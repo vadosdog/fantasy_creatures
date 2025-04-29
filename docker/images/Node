@@ -1,0 +1,4 @@
+FROM node:latest
+
+RUN apk update \
+ && apk add --update git python2

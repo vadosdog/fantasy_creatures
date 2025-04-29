@@ -1,0 +1,4 @@
+storage/app/frontend/*
+storage/framework/views/*
+storage/framework/sessions/*
+data/pg/*

@@ -20,7 +20,7 @@ services:
   php-fpm:
     # For the php-fpm service, we will create a custom image to install the necessary PHP extensions and setup proper permissions.
     build:
-      context: .
+      context: ..
       dockerfile: ./docker/common/php-fpm/Dockerfile
       target: development
       args:
@@ -34,7 +34,7 @@ services:
         XDEBUG_LOG_LEVEL: 0
     env_file:
       # Load the environment variables from the Laravel application
-      - .env
+      - ../.env
     user: "${UID:-1000}:${GID:-1000}"
     volumes:
       # Mount the application code for live updates
@@ -48,7 +48,7 @@ services:
   workspace:
    # For the workspace service, we will also create a custom image to install and setup all the necessary stuff.
     build:
-      context: .
+      context: ..
       dockerfile: ./docker/development/workspace/Dockerfile
       args:
         UID: ${UID:-1000}
@@ -64,7 +64,7 @@ services:
     tty: true  # Enables an interactive terminal
     stdin_open: true  # Keeps standard input open for 'docker exec'
     env_file:
-      - .env
+      - ../.env
     volumes:
       - ./:/var/www
     networks:

@@ -1,0 +1,21 @@
+{
+  "appKey": "base64:HjCExxcC3+eien3aYLemXUede5P7nUs857m+MLwczJM=",
+  "authHost": "authHOSSST",
+  "authEndpoint": "/broadcasting/auth",
+  "callbackEndpoint": "/api/voximplant/ws-callback",
+  "database": "redis",
+  "databaseConfig": {
+    "redis": {
+      "port": "6379",
+      "host": "redis"
+    }
+  },
+  "devMode": false,
+  "host": "0.0.0.0",
+  "port": "6001",
+  "protocol": "http",
+  "referrers": [],
+  "socketio": {},
+  "sslCertPath": "",
+  "sslKeyPath": ""
+}

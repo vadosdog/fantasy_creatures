@@ -1,0 +1,85 @@
+version: '3.6'
+
+services:
+  nginx:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      target: nginx
+    ports:
+      - "${PORT}:80"
+    restart: always
+    env_file: .env
+    volumes:
+      - ../:/app/:delegated
+    depends_on:
+      - app
+    networks:
+      - default
+      - fc-network
+
+  app: &app
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      target: app
+    command: /app/docker/sh/docker_entrypoint.sh
+    restart: always
+    env_file: .env
+    volumes:
+      - ../:/app/:delegated
+    depends_on:
+      - postgres
+    networks:
+      - default
+      - fc-network
+
+  node:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      target: node
+    command: sh -c "npm install && npm run dev-nolog"
+#    command: sh -c "npm install"
+    restart: always
+    env_file: .env
+    ports:
+      - "8010:8010"
+    volumes:
+      - ../front/:/app/:delegated
+    environment:
+      HOST: 0.0.0.0
+    networks:
+      - default
+      - fc-network
+
+  postgres:
+    image: postgres:16
+    volumes:
+      - ./pg/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/:delegated
+      - pg-data:/var/lib/postgresql/data:delegated
+      - ./pg/dumps:/dumps:delegated # Это надо для проброса дампов в контейнер
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_EXT_PORT}:5432" # Меняем порт на.env свободный
+    restart: always
+    networks:
+      - default
+      - fc-network
+
+  redis:
+    image: redis:7.0.11-alpine3.18
+    restart: always
+    networks:
+      - default
+      - fc-network
+
+volumes:
+  pg-data:
+
+networks:
+  fc-network:
+    driver: bridge

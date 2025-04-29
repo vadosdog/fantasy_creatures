@@ -6,9 +6,9 @@ include docker/.env
 EXEC_PHP      = docker compose exec app
 EXEC_DB       = docker compose exec postgres
 EXEC_REDIS    = docker compose exec redis
+EXEC_NODE     = docker compose exec node
 ARTISAN       = $(EXEC_PHP) php artisan
 COMPOSER      = $(EXEC_PHP) composer
-COMPOSE_FILE  = compose.dev.yaml
 DOCKER_F      = $(COMPOSE_FILE)
 DATE          = $(shell date +"%Y-%m-%d")
 
@@ -20,80 +20,92 @@ args = `arg="$(filter-out $@,$(MAKECMDGOALS))" && echo $${arg:-${1}}`
 
 ### project setup
 rebuild:
-	docker compose -f $(DOCKER_F) down --remove-orphans \
+	cd ./docker \
+	&& docker compose -f $(DOCKER_F) down --remove-orphans \
 	&& docker compose -f $(DOCKER_F) build --parallel \
 	&& docker compose -f $(DOCKER_F) up -d \
 
 down:
-	docker compose down
+	cd ./docker \
+	&& docker compose down
 
 up:
-	docker compose -f $(DOCKER_F) up -d \
+	cd ./docker \
+	&& docker compose -f $(DOCKER_F) up -d \
 
 php-shell:
-	docker compose -f $(DOCKER_F) exec workspace bash
+	cd ./docker \
+	&& $(EXEC_PHP) sh
+
+node-shell:
+	cd ./docker \
+	&& $(EXEC_NODE) sh
 
 redis-cli:
-	$(EXEC_REDIS) sh
+	cd ./docker \
+	&& $(EXEC_REDIS) sh
 
 optimize:
-	$(ARTISAN) optimize
+	cd ./docker \
+	&& $(ARTISAN) optimize
 
 tinker:
-	$(ARTISAN) tinker
+	cd ./docker \
+	&& $(ARTISAN) tinker
 
 pint:
-	$(EXEC_PHP) ./vendor/bin/pint
+	cd ./docker \
+	&& $(EXEC_PHP) ./vendor/bin/pint
 
 artisan-run:
-	$(ARTISAN) $(call args,help)
+	cd ./docker \
+	&& $(ARTISAN) $(call args,help)
 
 migrate:
-	$(ARTISAN) migrate
+	cd ./docker \
+	&& $(ARTISAN) migrate
 
 migrate-rollback:
-	$(ARTISAN) migrate:rollback
+	cd ./docker \
+	&& $(ARTISAN) migrate:rollback
 
 migration:
-	$(ARTISAN) make:migration
+	cd ./docker \
+	&& $(ARTISAN) make:migration
 
 composer-install:
-	$(COMPOSER) install
+	cd ./docker \
+	&& $(COMPOSER) install
 
 # Refresh composer.lock hash
 composer-update-hash:
-	$(COMPOSER) update --lock
+	cd ./docker \
+	&& $(COMPOSER) update --lock
 
 composer-dump-autoload:
-	$(COMPOSER) dump-autoload
-
-download-logistics-dump:
-	mkdir -p ./docker/pg/dumps \
-	&& cd ./docker/pg/dumps \
-	&& curl -o dump.custom -u gfbackup:Ghf_Vbc#1 https://backups.gftech.ru/short/logistic/logistic_short.sql.xz \
-
-create-db-logistics:
-	docker compose down --remove-orphans \
-	&& docker volume rm logistics_pg-data \
-	&& docker compose -f $(DOCKER_F) up -d \
-	&& sleep 5 \
-	&& $(EXEC_DB) sh -c "pg_restore -v -U postgres -C -d logisticsgf dumps/dump.custom"
+	cd ./docker \
+	&& $(COMPOSER) dump-autoload
 
 unittest:
-	$(EXEC_PHP) vendor/bin/paratest
+	cd ./docker \
+	&& $(EXEC_PHP) vendor/bin/paratest
 
 reset-roles:
-	$(ARTISAN) db:seed --class=RolesAndPermissions
+	cd ./docker \
+	&& $(ARTISAN) db:seed --class=RolesAndPermissions
 
 db-seed:
 	cd ./docker \
     && $(ARTISAN) db:seed
 
 tail-info:
-	$(EXEC_PHP) tail -f storage/logs/laravel.log -n 500
+	cd ./docker \
+	&& $(EXEC_PHP) tail -f storage/logs/laravel.log -n 500
 
 tail-logs:
-	docker compose -f $(DOCKER_F) logs -f
+	cd ./docker \
+	&& docker compose -f $(DOCKER_F) logs -f
 
 openapi-gen:
-	$(ARTISAN) openapi:generate > ../docs/swagger.json
+	cd ./docker \
+	&& $(ARTISAN) openapi:generate > ../docs/swagger.json
