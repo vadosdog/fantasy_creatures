@@ -36,8 +36,17 @@ export class Preloader extends Scene
         this.load.image('sky', 'sky.png');
         this.load.image('star', 'star.png');
         this.load.image('bomb', 'bomb.png');
-        this.load.spritesheet('dude', 'dude.png', { frameWidth: 32, frameHeight: 48 });
         this.load.image('ground', 'platform.png');
+        this.load.spritesheet('dude', 'dude.png', { frameWidth: 32, frameHeight: 48 });
+        
+        // Battle backgrounds
+        // this.load.image('battle-background-1-back_decor', 'battle/backgrounds/game_background_1/layers/back_decor.png');
+        this.load.image('battle-background-1-back_land', 'battle/backgrounds/game_background_1/layers/back_land.png');
+        this.load.image('battle-background-1-battleground', 'battle/backgrounds/game_background_1/layers/battleground.png');
+        // this.load.image('hexagon', 'battle/hexagon/hexagon2.png');
+        this.load.spritesheet('hexagon', 'battle/hexagon/hexagon3.png', { frameWidth: 95, frameHeight: 110 });
+        // this.load.image('battle-background-1-front_decor', 'battle/backgrounds/game_background_1/layers/front_decor.png');
+        // this.load.image('battle-background-1-ground_decor', 'battle/backgrounds/game_background_1/layers/ground_decor.png');
     }
 
     create ()
@@ -46,6 +55,6 @@ export class Preloader extends Scene
         //  For example, you can define global animations here, so we can use them in other scenes.
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-        this.scene.start('MainMenu');
+        this.scene.start('Battle');
     }
 }

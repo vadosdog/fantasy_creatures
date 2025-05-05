@@ -1,9 +1,7 @@
 <script setup>
-import Phaser from 'phaser';
-import {ref, toRaw} from 'vue';
-import Game from "./pages/Game.vue";
+import {ref, toRaw} from "vue";
+import Phaser from "phaser";
 
-// The sprite can only be moved in the MainMenu Scene
 const canMoveSprite = ref();
 
 //  References to the PhaserGame component (game and scene are exposed)
@@ -68,8 +66,35 @@ const currentScene = (scene) => {
     canMoveSprite.value = (scene.scene.key !== 'MainMenu');
 
 }
-
 </script>
+
 <template>
-    <RouterView/>
+
+    <nav>
+        <RouterLink to="/">Go to Home</RouterLink>
+        <RouterLink to="/game">Go to Game</RouterLink>
+        <RouterLink to="/phaser-game">Go to Phaser</RouterLink>
+    </nav>
+    <main>
+        <RouterView/>
+    </main>
+    <div>
+        <div>
+            <button class="button" @click="changeScene">Change Scene</button>
+            <button class="button" @click="changeScene">Go to Battle</button>
+        </div>
+        <div>
+            <button :disabled="canMoveSprite" class="button" @click="moveSprite">Toggle Movement</button>
+        </div>
+        <div class="spritePosition">Sprite Position:
+            <pre>{{ spritePosition }}</pre>
+        </div>
+        <div>
+            <button class="button" @click="addSprite">Add New Sprite</button>
+        </div>
+    </div>
 </template>
+
+<style scoped>
+
+</style>

@@ -1,7 +1,8 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue';
-import { EventBus } from './game/EventBus';
-import StartGame from './game/main';
+import {onMounted, onUnmounted, ref} from 'vue';
+import {EventBus} from '../game/EventBus.js';
+import StartGame from '../game/main.js';
+import {useBattleStore} from "../store/battle.js";
 
 // Save the current scene instance
 const scene = ref();
@@ -10,32 +11,27 @@ const game = ref();
 const emit = defineEmits(['current-active-scene']);
 
 onMounted(() => {
-
-    game.value = StartGame('game-container');
+    game.value = StartGame('game-container', useBattleStore());
 
     EventBus.on('current-scene-ready', (currentScene) => {
+        emit('current-active-scene', 'Battle');
 
-        emit('current-active-scene', currentScene);
-
-        scene.value = currentScene;
+        scene.value = 'Battle';
 
     });
 
 });
 
 onUnmounted(() => {
-
-    if (game.value)
-    {
+    if (game.value) {
         game.value.destroy(true);
         game.value = null;
     }
-    
+
 });
 
-defineExpose({ scene, game });
+defineExpose({scene, game});
 </script>
-
 <template>
     <div id="game-container"></div>
 </template>

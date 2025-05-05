@@ -139,8 +139,8 @@ export class MainMenu extends Scene {
         player.setTint(0xff0000);
 
         player.anims.play('turn');
-
-        gameOver = true;
+        
+        this.scene.start('GameOver');
     }
 
 
