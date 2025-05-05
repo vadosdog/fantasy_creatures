@@ -1,7 +1,7 @@
 import {EventBus} from '../EventBus';
 import {Scene} from 'phaser';
 import Hexagon, {
-    GAME_STATE_MOVABLE,
+    GAME_STATE_MOVABLE, GAME_STATE_NORMAL,
     GAME_STATE_SELECTED,
     HEXAGON_ANIM_GREEN, HEXAGON_ANIM_GREY,
     HEXAGON_ANIM_LIGHT_GREEN,
@@ -11,27 +11,91 @@ import Hexagon, {
     HEXAGON_ANIM_RED,
     HEXAGON_ANIM_YELLOW
 } from "../sprites/battle/Hexagon.js";
-import {GAME_STATE_CHOOSE_TARGET} from "../../store/battle.js";
+import {GAME_STATE_PLAYER_TURN} from "../../store/battle.js";
 
 export class Battle extends Scene {
     showGridIndexes = true
     hexagonGroup;
     store
+    hexagonsArray;
 
     constructor(store) {
         super('Battle');
         this.store = store
+        this.hexagonsArray = new Map()
     }
 
     create() {
+        this.store.load()
+
+        this.createAnims()
         this.createBackground()
         this.createBattleField()
-        this.createCreatures()
-
+        //
         this.handleStep()
 
-        this.store.setGameState(GAME_STATE_CHOOSE_TARGET);
         EventBus.emit('current-scene-ready', this);
+    }
+
+    createAnims() {
+        this.anims.create({
+            key: HEXAGON_ANIM_NORMAL,
+            frames: [{key: 'hexagon', frame: 0}],
+        });
+        this.anims.create({
+            key: HEXAGON_ANIM_LIGHT_YELLOW,
+            frames: [{key: 'hexagon', frame: 1}],
+        });
+        this.anims.create({
+            key: HEXAGON_ANIM_LIGHT_RED,
+            frames: [{key: 'hexagon', frame: 2}],
+        });
+        this.anims.create({
+            key: HEXAGON_ANIM_LIGHT_GREEN,
+            frames: [{key: 'hexagon', frame: 3}],
+        });
+        this.anims.create({
+            key: HEXAGON_ANIM_YELLOW,
+            frames: [{key: 'hexagon', frame: 4}],
+        });
+        this.anims.create({
+            key: HEXAGON_ANIM_RED,
+            frames: [{key: 'hexagon', frame: 5}],
+        });
+        this.anims.create({
+            key: HEXAGON_ANIM_GREEN,
+            frames: [{key: 'hexagon', frame: 6}],
+        });
+        this.anims.create({
+            key: HEXAGON_ANIM_GREY,
+            frames: [{key: 'hexagon', frame: 7}],
+        });
+
+        this.anims.create({
+            key: 'turn',
+            frames: [{key: 'dude', frame: 4}],
+        });
+        this.anims.create({
+            key: 'moveLeft',
+            frames: this.anims.generateFrameNumbers('dude', {start: 0, end: 3}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'turnLeft',
+            frames: [{key: 'dude', frame: 0}],
+        });
+
+        this.anims.create({
+            key: 'moveRight',
+            frames: this.anims.generateFrameNumbers('dude', {start: 5, end: 8}),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'turnRight',
+            frames: [{key: 'dude', frame: 5}],
+        });
     }
 
     createBackground() {
@@ -83,158 +147,122 @@ export class Battle extends Scene {
 
         this.hexagonGroup = this.add.group();
 
-        this.anims.create({
-            key: HEXAGON_ANIM_NORMAL,
-            frames: [{key: 'hexagon', frame: 0}],
-        });
-        this.anims.create({
-            key: HEXAGON_ANIM_LIGHT_YELLOW,
-            frames: [{key: 'hexagon', frame: 1}],
-        });
-        this.anims.create({
-            key: HEXAGON_ANIM_LIGHT_RED,
-            frames: [{key: 'hexagon', frame: 2}],
-        });
-        this.anims.create({
-            key: HEXAGON_ANIM_LIGHT_GREEN,
-            frames: [{key: 'hexagon', frame: 3}],
-        });
-        this.anims.create({
-            key: HEXAGON_ANIM_YELLOW,
-            frames: [{key: 'hexagon', frame: 4}],
-        });
-        this.anims.create({
-            key: HEXAGON_ANIM_RED,
-            frames: [{key: 'hexagon', frame: 5}],
-        });
-        this.anims.create({
-            key: HEXAGON_ANIM_GREEN,
-            frames: [{key: 'hexagon', frame: 6}],
-        });
-        this.anims.create({
-            key: HEXAGON_ANIM_GREY,
-            frames: [{key: 'hexagon', frame: 7}],
-        });
-
-        const hexagonsArray = new Map()
-        for (let i = 0; i < this.store.gridSizeY / 2; i++) {
-            for (let j = 0; j < this.store.gridSizeX; j++) {
-                if (this.store.gridSizeY % 2 === 0 || i + 1 < this.store.gridSizeY / 2 || j % 2 === 0) {
-                    let hexagonX = startX + hexagonWidth / 2 + hexagonWidth * j / 2;
-                    let hexagonY = startY + hexagonHeight / 2
-                        // Если четный ряд (j нечетное), то смещаем ряд "под" предыдущий  
-                        + (j % 2 === 1 ? (hexagonT + (hexagonHeight - hexagonT) / 2) : 0)
-                        // Каждый ряд смещается на высоту хекса + сторону
-                        + (hexagonHeight + hexagonT) * i
+        this.store.battleMap.forEach((cell) => {
+            let posX = cell.positionX
+            let posY = cell.positionY
+            let hexagonX = startX + hexagonWidth / 2 + hexagonWidth * posY / 2;
+            let hexagonY = startY + hexagonHeight / 2
+                // Если четный ряд (j нечетное), то смещаем ряд "под" предыдущий  
+                + (posY % 2 === 1 ? (hexagonT + (hexagonHeight - hexagonT) / 2) : 0)
+                // Каждый ряд смещается на высоту хекса + сторону
+                + (hexagonHeight + hexagonT) * posX
 
 
-                    let hexagon = new Hexagon(this, hexagonX, hexagonY)
-                    this.hexagonGroup.add(hexagon)
-                    hexagonsArray.set(`${i},${j}`, hexagon)
+            let hexagon = new Hexagon(this, hexagonX, hexagonY)
+            this.hexagonGroup.add(hexagon)
+            this.hexagonsArray.set(`${posX},${posY}`, hexagon)
 
-                    // hexagon.anims.play(HEXAGON_ANIM_YELLOW)
-                    let scaleX = hexagonWidth / (hexagon.width)
-                    let scaleY = hexagonHeight / (hexagon.height)
-                    hexagon.setScale(scaleX, scaleY).setScrollFactor(0)
 
-                    if (this.showGridIndexes) {
-                        let hexagonText = this.add.text(hexagonX - hexagonWidth / 4, hexagonY, i + "," + j);
-                        hexagonText.font = "arial";
-                        hexagonText.fontSize = 12;
-                        this.hexagonGroup.add(hexagonText);
-                    }
+            hexagon.on('pointerup', (...args) => {
+                this.handleHexagonClick([posX, posY], hexagon, ...args)
+            });
+
+            // hexagon.anims.play(HEXAGON_ANIM_YELLOW)
+            let scaleX = hexagonWidth / (hexagon.width)
+            let scaleY = hexagonHeight / (hexagon.height)
+            hexagon.setScale(scaleX, scaleY).setScrollFactor(0)
+
+            if (this.showGridIndexes) {
+                let hexagonText = this.add.text(hexagonX - hexagonWidth / 4, hexagonY, posX + "," + posY);
+                hexagonText.font = "arial";
+                hexagonText.fontSize = 12;
+                this.hexagonGroup.add(hexagonText);
+            }
+
+        })
+        this.store.battleMap.forEach((cell) => {
+            if (cell.content) {
+                // в перспективе могут быть другие препятствия
+                let creature = cell.content
+                let hexagon = this.hexagonsArray.get(creature.position.join(','))
+                let creatureSprite = this.add.sprite(
+                    hexagon.x,
+                    hexagon.y - 30,
+                    creature.sprite
+                );
+                if (creature.direction === 'left') {
+                    creature.defaultDirection = 'turnLeft'
+                } else {
+                    creature.defaultDirection = 'turnRight'
                 }
+                creatureSprite.anims.play(creature.defaultDirection)
+                creatureSprite.setScale(1.7, 1.7)
+                creature.creatureSprite = creatureSprite
+                // scaleX = this.cameras.main.width / battleground.width
+                // scaleY = this.cameras.main.height / battleground.height
+                // scale = Math.max(scaleX, scaleY)
+                // battleground.setScale(scale).setScrollFactor(0)
+
+                this.store.creatures.add(creature)
             }
-        }
-        this.store.setHexagonsMaps(hexagonsArray)
-        this.hexagonGroup.x = (this.width - hexagonWidth * Math.ceil(this.store.gridSizeX / 2)) / 2;
-        if (this.store.gridSizeX % 2 === 0) {
-            this.hexagonGroup.x -= hexagonWidth / 4;
-        }
-        this.hexagonGroup.y = (this.height - Math.ceil(this.store.gridSizeY / 2) * hexagonHeight - Math.floor(this.store.gridSizeY / 2) * hexagonHeight / 2) / 2;
-        if (this.store.gridSizeY % 2 === 0) {
-            this.hexagonGroup.y -= hexagonHeight / 8;
-        }
-
-        // marker
-        // let marker = this.add.sprite(0,0,"marker");
-        // marker.anchor.setTo(0.5);
-        // marker.visible=false;
-        // this.hexagonGroup.add(marker);
-        // let moveIndex = this.input.addMoveCallback(this.checkHex, this);
-    }
-
-    createCreatures() {
-        this.anims.create({
-            key: 'turn',
-            frames: [{key: 'dude', frame: 4}],
-        });
-        this.anims.create({
-            key: 'moveLeft',
-            frames: this.anims.generateFrameNumbers('dude', {start: 0, end: 3}),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'turnLeft',
-            frames: [{key: 'dude', frame: 0}],
-        });
-
-        this.anims.create({
-            key: 'moveRight',
-            frames: this.anims.generateFrameNumbers('dude', {start: 5, end: 8}),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'turnRight',
-            frames: [{key: 'dude', frame: 5}],
-        });
-
-        this.store.queue.forEach((creature) => {
-            let hexagon = this.store.hexagonsArray.get(`${creature.position[0]},${creature.position[1]}`)
-            let creatureSprite = this.add.sprite(
-                hexagon.x,
-                hexagon.y - 30,
-                creature.sprite
-            );
-            if (creature.direction === 'left') {
-                creature.defaultDirection = 'turnLeft'
-            } else {
-                creature.defaultDirection = 'turnRight'
-            }
-            creatureSprite.anims.play(creature.defaultDirection)
-            creatureSprite.setScale(1.7, 1.7)
-            creature.creatureSprite = creatureSprite
-            // scaleX = this.cameras.main.width / battleground.width
-            // scaleY = this.cameras.main.height / battleground.height
-            // scale = Math.max(scaleX, scaleY)
-            // battleground.setScale(scale).setScrollFactor(0)
-
-            this.store.creatures.add(creature)
         })
     }
 
     handleStep() {
-        let queue = this.store.round % this.store.queue.length
-        let activeCreature = this.store.queue[queue]
-        let creatureSprite = this.store.hexagonsArray.get(`${activeCreature.position[0]},${activeCreature.position[1]}`)
+        this.hexagonsArray.forEach(hexagonSprite => {
+            hexagonSprite.setGameState(GAME_STATE_NORMAL)
+        })
+        this.store.nextRound()
+        let {activeCreature, availableActions} = this.store.getTurn()
+        let creatureSprite = this.hexagonsArray.get(`${activeCreature.position[0]},${activeCreature.position[1]}`)
         creatureSprite.setGameState(GAME_STATE_SELECTED)
-        let availableMoves = this.findAccessibleCells(activeCreature.position, 4)
-        availableMoves.forEach(([x, y]) => {
-            let hexagonSprite = this.store.hexagonsArray.get(`${x},${y}`)
-            hexagonSprite.setGameState(GAME_STATE_MOVABLE)
+        availableActions.forEach(({action, targets}) => {
+            switch (action) {
+                case 'move':
+                    targets.forEach(([x, y]) => {
+                        let hexagonSprite = this.hexagonsArray.get(`${x},${y}`)
+                        hexagonSprite.setGameState(GAME_STATE_MOVABLE)
+                    })
+            }
+        })
+    }
 
-            hexagonSprite.on('pointerup', () => {
-                // Получаем путь от текущей позиции персонажа до выбранной клетки
-                const path = this.findPath([activeCreature.position[0], activeCreature.position[1]], [x, y]);
-                if (!path || path.length === 0) return;
+    handleHexagonClick(position, hexagonSprite, args) {
+        if (this.store.gameState !== GAME_STATE_PLAYER_TURN) {
+            return
+        }
 
-                this.moveCreatureAlongPath(activeCreature, path);
-            });
+        const targets = new Map
+        this.store.availableActions.forEach(({targets: actionTargets, action}) => {
+            actionTargets.forEach(target => {
+                targets.set(target.join(','), action)
+            })
         })
 
-        this.store.round++
+        if (!targets.has(position.join(','))) {
+            return
+        }
+
+        const action = targets.get(position.join(','))
+        let timeline
+        switch (action) {
+            case 'move':
+                // Получаем путь от текущей позиции персонажа до выбранной клетки
+                const path = this.findPath(this.store.activeCreature.position, position);
+                if (!path || path.length === 0) return;
+
+                this.store.playerActionMoveTo(path)
+                timeline = this.moveCreatureAlongPath(this.store.activeCreature, path)
+                break
+            default:
+                // неизвестное действие
+                return
+        }
+
+        timeline.on('complete', () => {
+            this.store.endOfRound();
+            this.handleStep()
+        })
     }
 
     moveCreatureAlongPath(activeCreature, path) {
@@ -248,7 +276,7 @@ export class Battle extends Scene {
         for (let i = 1; i < path.length; i++) {
             const [x, y] = path[i];
             const key = `${x},${y}`;
-            const cellSprite = this.store.hexagonsArray.get(`${x},${y}`);
+            const cellSprite = this.hexagonsArray.get(`${x},${y}`);
             if (!cellSprite) continue;
 
             // if (path[i - 1][1] < y) {
@@ -280,12 +308,12 @@ export class Battle extends Scene {
                 activeCreature.position[0] = lastPos[0];
                 activeCreature.position[1] = lastPos[1];
                 activeCreature.creatureSprite.anims.play(activeCreature.defaultDirection, true)
-                this.store.endOfRound();
             }
         })
 
         timeline.play();
 
+        return timeline
     }
 
     getDirections(position) {
@@ -321,7 +349,7 @@ export class Battle extends Scene {
                     if (
                         newX >= 0 &&
                         newY >= 0 &&
-                        this.store.hexagonsArray.has(`${newX},${newY}`) &&
+                        this.hexagonsArray.has(`${newX},${newY}`) &&
                         !visited.has(key) &&
                         !obstacles.has(key)
                     ) {
@@ -375,7 +403,7 @@ export class Battle extends Scene {
                 if (
                     newX >= 0 &&
                     newY >= 0 &&
-                    this.store.hexagonsArray.has(`${newX},${newY}`) &&
+                    this.hexagonsArray.has(`${newX},${newY}`) &&
                     !visited.has(newKey) &&
                     !obstacles.has(newKey)
                 ) {

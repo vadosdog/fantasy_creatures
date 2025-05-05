@@ -78,7 +78,8 @@ export default class Hexagon extends Phaser.GameObjects.Sprite {
                 case GAME_STATE_TREATABLE:
                     this.anims.play(HEXAGON_ANIM_NORMAL)
                     break
-                //     GAME_STATE_SELECTED
+                default:
+                    this.anims.play(HEXAGON_ANIM_NORMAL)
             }
         } else if (this.interactionState === INTERACTION_STATE_HOVERED) {
             switch (this.gameState) {
@@ -99,6 +100,8 @@ export default class Hexagon extends Phaser.GameObjects.Sprite {
                 case GAME_STATE_TREATABLE:
                     this.anims.play(HEXAGON_ANIM_LIGHT_GREEN)
                     break
+                default:
+                    this.anims.play(HEXAGON_ANIM_NORMAL)
             }
         } else if (this.interactionState === INTERACTION_STATE_PRESSED) {
             switch (this.gameState) {
@@ -119,19 +122,24 @@ export default class Hexagon extends Phaser.GameObjects.Sprite {
                 case GAME_STATE_TREATABLE:
                     this.anims.play(HEXAGON_ANIM_GREEN)
                     break
+                default:
+                    this.anims.play(HEXAGON_ANIM_NORMAL)
+                    
             }
+        } else {
+            this.anims.play(HEXAGON_ANIM_NORMAL)
         }
     }
 
     onHover() {
-        this.setInteractionState('hovered');
+        this.setInteractionState(INTERACTION_STATE_HOVERED);
     }
 
     onOut() {
-        this.setInteractionState('normal');
+        this.setInteractionState(INTERACTION_STATE_NORMAL);
     }
 
     onClick() {
-        this.setInteractionState('pressed');
+        this.setInteractionState(INTERACTION_STATE_PRESSED);
     }
 }
