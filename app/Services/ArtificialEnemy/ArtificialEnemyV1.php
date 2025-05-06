@@ -1,10 +1,10 @@
 <?php
 
-namespace app\Services\ArtificialEnemy;
+namespace App\Services\ArtificialEnemy;
 
-use app\Models\Battle\BattleSide;
-use app\Models\Creature\Creature;
-use app\Services\Battle\BattleContainer;
+use App\Models\Battle\BattleSide;
+use App\Models\Creature\Creature;
+use App\Services\Battle\BattleContainer;
 
 class ArtificialEnemyV1
 {

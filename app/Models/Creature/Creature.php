@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Models\Creature;
+namespace App\Models\Creature;
 
 use App\Models\User;
 use Barryvdh\LaravelIdeHelper\Eloquent;

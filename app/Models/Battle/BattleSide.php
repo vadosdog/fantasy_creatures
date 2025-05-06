@@ -1,8 +1,8 @@
 <?php
 
-namespace app\Models\Battle;
+namespace App\Models\Battle;
 
-use app\Models\Creature\Creature;
+use App\Models\Creature\Creature;
 use Barryvdh\LaravelIdeHelper\Eloquent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

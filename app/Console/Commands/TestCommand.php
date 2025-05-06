@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use app\Models\Battle\Battle;
-use app\Models\Creature\Creature;
+use App\Models\Battle\Battle;
+use App\Models\Creature\Creature;
 use App\Models\User;
-use app\Services\ArtificialEnemy\ArtificialEnemyV1;
-use app\Services\Battle\BattleContainer;
+use App\Services\ArtificialEnemy\ArtificialEnemyV1;
+use App\Services\Battle\BattleContainer;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Collection;
 

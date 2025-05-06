@@ -1,13 +1,14 @@
 export default class Monster1 extends Phaser.GameObjects.Sprite {
     texturePrefix
-    
-    constructor(texture, scene, x, y) {
+    defaultDirection
+
+    constructor(texture, scene, x, y, defaultDirection) {
         super(scene, x, y, texture + '_stand');
 
+        this.defaultDirection = defaultDirection
         this.texturePrefix = texture
         scene.add.existing(this);
         this.createAnimations();
-        this.state = 'stand';
     }
 
     createAnimations() {
@@ -38,6 +39,19 @@ export default class Monster1 extends Phaser.GameObjects.Sprite {
                 repeat: -1
             });
         }
+
+        if (!this.scene.anims.exists(this.texturePrefix + '_death_right')) {
+            this.scene.anims.create({
+                key: this.texturePrefix + '_death_right',
+                frames: this.scene.anims.generateFrameNumbers(this.texturePrefix + '_death', {start: 0, end: 7}),
+                frameRate: 10,
+                repeat: -1
+            });
+        }
+    }
+
+    setDefaultState() {
+        return this.setState(this.defaultDirection)
     }
 
     setState(newState) {
@@ -68,6 +82,14 @@ export default class Monster1 extends Phaser.GameObjects.Sprite {
             case 'hurt_left':
                 this.setFlipX(true);
                 this.play(this.texturePrefix + '_hurt_right');
+                break;
+            case 'death_right':
+                this.setFlipX(false);
+                this.play(this.texturePrefix + '_death_right');
+                break;
+            case 'death_left':
+                this.setFlipX(true);
+                this.play(this.texturePrefix + '_death_right');
                 break;
             case 'stand_right':
                 this.setFlipX(false);

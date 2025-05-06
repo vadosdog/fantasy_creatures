@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Models\Battle;
+namespace App\Models\Battle;
 
 use App\Models\User;
 use Barryvdh\LaravelIdeHelper\Eloquent;

@@ -1,9 +1,9 @@
 <?php
 
-namespace app\Services\Battle;
+namespace App\Services\Battle;
 
-use app\Models\Battle\Battle;
-use app\Models\Battle\BattleSide;
+use App\Models\Battle\Battle;
+use App\Models\Battle\BattleSide;
 use App\Models\User;
 use Illuminate\Support\Collection;
 
@@ -220,6 +220,7 @@ class BattleContainer
         /** @var BattleSide $target */
         $target = $this->queue->filter(fn(BattleSide $side) => $side->position === $position)->first();
         $currentAttacks = $currentCreature->creature->abilities[random_int(0, count($currentCreature->creature->abilities) - 1)];
+        dd($currentAttacks->toArray());
         $log = "Атака: " . $currentAttacks->name . ". Шанс: " . $currentAttacks->chance . "\n";
         $dice = random_int(1, 100);
         $log .= "Dice: " . $dice . "\n";

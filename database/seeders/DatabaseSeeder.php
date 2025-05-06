@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use app\Models\Creature\Creature;
-use app\Models\Creature\CreatureAbility;
+use App\Models\Creature\Creature;
+use App\Models\Creature\CreatureAbility;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 

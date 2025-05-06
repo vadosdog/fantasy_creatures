@@ -4,6 +4,7 @@ COPY ./front /app/
 
 FROM php:8.3-fpm-alpine as app
 RUN apk --no-cache add \
+    postgresql-dev \
     libpng-dev \
     libjpeg-turbo-dev \
     libwebp-dev \
@@ -15,6 +16,7 @@ RUN apk --no-cache add \
     libc-dev \
     pkgconfig \
     linux-headers \
+    && docker-php-ext-install pdo_pgsql \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd exif \
     && pecl install redis \

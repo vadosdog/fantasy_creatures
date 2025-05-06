@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Models\Creature;
+namespace App\Models\Creature;
 
 use Barryvdh\LaravelIdeHelper\Eloquent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

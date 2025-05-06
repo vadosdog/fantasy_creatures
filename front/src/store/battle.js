@@ -15,50 +15,100 @@ export const useBattleStore = defineStore('battle', {
         round: 0,
         queue: [
             {
-                name: 'One',
+                name: 'Flameky',
                 texture: 'Pink_Monster',
-                health: 100,
+                health: 10,
                 maxHealth: 100,
-                position: [1, 2],
+                position: [2, 13],
                 direction: 'right',
                 speed: 4,
-                availableActions: [
+                attacks: [
                     {
-                        action: 'move'
+
+                        'name': 'Искры',
+                        'chance': 90,
+                        'power': 10,
+                        'type': 'melee',
+                    },
+                    {
+                        'name': 'Fireball',
+                        'chance': 50,
+                        'power': 50,
+                        'type': 'ranged',
                     }
-                ]
+                ],
             },
             {
-                name: 'Two',
+                name: 'Bubbly',
                 texture: 'Dude_Monster',
-                health: 100,
+                health: 50,
                 maxHealth: 100,
-                position: [1, 6],
+                position: [3, 13],
                 direction: 'right',
                 speed: 4,
-                availableActions: [
+                attacks: [
                     {
-                        action: 'move',
+
+                        'name': 'Брызги',
+                        'chance': 80,
+                        'power': 20,
+                        'type': 'melee',
+                    },
+                    {
+                        'name': 'Водомет',
+                        'chance': 40,
+                        'power': 80,
+                        'type': 'ranged',
                     }
-                ]
+                ],
             },
             {
-                name: 'Three',
+                name: 'Droplet',
                 texture: 'Owlet_Monster',
                 health: 100,
                 maxHealth: 100,
-                position: [1, 5],
+                position: [2, 19],
                 direction: 'left',
                 speed: 4,
+                attacks: [
+                    {
+
+                        'name': 'Искры',
+                        'chance': 90,
+                        'power': 10,
+                        'type': 'melee',
+                    },
+                    {
+                        'name': 'Fireball',
+                        'chance': 50,
+                        'power': 50,
+                        'type': 'ranged',
+                    }
+                ],
             },
             {
-                name: 'Four',
+                name: 'Bulbik',
                 texture: 'Dude_Monster',
                 health: 100,
                 maxHealth: 100,
-                position: [4, 28],
+                position: [3, 19],
                 direction: 'left',
                 speed: 4,
+                attacks: [
+                    {
+
+                        'name': 'Брызги',
+                        'chance': 80,
+                        'power': 20,
+                        'type': 'melee',
+                    },
+                    {
+                        'name': 'Водомет',
+                        'chance': 40,
+                        'power': 80,
+                        'type': 'ranged',
+                    }
+                ],
             },
         ],
         gameState: GAME_STATE_WAITING,
@@ -76,7 +126,8 @@ export const useBattleStore = defineStore('battle', {
             this.battleMap = BattleMap.create(this.gridSizeX, this.gridSizeY, contents)
         },
         nextRound() {
-            this.activeCreature = this.queue[this.round % 4]
+            console.log('nextround', this.round % this.queue.length)
+            this.activeCreature = this.queue[this.round % this.queue.length]
 
             this.availableActions = []
             const moveable = this.getMoveablePositions(this.activeCreature)
@@ -91,6 +142,10 @@ export const useBattleStore = defineStore('battle', {
             const attackAble = []
             this.creatures.forEach(creature => {
                 if (creature.direction === this.activeCreature.direction) {
+                    return
+                }
+                
+                if (creature.health <= 0) {
                     return
                 }
 
@@ -114,7 +169,7 @@ export const useBattleStore = defineStore('battle', {
 
             // переделать на что-то другое
             // if (this.activeCreature.direction === 'right') {
-            //     this.setGameState(GAME_STATE_PLAYER_TURN)
+                this.setGameState(GAME_STATE_PLAYER_TURN)
             // }
         },
         setGameState(gameState) {
@@ -180,7 +235,7 @@ export const useBattleStore = defineStore('battle', {
         },
         findPath(start, end) {
             // Плохо что есть две разные точки поиска пути, надобы объеденить
-            
+
             if (!start || !end) {
                 return []
             }
@@ -226,6 +281,45 @@ export const useBattleStore = defineStore('battle', {
             this.battleMap.removeContent(...this.activeCreature.position)
             this.activeCreature.position = path[path.length - 1]
             this.battleMap.setContent(...path[path.length - 1], this.activeCreature)
+        },
+        playerActionAttack(targetPosition) {
+            const result = {
+                attack: undefined,
+                success: false,
+                damage: 0,
+                health: 0
+            }
+            const targetCreature = this.getCreatureByCoords(targetPosition)
+            if (!targetPosition) {
+                return
+            }
+
+            const attack = this.activeCreature.attacks[0]
+            result.attack = attack.name
+            const dice = Phaser.Math.Between(0, 100)
+            if (dice < attack.chance) {
+                result.success = true
+                result.damage = attack.power
+            }
+
+            targetCreature.health -= result.damage
+            if (targetCreature.health <= 0) {
+                targetCreature.health = 0
+                // гомосятина переделать
+                let targetIndex = this.queue.findIndex(c => c === targetCreature)
+                this.queue.splice(targetIndex, 1)
+                this.battleMap.removeContent(...targetCreature.position)
+                targetIndex = this.queue.findIndex(c => c === this.activeCreature)
+                this.round = targetIndex
+            }
+            
+            result.health = targetCreature.health
+            
+            return result
+        },
+        playerActionMoveAndAttack(path, targetPosition) {
+            this.playerActionMoveTo(path)
+            return this.playerActionAttack(targetPosition)
         },
         getCreatureByCoords(position) {
             return this.battleMap.get(position.join(',')).content

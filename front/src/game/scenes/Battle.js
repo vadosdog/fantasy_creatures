@@ -12,7 +12,9 @@ import Hexagon, {
     HEXAGON_ANIM_RED,
     HEXAGON_ANIM_YELLOW
 } from "../sprites/battle/Hexagon.js";
-import Monster1 from "../sprites/creatures/monster1.js";
+import Monster1 from "../sprites/creatures/Monster1.js";
+import MonsterContainer from "../sprites/creatures/MonsterContainer.js";
+import {GAME_STATE_PLAYER_TURN, GAME_STATE_WAITING} from "../../store/battle.js";
 
 export class Battle extends Scene {
     showGridIndexes = false
@@ -161,40 +163,12 @@ export class Battle extends Scene {
                 let creature = cell.content
                 let hexagon = this.hexagonsArray.get(creature.position.join(','))
 
-                let creatureContainer = this.add.container(
+                let creatureContainer = new MonsterContainer(
+                    creature,
+                    this, 
                     hexagon.x,
-                    hexagon.y,
+                    hexagon.y, 
                 )
-
-                // let creatureSprite = this.add.sprite(
-                //     0,
-                //     -30,
-                //     creature.texture
-                // );
-                let creatureSprite = new Monster1(creature.texture, this, 0, -20)
-                creatureSprite.createAnimations()
-                if (creature.direction === 'left') {
-                    creature.defaultDirection = 'stand_left'
-                } else {
-                    creature.defaultDirection = 'stand_right'
-                }
-                creatureSprite.setState(creature.defaultDirection)
-                creatureSprite.setScale(1.7, 1.7)
-                creature.creatureSprite = creatureSprite
-                creatureContainer.add(creatureSprite)
-
-                let creatureText = this.add.text(
-                    0,
-                    12,
-                    creature.name + "\n" + creature.health + "/" + creature.maxHealth,
-                    {
-                        fontFamily: "arial",
-                        fontSize: "11px",
-                        align: "center"
-                    }
-                )
-                creatureText.x = creatureText.x - (creatureText.width / 2)
-                creatureContainer.add(creatureText)
 
                 creature.creatureSpriteContainer = creatureContainer
                 this.store.creatures.add(creature)
@@ -208,8 +182,9 @@ export class Battle extends Scene {
         })
         this.store.nextRound()
         let {activeCreature, availableActions} = this.store.getTurn()
-        let creatureSprite = this.hexagonsArray.get(`${activeCreature.position[0]},${activeCreature.position[1]}`)
-        creatureSprite.setGameState(GAME_STATE_SELECTED)
+        let activeHexagonSprite = this.hexagonsArray.get(`${activeCreature.position[0]},${activeCreature.position[1]}`)
+        
+        activeHexagonSprite.setGameState(GAME_STATE_SELECTED)
         availableActions.forEach(({action, targets}) => {
             switch (action) {
                 case 'move':
@@ -228,9 +203,9 @@ export class Battle extends Scene {
     }
 
     handleHexagonClick(position, hexagonSprite, args) {
-        // if (this.store.gameState !== GAME_STATE_PLAYER_TURN) {
-        //     return
-        // }
+        if (this.store.gameState !== GAME_STATE_PLAYER_TURN) {
+            return
+        }
 
         const targets = new Map
         this.store.availableActions.forEach(({targets: actionTargets, action}) => {
@@ -242,6 +217,8 @@ export class Battle extends Scene {
         if (!targets.has(position.join(','))) {
             return
         }
+        
+        this.store.setGameState(GAME_STATE_WAITING)
 
         const action = targets.get(position.join(','))
         const timeline = this.add.timeline({});
@@ -254,12 +231,12 @@ export class Battle extends Scene {
 
                 this.store.playerActionMoveTo(path)
                 this.moveCreatureAlongPath(timeline, this.store.activeCreature, path)
-                
+
                 // надо бы в одном место выделить
                 timeline.add({
                     at: 200 * (path.length), //гомосятина
                     run: () => {
-                        this.store.activeCreature.creatureSprite.setState(this.store.activeCreature.defaultDirection)
+                        this.store.activeCreature.creatureSpriteContainer.setDefaultState()
                     }
                 });
                 break
@@ -273,43 +250,74 @@ export class Battle extends Scene {
                 if (!path || path.length === 0) return;
                 path = path.slice(0, path.length - 1)
 
+                let attackResult
                 if (path.length > 1) {
-                    this.store.playerActionMoveTo(path)
+                    attackResult = this.store.playerActionMoveAndAttack(path, position)
                     this.moveCreatureAlongPath(timeline, this.store.activeCreature, path)
+                } else {
+                    attackResult = this.store.playerActionAttack(position)
                 }
 
                 timeline.add({
                     at: 200 * (path.length), //гомосятина
                     run: () => {
-                        let attackDirection = this.store.activeCreature.position[1] < position[1] 
+                        let attackDirection = this.store.activeCreature.position[1] < position[1]
                             ? 'attack_right'
                             : 'attack_left'
-                        this.store.activeCreature.creatureSprite.setState(attackDirection)
+                        this.store.activeCreature.creatureSpriteContainer.setState(attackDirection)
                     }
                 });
-                timeline.add({
-                    at: 200 * (path.length), //гомосятина
-                    run: () => {
-                        let attackDirection = this.store.activeCreature.position[1] < position[1] 
-                            ? 'hurt_left'
-                            : 'hurt_right'
-                        targetCreature.creatureSprite.setState(attackDirection)
-                    }
-                });
-                
+
                 // надо бы в одном место выделить
                 timeline.add({
                     at: 200 * (path.length) + 500, //гомосятина
                     run: () => {
-                        this.store.activeCreature.creatureSprite.setState(this.store.activeCreature.defaultDirection)
+                        this.store.activeCreature.creatureSpriteContainer.setDefaultState()
                     }
                 });
-                timeline.add({
-                    at: 200 * (path.length) + 500, //гомосятина
-                    run: () => {
-                        targetCreature.creatureSprite.setState(this.store.activeCreature.defaultDirection)
+
+                let attackDirection = this.store.activeCreature.position[1] < position[1]
+                    ? 'left'
+                    : 'right'
+                if (attackResult.success) {
+                    timeline.add({
+                        at: 200 * (path.length), //гомосятина
+                        run: () => {
+                            targetCreature.creatureSpriteContainer.setState('hurt_' + attackDirection)
+                            targetCreature.creatureSpriteContainer.updateVisual()
+                            targetCreature.creatureSpriteContainer.playActionText("-" + attackResult.damage)
+                        }
+                    });
+                    if (targetCreature.health) {
+                        timeline.add({
+                            at: 200 * (path.length) + 500, //гомосятина
+                            run: () => {
+                                targetCreature.creatureSpriteContainer.setDefaultState()
+                            }
+                        });
+                    } else {
+                        timeline.add({
+                            at: 200 * (path.length) + 500, //гомосятина
+                            run: () => {
+                                targetCreature.creatureSpriteContainer.setState('death_' + attackDirection)
+                                targetCreature.creatureSpriteContainer.updateVisual()
+                            }
+                        });
+                        timeline.add({
+                            at: 200 * (path.length + 1) + 1000, //гомосятина
+                            run: () => {
+                                targetCreature.creatureSpriteContainer.destroy()
+                            }
+                        });
                     }
-                });
+                } else {
+                    timeline.add({
+                        at: 200 * (path.length), //гомосятина
+                        run: () => {
+                            targetCreature.creatureSpriteContainer.playActionText("Промах...")
+                        }
+                    });
+                }
 
                 break
             default:
@@ -339,7 +347,7 @@ export class Battle extends Scene {
             let direction = path[i - 1][1] < y ? 'walk_right' : 'walk_left'
             timeline.add({
                 at: i * segmentDuration,
-                run: () => activeCreature.creatureSprite.setState(direction)
+                run: () => activeCreature.creatureSpriteContainer.setState(direction)
             });
             timeline.add({
                 at: i * segmentDuration,
