@@ -1,14 +1,11 @@
-import { Scene } from 'phaser';
+import {Scene} from 'phaser';
 
-export class Preloader extends Scene
-{
-    constructor ()
-    {
+export class Preloader extends Scene {
+    constructor() {
         super('Preloader');
     }
 
-    init ()
-    {
+    init() {
         //  We loaded this image in our Boot Scene, so we can display it here
         this.add.image(512, 384, 'background');
 
@@ -16,7 +13,7 @@ export class Preloader extends Scene
         this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
 
         //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
-        const bar = this.add.rectangle(512-230, 384, 4, 28, 0xffffff);
+        const bar = this.add.rectangle(512 - 230, 384, 4, 28, 0xffffff);
 
         //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
         this.load.on('progress', (progress) => {
@@ -27,8 +24,7 @@ export class Preloader extends Scene
         });
     }
 
-    preload ()
-    {
+    preload() {
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
 
@@ -37,20 +33,31 @@ export class Preloader extends Scene
         this.load.image('star', 'star.png');
         this.load.image('bomb', 'bomb.png');
         this.load.image('ground', 'platform.png');
-        this.load.spritesheet('dude', 'dude.png', { frameWidth: 32, frameHeight: 48 });
-        
+        // this.load.spritesheet('dude', 'dude.png', {frameWidth: 32, frameHeight: 48});
+
         // Battle backgrounds
-        // this.load.image('battle-background-1-back_decor', 'battle/backgrounds/game_background_1/layers/back_decor.png');
         this.load.image('battle-background-1-back_land', 'battle/backgrounds/game_background_1/layers/back_land.png');
         this.load.image('battle-background-1-battleground', 'battle/backgrounds/game_background_1/layers/battleground.png');
-        // this.load.image('hexagon', 'battle/hexagon/hexagon2.png');
-        this.load.spritesheet('hexagon', 'battle/hexagon/hexagon3.png', { frameWidth: 95, frameHeight: 110 });
-        // this.load.image('battle-background-1-front_decor', 'battle/backgrounds/game_background_1/layers/front_decor.png');
-        // this.load.image('battle-background-1-ground_decor', 'battle/backgrounds/game_background_1/layers/ground_decor.png');
+        this.load.spritesheet('hexagon', 'battle/hexagon/hexagon3.png', {frameWidth: 95, frameHeight: 110});
+
+        // Pink_Monster
+        this.load.spritesheet('Pink_Monster_walk', 'battle/creatures/Pink_Monster/walk.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('Pink_Monster_attack1', 'battle/creatures/Pink_Monster/attack1.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('Pink_Monster_hurt', 'battle/creatures/Pink_Monster/hurt.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.image('Pink_Monster_stand', 'battle/creatures/Pink_Monster/stand.png');
+        // Owlet_Monster
+        this.load.spritesheet('Owlet_Monster_walk', 'battle/creatures/Owlet_Monster/walk.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('Owlet_Monster_attack1', 'battle/creatures/Owlet_Monster/attack1.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('Owlet_Monster_hurt', 'battle/creatures/Owlet_Monster/hurt.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.image('Owlet_Monster_stand', 'battle/creatures/Owlet_Monster/stand.png');
+        // Dude_Monster
+        this.load.spritesheet('Dude_Monster_walk', 'battle/creatures/Dude_Monster/walk.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('Dude_Monster_attack1', 'battle/creatures/Dude_Monster/attack1.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('Dude_Monster_hurt', 'battle/creatures/Dude_Monster/hurt.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.image('Dude_Monster_stand', 'battle/creatures/Dude_Monster/stand.png');
     }
 
-    create ()
-    {
+    create() {
         //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
         //  For example, you can define global animations here, so we can use them in other scenes.
 

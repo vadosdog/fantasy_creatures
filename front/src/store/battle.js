@@ -16,9 +16,9 @@ export const useBattleStore = defineStore('battle', {
         queue: [
             {
                 name: 'One',
-                sprite: 'dude',
+                texture: 'Pink_Monster',
                 health: 100,
-                mahHealth: 100,
+                maxHealth: 100,
                 position: [1, 2],
                 direction: 'right',
                 speed: 4,
@@ -30,9 +30,9 @@ export const useBattleStore = defineStore('battle', {
             },
             {
                 name: 'Two',
-                sprite: 'dude',
+                texture: 'Dude_Monster',
                 health: 100,
-                mahHealth: 100,
+                maxHealth: 100,
                 position: [1, 6],
                 direction: 'right',
                 speed: 4,
@@ -44,18 +44,18 @@ export const useBattleStore = defineStore('battle', {
             },
             {
                 name: 'Three',
-                sprite: 'dude',
+                texture: 'Owlet_Monster',
                 health: 100,
-                mahHealth: 100,
+                maxHealth: 100,
                 position: [1, 5],
                 direction: 'left',
                 speed: 4,
             },
             {
                 name: 'Four',
-                sprite: 'dude',
+                texture: 'Dude_Monster',
                 health: 100,
-                mahHealth: 100,
+                maxHealth: 100,
                 position: [4, 28],
                 direction: 'left',
                 speed: 4,
@@ -84,14 +84,38 @@ export const useBattleStore = defineStore('battle', {
                 this.availableActions.push(
                     {
                         action: 'move',
-                        targets: this.getMoveablePositions(this.activeCreature),
+                        targets: moveable,
+                    })
+            }
+
+            const attackAble = []
+            this.creatures.forEach(creature => {
+                if (creature.direction === this.activeCreature.direction) {
+                    return
+                }
+
+                let pathLength = this.findPath(this.activeCreature.position, creature.position).length
+                if (pathLength === 0) {
+                    return;
+                }
+                if ((pathLength - 1) > this.activeCreature.speed) {
+                    return
+                }
+
+                attackAble.push(creature.position)
+            })
+            if (attackAble.length) {
+                this.availableActions.push(
+                    {
+                        action: 'attack',
+                        targets: attackAble,
                     })
             }
 
             // переделать на что-то другое
-            if (this.activeCreature.direction === 'right') {
-                this.setGameState(GAME_STATE_PLAYER_TURN)
-            }
+            // if (this.activeCreature.direction === 'right') {
+            //     this.setGameState(GAME_STATE_PLAYER_TURN)
+            // }
         },
         setGameState(gameState) {
             this.gameState = gameState
@@ -154,10 +178,57 @@ export const useBattleStore = defineStore('battle', {
                 position[1] % 2 ? [1, -1] : [0, -1], //лево вниз
             ]
         },
+        findPath(start, end) {
+            // Плохо что есть две разные точки поиска пути, надобы объеденить
+            
+            if (!start || !end) {
+                return []
+            }
+
+            // Очередь для BFS: элементы вида [x, y, path]
+            const queue = [];
+            queue.push([start[0], start[1], []]);
+
+            const visited = new Set();
+
+            while (queue.length > 0) {
+                const [x, y, path] = queue.shift();
+                const key = `${x},${y}`;
+                if (visited.has(key)) continue;
+                visited.add(key);
+
+                const newPath = path.concat([[x, y]]);
+
+                if (x === end[0] && y === end[1]) {
+                    return newPath;
+                }
+
+                const directions = this.getDirections([x, y]);
+                for (const [dx, dy] of directions) {
+                    const newX = x + dx;
+                    const newY = y + dy;
+                    const newKey = `${newX},${newY}`;
+
+                    if (
+                        newX >= 0 &&
+                        newY >= 0 &&
+                        this.battleMap.has(`${newX},${newY}`) &&
+                        !visited.has(newKey)
+                    ) {
+                        queue.push([newX, newY, newPath]);
+                    }
+                }
+            }
+
+            return []
+        },
         playerActionMoveTo(path) {
             this.battleMap.removeContent(...this.activeCreature.position)
             this.activeCreature.position = path[path.length - 1]
             this.battleMap.setContent(...path[path.length - 1], this.activeCreature)
+        },
+        getCreatureByCoords(position) {
+            return this.battleMap.get(position.join(',')).content
         }
     },
 });

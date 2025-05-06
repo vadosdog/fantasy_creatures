@@ -1,6 +1,7 @@
 import {EventBus} from '../EventBus';
 import {Scene} from 'phaser';
 import Hexagon, {
+    GAME_STATE_ATTACKABLE,
     GAME_STATE_MOVABLE, GAME_STATE_NORMAL,
     GAME_STATE_SELECTED,
     HEXAGON_ANIM_GREEN, HEXAGON_ANIM_GREY,
@@ -11,10 +12,10 @@ import Hexagon, {
     HEXAGON_ANIM_RED,
     HEXAGON_ANIM_YELLOW
 } from "../sprites/battle/Hexagon.js";
-import {GAME_STATE_PLAYER_TURN} from "../../store/battle.js";
+import Monster1 from "../sprites/creatures/monster1.js";
 
 export class Battle extends Scene {
-    showGridIndexes = true
+    showGridIndexes = false
     hexagonGroup;
     store
     hexagonsArray;
@@ -69,32 +70,6 @@ export class Battle extends Scene {
         this.anims.create({
             key: HEXAGON_ANIM_GREY,
             frames: [{key: 'hexagon', frame: 7}],
-        });
-
-        this.anims.create({
-            key: 'turn',
-            frames: [{key: 'dude', frame: 4}],
-        });
-        this.anims.create({
-            key: 'moveLeft',
-            frames: this.anims.generateFrameNumbers('dude', {start: 0, end: 3}),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'turnLeft',
-            frames: [{key: 'dude', frame: 0}],
-        });
-
-        this.anims.create({
-            key: 'moveRight',
-            frames: this.anims.generateFrameNumbers('dude', {start: 5, end: 8}),
-            frameRate: 10,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'turnRight',
-            frames: [{key: 'dude', frame: 5}],
         });
     }
 
@@ -167,7 +142,6 @@ export class Battle extends Scene {
                 this.handleHexagonClick([posX, posY], hexagon, ...args)
             });
 
-            // hexagon.anims.play(HEXAGON_ANIM_YELLOW)
             let scaleX = hexagonWidth / (hexagon.width)
             let scaleY = hexagonHeight / (hexagon.height)
             hexagon.setScale(scaleX, scaleY).setScrollFactor(0)
@@ -180,29 +154,49 @@ export class Battle extends Scene {
             }
 
         })
+
         this.store.battleMap.forEach((cell) => {
             if (cell.content) {
                 // в перспективе могут быть другие препятствия
                 let creature = cell.content
                 let hexagon = this.hexagonsArray.get(creature.position.join(','))
-                let creatureSprite = this.add.sprite(
+
+                let creatureContainer = this.add.container(
                     hexagon.x,
-                    hexagon.y - 30,
-                    creature.sprite
-                );
+                    hexagon.y,
+                )
+
+                // let creatureSprite = this.add.sprite(
+                //     0,
+                //     -30,
+                //     creature.texture
+                // );
+                let creatureSprite = new Monster1(creature.texture, this, 0, -20)
+                creatureSprite.createAnimations()
                 if (creature.direction === 'left') {
-                    creature.defaultDirection = 'turnLeft'
+                    creature.defaultDirection = 'stand_left'
                 } else {
-                    creature.defaultDirection = 'turnRight'
+                    creature.defaultDirection = 'stand_right'
                 }
-                creatureSprite.anims.play(creature.defaultDirection)
+                creatureSprite.setState(creature.defaultDirection)
                 creatureSprite.setScale(1.7, 1.7)
                 creature.creatureSprite = creatureSprite
-                // scaleX = this.cameras.main.width / battleground.width
-                // scaleY = this.cameras.main.height / battleground.height
-                // scale = Math.max(scaleX, scaleY)
-                // battleground.setScale(scale).setScrollFactor(0)
+                creatureContainer.add(creatureSprite)
 
+                let creatureText = this.add.text(
+                    0,
+                    12,
+                    creature.name + "\n" + creature.health + "/" + creature.maxHealth,
+                    {
+                        fontFamily: "arial",
+                        fontSize: "11px",
+                        align: "center"
+                    }
+                )
+                creatureText.x = creatureText.x - (creatureText.width / 2)
+                creatureContainer.add(creatureText)
+
+                creature.creatureSpriteContainer = creatureContainer
                 this.store.creatures.add(creature)
             }
         })
@@ -223,14 +217,20 @@ export class Battle extends Scene {
                         let hexagonSprite = this.hexagonsArray.get(`${x},${y}`)
                         hexagonSprite.setGameState(GAME_STATE_MOVABLE)
                     })
+                    break;
+                case 'attack':
+                    targets.forEach(([x, y]) => {
+                        let hexagonSprite = this.hexagonsArray.get(`${x},${y}`)
+                        hexagonSprite.setGameState(GAME_STATE_ATTACKABLE)
+                    })
             }
         })
     }
 
     handleHexagonClick(position, hexagonSprite, args) {
-        if (this.store.gameState !== GAME_STATE_PLAYER_TURN) {
-            return
-        }
+        // if (this.store.gameState !== GAME_STATE_PLAYER_TURN) {
+        //     return
+        // }
 
         const targets = new Map
         this.store.availableActions.forEach(({targets: actionTargets, action}) => {
@@ -244,34 +244,91 @@ export class Battle extends Scene {
         }
 
         const action = targets.get(position.join(','))
-        let timeline
+        const timeline = this.add.timeline({});
+        let path
         switch (action) {
             case 'move':
                 // Получаем путь от текущей позиции персонажа до выбранной клетки
-                const path = this.findPath(this.store.activeCreature.position, position);
+                path = this.findPath(this.store.activeCreature.position, position);
                 if (!path || path.length === 0) return;
 
                 this.store.playerActionMoveTo(path)
-                timeline = this.moveCreatureAlongPath(this.store.activeCreature, path)
+                this.moveCreatureAlongPath(timeline, this.store.activeCreature, path)
+                
+                // надо бы в одном место выделить
+                timeline.add({
+                    at: 200 * (path.length), //гомосятина
+                    run: () => {
+                        this.store.activeCreature.creatureSprite.setState(this.store.activeCreature.defaultDirection)
+                    }
+                });
+                break
+            case 'attack':
+                const targetCreature = this.store.getCreatureByCoords(position)
+                if (!targetCreature) {
+                    return
+                }
+                // Получаем путь от текущей позиции персонажа до выбранной клетки
+                path = this.findPath(this.store.activeCreature.position, position);
+                if (!path || path.length === 0) return;
+                path = path.slice(0, path.length - 1)
+
+                if (path.length > 1) {
+                    this.store.playerActionMoveTo(path)
+                    this.moveCreatureAlongPath(timeline, this.store.activeCreature, path)
+                }
+
+                timeline.add({
+                    at: 200 * (path.length), //гомосятина
+                    run: () => {
+                        let attackDirection = this.store.activeCreature.position[1] < position[1] 
+                            ? 'attack_right'
+                            : 'attack_left'
+                        this.store.activeCreature.creatureSprite.setState(attackDirection)
+                    }
+                });
+                timeline.add({
+                    at: 200 * (path.length), //гомосятина
+                    run: () => {
+                        let attackDirection = this.store.activeCreature.position[1] < position[1] 
+                            ? 'hurt_left'
+                            : 'hurt_right'
+                        targetCreature.creatureSprite.setState(attackDirection)
+                    }
+                });
+                
+                // надо бы в одном место выделить
+                timeline.add({
+                    at: 200 * (path.length) + 500, //гомосятина
+                    run: () => {
+                        this.store.activeCreature.creatureSprite.setState(this.store.activeCreature.defaultDirection)
+                    }
+                });
+                timeline.add({
+                    at: 200 * (path.length) + 500, //гомосятина
+                    run: () => {
+                        targetCreature.creatureSprite.setState(this.store.activeCreature.defaultDirection)
+                    }
+                });
+
                 break
             default:
                 // неизвестное действие
                 return
         }
 
+
         timeline.on('complete', () => {
             this.store.endOfRound();
             this.handleStep()
         })
+        timeline.play()
     }
 
-    moveCreatureAlongPath(activeCreature, path) {
+    moveCreatureAlongPath(timeline, activeCreature, path) {
         if (path.length < 2) return;
 
-        const totalDuration = 2000; // 2 секунды на весь путь
         const segmentDuration = 200;
-
-        const timeline = this.add.timeline({});
 
         for (let i = 1; i < path.length; i++) {
             const [x, y] = path[i];
@@ -279,23 +336,17 @@ export class Battle extends Scene {
             const cellSprite = this.hexagonsArray.get(`${x},${y}`);
             if (!cellSprite) continue;
 
-            // if (path[i - 1][1] < y) {
-            //     activeCreature.creatureSprite.anims.play('moveLeft', true);
-            // } else {
-            //     activeCreature.creatureSprite.anims.play('moveRight', true);
-            // }
-
-            let direction = path[i - 1][1] < y ? 'moveRight' : 'moveLeft'
+            let direction = path[i - 1][1] < y ? 'walk_right' : 'walk_left'
             timeline.add({
                 at: i * segmentDuration,
-                run: () => activeCreature.creatureSprite.anims.play(direction, true)
+                run: () => activeCreature.creatureSprite.setState(direction)
             });
             timeline.add({
                 at: i * segmentDuration,
                 tween: {
-                    targets: activeCreature.creatureSprite,
+                    targets: activeCreature.creatureSpriteContainer,
                     x: cellSprite.x,
-                    y: cellSprite.y - 30,
+                    y: cellSprite.y,
                     duration: segmentDuration,
                     ease: 'Linear'
                 }
@@ -307,11 +358,8 @@ export class Battle extends Scene {
                 const lastPos = path[path.length - 1];
                 activeCreature.position[0] = lastPos[0];
                 activeCreature.position[1] = lastPos[1];
-                activeCreature.creatureSprite.anims.play(activeCreature.defaultDirection, true)
             }
         })
-
-        timeline.play();
 
         return timeline
     }
@@ -369,6 +417,8 @@ export class Battle extends Scene {
     }
 
     findPath(start, end) {
+        // Плохо что есть две разные точки поиска пути, надобы объеденить
+
         if (!start || !end) {
             throw new Error("Start or end point not found.");
         }
@@ -378,9 +428,19 @@ export class Battle extends Scene {
         queue.push([start[0], start[1], []]);
 
         const visited = new Set();
-        let obstacles = new Set(this.store.queue.map(item => {
-            return item.position.join(',')
-        }))
+        let obstacles = new Set()
+
+        this.store.queue.forEach(item => {
+            let obstaclePosition = item.position.join(',')
+            // исключаем стартовые и конченые точки, тк они обязательно должны быть проходимые
+            if (
+                obstaclePosition === start.join(',')
+                || obstaclePosition === end.join(',')
+            ) {
+                return
+            }
+            obstacles.add(obstaclePosition)
+        })
 
         while (queue.length > 0) {
             const [x, y, path] = queue.shift();
