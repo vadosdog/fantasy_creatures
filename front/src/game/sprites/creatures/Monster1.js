@@ -48,6 +48,15 @@ export default class Monster1 extends Phaser.GameObjects.Sprite {
                 repeat: -1
             });
         }
+
+        if (!this.scene.anims.exists(this.texturePrefix + '_idle_right')) {
+            this.scene.anims.create({
+                key: this.texturePrefix + '_idle_right',
+                frames: this.scene.anims.generateFrameNumbers(this.texturePrefix + '_idle', {start: 0, end: 3}),
+                frameRate: 10,
+                repeat: -1
+            });
+        }
     }
 
     setDefaultState() {
@@ -100,6 +109,16 @@ export default class Monster1 extends Phaser.GameObjects.Sprite {
                 this.setFlipX(true);
                 this.stop();
                 this.setTexture(this.texturePrefix + '_stand');
+                break;
+            case 'idle_right':
+                this.setFlipX(false);
+                this.stop();
+                this.play(this.texturePrefix + '_idle_right');
+                break;
+            case 'idle_left':
+                this.setFlipX(true);
+                this.stop();
+                this.play(this.texturePrefix + '_idle_right');
                 break;
         }
     }

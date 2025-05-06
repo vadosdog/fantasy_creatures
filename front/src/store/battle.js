@@ -126,7 +126,6 @@ export const useBattleStore = defineStore('battle', {
             this.battleMap = BattleMap.create(this.gridSizeX, this.gridSizeY, contents)
         },
         nextRound() {
-            console.log('nextround', this.round % this.queue.length)
             this.activeCreature = this.queue[this.round % this.queue.length]
 
             this.availableActions = []

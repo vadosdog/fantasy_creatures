@@ -185,6 +185,7 @@ export class Battle extends Scene {
         let activeHexagonSprite = this.hexagonsArray.get(`${activeCreature.position[0]},${activeCreature.position[1]}`)
         
         activeHexagonSprite.setGameState(GAME_STATE_SELECTED)
+        activeCreature.creatureSpriteContainer.setState('idle_' + activeCreature.direction)
         availableActions.forEach(({action, targets}) => {
             switch (action) {
                 case 'move':

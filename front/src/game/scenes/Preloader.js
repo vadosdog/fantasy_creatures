@@ -45,18 +45,21 @@ export class Preloader extends Scene {
         this.load.spritesheet('Pink_Monster_attack1', 'battle/creatures/Pink_Monster/attack1.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('Pink_Monster_hurt', 'battle/creatures/Pink_Monster/hurt.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('Pink_Monster_death', 'battle/creatures/Pink_Monster/death.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('Pink_Monster_idle', 'battle/creatures/Pink_Monster/idle.png', { frameWidth: 32, frameHeight: 32 });
         this.load.image('Pink_Monster_stand', 'battle/creatures/Pink_Monster/stand.png');
         // Owlet_Monster
         this.load.spritesheet('Owlet_Monster_walk', 'battle/creatures/Owlet_Monster/walk.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('Owlet_Monster_attack1', 'battle/creatures/Owlet_Monster/attack1.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('Owlet_Monster_hurt', 'battle/creatures/Owlet_Monster/hurt.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('Owlet_Monster_death', 'battle/creatures/Owlet_Monster/death.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('Owlet_Monster_idle', 'battle/creatures/Owlet_Monster/idle.png', { frameWidth: 32, frameHeight: 32 });
         this.load.image('Owlet_Monster_stand', 'battle/creatures/Owlet_Monster/stand.png');
         // Dude_Monster
         this.load.spritesheet('Dude_Monster_walk', 'battle/creatures/Dude_Monster/walk.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('Dude_Monster_attack1', 'battle/creatures/Dude_Monster/attack1.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('Dude_Monster_hurt', 'battle/creatures/Dude_Monster/hurt.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('Dude_Monster_death', 'battle/creatures/Dude_Monster/death.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('Dude_Monster_idle', 'battle/creatures/Dude_Monster/idle.png', { frameWidth: 32, frameHeight: 32 });
         this.load.image('Dude_Monster_stand', 'battle/creatures/Dude_Monster/stand.png');
     }
 
