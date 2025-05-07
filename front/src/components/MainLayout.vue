@@ -14,16 +14,6 @@ const changeScene = (newScene) => {
     }
 
     store.scene.start(newScene);
-    // const scene = toRaw(phaserRef.value.scene);
-    //
-    // if (scene) {
-    //     if (newScene) {
-    //     } else {
-    //          Call the changeScene method defined in the `MainMenu`, `Game` and `BattleOver` Scenes
-            // scene.changeScene();
-        // }
-    // }
-
 }
 </script>
 

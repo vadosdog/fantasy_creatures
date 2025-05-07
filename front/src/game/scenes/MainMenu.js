@@ -143,16 +143,6 @@ export class MainMenu extends Scene {
         this.scene.start('BattleOver');
     }
 
-
-    changeScene() {
-        if (this.logoTween) {
-            this.logoTween.stop();
-            this.logoTween = null;
-        }
-
-        this.scene.start('Game');
-    }
-
     moveLogo(vueCallback) {
         if (this.logoTween) {
             if (this.logoTween.isPlaying()) {

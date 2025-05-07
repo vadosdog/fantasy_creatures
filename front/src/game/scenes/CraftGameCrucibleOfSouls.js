@@ -24,9 +24,4 @@ export class CraftGameCrucibleOfSouls extends Scene
         }).setOrigin(0.5).setDepth(100);
 
     }
-
-    changeScene ()
-    {
-        this.scene.start('BattleOver');
-    }
 }

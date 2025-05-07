@@ -511,9 +511,4 @@ export class Battle extends Scene {
     update(time, delta) {
     }
 
-
-    changeScene() {
-        this.scene.start('Game');
-    }
-
 }
