@@ -18,7 +18,7 @@ import {
     BATTLE_STATE_BATTLE_OVER_LOSE,
     BATTLE_STATE_BATTLE_OVER_WIN,
     BATTLE_STATE_PLAYER_TURN,
-    BATTLE_STATE_WAITING
+    BATTLE_STATE_WAITING, useBattleStore
 } from "../../store/battle.js";
 
 export class Battle extends Scene {
@@ -27,9 +27,9 @@ export class Battle extends Scene {
     store
     hexagonsArray;
 
-    constructor(store) {
+    constructor() {
         super('Battle');
-        this.store = store
+        this.store = useBattleStore()
         this.hexagonsArray = new Map()
     }
 

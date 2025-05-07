@@ -1,13 +1,14 @@
 import {Boot} from './scenes/Boot';
 import {Game} from './scenes/Game';
-import {GameOver} from './scenes/GameOver';
+import {BattleOver} from './scenes/BattleOver.js';
 import {MainMenu} from './scenes/MainMenu';
 import {Battle} from './scenes/Battle';
 import Phaser from 'phaser';
 import {Preloader} from './scenes/Preloader';
+import {CraftGameCrucibleOfSouls} from "./scenes/CraftGameCrucibleOfSouls";
 
 
-const StartGame = (parent, store) => {
+const StartGame = (parent) => {
     // Find out more information about the Game Config at:
     // https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
     const config = {
@@ -27,9 +28,10 @@ const StartGame = (parent, store) => {
             Boot,
             Preloader,
             MainMenu,
+            CraftGameCrucibleOfSouls,
             Game,
-            GameOver,
-            new Battle(store),
+            BattleOver,
+            Battle,
         ]
     }
     return new Phaser.Game({...config, parent});
