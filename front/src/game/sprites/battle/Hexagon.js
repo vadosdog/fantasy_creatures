@@ -1,9 +1,9 @@
-export const GAME_STATE_NORMAL = 'normal',
-    GAME_STATE_INACTIVE = 'inactive',
-    GAME_STATE_MOVABLE = 'movable',
-    GAME_STATE_ATTACKABLE = 'attackable',
-    GAME_STATE_TREATABLE = 'treat',
-    GAME_STATE_SELECTED = 'selected'
+export const HEX_STATE_NORMAL = 'normal',
+    HEX_STATE_INACTIVE = 'inactive',
+    HEX_STATE_MOVABLE = 'movable',
+    HEX_STATE_ATTACKABLE = 'attackable',
+    HEX_STATE_TREATABLE = 'treat',
+    HEX_STATE_SELECTED = 'selected'
 
 
 export const INTERACTION_STATE_NORMAL = 'normal',
@@ -21,7 +21,7 @@ export const HEXAGON_ANIM_NORMAL = 'hex-normal',
 
 export default class Hexagon extends Phaser.GameObjects.Sprite {
     // Состояния: inactive, selected, movable, attackable, treatable
-    gameState = GAME_STATE_NORMAL
+    hexState = HEX_STATE_NORMAL
     // Взаимодействие: normal, hovered, pressed
     interactionState = INTERACTION_STATE_NORMAL
 
@@ -39,9 +39,9 @@ export default class Hexagon extends Phaser.GameObjects.Sprite {
         this.on('pointerup', () => this.onHover());
     }
 
-    setGameState(state) {
-        if (this.gameState !== state) {
-            this.gameState = state;
+    setHexState(state) {
+        if (this.hexState !== state) {
+            this.hexState = state;
             this.updateVisual();
         }
     }
@@ -54,74 +54,69 @@ export default class Hexagon extends Phaser.GameObjects.Sprite {
     }
 
     updateVisual() {
-        //GAME_STATE_INACTIVE = 'inactive',
-        //     GAME_STATE_MOVABLE = 'movable',
-        //     GAME_STATE_ATTACKABLE = 'attackable',
-        //     GAME_STATE_TREATABLE = 'treat',
-        //     GAME_STATE_SELECTED
         this.setInteractive();
 
         if (this.interactionState === INTERACTION_STATE_NORMAL) {
-            switch (this.gameState) {
-                case GAME_STATE_INACTIVE:
+            switch (this.hexState) {
+                case HEX_STATE_INACTIVE:
                     this.anims.play(HEXAGON_ANIM_NORMAL)
                     this.disableInteractive();
                     break
-                case GAME_STATE_SELECTED:
+                case HEX_STATE_SELECTED:
                     this.anims.play(HEXAGON_ANIM_YELLOW)
                     this.disableInteractive();
                     break
-                case GAME_STATE_MOVABLE:
+                case HEX_STATE_MOVABLE:
                     this.anims.play(HEXAGON_ANIM_GREY)
                     break
-                case GAME_STATE_ATTACKABLE:
+                case HEX_STATE_ATTACKABLE:
                     this.anims.play(HEXAGON_ANIM_LIGHT_RED)
                     break
-                case GAME_STATE_TREATABLE:
+                case HEX_STATE_TREATABLE:
                     this.anims.play(HEXAGON_ANIM_NORMAL)
                     break
                 default:
                     this.anims.play(HEXAGON_ANIM_NORMAL)
             }
         } else if (this.interactionState === INTERACTION_STATE_HOVERED) {
-            switch (this.gameState) {
-                case GAME_STATE_INACTIVE:
+            switch (this.hexState) {
+                case HEX_STATE_INACTIVE:
                     this.anims.play(HEXAGON_ANIM_NORMAL)
                     this.disableInteractive();
                     break
-                case GAME_STATE_SELECTED:
+                case HEX_STATE_SELECTED:
                     this.anims.play(HEXAGON_ANIM_YELLOW)
                     this.disableInteractive();
                     break
-                case GAME_STATE_MOVABLE:
+                case HEX_STATE_MOVABLE:
                     this.anims.play(HEXAGON_ANIM_LIGHT_YELLOW)
                     break
-                case GAME_STATE_ATTACKABLE:
+                case HEX_STATE_ATTACKABLE:
                     this.anims.play(HEXAGON_ANIM_RED)
                     break
-                case GAME_STATE_TREATABLE:
+                case HEX_STATE_TREATABLE:
                     this.anims.play(HEXAGON_ANIM_LIGHT_GREEN)
                     break
                 default:
                     this.anims.play(HEXAGON_ANIM_NORMAL)
             }
         } else if (this.interactionState === INTERACTION_STATE_PRESSED) {
-            switch (this.gameState) {
-                case GAME_STATE_INACTIVE:
+            switch (this.hexState) {
+                case HEX_STATE_INACTIVE:
                     this.anims.play(HEXAGON_ANIM_NORMAL)
                     this.disableInteractive();
                     break
-                case GAME_STATE_SELECTED:
+                case HEX_STATE_SELECTED:
                     this.anims.play(HEXAGON_ANIM_YELLOW)
                     this.disableInteractive();
                     break
-                case GAME_STATE_MOVABLE:
+                case HEX_STATE_MOVABLE:
                     this.anims.play(HEXAGON_ANIM_YELLOW)
                     break
-                case GAME_STATE_ATTACKABLE:
+                case HEX_STATE_ATTACKABLE:
                     this.anims.play(HEXAGON_ANIM_YELLOW)
                     break
-                case GAME_STATE_TREATABLE:
+                case HEX_STATE_TREATABLE:
                     this.anims.play(HEXAGON_ANIM_GREEN)
                     break
                 default:

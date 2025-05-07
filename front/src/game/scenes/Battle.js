@@ -1,9 +1,9 @@
 import {EventBus} from '../EventBus';
 import {Scene} from 'phaser';
 import Hexagon, {
-    GAME_STATE_ATTACKABLE,
-    GAME_STATE_MOVABLE, GAME_STATE_NORMAL,
-    GAME_STATE_SELECTED,
+    HEX_STATE_ATTACKABLE,
+    HEX_STATE_MOVABLE, HEX_STATE_NORMAL,
+    HEX_STATE_SELECTED,
     HEXAGON_ANIM_GREEN, HEXAGON_ANIM_GREY,
     HEXAGON_ANIM_LIGHT_GREEN,
     HEXAGON_ANIM_LIGHT_RED,
@@ -14,7 +14,12 @@ import Hexagon, {
 } from "../sprites/battle/Hexagon.js";
 import Monster1 from "../sprites/creatures/Monster1.js";
 import MonsterContainer from "../sprites/creatures/MonsterContainer.js";
-import {GAME_STATE_PLAYER_TURN, GAME_STATE_WAITING} from "../../store/battle.js";
+import {
+    BATTLE_STATE_BATTLE_OVER_LOSE,
+    BATTLE_STATE_BATTLE_OVER_WIN,
+    BATTLE_STATE_PLAYER_TURN,
+    BATTLE_STATE_WAITING
+} from "../../store/battle.js";
 
 export class Battle extends Scene {
     showGridIndexes = false
@@ -165,9 +170,9 @@ export class Battle extends Scene {
 
                 let creatureContainer = new MonsterContainer(
                     creature,
-                    this, 
+                    this,
                     hexagon.x,
-                    hexagon.y, 
+                    hexagon.y,
                 )
 
                 creature.creatureSpriteContainer = creatureContainer
@@ -178,33 +183,41 @@ export class Battle extends Scene {
 
     handleStep() {
         this.hexagonsArray.forEach(hexagonSprite => {
-            hexagonSprite.setGameState(GAME_STATE_NORMAL)
+            hexagonSprite.setHexState(HEX_STATE_NORMAL)
         })
-        this.store.nextRound()
+        this.store.handleRound()
         let {activeCreature, availableActions} = this.store.getTurn()
         let activeHexagonSprite = this.hexagonsArray.get(`${activeCreature.position[0]},${activeCreature.position[1]}`)
-        
-        activeHexagonSprite.setGameState(GAME_STATE_SELECTED)
+
+        activeHexagonSprite.setHexState(HEX_STATE_SELECTED)
         activeCreature.creatureSpriteContainer.setState('idle_' + activeCreature.direction)
-        availableActions.forEach(({action, targets}) => {
-            switch (action) {
-                case 'move':
-                    targets.forEach(([x, y]) => {
-                        let hexagonSprite = this.hexagonsArray.get(`${x},${y}`)
-                        hexagonSprite.setGameState(GAME_STATE_MOVABLE)
-                    })
-                    break;
-                case 'attack':
-                    targets.forEach(([x, y]) => {
-                        let hexagonSprite = this.hexagonsArray.get(`${x},${y}`)
-                        hexagonSprite.setGameState(GAME_STATE_ATTACKABLE)
-                    })
+        if (this.store.battleState === BATTLE_STATE_PLAYER_TURN) {
+            availableActions.forEach(({action, targets}) => {
+                switch (action) {
+                    case 'move':
+                        targets.forEach(([x, y]) => {
+                            let hexagonSprite = this.hexagonsArray.get(`${x},${y}`)
+                            hexagonSprite.setHexState(HEX_STATE_MOVABLE)
+                        })
+                        break;
+                    case 'attack':
+                        targets.forEach(([x, y]) => {
+                            let hexagonSprite = this.hexagonsArray.get(`${x},${y}`)
+                            hexagonSprite.setHexState(HEX_STATE_ATTACKABLE)
+                        })
+                }
+            })
+        } else {
+            if (availableActions.length === 0) {
+                this.scene.start('BattleOver');
+                return
             }
-        })
+            this.handleAction(availableActions[0].action, availableActions[0].targets)
+        }
     }
 
     handleHexagonClick(position, hexagonSprite, args) {
-        if (this.store.gameState !== GAME_STATE_PLAYER_TURN) {
+        if (this.store.battleState !== BATTLE_STATE_PLAYER_TURN) {
             return
         }
 
@@ -218,10 +231,14 @@ export class Battle extends Scene {
         if (!targets.has(position.join(','))) {
             return
         }
-        
-        this.store.setGameState(GAME_STATE_WAITING)
 
         const action = targets.get(position.join(','))
+        this.handleAction(action, position)
+    }
+
+    handleAction(action, position) {
+        this.store.setBattleState(BATTLE_STATE_WAITING)
+
         const timeline = this.add.timeline({});
         let path
         switch (action) {
@@ -329,6 +346,13 @@ export class Battle extends Scene {
 
         timeline.on('complete', () => {
             this.store.endOfRound();
+            if (
+                this.store.state === BATTLE_STATE_BATTLE_OVER_WIN
+                || this.store.state === BATTLE_STATE_BATTLE_OVER_LOSE
+            ) {
+
+                return this.scene.start('BattleOver');
+            }
             this.handleStep()
         })
         timeline.play()

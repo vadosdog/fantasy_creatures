@@ -35,6 +35,9 @@ export class Preloader extends Scene {
         this.load.image('ground', 'platform.png');
         // this.load.spritesheet('dude', 'dude.png', {frameWidth: 32, frameHeight: 48});
 
+        /**
+         * BATTLE
+         */
         // Battle backgrounds
         this.load.image('battle-background-1-back_land', 'battle/backgrounds/game_background_1/layers/back_land.png');
         this.load.image('battle-background-1-battleground', 'battle/backgrounds/game_background_1/layers/battleground.png');
@@ -61,6 +64,19 @@ export class Preloader extends Scene {
         this.load.spritesheet('Dude_Monster_death', 'battle/creatures/Dude_Monster/death.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('Dude_Monster_idle', 'battle/creatures/Dude_Monster/idle.png', { frameWidth: 32, frameHeight: 32 });
         this.load.image('Dude_Monster_stand', 'battle/creatures/Dude_Monster/stand.png');
+
+        /**
+         * Craft Game Crucible Of Souls
+         */
+        this.load.image('forgeBackground', 'craftGames/crucibleOfSouls/background.jpg');
+        // this.load.image('crucible', 'assets/crucible.png');
+        // this.load.image('hammer', 'assets/hammer.png');
+        // this.load.image('shard', 'assets/shard.png');
+        // this.load.image('temperatureBar', 'assets/temperature_bar.png');
+        // this.load.image('temperatureIndicator', 'assets/temp_indicator.png');
+        // this.load.audio('hammerHit', 'assets/hammer_hit.wav');
+        // this.load.audio('success', 'assets/success.wav');
+        // this.load.audio('overheat', 'assets/overheat.wav');
     }
 
     create() {

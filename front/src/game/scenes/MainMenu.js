@@ -140,7 +140,7 @@ export class MainMenu extends Scene {
 
         player.anims.play('turn');
         
-        this.scene.start('GameOver');
+        this.scene.start('BattleOver');
     }
 
 

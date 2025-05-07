@@ -1,9 +1,11 @@
 import {defineStore} from 'pinia';
 import {BattleMap} from "../game/classes/BattleMap.js";
 
-export const GAME_STATE_PLAYER_TURN = 'PLAYER_TURN'
-export const GAME_STATE_ENGINE_TURN = 'ENGINE_TURN'
-export const GAME_STATE_WAITING = 'GAME_STATE_WAITING'
+export const BATTLE_STATE_PLAYER_TURN = 'PLAYER_TURN'
+export const BATTLE_STATE_ENGINE_TURN = 'ENGINE_TURN'
+export const BATTLE_STATE_WAITING = 'WAITING'
+export const BATTLE_STATE_BATTLE_OVER_WIN = 'BATTLE_OVER_WIN'
+export const BATTLE_STATE_BATTLE_OVER_LOSE = 'BATTLE_OVER_LOSE'
 
 export const useBattleStore = defineStore('battle', {
     state: () => ({
@@ -21,6 +23,7 @@ export const useBattleStore = defineStore('battle', {
                 maxHealth: 100,
                 position: [2, 13],
                 direction: 'right',
+                control: 'player',
                 speed: 4,
                 attacks: [
                     {
@@ -45,6 +48,7 @@ export const useBattleStore = defineStore('battle', {
                 maxHealth: 100,
                 position: [3, 13],
                 direction: 'right',
+                control: 'player',
                 speed: 4,
                 attacks: [
                     {
@@ -69,6 +73,7 @@ export const useBattleStore = defineStore('battle', {
                 maxHealth: 100,
                 position: [2, 19],
                 direction: 'left',
+                control: 'engine',
                 speed: 4,
                 attacks: [
                     {
@@ -93,6 +98,7 @@ export const useBattleStore = defineStore('battle', {
                 maxHealth: 100,
                 position: [3, 19],
                 direction: 'left',
+                control: 'engine',
                 speed: 4,
                 attacks: [
                     {
@@ -111,7 +117,7 @@ export const useBattleStore = defineStore('battle', {
                 ],
             },
         ],
-        gameState: GAME_STATE_WAITING,
+        battleState: BATTLE_STATE_WAITING,
         battleMap: undefined,
         activeCreature: undefined,
         availableActions: [],
@@ -125,17 +131,27 @@ export const useBattleStore = defineStore('battle', {
             })
             this.battleMap = BattleMap.create(this.gridSizeX, this.gridSizeY, contents)
         },
-        nextRound() {
+        handleRound() {
             this.activeCreature = this.queue[this.round % this.queue.length]
 
             this.availableActions = []
+
+            // переделать на что-то другое
+            if (this.activeCreature.control === 'player') {
+                this.handlePlayerTurn()
+                this.setBattleState(BATTLE_STATE_PLAYER_TURN)
+            } else {
+                this.handleEngineTurn()
+                this.setBattleState(BATTLE_STATE_ENGINE_TURN)
+            }
+        },
+        handlePlayerTurn() {
             const moveable = this.getMoveablePositions(this.activeCreature)
             if (moveable.length) {
-                this.availableActions.push(
-                    {
-                        action: 'move',
-                        targets: moveable,
-                    })
+                this.availableActions.push({
+                    action: 'move',
+                    targets: moveable,
+                })
             }
 
             const attackAble = []
@@ -143,7 +159,7 @@ export const useBattleStore = defineStore('battle', {
                 if (creature.direction === this.activeCreature.direction) {
                     return
                 }
-                
+
                 if (creature.health <= 0) {
                     return
                 }
@@ -159,23 +175,88 @@ export const useBattleStore = defineStore('battle', {
                 attackAble.push(creature.position)
             })
             if (attackAble.length) {
+                this.availableActions.push({
+                    action: 'attack',
+                    targets: attackAble,
+                })
+            }
+        },
+        handleEngineTurn() {
+            //Выбор всех активных врагов
+            let enemies = []
+            this.creatures.forEach(creature => {
+                if (creature.direction === this.activeCreature.direction
+                    || creature.health <= 0) {
+                    return false
+                }
+
+                enemies.push(creature)
+            });
+
+            // Если врагов не осталось, то ничего не приходится делать
+            if (enemies.length === 0) {
+                return
+            }
+
+            // Ищем ближайшего противника, если таких несколько, то того у кого меньше ХП
+            let path = this.findPath(this.activeCreature.position, enemies[0].position)
+            let target = enemies[0].position
+
+            for (let i = 0; i < enemies.length; i++) {
+                if (i === 0) continue
+                let newPath = this.findPath(this.activeCreature.position, enemies[i].position)
+                if (
+                    newPath.length < path.length
+                    || enemies[i].health < target.health
+                ) {
+                    path = newPath
+                    target = enemies[i].position
+                }
+            }
+
+            // Если можем дойти до цели, то атакуем ее
+            if ((path.length - 1) <= this.activeCreature.speed) {
                 this.availableActions.push(
                     {
                         action: 'attack',
-                        targets: attackAble,
+                        targets: target,
                     })
             }
-
-            // переделать на что-то другое
-            // if (this.activeCreature.direction === 'right') {
-                this.setGameState(GAME_STATE_PLAYER_TURN)
-            // }
+            // в противном случае идем к цели
+            else {
+                this.availableActions.push({
+                    action: 'move',
+                    targets: path[this.activeCreature.speed - 1],
+                })
+            }
         },
-        setGameState(gameState) {
-            this.gameState = gameState
+        setBattleState(battleState) {
+            this.battleState = battleState
         },
         endOfRound() {
+            this.checkBattleOver()
             this.round++
+        },
+        checkBattleOver() {
+            let sideA = 0
+            let sideB = 0
+            this.creatures.forEach(creature => {
+                if (creature.health <= 0) {
+                    return
+                }
+
+                if (creature.direction === 'right') {
+                    sideA++
+                } else {
+                    sideB++
+                }
+            })
+
+            if (sideA === 0) {
+                this.setBattleState(BATTLE_STATE_BATTLE_OVER_LOSE)
+            } else if (sideB === 0) {
+                this.setBattleState(BATTLE_STATE_BATTLE_OVER_WIN)
+            }
         },
         getTurn() {
             return {
@@ -311,9 +392,9 @@ export const useBattleStore = defineStore('battle', {
                 targetIndex = this.queue.findIndex(c => c === this.activeCreature)
                 this.round = targetIndex
             }
-            
+
             result.health = targetCreature.health
-            
+
             return result
         },
         playerActionMoveAndAttack(path, targetPosition) {
@@ -321,7 +402,7 @@ export const useBattleStore = defineStore('battle', {
             return this.playerActionAttack(targetPosition)
         },
         getCreatureByCoords(position) {
-            return this.battleMap.get(position.join(',')).content
+            return this.battleMap.get(position.join(','))?.content
         }
     },
 });

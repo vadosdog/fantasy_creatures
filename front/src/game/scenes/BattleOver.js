@@ -1,11 +1,11 @@
 import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
 
-export class GameOver extends Scene
+export class BattleOver extends Scene
 {
     constructor ()
     {
-        super('GameOver');
+        super('BattleOver');
     }
 
     create ()
@@ -14,7 +14,7 @@ export class GameOver extends Scene
 
         this.add.image(512, 384, 'background').setAlpha(0.5);
 
-        this.add.text(512, 384, 'Game Over', {
+        this.add.text(512, 384, 'Battle Over', {
             fontFamily: 'Arial Black', fontSize: 64, color: '#ffffff',
             stroke: '#000000', strokeThickness: 8,
             align: 'center'
