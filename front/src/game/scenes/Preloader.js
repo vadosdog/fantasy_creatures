@@ -68,12 +68,11 @@ export class Preloader extends Scene {
         /**
          * Craft Game Crucible Of Souls
          */
-        this.load.image('forgeBackground', 'craftGames/crucibleOfSouls/background.jpg');
-        // this.load.image('crucible', 'assets/crucible.png');
-        // this.load.image('hammer', 'assets/hammer.png');
-        // this.load.image('shard', 'assets/shard.png');
-        // this.load.image('temperatureBar', 'assets/temperature_bar.png');
-        // this.load.image('temperatureIndicator', 'assets/temp_indicator.png');
+        this.load.image('craft-game-crucible-of-souls-background', 'craftGames/crucibleOfSouls/background.jpg');
+        this.load.image('craft-game-crucible-of-souls-hammer', 'craftGames/crucibleOfSouls/hammer.png');
+        this.load.spritesheet('craft-game-crucible-of-souls-shard', 'craftGames/crucibleOfSouls/shard.png', { frameWidth: 72, frameHeight: 72 });
+        this.load.image('craft-game-crucible-of-souls-temperatureBar', 'assets/temperature_bar.png');
+        this.load.image('craft-game-crucible-of-souls-temperatureIndicator', 'assets/temp_indicator.png');
         // this.load.audio('hammerHit', 'assets/hammer_hit.wav');
         // this.load.audio('success', 'assets/success.wav');
         // this.load.audio('overheat', 'assets/overheat.wav');
