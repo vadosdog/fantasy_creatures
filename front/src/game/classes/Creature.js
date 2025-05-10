@@ -90,7 +90,7 @@ export class CreatureAction {
                     hitChance,
                     critChance,
                     effects,
-                    attackType,
+                    actionType,
                     range,
                 }) {
 
@@ -99,7 +99,7 @@ export class CreatureAction {
         this.baseDamage = baseDamage
         this.hitChance = hitChance
         this.critChance = critChance
-        this.attackType = attackType
+        this.actionType = actionType
         this.range = range
         this.effects = effects
     }

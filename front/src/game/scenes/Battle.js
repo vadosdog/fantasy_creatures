@@ -4,7 +4,7 @@ import Hexagon, {
     HEX_STATE_ATTACKABLE,
     HEX_STATE_MOVABLE,
     HEX_STATE_NORMAL,
-    HEX_STATE_SELECTED,
+    HEX_STATE_SELECTED, HEX_STATE_TREATABLE,
     HEXAGON_ANIM_GREEN,
     HEXAGON_ANIM_GREY,
     HEXAGON_ANIM_LIGHT_GREEN,
@@ -29,6 +29,7 @@ export class Battle extends Scene {
     store
     hexagonsArray;
     buttons = []
+    selectedAction
 
     constructor() {
         super('Battle');
@@ -194,22 +195,8 @@ export class Battle extends Scene {
         activeCreature.creatureSpriteContainer.setMonsterState('idle_' + activeCreature.direction)
         if (this.store.battleState === BATTLE_STATE_PLAYER_TURN) {
             this.showButtons()
-            
-            availableActions.forEach(({action, targets}) => {
-                switch (action) {
-                    case 'move':
-                        targets.forEach(([x, y]) => {
-                            let hexagonSprite = this.hexagonsArray.get(`${x},${y}`)
-                            hexagonSprite.setHexState(HEX_STATE_MOVABLE)
-                        })
-                        break;
-                    case 'attack':
-                        targets.forEach(([x, y]) => {
-                            let hexagonSprite = this.hexagonsArray.get(`${x},${y}`)
-                            hexagonSprite.setHexState(HEX_STATE_ATTACKABLE)
-                        })
-                }
-            })
+
+            this.markActionAvailableHexs(false)
         } else {
             if (availableActions.length === 0) {
                 this.scene.start('BattleOver');
@@ -219,14 +206,48 @@ export class Battle extends Scene {
         }
     }
 
+    markActionAvailableHexs(reset = true) {
+        if (reset) {
+            this.hexagonsArray.forEach(hexagonSprite => {
+                if (
+                    hexagonSprite.hexState === HEX_STATE_ATTACKABLE
+                    || hexagonSprite.hexState === HEX_STATE_TREATABLE
+                ) {
+                    hexagonSprite.setHexState(HEX_STATE_NORMAL)
+                }
+            })
+        }
+
+        this.store.availableActions.forEach(({action, actionObject, targets}) => {
+            if (action === 'move') {
+                targets.forEach(([x, y]) => {
+                    let hexagonSprite = this.hexagonsArray.get(`${x},${y}`)
+                    hexagonSprite.setHexState(HEX_STATE_MOVABLE)
+                })
+                return
+            }
+            if (this.selectedAction.action.name !== actionObject.name) {
+                return
+            }
+
+            targets.forEach(([x, y]) => {
+                let hexagonSprite = this.hexagonsArray.get(`${x},${y}`)
+                hexagonSprite.setHexState(action === 'attack' ? HEX_STATE_ATTACKABLE : HEX_STATE_TREATABLE)
+            })
+        })
+    }
+
     handleHexagonClick(position, hexagonSprite, args) {
         if (this.store.battleState !== BATTLE_STATE_PLAYER_TURN) {
             return
         }
 
         const targets = new Map
-        this.store.availableActions.forEach(({targets: actionTargets, action}) => {
-            actionTargets.forEach(target => {
+        this.store.availableActions.forEach((action) => {
+            if (action.action !== 'move' && this.selectedAction.action.name !== action.actionObject.name) {
+                return
+            }
+            action.targets.forEach(target => {
                 targets.set(target.join(','), action)
             })
         })
@@ -243,8 +264,8 @@ export class Battle extends Scene {
         this.store.setBattleState(BATTLE_STATE_WAITING)
 
         const timeline = this.add.timeline({});
-        let path
-        switch (action) {
+        let path = []
+        switch (action.action) {
             case 'move':
                 // Получаем путь от текущей позиции персонажа до выбранной клетки
                 path = this.findPath(this.store.activeCreature.position, position);
@@ -262,22 +283,30 @@ export class Battle extends Scene {
                 });
                 break
             case 'attack':
+                let attackResult
                 const targetCreature = this.store.getCreatureByCoords(position)
                 if (!targetCreature) {
                     return
                 }
-                // Получаем путь от текущей позиции персонажа до выбранной клетки
-                path = this.findPath(this.store.activeCreature.position, position);
-                if (!path || path.length === 0) return;
-                path = path.slice(0, path.length - 1)
 
-                let attackResult
-                if (path.length > 1) {
-                    attackResult = this.store.playerActionMoveAndAttack(path, position)
-                    this.moveCreatureAlongPath(timeline, this.store.activeCreature, path)
+                let timelineStart = 0
+                // для ближний атак, нужно еще перемещение
+                if (action.actionObject.actionType === 'melee') {
+                    // Получаем путь от текущей позиции персонажа до выбранной клетки
+                    path = this.findPath(this.store.activeCreature.position, position);
+                    if (!path || path.length === 0) return;
+                    path = path.slice(0, path.length - 1)
+
+                    if (path.length > 1) {
+                        attackResult = this.store.playerActionMoveAndAttack(path, position, action.actionObject)
+                        this.moveCreatureAlongPath(timeline, this.store.activeCreature, path)
+                    } else {
+                        attackResult = this.store.playerActionAttack(position, action.actionObject)
+                    }
                 } else {
-                    attackResult = this.store.playerActionAttack(position)
+                    attackResult = this.store.playerActionAttack(position, action.actionObject)
                 }
+
 
                 timeline.add({
                     at: 200 * (path.length), //гомосятина
@@ -297,14 +326,15 @@ export class Battle extends Scene {
                     }
                 });
 
-                let attackDirection = this.store.activeCreature.position[1] < position[1]
+
+                let defenseDirection = this.store.activeCreature.position[1] < position[1]
                     ? 'left'
                     : 'right'
                 if (attackResult.success) {
                     timeline.add({
                         at: 200 * (path.length), //гомосятина
                         run: () => {
-                            targetCreature.creatureSpriteContainer.setMonsterState('hurt_' + attackDirection)
+                            targetCreature.creatureSpriteContainer.setMonsterState('hurt_' + defenseDirection)
                             targetCreature.creatureSpriteContainer.updateVisual()
                             targetCreature.creatureSpriteContainer.playActionText("-" + attackResult.damage)
                         }
@@ -320,7 +350,7 @@ export class Battle extends Scene {
                         timeline.add({
                             at: 200 * (path.length) + 500, //гомосятина
                             run: () => {
-                                targetCreature.creatureSpriteContainer.setMonsterState('death_' + attackDirection)
+                                targetCreature.creatureSpriteContainer.setMonsterState('death_' + defenseDirection)
                                 targetCreature.creatureSpriteContainer.updateVisual()
                             }
                         });
@@ -474,7 +504,85 @@ export class Battle extends Scene {
     }
 
     showButtons() {
+
+        this.store.activeCreature.getActions().forEach((action, i) => {
+            // Создаем элементы кнопки
+            const buttonBg = this.add.rectangle(0, 0, 200, 150, 0x3e5a4d)
+                .setOrigin(0, 0)
+                .setInteractive();
+
+            const buttonTexts = [
+                this.add.text(20, 20, action.name, {fontFamily: "arial", fontSize: "14px"}).setOrigin(0, 0),
+                this.add.text(20, 40, 'Стихия: ' + action.element, {
+                    fontFamily: "arial",
+                    fontSize: "12px"
+                }).setOrigin(0, 0),
+                this.add.text(20, 60, 'Тип атаки: ' + action.actionType + (action.actionType === 'ranged' ? ' (' + action.range + ')' : ''), {
+                    fontFamily: "arial",
+                    fontSize: "12px"
+                }).setOrigin(0, 0),
+                this.add.text(20, 80, 'Шанс (крит): ' + action.hitChance + ' (' + action.critChance + ')', {
+                    fontFamily: "arial",
+                    fontSize: "12px"
+                }).setOrigin(0, 0),
+                this.add.text(20, 100, 'Базовый урон: ' + action.baseDamage, {
+                    fontFamily: "arial",
+                    fontSize: "12px"
+                }).setOrigin(0, 0)
+            ];
+
+            // Создаем контейнер для кнопки
+            const buttonContainer = this.add.container(20 + i * 250, 20, [buttonBg, ...buttonTexts]);
+
+            buttonContainer.action = action
+
+            // Делаем весь контейнер интерактивным
+            buttonContainer.setInteractive(new Phaser.Geom.Rectangle(0, 0, 200, 150), Phaser.Geom.Rectangle.Contains);
+
+            // Сохраняем ссылку на background для удобства
+            buttonContainer.buttonBg = buttonBg;
+            buttonContainer.isActive = false;
+
+            // Обработчики событий
+            buttonBg.on('pointerover', () => {
+                if (!buttonContainer.isActive) {
+                    buttonBg.setFillStyle(0x5a7a6d); // Цвет при наведении
+                }
+            });
+
+            buttonBg.on('pointerout', () => {
+                if (!buttonContainer.isActive) {
+                    buttonBg.setFillStyle(0x3e5a4d); // Исходный цвет
+                }
+            });
+
+            buttonBg.on('pointerdown', () => {
+                // Сбрасываем предыдущую активную кнопку
+                if (this.selectedAction) {
+                    this.selectedAction.buttonBg.setFillStyle(0x3e5a4d);
+                    this.selectedAction.isActive = false;
+                }
+
+                // Устанавливаем новую активную кнопку
+                this.selectedAction = buttonContainer;
+                buttonContainer.isActive = true;
+                buttonBg.setFillStyle(0x7a9a8d); // Цвет активной кнопки
+
+                this.markActionAvailableHexs()
+            });
+
+            // устанавливаем первой активность по умолчанию
+            if (i === 0) {
+                // Устанавливаем новую активную кнопку
+                this.selectedAction = buttonContainer;
+                buttonContainer.isActive = true;
+                buttonBg.setFillStyle(0x7a9a8d); // Цвет активной кнопки
+            }
+        });
+    }
+
+    hideButtons() {
+        this.buttons.forEach(button => button.destroy())
         this.buttons = []
-        console.log(this.store.activeCreature.getActions())
     }
 }

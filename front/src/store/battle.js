@@ -21,11 +21,11 @@ export const useBattleStore = defineStore('battle', {
                 name: 'Огонь/Танк',
                 texture: 'Pink_Monster',
                 element: 'fire',
-                position: [2, 12],
+                position: [1, 3],
                 direction: 'right',
                 control: 'player',
 
-                maxHealthStat: 600,
+                maxHealthStat: 300,
                 speedStat: 3,
                 attackStat: 40,
                 defenseStat: 60,
@@ -41,7 +41,7 @@ export const useBattleStore = defineStore('battle', {
                         baseDamage: 30,
                         hitChance: 0.85,
                         critChance: 0.05,
-                        attackType: 'melee', // Ближняя атака
+                        actionType: 'melee', // Ближняя атака
                         range: 1, // Дистанция 1 для ближней атаки
                         effects: [],
                     }),
@@ -51,7 +51,27 @@ export const useBattleStore = defineStore('battle', {
                         baseDamage: 25,
                         hitChance: 0.9,
                         critChance: 0.00,
-                        attackType: 'melee',
+                        actionType: 'melee',
+                        range: 1,
+                        effects: [],
+                    }),
+                    new CreatureAction({
+                        name: 'Раскалённый удар',
+                        element: 'fire',
+                        baseDamage: 30,
+                        hitChance: 0.85,
+                        critChance: 0.05,
+                        actionType: 'melee', // Ближняя атака
+                        range: 1, // Дистанция 1 для ближней атаки
+                        effects: [],
+                    }),
+                    new CreatureAction({
+                        name: 'Тяжёлая лапа',
+                        element: 'normal',
+                        baseDamage: 25,
+                        hitChance: 0.9,
+                        critChance: 0.00,
+                        actionType: 'melee',
                         range: 1,
                         effects: [],
                     }),
@@ -62,11 +82,11 @@ export const useBattleStore = defineStore('battle', {
                 name: 'ДД/Трава',
                 texture: 'Dude_Monster',
                 element: 'grass',
-                position: [3, 10],
+                position: [3, 3],
                 direction: 'right',
                 control: 'player',
 
-                maxHealthStat: 400,
+                maxHealthStat: 200,
                 speedStat: 5,
                 attackStat: 65,
                 defenseStat: 30,
@@ -82,7 +102,7 @@ export const useBattleStore = defineStore('battle', {
                         baseDamage: 40,
                         hitChance: 0.8,
                         critChance: 0.1,
-                        attackType: 'melee',
+                        actionType: 'melee',
                         range: 1,
                         effects: [],
                     }),
@@ -92,7 +112,27 @@ export const useBattleStore = defineStore('battle', {
                         baseDamage: 35,
                         hitChance: 0.95,
                         critChance: 0.05,
-                        attackType: 'ranged', // Дальняя атака
+                        actionType: 'ranged', // Дальняя атака
+                        range: 15, // Дистанция 3 клетки
+                        effects: [],
+                    }),
+                    new CreatureAction({
+                        name: 'Каменный клык',
+                        element: 'grass',
+                        baseDamage: 40,
+                        hitChance: 0.8,
+                        critChance: 0.1,
+                        actionType: 'melee',
+                        range: 1,
+                        effects: [],
+                    }),
+                    new CreatureAction({
+                        name: 'Быстрый бросок',
+                        element: 'normal',
+                        baseDamage: 35,
+                        hitChance: 0.95,
+                        critChance: 0.05,
+                        actionType: 'ranged', // Дальняя атака
                         range: 15, // Дистанция 3 клетки
                         effects: [],
                     }),
@@ -103,11 +143,11 @@ export const useBattleStore = defineStore('battle', {
                 name: 'Вода/Танк',
                 texture: 'Owlet_Monster',
                 element: 'water',
-                position: [2, 18],
+                position: [1, 28],
                 direction: 'left',
                 control: 'player',
 
-                maxHealthStat: 550,
+                maxHealthStat: 250,
                 speedStat: 4,
                 attackStat: 35,
                 defenseStat: 55,
@@ -123,7 +163,7 @@ export const useBattleStore = defineStore('battle', {
                         baseDamage: 28,
                         hitChance: 0.88,
                         critChance: 0.07,
-                        attackType: 'ranged',
+                        actionType: 'ranged',
                         range: 10, // Средняя дистанция
                         effects: [],
                     }),
@@ -133,7 +173,27 @@ export const useBattleStore = defineStore('battle', {
                         baseDamage: 22,
                         hitChance: 0.93,
                         critChance: 0.03,
-                        attackType: 'melee',
+                        actionType: 'melee',
+                        range: 1,
+                        effects: [],
+                    }),
+                    new CreatureAction({
+                        name: 'Водяной клинок',
+                        element: 'water',
+                        baseDamage: 28,
+                        hitChance: 0.88,
+                        critChance: 0.07,
+                        actionType: 'ranged',
+                        range: 10, // Средняя дистанция
+                        effects: [],
+                    }),
+                    new CreatureAction({
+                        name: 'Клюющий удар',
+                        element: 'normal',
+                        baseDamage: 22,
+                        hitChance: 0.93,
+                        critChance: 0.03,
+                        actionType: 'melee',
                         range: 1,
                         effects: [],
                     }),
@@ -144,11 +204,11 @@ export const useBattleStore = defineStore('battle', {
                 name: 'Огонь / ДД',
                 texture: 'Dude_Monster',
                 element: 'fire',
-                position: [3, 20],
+                position: [3, 28],
                 direction: 'left',
                 control: 'player',
 
-                maxHealthStat: 375,
+                maxHealthStat: 175,
                 speedStat: 6,
                 attackStat: 70,
                 defenseStat: 25,
@@ -164,7 +224,7 @@ export const useBattleStore = defineStore('battle', {
                         baseDamage: 45,
                         hitChance: 0.75,
                         critChance: 0.15,
-                        attackType: 'ranged',
+                        actionType: 'ranged',
                         range: 30, // Дальняя дистанция
                         effects: [],
                     }),
@@ -174,7 +234,27 @@ export const useBattleStore = defineStore('battle', {
                         baseDamage: 38,
                         hitChance: 0.85,
                         critChance: 0.1,
-                        attackType: 'melee',
+                        actionType: 'melee',
+                        range: 1,
+                        effects: [],
+                    }),
+                    new CreatureAction({
+                        name: 'Огненное пике',
+                        element: 'fire',
+                        baseDamage: 45,
+                        hitChance: 0.75,
+                        critChance: 0.15,
+                        actionType: 'ranged',
+                        range: 30, // Дальняя дистанция
+                        effects: [],
+                    }),
+                    new CreatureAction({
+                        name: 'Быстрый коготь',
+                        element: 'normal',
+                        baseDamage: 38,
+                        hitChance: 0.85,
+                        critChance: 0.1,
+                        actionType: 'melee',
                         range: 1,
                         effects: [],
                     }),
@@ -210,7 +290,8 @@ export const useBattleStore = defineStore('battle', {
             }
         },
         handlePlayerTurn() {
-            const moveable = this.getMoveablePositions(this.activeCreature)
+            const activeCreature = this.activeCreature
+            const moveable = this.getMoveablePositions(activeCreature)
             if (moveable.length) {
                 this.availableActions.push({
                     action: 'move',
@@ -218,32 +299,42 @@ export const useBattleStore = defineStore('battle', {
                 })
             }
 
-            const attackAble = []
-            this.creatures.forEach(creature => {
-                if (creature.direction === this.activeCreature.direction) {
-                    return
-                }
+            activeCreature.getActions().forEach(action => {
+                const actionTargets = []
+                this.creatures.forEach(creature => {
+                    if (creature.direction === activeCreature.direction) {
+                        return
+                    }
 
-                if (creature.health <= 0) {
-                    return
-                }
+                    if (creature.health <= 0) {
+                        return
+                    }
 
-                let pathLength = this.findPath(this.activeCreature.position, creature.position).length
-                if (pathLength === 0) {
-                    return;
-                }
-                if ((pathLength - 1) > this.activeCreature.speed) {
-                    return
-                }
+                    let pathLength = this.findPath(activeCreature.position, creature.position).length
+                    if (pathLength === 0) {
+                        return;
+                    }
 
-                attackAble.push(creature.position)
-            })
-            if (attackAble.length) {
-                this.availableActions.push({
-                    action: 'attack',
-                    targets: attackAble,
+                    let pathLimit = activeCreature.getSpeed()
+                    if (action.actionType === 'ranged') {
+                        pathLimit = action.range
+                    }
+                    if ((pathLength - 1) > pathLimit) {
+                        return
+                    }
+
+                    actionTargets.push(creature.position)
                 })
-            }
+
+                if (actionTargets.length > 0) {
+                    this.availableActions.push({
+                        action: 'attack', //как будто должно быть actionType
+                        actionObject: action, //а тут просто action
+                        targets: actionTargets,
+                    })
+
+                }
+            })
         },
         handleEngineTurn() {
             //Выбор всех активных врагов
@@ -426,14 +517,14 @@ export const useBattleStore = defineStore('battle', {
             this.activeCreature.position = path[path.length - 1]
             this.battleMap.setContent(...path[path.length - 1], this.activeCreature)
         },
-        playerActionAttack(targetPosition) {
+        playerActionAttack(targetPosition, attack) {
             const result = {
-                attack: undefined,
+                attack: attack.name,
                 success: false,
                 damage: 0,
                 health: 0,
                 hitChance: 0,
-                isCrit: 0
+                isCrit: 0,
             }
             const attacker = this.activeCreature
             const defender = this.getCreatureByCoords(targetPosition)
@@ -441,8 +532,6 @@ export const useBattleStore = defineStore('battle', {
                 return
             }
 
-            const attack = attacker.getActions()[0]
-            result.attack = attack.name
 
             // Расчёт шанса попадания
             const hitChance = Phaser.Math.Clamp(
@@ -483,11 +572,12 @@ export const useBattleStore = defineStore('battle', {
 
             result.health = defender.health
 
+            console.log(result)
             return result
         },
-        playerActionMoveAndAttack(path, targetPosition) {
+        playerActionMoveAndAttack(path, targetPosition, action) {
             this.playerActionMoveTo(path)
-            return this.playerActionAttack(targetPosition)
+            return this.playerActionAttack(targetPosition, action)
         },
         getCreatureByCoords(position) {
             return this.battleMap.get(position.join(','))?.content
