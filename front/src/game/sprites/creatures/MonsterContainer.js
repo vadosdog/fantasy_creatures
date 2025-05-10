@@ -28,7 +28,7 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
         this.creatureText = scene.add.text(
             0,
             12,
-            creature.name + "\n" + creature.health + "/" + creature.maxHealth,
+            creature.name + "\n" + Math.ceil(creature.health) + "/" + creature.getMaxHealth(),
             {
                 fontFamily: "arial",
                 fontSize: "11px",
@@ -39,8 +39,8 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
         this.add(this.creatureText)
     }
 
-    setState(newState) {
-        this.creatureSprite.setState(newState)
+    setMonsterState(newState) {
+        this.creatureSprite.setMonsterState(newState)
     }
 
     setDefaultState() {
@@ -48,7 +48,7 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
     }
 
     updateVisual() {
-        this.creatureText.setText(this.creature.name + "\n" + this.creature.health + "/" + this.creature.maxHealth);
+        this.creatureText.setText(this.creature.name + "\n" + this.creature.health + "/" + this.creature.getMaxHealth());
     }
 
     // Можно добавить метод для обновления позиции или логики

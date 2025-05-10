@@ -60,10 +60,10 @@ export default class Monster1 extends Phaser.GameObjects.Sprite {
     }
 
     setDefaultState() {
-        return this.setState(this.defaultDirection)
+        return this.setMonsterState(this.defaultDirection)
     }
 
-    setState(newState) {
+    setMonsterState(newState) {
         if (this.state === newState) return;
         this.state = newState;
 

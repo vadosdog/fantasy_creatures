@@ -2,9 +2,11 @@ import {EventBus} from '../EventBus';
 import {Scene} from 'phaser';
 import Hexagon, {
     HEX_STATE_ATTACKABLE,
-    HEX_STATE_MOVABLE, HEX_STATE_NORMAL,
+    HEX_STATE_MOVABLE,
+    HEX_STATE_NORMAL,
     HEX_STATE_SELECTED,
-    HEXAGON_ANIM_GREEN, HEXAGON_ANIM_GREY,
+    HEXAGON_ANIM_GREEN,
+    HEXAGON_ANIM_GREY,
     HEXAGON_ANIM_LIGHT_GREEN,
     HEXAGON_ANIM_LIGHT_RED,
     HEXAGON_ANIM_LIGHT_YELLOW,
@@ -12,13 +14,13 @@ import Hexagon, {
     HEXAGON_ANIM_RED,
     HEXAGON_ANIM_YELLOW
 } from "../sprites/battle/Hexagon.js";
-import Monster1 from "../sprites/creatures/Monster1.js";
 import MonsterContainer from "../sprites/creatures/MonsterContainer.js";
 import {
     BATTLE_STATE_BATTLE_OVER_LOSE,
     BATTLE_STATE_BATTLE_OVER_WIN,
     BATTLE_STATE_PLAYER_TURN,
-    BATTLE_STATE_WAITING, useBattleStore
+    BATTLE_STATE_WAITING,
+    useBattleStore
 } from "../../store/battle.js";
 
 export class Battle extends Scene {
@@ -26,6 +28,7 @@ export class Battle extends Scene {
     hexagonGroup;
     store
     hexagonsArray;
+    buttons = []
 
     constructor() {
         super('Battle');
@@ -168,14 +171,12 @@ export class Battle extends Scene {
                 let creature = cell.content
                 let hexagon = this.hexagonsArray.get(creature.position.join(','))
 
-                let creatureContainer = new MonsterContainer(
+                creature.creatureSpriteContainer = new MonsterContainer(
                     creature,
                     this,
                     hexagon.x,
                     hexagon.y,
                 )
-
-                creature.creatureSpriteContainer = creatureContainer
                 this.store.creatures.add(creature)
             }
         })
@@ -190,8 +191,10 @@ export class Battle extends Scene {
         let activeHexagonSprite = this.hexagonsArray.get(`${activeCreature.position[0]},${activeCreature.position[1]}`)
 
         activeHexagonSprite.setHexState(HEX_STATE_SELECTED)
-        activeCreature.creatureSpriteContainer.setState('idle_' + activeCreature.direction)
+        activeCreature.creatureSpriteContainer.setMonsterState('idle_' + activeCreature.direction)
         if (this.store.battleState === BATTLE_STATE_PLAYER_TURN) {
+            this.showButtons()
+            
             availableActions.forEach(({action, targets}) => {
                 switch (action) {
                     case 'move':
@@ -282,7 +285,7 @@ export class Battle extends Scene {
                         let attackDirection = this.store.activeCreature.position[1] < position[1]
                             ? 'attack_right'
                             : 'attack_left'
-                        this.store.activeCreature.creatureSpriteContainer.setState(attackDirection)
+                        this.store.activeCreature.creatureSpriteContainer.setMonsterState(attackDirection)
                     }
                 });
 
@@ -301,7 +304,7 @@ export class Battle extends Scene {
                     timeline.add({
                         at: 200 * (path.length), //гомосятина
                         run: () => {
-                            targetCreature.creatureSpriteContainer.setState('hurt_' + attackDirection)
+                            targetCreature.creatureSpriteContainer.setMonsterState('hurt_' + attackDirection)
                             targetCreature.creatureSpriteContainer.updateVisual()
                             targetCreature.creatureSpriteContainer.playActionText("-" + attackResult.damage)
                         }
@@ -317,7 +320,7 @@ export class Battle extends Scene {
                         timeline.add({
                             at: 200 * (path.length) + 500, //гомосятина
                             run: () => {
-                                targetCreature.creatureSpriteContainer.setState('death_' + attackDirection)
+                                targetCreature.creatureSpriteContainer.setMonsterState('death_' + attackDirection)
                                 targetCreature.creatureSpriteContainer.updateVisual()
                             }
                         });
@@ -372,7 +375,7 @@ export class Battle extends Scene {
             let direction = path[i - 1][1] < y ? 'walk_right' : 'walk_left'
             timeline.add({
                 at: i * segmentDuration,
-                run: () => activeCreature.creatureSpriteContainer.setState(direction)
+                run: () => activeCreature.creatureSpriteContainer.setMonsterState(direction)
             });
             timeline.add({
                 at: i * segmentDuration,
@@ -406,47 +409,6 @@ export class Battle extends Scene {
             position[1] % 2 ? [1, 1] : [0, 1], //право вниз
             position[1] % 2 ? [1, -1] : [0, -1], //лево вниз
         ]
-    }
-
-    findAccessibleCells(start, step) {
-        const visited = new Set();
-        let currentPositions = [start];
-        visited.add(start.join(','));
-        let obstacles = new Set(this.store.queue.map(item => {
-            return item.position.join(',')
-        }))
-
-        for (let s = 0; s < step; s++) {
-            const nextPositions = [];
-
-            for (const pos of currentPositions) {
-                const directions = this.getDirections(pos);
-
-                for (const [dx, dy] of directions) {
-                    const newX = pos[0] + dx;
-                    const newY = pos[1] + dy;
-                    const key = `${newX},${newY}`;
-
-                    if (
-                        newX >= 0 &&
-                        newY >= 0 &&
-                        this.hexagonsArray.has(`${newX},${newY}`) &&
-                        !visited.has(key) &&
-                        !obstacles.has(key)
-                    ) {
-                        visited.add(key);
-                        nextPositions.push([newX, newY]);
-                    }
-                }
-            }
-
-            currentPositions.push(...nextPositions);
-            if (currentPositions.length === 0) break; // нет куда идти дальше
-        }
-
-        // убираем стартовую позицию, тк туда перемещаться и не надо
-        currentPositions.shift()
-        return currentPositions;
     }
 
     findPath(start, end) {
@@ -511,4 +473,8 @@ export class Battle extends Scene {
     update(time, delta) {
     }
 
+    showButtons() {
+        this.buttons = []
+        console.log(this.store.activeCreature.getActions())
+    }
 }

@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia';
 import {BattleMap} from "../game/classes/BattleMap.js";
+import {Creature, CreatureAction} from "../game/classes/Creature.js";
 
 export const BATTLE_STATE_PLAYER_TURN = 'PLAYER_TURN'
 export const BATTLE_STATE_ENGINE_TURN = 'ENGINE_TURN'
@@ -16,106 +17,169 @@ export const useBattleStore = defineStore('battle', {
         creatures: new Set(),
         round: 0,
         queue: [
-            {
-                name: 'Flameky',
+            new Creature({
+                name: 'Огонь/Танк',
                 texture: 'Pink_Monster',
-                health: 10,
-                maxHealth: 100,
-                position: [2, 13],
+                element: 'fire',
+                position: [2, 12],
                 direction: 'right',
                 control: 'player',
-                speed: 4,
-                attacks: [
-                    {
 
-                        'name': 'Искры',
-                        'chance': 90,
-                        'power': 10,
-                        'type': 'melee',
-                    },
-                    {
-                        'name': 'Fireball',
-                        'chance': 50,
-                        'power': 50,
-                        'type': 'ranged',
-                    }
+                maxHealthStat: 600,
+                speedStat: 3,
+                attackStat: 40,
+                defenseStat: 60,
+                initiativeStat: 30,
+                willStat: 25,
+                form: 70,
+                mass: 80,
+
+                actions: [
+                    new CreatureAction({
+                        name: 'Раскалённый удар',
+                        element: 'fire',
+                        baseDamage: 30,
+                        hitChance: 0.85,
+                        critChance: 0.05,
+                        attackType: 'melee', // Ближняя атака
+                        range: 1, // Дистанция 1 для ближней атаки
+                        effects: [],
+                    }),
+                    new CreatureAction({
+                        name: 'Тяжёлая лапа',
+                        element: 'normal',
+                        baseDamage: 25,
+                        hitChance: 0.9,
+                        critChance: 0.00,
+                        attackType: 'melee',
+                        range: 1,
+                        effects: [],
+                    }),
                 ],
-            },
-            {
-                name: 'Bubbly',
+            }),
+
+            new Creature({
+                name: 'ДД/Трава',
                 texture: 'Dude_Monster',
-                health: 50,
-                maxHealth: 100,
-                position: [3, 13],
+                element: 'grass',
+                position: [3, 10],
                 direction: 'right',
                 control: 'player',
-                speed: 4,
-                attacks: [
-                    {
 
-                        'name': 'Брызги',
-                        'chance': 80,
-                        'power': 20,
-                        'type': 'melee',
-                    },
-                    {
-                        'name': 'Водомет',
-                        'chance': 40,
-                        'power': 80,
-                        'type': 'ranged',
-                    }
+                maxHealthStat: 400,
+                speedStat: 5,
+                attackStat: 65,
+                defenseStat: 30,
+                initiativeStat: 50,
+                willStat: 35,
+                form: 50,
+                mass: 60,
+
+                actions: [
+                    new CreatureAction({
+                        name: 'Каменный клык',
+                        element: 'grass',
+                        baseDamage: 40,
+                        hitChance: 0.8,
+                        critChance: 0.1,
+                        attackType: 'melee',
+                        range: 1,
+                        effects: [],
+                    }),
+                    new CreatureAction({
+                        name: 'Быстрый бросок',
+                        element: 'normal',
+                        baseDamage: 35,
+                        hitChance: 0.95,
+                        critChance: 0.05,
+                        attackType: 'ranged', // Дальняя атака
+                        range: 15, // Дистанция 3 клетки
+                        effects: [],
+                    }),
                 ],
-            },
-            {
-                name: 'Droplet',
+            }),
+
+            new Creature({
+                name: 'Вода/Танк',
                 texture: 'Owlet_Monster',
-                health: 100,
-                maxHealth: 100,
-                position: [2, 19],
+                element: 'water',
+                position: [2, 18],
                 direction: 'left',
-                control: 'engine',
-                speed: 4,
-                attacks: [
-                    {
+                control: 'player',
 
-                        'name': 'Искры',
-                        'chance': 90,
-                        'power': 10,
-                        'type': 'melee',
-                    },
-                    {
-                        'name': 'Fireball',
-                        'chance': 50,
-                        'power': 50,
-                        'type': 'ranged',
-                    }
+                maxHealthStat: 550,
+                speedStat: 4,
+                attackStat: 35,
+                defenseStat: 55,
+                initiativeStat: 45,
+                willStat: 30,
+                form: 60,
+                mass: 50,
+
+                actions: [
+                    new CreatureAction({
+                        name: 'Водяной клинок',
+                        element: 'water',
+                        baseDamage: 28,
+                        hitChance: 0.88,
+                        critChance: 0.07,
+                        attackType: 'ranged',
+                        range: 10, // Средняя дистанция
+                        effects: [],
+                    }),
+                    new CreatureAction({
+                        name: 'Клюющий удар',
+                        element: 'normal',
+                        baseDamage: 22,
+                        hitChance: 0.93,
+                        critChance: 0.03,
+                        attackType: 'melee',
+                        range: 1,
+                        effects: [],
+                    }),
                 ],
-            },
-            {
-                name: 'Bulbik',
+            }),
+
+            new Creature({
+                name: 'Огонь / ДД',
                 texture: 'Dude_Monster',
-                health: 100,
-                maxHealth: 100,
-                position: [3, 19],
+                element: 'fire',
+                position: [3, 20],
                 direction: 'left',
-                control: 'engine',
-                speed: 4,
-                attacks: [
-                    {
+                control: 'player',
 
-                        'name': 'Брызги',
-                        'chance': 80,
-                        'power': 20,
-                        'type': 'melee',
-                    },
-                    {
-                        'name': 'Водомет',
-                        'chance': 40,
-                        'power': 80,
-                        'type': 'ranged',
-                    }
+                maxHealthStat: 375,
+                speedStat: 6,
+                attackStat: 70,
+                defenseStat: 25,
+                initiativeStat: 65,
+                willStat: 40,
+                form: 55,
+                mass: 45,
+
+                actions: [
+                    new CreatureAction({
+                        name: 'Огненное пике',
+                        element: 'fire',
+                        baseDamage: 45,
+                        hitChance: 0.75,
+                        critChance: 0.15,
+                        attackType: 'ranged',
+                        range: 30, // Дальняя дистанция
+                        effects: [],
+                    }),
+                    new CreatureAction({
+                        name: 'Быстрый коготь',
+                        element: 'normal',
+                        baseDamage: 38,
+                        hitChance: 0.85,
+                        critChance: 0.1,
+                        attackType: 'melee',
+                        range: 1,
+                        effects: [],
+                    }),
                 ],
-            },
+            })
         ],
         battleState: BATTLE_STATE_WAITING,
         battleMap: undefined,
@@ -266,7 +330,7 @@ export const useBattleStore = defineStore('battle', {
         },
         getMoveablePositions(activeCreature) {
             let start = activeCreature.position
-            let speed = activeCreature.speed
+            let speed = activeCreature.getSpeed()
             const visited = new Set();
             let currentPositions = [start];
             visited.add(start.join(','));
@@ -367,33 +431,57 @@ export const useBattleStore = defineStore('battle', {
                 attack: undefined,
                 success: false,
                 damage: 0,
-                health: 0
+                health: 0,
+                hitChance: 0,
+                isCrit: 0
             }
-            const targetCreature = this.getCreatureByCoords(targetPosition)
-            if (!targetPosition) {
+            const attacker = this.activeCreature
+            const defender = this.getCreatureByCoords(targetPosition)
+            if (!defender) {
                 return
             }
 
-            const attack = this.activeCreature.attacks[0]
+            const attack = attacker.getActions()[0]
             result.attack = attack.name
-            const dice = Phaser.Math.Between(0, 100)
-            if (dice < attack.chance) {
+
+            // Расчёт шанса попадания
+            const hitChance = Phaser.Math.Clamp(
+                attack.hitChance
+                + (attacker.getInitiative() - defender.getInitiative()) / 100
+                - (attacker.getForm() - defender.getForm()) / 100,
+                0.05, // всегда есть шанс на поподание
+                0.99 // всегда есть шанс на промах
+            );
+            result.hitChance = hitChance
+            const isCrit = Math.random() < (attack.critChance
+                + (attacker.getWill() - defender.getWill()) / 100);
+
+            const dice = Math.random()
+            if (dice < hitChance) {
                 result.success = true
-                result.damage = attack.power
+
+                // считаем урон
+                result.damage = Math.floor(attack.baseDamage
+                    * (attacker.getAttack() / defender.getDefense())
+                    * (1 + (attacker.mass - defender.mass) / 100)
+                    * this.getElementMultiplier(attack.element, defender.element)
+                    * (isCrit ? 1.15 : 1)
+                )
+                defender.health -= result.damage
             }
 
-            targetCreature.health -= result.damage
-            if (targetCreature.health <= 0) {
-                targetCreature.health = 0
+
+            if (defender.health <= 0) {
+                defender.health = 0
                 // гомосятина переделать
-                let targetIndex = this.queue.findIndex(c => c === targetCreature)
+                let targetIndex = this.queue.findIndex(c => c === defender)
                 this.queue.splice(targetIndex, 1)
-                this.battleMap.removeContent(...targetCreature.position)
+                this.battleMap.removeContent(...defender.position)
                 targetIndex = this.queue.findIndex(c => c === this.activeCreature)
                 this.round = targetIndex
             }
 
-            result.health = targetCreature.health
+            result.health = defender.health
 
             return result
         },
@@ -403,6 +491,23 @@ export const useBattleStore = defineStore('battle', {
         },
         getCreatureByCoords(position) {
             return this.battleMap.get(position.join(','))?.content
+        },
+        getElementMultiplier(attackElement, defenseElement) {
+            const normal = 1
+            const enlarged = 1.5
+            const reduced = 0.75
+
+            return {
+                'fire->fire': reduced,
+                'fire->water': reduced,
+                'fire->grass': enlarged,
+                'water->water': reduced,
+                'water->fire': enlarged,
+                'water->grass': reduced,
+                'grass->grass': reduced,
+                'grass->water': enlarged,
+                'grass->fire': reduced,
+            }[attackElement + '->' + defenseElement] || 1.0
         }
     },
 });
