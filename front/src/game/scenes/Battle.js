@@ -264,6 +264,7 @@ export class Battle extends Scene {
         this.store.setBattleState(BATTLE_STATE_WAITING)
 
         const timeline = this.add.timeline({});
+        const targetCreature = this.store.getCreatureByCoords(position)
         let path = []
         switch (action.action) {
             case 'move':
@@ -284,7 +285,6 @@ export class Battle extends Scene {
                 break
             case 'attack':
                 let attackResult
-                const targetCreature = this.store.getCreatureByCoords(position)
                 if (!targetCreature) {
                     return
                 }
@@ -371,6 +371,57 @@ export class Battle extends Scene {
                 }
 
                 break
+            case 'treat':
+                let treatResult
+                if (!targetCreature) {
+                    return
+                }
+                treatResult = this.store.playerActionTreat(position, action.actionObject)
+                
+                timeline.add({
+                    at: 200 * (path.length), //гомосятина
+                    run: () => {
+                        let attackDirection = this.store.activeCreature.position[1] < position[1]
+                            ? 'attack_right'
+                            : 'attack_left'
+                        this.store.activeCreature.creatureSpriteContainer.setMonsterState(attackDirection) //сделать анимацию treat
+                    }
+                });
+                // надо бы в одном место выделить
+                timeline.add({
+                    at: 200 * (path.length) + 500, //гомосятина
+                    run: () => {
+                        this.store.activeCreature.creatureSpriteContainer.setDefaultState()
+                    }
+                });
+                let treatedDirection = this.store.activeCreature.position[1] < position[1]
+                    ? 'left'
+                    : 'right'
+
+                if (treatResult.success) {
+                    timeline.add({
+                        at: 200 * (path.length), //гомосятина
+                        run: () => {
+                            targetCreature.creatureSpriteContainer.setMonsterState('hurt_' + treatedDirection)
+                            targetCreature.creatureSpriteContainer.updateVisual()
+                            targetCreature.creatureSpriteContainer.playActionText("+" + treatResult.damage)
+                        }
+                    });
+                    timeline.add({
+                        at: 200 * (path.length) + 500,
+                        run: () => {
+                            targetCreature.creatureSpriteContainer.setDefaultState()
+                        }
+                    });
+                } else {
+                    timeline.add({
+                        at: 200 * (path.length), //гомосятина
+                        run: () => {
+                            targetCreature.creatureSpriteContainer.playActionText("Промах...")
+                        }
+                    });
+                }
+                break;
             default:
                 // неизвестное действие
                 return
@@ -511,6 +562,7 @@ export class Battle extends Scene {
                 .setOrigin(0, 0)
                 .setInteractive();
 
+            const effects = (action.effects || []).map(effect => effect.type).join(', ')
             const buttonTexts = [
                 this.add.text(20, 20, action.name, {fontFamily: "arial", fontSize: "14px"}).setOrigin(0, 0),
                 this.add.text(20, 40, 'Стихия: ' + action.element, {
@@ -521,11 +573,15 @@ export class Battle extends Scene {
                     fontFamily: "arial",
                     fontSize: "12px"
                 }).setOrigin(0, 0),
-                this.add.text(20, 80, 'Шанс (крит): ' + action.hitChance + ' (' + action.critChance + ')', {
+                this.add.text(20, 80, 'Шанс (крит): ' + action.hitChance + ' (' + (action.critChance || 0) + ')', {
                     fontFamily: "arial",
                     fontSize: "12px"
                 }).setOrigin(0, 0),
                 this.add.text(20, 100, 'Базовый урон: ' + action.baseDamage, {
+                    fontFamily: "arial",
+                    fontSize: "12px"
+                }).setOrigin(0, 0),
+                this.add.text(20, 120, 'Эффекты: ' + effects, {
                     fontFamily: "arial",
                     fontSize: "12px"
                 }).setOrigin(0, 0)

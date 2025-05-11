@@ -17,6 +17,9 @@ export const useBattleStore = defineStore('battle', {
         creatures: new Set(),
         round: 0,
         queue: [
+            //Pink_Monster
+            //Dude_Monster
+            //Owlet_Monster
             new Creature({
                 name: 'Огонь/Танк',
                 texture: 'Pink_Monster',
@@ -140,8 +143,68 @@ export const useBattleStore = defineStore('battle', {
             }),
 
             new Creature({
-                name: 'Вода/Танк',
+                name: 'Сап/Вода',
                 texture: 'Owlet_Monster',
+                element: 'water',
+                position: [4, 4],
+                direction: 'right',
+                control: 'player',
+                maxHealthStat: 90,
+                speedStat: 4,
+                attackStat: 30,
+                defenseStat: 50,
+                initiativeStat: 60,
+                willStat: 70,
+                form: 60,
+                mass: 50,
+                actions: [
+                    // 1. Обычная атака с дебафом
+                    new CreatureAction({
+                        name: 'Удар прилива',
+                        element: 'water',
+                        baseDamage: 25,
+                        hitChance: 0.9,
+                        actionType: 'melee',
+                        range: 1,
+                        effects: [{type: 'chill', duration: 2}], // Замедление
+                    }),
+                    // 2. Дальний дебаф (без урона)
+                    new CreatureAction({
+                        name: 'Глубинный шёпот',
+                        element: 'water',
+                        baseDamage: 0,
+                        hitChance: 0.95,
+                        actionType: 'ranged',
+                        range: 5,
+                        effects: [{type: 'blind', duration: 3}], // Слепота
+                    }),
+                    // 3. Баф на союзника
+                    new CreatureAction({
+                        name: 'Щит волн',
+                        element: 'water',
+                        baseDamage: 0,
+                        hitChance: 1.0,
+                        actionType: 'treat',
+                        range: 4,
+                        effects: [{type: 'aegis', duration: 4}], // -10% урона
+                    }),
+                    // 4. Второй баф
+                    new CreatureAction({
+                        name: 'Исцеляющий поток',
+                        element: 'water',
+                        baseDamage: 25,
+                        hitChance: 0.9,
+                        critChance: 0.15,
+                        actionType: 'treat',
+                        range: 4,
+                        effects: [{type: 'regeneration', duration: 5}], // +5% HP/ход
+                    }),
+                ],
+            }),
+
+            new Creature({
+                name: 'Вода/Танк',
+                texture: 'Pink_Monster',
                 element: 'water',
                 position: [1, 28],
                 direction: 'left',
@@ -259,6 +322,66 @@ export const useBattleStore = defineStore('battle', {
                         effects: [],
                     }),
                 ],
+            }),
+
+            new Creature({
+                name: 'Трава/САП',
+                texture: 'Owlet_Monster',
+                element: 'grass',
+                position: [4, 28],
+                direction: 'left',
+                control: 'player',
+                maxHealthStat: 100,
+                speedStat: 3,
+                attackStat: 35,
+                defenseStat: 55,
+                initiativeStat: 40,
+                willStat: 65,
+                form: 80,
+                mass: 70,
+                actions: [
+                    // 1. Обычная атака с дебафом
+                    new CreatureAction({
+                        name: 'Удушающие корни',
+                        element: 'grass',
+                        baseDamage: 20,
+                        hitChance: 0.85,
+                        actionType: 'melee',
+                        range: 1,
+                        effects: [{type: 'poison', duration: 3}], // Яд
+                    }),
+                    // 2. Дальний дебаф (без урона)
+                    new CreatureAction({
+                        name: 'Проклятие листвы',
+                        element: 'grass',
+                        baseDamage: 0,
+                        hitChance: 0.9,
+                        actionType: 'ranged',
+                        range: 6,
+                        effects: [{type: 'curse', duration: 'permanent'}], // -20% max HP
+                    }),
+                    // 3. Баф на союзника
+                    new CreatureAction({
+                        name: 'Благословение роста',
+                        element: 'grass',
+                        baseDamage: 0,
+                        hitChance: 1.0,
+                        actionType: 'treat',
+                        range: 4,
+                        effects: [{type: 'empower', duration: 4}], // +X к атаке
+                    }),
+                    // 4. Второй баф
+                    new CreatureAction({
+                        name: 'Целительный споры',
+                        element: 'grass',
+                        baseDamage: 20,
+                        hitChance: 0.8,
+                        actionType: 'treat',
+                        critChance: 0.2,
+                        range: 3,
+                        effects: [{type: 'regeneration', duration: 5}], // +5% HP/ход
+                    }),
+                ],
             })
         ],
         battleState: BATTLE_STATE_WAITING,
@@ -302,7 +425,10 @@ export const useBattleStore = defineStore('battle', {
             activeCreature.getActions().forEach(action => {
                 const actionTargets = []
                 this.creatures.forEach(creature => {
-                    if (creature.direction === activeCreature.direction) {
+                    if (action.actionType === 'treat' 
+                        ? creature.direction !== activeCreature.direction 
+                        : creature.direction === activeCreature.direction
+                    ) {
                         return
                     }
 
@@ -311,12 +437,12 @@ export const useBattleStore = defineStore('battle', {
                     }
 
                     let pathLength = this.findPath(activeCreature.position, creature.position).length
-                    if (pathLength === 0) {
-                        return;
-                    }
+                    // if (pathLength === 0) {
+                    //     return;
+                    // }
 
                     let pathLimit = activeCreature.getSpeed()
-                    if (action.actionType === 'ranged') {
+                    if (action.actionType !== 'melee') {
                         pathLimit = action.range
                     }
                     if ((pathLength - 1) > pathLimit) {
@@ -328,7 +454,7 @@ export const useBattleStore = defineStore('battle', {
 
                 if (actionTargets.length > 0) {
                     this.availableActions.push({
-                        action: 'attack', //как будто должно быть actionType
+                        action: action.actionType === 'treat' ? 'treat' : 'attack', //как будто должно быть actionType
                         actionObject: action, //а тут просто action
                         targets: actionTargets,
                     })
@@ -571,6 +697,50 @@ export const useBattleStore = defineStore('battle', {
             }
 
             result.health = defender.health
+
+            console.log(result)
+            return result
+        },
+        playerActionTreat(targetPosition, action) {
+            const result = {
+                attack: action.name,
+                success: false,
+                damage: 0,
+                health: 0,
+                hitChance: 0,
+                isCrit: 0,
+            }
+            const treater = this.activeCreature
+            const treated = this.getCreatureByCoords(targetPosition)
+            if (!treated) {
+                return
+            }
+
+
+            // Расчёт шанса попадания
+            const hitChance = action.hitChance
+                + (treater.getWill() - treated.getWill()) / 100;
+            result.hitChance = hitChance
+            const isCrit = Math.random() < (0.05 + treater.getWill() / 100);
+
+            const dice = Math.random()
+            if (dice < hitChance) {
+                result.success = true
+
+                // считаем урон
+                result.damage = Math.floor(action.baseDamage
+                    * (treater.getAttack() / treated.getDefense())
+                    * (1 + (treater.mass - treated.mass) / 100)
+                    * this.getElementMultiplier(action.element, treated.element)
+                    * (isCrit ? 1.15 : 1)
+                )
+                treated.health += result.damage
+                if (treated.health > treated.getMaxHealth()) {
+                    treated.health = treated.getMaxHealth()
+                }
+            }
+
+            result.health = treated.health
 
             console.log(result)
             return result

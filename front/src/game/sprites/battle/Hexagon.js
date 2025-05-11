@@ -73,7 +73,7 @@ export default class Hexagon extends Phaser.GameObjects.Sprite {
                     this.anims.play(HEXAGON_ANIM_LIGHT_RED)
                     break
                 case HEX_STATE_TREATABLE:
-                    this.anims.play(HEXAGON_ANIM_NORMAL)
+                    this.anims.play(HEXAGON_ANIM_LIGHT_GREEN)
                     break
                 default:
                     this.anims.play(HEXAGON_ANIM_NORMAL)
@@ -95,7 +95,7 @@ export default class Hexagon extends Phaser.GameObjects.Sprite {
                     this.anims.play(HEXAGON_ANIM_RED)
                     break
                 case HEX_STATE_TREATABLE:
-                    this.anims.play(HEXAGON_ANIM_LIGHT_GREEN)
+                    this.anims.play(HEXAGON_ANIM_GREEN)
                     break
                 default:
                     this.anims.play(HEXAGON_ANIM_NORMAL)
@@ -117,7 +117,7 @@ export default class Hexagon extends Phaser.GameObjects.Sprite {
                     this.anims.play(HEXAGON_ANIM_YELLOW)
                     break
                 case HEX_STATE_TREATABLE:
-                    this.anims.play(HEXAGON_ANIM_GREEN)
+                    this.anims.play(HEXAGON_ANIM_YELLOW)
                     break
                 default:
                     this.anims.play(HEXAGON_ANIM_NORMAL)
