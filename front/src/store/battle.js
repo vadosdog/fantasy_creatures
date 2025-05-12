@@ -712,7 +712,7 @@ export const useBattleStore = defineStore('battle', {
             // Расчёт шанса попадания
             const hitChance = Phaser.Math.Clamp(
                 attack.hitChance
-                + (attacker.getInitiative() - defender.getInitiative()) / 100
+                + (attacker.getInitiativeToAttack() - defender.getInitiative()) / 100
                 - (attacker.getForm() - defender.getForm()) / 100,
                 0.05, // всегда есть шанс на поподание
                 0.99 // всегда есть шанс на промах
@@ -728,7 +728,7 @@ export const useBattleStore = defineStore('battle', {
                 // считаем урон
                 result.damage = Math.floor(attack.baseDamage
                     * (attacker.getAttack() / defender.getDefense())
-                    * (1 + (attacker.mass - defender.mass) / 100)
+                    * (1 + (attacker.getMass() - defender.getMass()) / 100)
                     * this.getElementMultiplier(attack.element, defender.element)
                     * (isCrit ? 1.15 : 1)
                 )
@@ -802,7 +802,7 @@ export const useBattleStore = defineStore('battle', {
                 // считаем урон
                 result.damage = Math.floor(action.baseDamage
                     * (treater.getAttack() / treated.getDefense())
-                    * (1 + (treater.mass - treated.mass) / 100)
+                    * (1 + (treater.getMass() - treated.getMass()) / 100)
                     * this.getElementMultiplier(action.element, treated.element)
                     * (isCrit ? 1.15 : 1)
                 )

@@ -54,7 +54,7 @@ export class Creature {
         // {type: 'bleed', duration: 1}, //TODO прекращается при лечении
         // {type: 'burn', duration: 1},
         // {type: 'chill', duration: 1},
-        // {type: 'blind', duration: 1}, //TODO Уменьшает шанс попадания на 25%
+        // {type: 'blind', duration: 1},
         // {type: 'curse', duration: 1},
         // {type: 'madness', duration: 1},
         // {type: 'fear', duration: 1}
@@ -70,7 +70,7 @@ export class Creature {
             console.log('Effect: Проклятие снижает max HP на 20%')
         }
         return this.maxHealthStat
-            * (this.hasEffect('haste') ? 0.8 : 1)
+            * (this.hasEffect('curse') ? 0.8 : 1)
     }
 
     getSpeed() {
@@ -123,6 +123,15 @@ export class Creature {
         }
         return this.initiativeStat
             * (this.hasEffect('сhill') ? 0.8 : 1)
+    }
+
+    // Делаем отдельный метод для инициативы атаки, чтобы обыграть слепоту
+    getInitiativeToAttack() {
+        if (this.hasEffect('blind')) {
+            console.log('Effect: Слепота снижает шанс попадания')
+        }
+        return this.initiativeStat
+            * (this.hasEffect('blind') ? 0.75 : 1)
     }
 
     getWill() {
