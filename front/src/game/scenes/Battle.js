@@ -179,6 +179,7 @@ export class Battle extends Scene {
                     hexagon.y,
                 )
                 this.store.creatures.add(creature)
+                creature.creatureSpriteContainer.updateEffectsIcons()
             }
         })
     }
@@ -188,22 +189,84 @@ export class Battle extends Scene {
             hexagonSprite.setHexState(HEX_STATE_NORMAL)
         })
         this.store.handleRound()
-        let {activeCreature, availableActions} = this.store.getTurn()
-        let activeHexagonSprite = this.hexagonsArray.get(`${activeCreature.position[0]},${activeCreature.position[1]}`)
-
-        activeHexagonSprite.setHexState(HEX_STATE_SELECTED)
-        activeCreature.creatureSpriteContainer.setMonsterState('idle_' + activeCreature.direction)
-        if (this.store.battleState === BATTLE_STATE_PLAYER_TURN) {
-            this.showButtons()
-
-            this.markActionAvailableHexs(false)
-        } else {
-            if (availableActions.length === 0) {
-                this.scene.start('BattleOver');
-                return
+        let {activeCreature, availableActions, effects} = this.store.getTurn()
+        // показывает произошедшие эффекты в начале раунда
+        const timeline = this.add.timeline({});
+        timeline.add({
+            at: 0, //гомосятина
+            run: () => {
+                activeCreature.creatureSpriteContainer.setMonsterState('hurt_' + activeCreature.direction)
+                activeCreature.creatureSpriteContainer.updateVisual()
             }
-            this.handleAction(availableActions[0].action, availableActions[0].targets)
+        })
+
+        effects.forEach((effect, i) => {
+            const emoji = {
+                'regeneration': '💚',
+                'poison': '☠️',
+                'bleed': '💉',
+                'burn': '🔥',
+                'madness': '🤪',
+            }[effect.type] || ''
+            timeline.add({
+                at: i * 200, //гомосятина
+                run: () => {
+                    activeCreature.creatureSpriteContainer.playActionText(emoji + " " + effect.damage, effect.damage > 0 ? 'green' : 'red')
+                }
+            })
+        })
+        if (activeCreature.health <= 0) {
+            timeline.add({
+                at: 200 * (effects.length), //гомосятина
+                run: () => {
+                    activeCreature.creatureSpriteContainer.setMonsterState('death_' + activeCreature.direction)
+                    activeCreature.creatureSpriteContainer.updateVisual()
+                }
+            });
+            timeline.add({
+                at: 200 * (effects.length + 1) + 500, //гомосятина
+                run: () => {
+                    activeCreature.creatureSpriteContainer.destroy()
+                }
+            });
+        } else {
+            timeline.add({
+                at: 200 * (effects.length), //гомосятина
+                run: () => {
+                    activeCreature.creatureSpriteContainer.setMonsterState('idle_' + activeCreature.direction)
+                }
+            });
         }
+
+        timeline.on('complete', () => {
+            if (activeCreature.health <= 0) {
+                this.store.endOfRound();
+                if (
+                    this.store.state === BATTLE_STATE_BATTLE_OVER_WIN
+                    || this.store.state === BATTLE_STATE_BATTLE_OVER_LOSE
+                ) {
+
+                    return this.scene.start('BattleOver');
+                }
+                this.handleStep()
+            } else {
+                let activeHexagonSprite = this.hexagonsArray.get(`${activeCreature.position[0]},${activeCreature.position[1]}`)
+
+                activeHexagonSprite.setHexState(HEX_STATE_SELECTED)
+                if (this.store.battleState === BATTLE_STATE_PLAYER_TURN) {
+                    this.showButtons()
+
+                    this.markActionAvailableHexs(false)
+                } else {
+                    if (availableActions.length === 0) {
+                        this.scene.start('BattleOver');
+                        return
+                    }
+                    this.handleAction(availableActions[0].action, availableActions[0].targets)
+                }
+            }
+        })
+        timeline.play()
     }
 
     markActionAvailableHexs(reset = true) {
@@ -336,7 +399,9 @@ export class Battle extends Scene {
                         run: () => {
                             targetCreature.creatureSpriteContainer.setMonsterState('hurt_' + defenseDirection)
                             targetCreature.creatureSpriteContainer.updateVisual()
-                            targetCreature.creatureSpriteContainer.playActionText("-" + attackResult.damage)
+                            targetCreature.creatureSpriteContainer.playActionText("-" + attackResult.damage, 'red')
+                            targetCreature.creatureSpriteContainer.updateEffectsIcons()
+                            this.store.activeCreature.creatureSpriteContainer.updateEffectsIcons()
                         }
                     });
                     if (targetCreature.health) {
@@ -365,7 +430,7 @@ export class Battle extends Scene {
                     timeline.add({
                         at: 200 * (path.length), //гомосятина
                         run: () => {
-                            targetCreature.creatureSpriteContainer.playActionText("Промах...")
+                            targetCreature.creatureSpriteContainer.playActionText("Промах...", 'red')
                         }
                     });
                 }
@@ -377,7 +442,7 @@ export class Battle extends Scene {
                     return
                 }
                 treatResult = this.store.playerActionTreat(position, action.actionObject)
-                
+
                 timeline.add({
                     at: 200 * (path.length), //гомосятина
                     run: () => {
@@ -404,7 +469,9 @@ export class Battle extends Scene {
                         run: () => {
                             targetCreature.creatureSpriteContainer.setMonsterState('hurt_' + treatedDirection)
                             targetCreature.creatureSpriteContainer.updateVisual()
-                            targetCreature.creatureSpriteContainer.playActionText("+" + treatResult.damage)
+                            targetCreature.creatureSpriteContainer.playActionText("+" + treatResult.damage, 'green')
+                            targetCreature.creatureSpriteContainer.updateEffectsIcons()
+                            this.store.activeCreature.creatureSpriteContainer.updateEffectsIcons()
                         }
                     });
                     timeline.add({
@@ -417,7 +484,7 @@ export class Battle extends Scene {
                     timeline.add({
                         at: 200 * (path.length), //гомосятина
                         run: () => {
-                            targetCreature.creatureSpriteContainer.playActionText("Промах...")
+                            targetCreature.creatureSpriteContainer.playActionText("Промах...", 'green')
                         }
                     });
                 }
@@ -430,6 +497,7 @@ export class Battle extends Scene {
 
         timeline.on('complete', () => {
             this.store.endOfRound();
+            this.store.activeCreature.creatureSpriteContainer.updateEffectsIcons()
             if (
                 this.store.state === BATTLE_STATE_BATTLE_OVER_WIN
                 || this.store.state === BATTLE_STATE_BATTLE_OVER_LOSE

@@ -56,7 +56,7 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
         // Логика движения или состояния
     }
 
-    playActionText(text) {
+    playActionText(text, color) {
         let actionText = this.scene.add.text(
             0,
             12,
@@ -66,7 +66,7 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
                 fontSize: "16px",
                 fontWeight: "bold",
                 align: "center",
-                color: "red"
+                color
             }
         )
         actionText.x = this.creatureText.x - (this.creatureText.width / 2)
@@ -81,6 +81,62 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
             onComplete: () => {
                 actionText.destroy(); // удаляем текст после анимации
             }
+        });
+    }
+
+    updateEffectsIcons() {
+        // Удаляем старые иконки эффектов
+        this.effectIcons?.forEach(icon => icon.destroy());
+        this.effectIcons = [];
+
+        // Если у существа нет эффектов - выходим
+        if (!this.creature?.effects?.length) return;
+
+        // Эмодзи для эффектов (бафы и дебафы)
+        const effectEmojis = {
+            // Бафы
+            'empower': '💪',
+            'haste': '⚡',
+            'lifesteal': '🩸',
+            'luck': '🍀',
+            'regeneration': '💚',
+            'thorns': '🌵',
+            'aegis': '🛡️',
+
+            // Дебафы
+            'poison': '☠️',
+            'bleed': '💉',
+            'burn': '🔥',
+            'chill': '❄️',
+            'blind': '👁️‍🗨️',
+            'curse': '📛',
+            'madness': '🤪',
+            'fear': '😱'
+        };
+
+        // Создаем новые иконки
+        const iconSize = 10; // Размер иконки
+        const padding = 5;   // Отступ между иконками
+        let offsetX = -20;     // Смещение по X
+
+        this.creature.effects.forEach((effect, i) => {
+            const emoji = effectEmojis[effect.type];
+            if (!emoji) return; // Пропускаем неизвестные эффекты
+
+            // Создаем текстовый объект для эмодзи
+            const icon = this.scene.add.text(
+                offsetX + i % 4 * (iconSize + padding),
+                -30 + Math.floor(i / 4) * (iconSize + padding), // Размещаем над существом
+                emoji,
+                {
+                    fontSize: iconSize + 'px',
+                    padding: {x: 2, y: 2}
+                }
+            ).setOrigin(0.5);
+
+            // Добавляем иконку в контейнер
+            this.add(icon);
+            this.effectIcons.push(icon);
         });
     }
 }
