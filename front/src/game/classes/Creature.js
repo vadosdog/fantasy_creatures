@@ -12,8 +12,6 @@ export class Creature {
                     defenseStat, //стойкость, защита
                     initiativeStat, // инициатива
                     willStat, // воля, сопротивление бафам/дебафам
-                    form, // Форма
-                    mass, // Массивность
                     element,
 
                     actions,
@@ -33,8 +31,6 @@ export class Creature {
         this.defenseStat = defenseStat; //стойкость, защита
         this.initiativeStat = initiativeStat; // инициатива
         this.willStat = willStat; // воля, сопротивление бафам/дебафам
-        this.form = form; // Форма
-        this.mass = mass; // Массивность
         this.element = element; // Массивность
 
         this.actions = actions;
@@ -136,14 +132,6 @@ export class Creature {
 
     getWill() {
         return this.willStat
-    }
-
-    getForm() {
-        return this.form
-    }
-
-    getMass() {
-        return this.mass
     }
 
     getActions() {

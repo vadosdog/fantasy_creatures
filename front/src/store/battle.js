@@ -34,8 +34,6 @@ export const useBattleStore = defineStore('battle', {
                 defenseStat: 60,
                 initiativeStat: 30,
                 willStat: 25,
-                form: 70,
-                mass: 80,
 
                 actions: [
                     new CreatureAction({
@@ -95,8 +93,6 @@ export const useBattleStore = defineStore('battle', {
                 defenseStat: 30,
                 initiativeStat: 50,
                 willStat: 35,
-                form: 50,
-                mass: 60,
 
                 actions: [
                     new CreatureAction({
@@ -155,8 +151,6 @@ export const useBattleStore = defineStore('battle', {
                 defenseStat: 50,
                 initiativeStat: 60,
                 willStat: 70,
-                form: 60,
-                mass: 50,
                 actions: [
                     // 1. Обычная атака с дебафом
                     new CreatureAction({
@@ -217,8 +211,6 @@ export const useBattleStore = defineStore('battle', {
                 defenseStat: 55,
                 initiativeStat: 45,
                 willStat: 30,
-                form: 60,
-                mass: 50,
 
                 actions: [
                     new CreatureAction({
@@ -298,8 +290,6 @@ export const useBattleStore = defineStore('battle', {
                 defenseStat: 25,
                 initiativeStat: 65,
                 willStat: 40,
-                form: 55,
-                mass: 45,
 
                 actions: [
                     new CreatureAction({
@@ -373,8 +363,6 @@ export const useBattleStore = defineStore('battle', {
                 defenseStat: 55,
                 initiativeStat: 40,
                 willStat: 65,
-                form: 80,
-                mass: 70,
                 actions: [
                     // 1. Обычная атака с дебафом
                     new CreatureAction({
@@ -588,7 +576,7 @@ export const useBattleStore = defineStore('battle', {
                 targetIndex = this.queue.findIndex(c => c === this.activeCreature)
                 this.round = targetIndex
             }
-            
+
             return {
                 activeCreature: this.activeCreature,
                 availableActions: this.availableActions,
@@ -712,8 +700,7 @@ export const useBattleStore = defineStore('battle', {
             // Расчёт шанса попадания
             const hitChance = Phaser.Math.Clamp(
                 attack.hitChance
-                + (attacker.getInitiativeToAttack() - defender.getInitiative()) / 100
-                - (attacker.getForm() - defender.getForm()) / 100,
+                + (attacker.getInitiativeToAttack() - defender.getInitiative()) / 100,
                 0.05, // всегда есть шанс на поподание
                 0.99 // всегда есть шанс на промах
             );
@@ -726,12 +713,13 @@ export const useBattleStore = defineStore('battle', {
                 result.success = true
 
                 // считаем урон
-                result.damage = Math.floor(attack.baseDamage
+                result.damage = Math.floor(Math.max(
+                    attack.baseDamage * 0.3,
+                    attack.baseDamage
                     * (attacker.getAttack() / defender.getDefense())
-                    * (1 + (attacker.getMass() - defender.getMass()) / 100)
                     * this.getElementMultiplier(attack.element, defender.element)
                     * (isCrit ? 1.15 : 1)
-                )
+                ))
                 defender.health -= result.damage
             }
 
@@ -802,7 +790,6 @@ export const useBattleStore = defineStore('battle', {
                 // считаем урон
                 result.damage = Math.floor(action.baseDamage
                     * (treater.getAttack() / treated.getDefense())
-                    * (1 + (treater.getMass() - treated.getMass()) / 100)
                     * this.getElementMultiplier(action.element, treated.element)
                     * (isCrit ? 1.15 : 1)
                 )
