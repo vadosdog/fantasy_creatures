@@ -29,7 +29,7 @@ export const useBattleStore = defineStore('battle', {
                 control: 'player',
 
                 maxHealthStat: 300,
-                speedStat: 3,
+                speedStat: 6,
                 attackStat: 40,
                 defenseStat: 60,
                 initiativeStat: 30,
@@ -87,9 +87,9 @@ export const useBattleStore = defineStore('battle', {
                 direction: 'right',
                 control: 'player',
 
-                maxHealthStat: 200,
-                speedStat: 5,
-                attackStat: 65,
+                maxHealthStat: 200, // 1=10 - 20
+                speedStat: 10, // 5=1 - 25
+                attackStat: 65, // 
                 defenseStat: 30,
                 initiativeStat: 50,
                 willStat: 35,
@@ -146,7 +146,7 @@ export const useBattleStore = defineStore('battle', {
                 direction: 'right',
                 control: 'player',
                 maxHealthStat: 90,
-                speedStat: 4,
+                speedStat: 8,
                 attackStat: 30,
                 defenseStat: 50,
                 initiativeStat: 60,
@@ -206,7 +206,7 @@ export const useBattleStore = defineStore('battle', {
                 control: 'player',
 
                 maxHealthStat: 250,
-                speedStat: 4,
+                speedStat: 8,
                 attackStat: 35,
                 defenseStat: 55,
                 initiativeStat: 45,
@@ -285,7 +285,7 @@ export const useBattleStore = defineStore('battle', {
                 control: 'player',
 
                 maxHealthStat: 175,
-                speedStat: 6,
+                speedStat: 12,
                 attackStat: 70,
                 defenseStat: 25,
                 initiativeStat: 65,
@@ -358,7 +358,7 @@ export const useBattleStore = defineStore('battle', {
                 direction: 'left',
                 control: 'player',
                 maxHealthStat: 100,
-                speedStat: 3,
+                speedStat: 6,
                 attackStat: 35,
                 defenseStat: 55,
                 initiativeStat: 40,
@@ -700,13 +700,13 @@ export const useBattleStore = defineStore('battle', {
             // Расчёт шанса попадания
             const hitChance = Phaser.Math.Clamp(
                 attack.hitChance
-                + (attacker.getInitiativeToAttack() - defender.getInitiative()) / 100,
+                * attacker.getAttackModifier(),
                 0.05, // всегда есть шанс на поподание
                 0.99 // всегда есть шанс на промах
             );
             result.hitChance = hitChance
-            const isCrit = Math.random() < (attack.critChance
-                + (attacker.getWill() - defender.getWill()) / 100);
+            const isCrit = Math.random() < Math.min(0.25, (attack.critChance
+                + (attacker.getWill() - defender.getWill()) / 100));
 
             const dice = Math.random()
             if (dice < hitChance) {
@@ -718,7 +718,7 @@ export const useBattleStore = defineStore('battle', {
                     attack.baseDamage
                     * (attacker.getAttack() / defender.getDefense())
                     * this.getElementMultiplier(attack.element, defender.element)
-                    * (isCrit ? 1.15 : 1)
+                    * (isCrit ? 1.1 : 1)
                 ))
                 defender.health -= result.damage
             }

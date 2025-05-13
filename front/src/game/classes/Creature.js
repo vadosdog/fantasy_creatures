@@ -63,10 +63,10 @@ export class Creature {
 
     getMaxHealth() {
         if (this.hasEffect('curse')) {
-            console.log('Effect: Проклятие снижает max HP на 20%')
+            console.log('Effect: Проклятие снижает max HP на 10%')
         }
         return this.maxHealthStat
-            * (this.hasEffect('curse') ? 0.8 : 1)
+            * (this.hasEffect('curse') ? 0.9 : 1)
     }
 
     getSpeed() {
@@ -86,14 +86,14 @@ export class Creature {
             console.log('Effect: Усиление увеличивает атаку')
         }
         if (this.hasEffect('madness')) {
-            console.log('Effect: Безумие +30% к атаке')
+            console.log('Effect: Безумие +20% к атаке')
         }
         if (this.hasEffect('fear')) {
             console.log('Effect: Страх -15% к атаке')
         }
         return this.attackStat
             * (this.hasEffect('empower') ? 1.1 : 1)
-            * (this.hasEffect('madness') ? 1.3 : 1)
+            * (this.hasEffect('madness') ? 1.2 : 1)
             * (this.hasEffect('fear') ? 0.85 : 1)
     }
 
@@ -105,12 +105,12 @@ export class Creature {
             console.log('Effect: Горение ухудшает защиту')
         }
         if (this.hasEffect('madness')) {
-            console.log('Effect: Безумие -20% к защите')
+            console.log('Effect: Безумие -15% к защите')
         }
         return this.defenseStat
             * (this.hasEffect('aegis') ? 1.1 : 1) //Защитная аура увеличивает защиту на 10%
             * (this.hasEffect('burn') ? 0.85 : 1) //Горение уменьшает защиту на 15%
-            * (this.hasEffect('madness') ? 0.8 : 1) //Безумие -20% к защите
+            * (this.hasEffect('madness') ? 0.85 : 1) //Безумие -20% к защите
     }
 
     getInitiative() {
@@ -122,12 +122,11 @@ export class Creature {
     }
 
     // Делаем отдельный метод для инициативы атаки, чтобы обыграть слепоту
-    getInitiativeToAttack() {
+    getAttackModifier() {
         if (this.hasEffect('blind')) {
             console.log('Effect: Слепота снижает шанс попадания')
         }
-        return this.initiativeStat
-            * (this.hasEffect('blind') ? 0.75 : 1)
+        return this.hasEffect('blind') ? 0.75 : 1
     }
 
     getWill() {
