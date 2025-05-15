@@ -6,6 +6,8 @@ import {Battle} from './scenes/Battle';
 import Phaser from 'phaser';
 import {Preloader} from './scenes/Preloader';
 import {CraftGameCrucibleOfSouls} from "./scenes/CraftGameCrucibleOfSouls";
+import {ExplorationLevel} from "./scenes/ExplorationLevel";
+import EasyStar from 'easystarjs';
 
 
 const StartGame = (parent) => {
@@ -29,10 +31,20 @@ const StartGame = (parent) => {
             Preloader,
             MainMenu,
             CraftGameCrucibleOfSouls,
+            ExplorationLevel,
             Game,
             BattleOver,
             Battle,
-        ]
+        ],
+        plugins: {
+            scene: [
+                {
+                    key: 'EasyStar',
+                    plugin: EasyStar,
+                    mapping: 'easystar'
+                }
+            ]
+        }
     }
     return new Phaser.Game({...config, parent});
 }

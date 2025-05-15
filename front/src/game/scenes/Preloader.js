@@ -44,25 +44,70 @@ export class Preloader extends Scene {
         this.load.spritesheet('hexagon', 'battle/hexagon/hexagon3.png', {frameWidth: 95, frameHeight: 110});
 
         // Pink_Monster
-        this.load.spritesheet('Pink_Monster_walk', 'battle/creatures/Pink_Monster/walk.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('Pink_Monster_attack1', 'battle/creatures/Pink_Monster/attack1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('Pink_Monster_hurt', 'battle/creatures/Pink_Monster/hurt.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('Pink_Monster_death', 'battle/creatures/Pink_Monster/death.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('Pink_Monster_idle', 'battle/creatures/Pink_Monster/idle.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('Pink_Monster_walk', 'battle/creatures/Pink_Monster/walk.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
+        this.load.spritesheet('Pink_Monster_attack1', 'battle/creatures/Pink_Monster/attack1.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
+        this.load.spritesheet('Pink_Monster_hurt', 'battle/creatures/Pink_Monster/hurt.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
+        this.load.spritesheet('Pink_Monster_death', 'battle/creatures/Pink_Monster/death.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
+        this.load.spritesheet('Pink_Monster_idle', 'battle/creatures/Pink_Monster/idle.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
         this.load.image('Pink_Monster_stand', 'battle/creatures/Pink_Monster/stand.png');
         // Owlet_Monster
-        this.load.spritesheet('Owlet_Monster_walk', 'battle/creatures/Owlet_Monster/walk.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('Owlet_Monster_attack1', 'battle/creatures/Owlet_Monster/attack1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('Owlet_Monster_hurt', 'battle/creatures/Owlet_Monster/hurt.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('Owlet_Monster_death', 'battle/creatures/Owlet_Monster/death.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('Owlet_Monster_idle', 'battle/creatures/Owlet_Monster/idle.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('Owlet_Monster_walk', 'battle/creatures/Owlet_Monster/walk.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
+        this.load.spritesheet('Owlet_Monster_attack1', 'battle/creatures/Owlet_Monster/attack1.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
+        this.load.spritesheet('Owlet_Monster_hurt', 'battle/creatures/Owlet_Monster/hurt.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
+        this.load.spritesheet('Owlet_Monster_death', 'battle/creatures/Owlet_Monster/death.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
+        this.load.spritesheet('Owlet_Monster_idle', 'battle/creatures/Owlet_Monster/idle.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
         this.load.image('Owlet_Monster_stand', 'battle/creatures/Owlet_Monster/stand.png');
         // Dude_Monster
-        this.load.spritesheet('Dude_Monster_walk', 'battle/creatures/Dude_Monster/walk.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('Dude_Monster_attack1', 'battle/creatures/Dude_Monster/attack1.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('Dude_Monster_hurt', 'battle/creatures/Dude_Monster/hurt.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('Dude_Monster_death', 'battle/creatures/Dude_Monster/death.png', { frameWidth: 32, frameHeight: 32 });
-        this.load.spritesheet('Dude_Monster_idle', 'battle/creatures/Dude_Monster/idle.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('Dude_Monster_walk', 'battle/creatures/Dude_Monster/walk.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
+        this.load.spritesheet('Dude_Monster_attack1', 'battle/creatures/Dude_Monster/attack1.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
+        this.load.spritesheet('Dude_Monster_hurt', 'battle/creatures/Dude_Monster/hurt.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
+        this.load.spritesheet('Dude_Monster_death', 'battle/creatures/Dude_Monster/death.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
+        this.load.spritesheet('Dude_Monster_idle', 'battle/creatures/Dude_Monster/idle.png', {
+            frameWidth: 32,
+            frameHeight: 32
+        });
         this.load.image('Dude_Monster_stand', 'battle/creatures/Dude_Monster/stand.png');
 
         /**
@@ -70,12 +115,31 @@ export class Preloader extends Scene {
          */
         this.load.image('craft-game-crucible-of-souls-background', 'craftGames/crucibleOfSouls/background.jpg');
         this.load.image('craft-game-crucible-of-souls-hammer', 'craftGames/crucibleOfSouls/hammer.png');
-        this.load.spritesheet('craft-game-crucible-of-souls-shard', 'craftGames/crucibleOfSouls/shard.png', { frameWidth: 72, frameHeight: 72 });
+        this.load.spritesheet('craft-game-crucible-of-souls-shard', 'craftGames/crucibleOfSouls/shard.png', {
+            frameWidth: 72,
+            frameHeight: 72
+        });
         // this.load.image('craft-game-crucible-of-souls-temperatureBar', 'assets/temperature_bar.png');
         // this.load.image('craft-game-crucible-of-souls-temperatureIndicator', 'assets/temp_indicator.png');
         // this.load.audio('hammerHit', 'assets/hammer_hit.wav');
         // this.load.audio('success', 'assets/success.wav');
         // this.load.audio('overheat', 'assets/overheat.wav');
+
+        // Исследование уровней
+
+        // Загрузка текстур (заглушки)
+        // Загружаем тайлы (временно - цветные прямоугольники)
+        this.load.image('grass', 'explorationLevel/1 Tiles/Tile_12.png');
+        this.load.image('floor', 'explorationLevel/1 Tiles/Tile_12.png');
+        this.load.image('tree', 'explorationLevel/3 Objects/Trees/1.png');
+        this.load.image('portal', 'explorationLevel/3 Objects/Ladders/1.png');
+        this.load.image('wall', 'explorationLevel/1 Tiles/Tile_31.png'); // Добавили текстуру стен
+
+        this.load.image('chest', 'explorationLevel/3 Objects/Boxes/1.png');
+        this.load.image('reward', 'explorationLevel/3 Objects/Pointers/1.png');
+        this.load.image('enemy', 'bomb.png');
+        this.load.image('boss', 'star.png');
+        this.load.image('trap', 'star.png');
     }
 
     create() {

@@ -30,6 +30,7 @@ const changeScene = (newScene) => {
         <div>
             <button class="button" @click="changeScene('CraftGameCrucibleOfSouls')">CraftGameCrucibleOfSouls</button>
             <button class="button" @click="changeScene('Battle')">Go to Battle</button>
+            <button class="button" @click="changeScene('ExplorationLevel')">ExplorationLevel</button>
         </div>
     </div>
 </template>
