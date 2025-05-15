@@ -136,10 +136,10 @@ export class Preloader extends Scene {
         this.load.image('wall', 'explorationLevel/1 Tiles/Tile_31.png'); // Добавили текстуру стен
 
         this.load.image('chest', 'explorationLevel/3 Objects/Boxes/1.png');
-        this.load.image('reward', 'explorationLevel/3 Objects/Pointers/1.png');
+        this.load.image('reward', 'explorationLevel/3 Objects/Stones/5.png');
         this.load.image('enemy', 'bomb.png');
         this.load.image('boss', 'star.png');
-        this.load.image('trap', 'star.png');
+        this.load.image('trap', 'explorationLevel/3 Objects/Pointers/1.png');
     }
 
     create() {

@@ -18,11 +18,12 @@ export class ExplorationLevel extends Phaser.Scene {
         this.chests = null;
         this.portals = null;
         this.currentLevelConfig = null
+        this.objectPositions = {} // нужен, чтобы объекты не находились друг на друге
 
         this.levelSizes = [
-            {rooms: 5, type: 'small', mapSize: 30},   // Уровни 1-5
-            {rooms: 10, type: 'medium', mapSize: 45}, // Уровни 6-10
-            {rooms: 25, type: 'large', mapSize: 65}   // Уровни 11-15
+            {rooms: 5, type: 'small', mapSize: 20},   // Уровни 1-5
+            {rooms: 10, type: 'medium', mapSize: 30}, // Уровни 6-10
+            {rooms: 25, type: 'large', mapSize: 45}   // Уровни 11-15
         ];
 
     }
@@ -38,6 +39,7 @@ export class ExplorationLevel extends Phaser.Scene {
         this.resources = this.add.group();
         this.playerGold = 0;
         this.traps = this.add.group();
+        this.objectPositions = {}
 
 
         this.createWorld();
@@ -65,7 +67,10 @@ export class ExplorationLevel extends Phaser.Scene {
     }
 
     addObjectsToRooms() {
+        //TODO добавить объекты в коридоры
+
         this.rooms.forEach(room => {
+            console.log(room.type)
             switch (room.type) {
                 case 'start':
                     // Портал назад (только если не на первом уровне)
@@ -92,35 +97,39 @@ export class ExplorationLevel extends Phaser.Scene {
         });
     }
 
+    getFreePositionInRoom(room) {
+        let x, y
+        let attempts = 0
+        // смотрим, чтобы оъекты не пересекались
+        do {
+            // сначала пробуем поставить посреди комнаты
+            if (attempts === 0) {
+                x = room.x
+                y = room.y
+            } else {
+                x = room.x + 1 + Math.floor(Math.random() * (room.width - 1));
+                y = room.y + 1 + Math.floor(Math.random() * (room.height - 1));
+            }
+        } while (attempts++ < 100 && this.objectPositions[`${x}-${y}`]);
+        return [x, y]
+    }
+
     addBoss(room) {
+        const [x, y] = this.getFreePositionInRoom(room)
         const boss = this.add.sprite(
-            (room.x + Math.floor(room.width / 2)) * this.tileSize,
-            (room.y + Math.floor(room.height / 2)) * this.tileSize,
+            (x + Math.floor(room.width / 2)) * this.tileSize,
+            (y + Math.floor(room.height / 2)) * this.tileSize,
             'boss'
         ).setOrigin(0.5);
 
         this.enemies.add(boss);
-
-        // Добавляем интерактивность для боя
-        boss.setInteractive();
-        boss.on('pointerdown', () => {
-            if (!this.isMoving && Phaser.Math.Distance.Between(
-                this.player.x,
-                this.player.y,
-                boss.x,
-                boss.y
-            ) < this.tileSize * 1.5) {
-                this.startBossFight(boss);
-            }
-        });
+        this.objectPositions[`${x}-${y}`] = true
     }
 
     addEnemies(room) {
         const count = Phaser.Math.Between(1, 3 + Math.floor(this.currentDepth / 3));
-
         for (let i = 0; i < count; i++) {
-            const x = room.x + 1 + Math.floor(Math.random() * (room.width - 2));
-            const y = room.y + 1 + Math.floor(Math.random() * (room.height - 2));
+            const [x, y] = this.getFreePositionInRoom(room)
 
             const enemy = this.add.sprite(
                 x * this.tileSize + this.tileSize / 2,
@@ -130,6 +139,7 @@ export class ExplorationLevel extends Phaser.Scene {
 
             enemy.type = 'enemy';
             this.enemies.add(enemy);
+            this.objectPositions[`${x}-${y}`] = true
         }
     }
 
@@ -137,8 +147,7 @@ export class ExplorationLevel extends Phaser.Scene {
         const count = Phaser.Math.Between(1, 3 + Math.floor(this.currentDepth / 3));
 
         for (let i = 0; i < count; i++) {
-            const x = room.x + 1 + Math.floor(Math.random() * (room.width - 2));
-            const y = room.y + 1 + Math.floor(Math.random() * (room.height - 2));
+            const [x, y] = this.getFreePositionInRoom(room)
 
             const resource = this.add.sprite(
                 x * this.tileSize + this.tileSize / 2,
@@ -148,6 +157,7 @@ export class ExplorationLevel extends Phaser.Scene {
 
             resource.type = 'chest';
             this.resources.add(resource);
+            this.objectPositions[`${x}-${y}`] = true
         }
     }
 
@@ -155,8 +165,7 @@ export class ExplorationLevel extends Phaser.Scene {
         const count = Phaser.Math.Between(1, 2);
 
         for (let i = 0; i < count; i++) {
-            const x = room.x + 1 + Math.floor(Math.random() * (room.width - 2));
-            const y = room.y + 1 + Math.floor(Math.random() * (room.height - 2));
+            const [x, y] = this.getFreePositionInRoom(room)
 
             const trap = this.add.sprite(
                 x * this.tileSize + this.tileSize / 2,
@@ -166,12 +175,12 @@ export class ExplorationLevel extends Phaser.Scene {
 
             trap.type = 'trap';
             this.traps.add(trap);
+            this.objectPositions[`${x}-${y}`] = true
         }
     }
 
     addChests(room) {
-        const x = room.x + Math.floor(room.width / 2);
-        const y = room.y + Math.floor(room.height / 2);
+        const [x, y] = this.getFreePositionInRoom(room)
 
         const chest = this.add.sprite(
             x * this.tileSize + this.tileSize / 2,
@@ -181,6 +190,7 @@ export class ExplorationLevel extends Phaser.Scene {
 
         chest.type = 'chest';
         this.chests.add(chest);
+        this.objectPositions[`${x}-${y}`] = true
     }
 
 
@@ -219,8 +229,7 @@ export class ExplorationLevel extends Phaser.Scene {
         let attempts = 0;
         do {
             exitRoom = this.generateRoom('exit');
-            attempts++;
-        } while (attempts < 100 && (!this.canPlaceRoom(exitRoom) ||
+        } while (attempts++ < 100 && (!this.canPlaceRoom(exitRoom) ||
             Phaser.Math.Distance.Between(
                 startRoom.x + startRoom.width / 2,
                 startRoom.y + startRoom.height / 2,
@@ -319,6 +328,8 @@ export class ExplorationLevel extends Phaser.Scene {
             y * this.tileSize + this.tileSize / 2,
             'portal'
         ).setOrigin(0.5).setInteractive();
+
+        this.objectPositions[`${x}-${y}`] = true
     }
 
 
@@ -333,6 +344,7 @@ export class ExplorationLevel extends Phaser.Scene {
         ).setOrigin(0.5).setInteractive().setTint(0x00ff00);
 
         this.portals.add(this.exitPortal);
+        this.objectPositions[`${x}-${y}`] = true
     }
 
 
