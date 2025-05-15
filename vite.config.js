@@ -6,7 +6,8 @@ export default defineConfig({
         host: '0.0.0.0',
         hmr: {
             host: 'localhost',
-        }
+        },
+        allowedHosts: 'all',
     },
     plugins: [
         laravel({

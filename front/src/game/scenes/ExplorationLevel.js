@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import EasyStar from 'easystarjs';
+import {ExplorationObject} from "../classes/exploration/ExplorationObject.js";
 
 export class ExplorationLevel extends Phaser.Scene {
     constructor() {
@@ -15,8 +16,9 @@ export class ExplorationLevel extends Phaser.Scene {
         this.currentPathIndex = 0;
         this.currentDepth = 1;
         this.enemies = null;
-        this.chests = null;
         this.portals = null;
+        this.traps = null;
+        this.resources = null;
         this.currentLevelConfig = null
         this.objectPositions = {} // нужен, чтобы объекты не находились друг на друге
 
@@ -33,12 +35,11 @@ export class ExplorationLevel extends Phaser.Scene {
 
     create() {
         // Создаем группы для объектов
-        this.enemies = this.add.group();
-        this.chests = this.add.group();
-        this.portals = this.add.group();
-        this.resources = this.add.group();
+        this.enemies = new Set();
+        this.portals = new Set();
+        this.resources = new Set();
+        this.traps = new Set();
         this.playerGold = 0;
-        this.traps = this.add.group();
         this.objectPositions = {}
 
 
@@ -70,7 +71,6 @@ export class ExplorationLevel extends Phaser.Scene {
         //TODO добавить объекты в коридоры
 
         this.rooms.forEach(room => {
-            console.log(room.type)
             switch (room.type) {
                 case 'start':
                     // Портал назад (только если не на первом уровне)
@@ -122,7 +122,11 @@ export class ExplorationLevel extends Phaser.Scene {
             'boss'
         ).setOrigin(0.5);
 
-        this.enemies.add(boss);
+        this.enemies.add(new ExplorationObject({
+            sprite: boss,
+            x, y,
+            type: 'boss'
+        }));
         this.objectPositions[`${x}-${y}`] = true
     }
 
@@ -137,8 +141,11 @@ export class ExplorationLevel extends Phaser.Scene {
                 'enemy'
             ).setOrigin(0.5).setInteractive();
 
-            enemy.type = 'enemy';
-            this.enemies.add(enemy);
+            this.enemies.add(new ExplorationObject({
+                sprite: enemy,
+                x, y,
+                type: 'enemy'
+            }));
             this.objectPositions[`${x}-${y}`] = true
         }
     }
@@ -155,8 +162,11 @@ export class ExplorationLevel extends Phaser.Scene {
                 'reward'
             ).setOrigin(0.5).setInteractive();
 
-            resource.type = 'chest';
-            this.resources.add(resource);
+            this.resources.add(new ExplorationObject({
+                sprite: resource,
+                x, y,
+                type: 'chest'
+            }));
             this.objectPositions[`${x}-${y}`] = true
         }
     }
@@ -173,8 +183,11 @@ export class ExplorationLevel extends Phaser.Scene {
                 'trap'
             ).setOrigin(0.5).setTint(0xff0000).setInteractive();
 
-            trap.type = 'trap';
-            this.traps.add(trap);
+            this.traps.add(new ExplorationObject({
+                sprite: trap,
+                x, y,
+                type: 'trap'
+            }));
             this.objectPositions[`${x}-${y}`] = true
         }
     }
@@ -188,8 +201,11 @@ export class ExplorationLevel extends Phaser.Scene {
             'chest'
         ).setOrigin(0.5).setInteractive();
 
-        chest.type = 'chest';
-        this.chests.add(chest);
+        this.resources.add(new ExplorationObject({
+            sprite: chest,
+            x, y,
+            type: 'chest'
+        }));
         this.objectPositions[`${x}-${y}`] = true
     }
 
@@ -329,6 +345,13 @@ export class ExplorationLevel extends Phaser.Scene {
             'portal'
         ).setOrigin(0.5).setInteractive();
 
+
+        this.portals.add(new ExplorationObject({
+            sprite: this.exitPortal,
+            x, y,
+            type: 'returnPortal'
+        }));
+
         this.objectPositions[`${x}-${y}`] = true
     }
 
@@ -343,28 +366,27 @@ export class ExplorationLevel extends Phaser.Scene {
             'portal'
         ).setOrigin(0.5).setInteractive().setTint(0x00ff00);
 
-        this.portals.add(this.exitPortal);
+        this.portals.add(new ExplorationObject({
+            sprite: this.exitPortal,
+            x, y,
+            type: 'exitPortal'
+        }));
         this.objectPositions[`${x}-${y}`] = true
     }
 
-
-    checkResourceCollection() {
-        this.resources.getChildren().forEach(resource => {
-            if (Phaser.Math.Distance.Between(
-                this.player.x,
-                this.player.y,
-                resource.x,
-                resource.y
-            ) < this.tileSize / 2) {
-                this.collectResource(resource);
-            }
-        });
-    }
-
-    collectResource(resource) {
-        resource.destroy();
+    collectResource(resourceObject) {
+        resourceObject.sprite.destroy();
+        this.resources.delete(resourceObject)
         // Добавляем ресурсы игроку
         this.playerGold += Phaser.Math.Between(10, 50);
+        this.updateUI();
+    }
+
+    catchInTrap(resourceObject) {
+        resourceObject.sprite.destroy();
+        this.traps.delete(resourceObject)
+        // Добавляем ресурсы игроку
+        this.playerGold -= Phaser.Math.Between(10, 50);
         this.updateUI();
     }
 
@@ -558,7 +580,17 @@ export class ExplorationLevel extends Phaser.Scene {
             x: playerTargetX,
             y: playerTargetY,
             duration: this.tileSize / this.moveSpeed * 1000,
-            ease: 'Linear'
+            ease: 'Linear',
+            onComplete: () => {
+                if (this.checkPlayerInteractWithObject(playerTarget)) {
+                    this.path = []
+                    this.currentPathIndex = 0
+                    this.isMoving = false
+                } else {
+                    this.currentPathIndex++;
+                    this.moveBothCharacters();
+                }
+            }
         });
 
         // Движение фамильяра
@@ -568,56 +600,53 @@ export class ExplorationLevel extends Phaser.Scene {
             y: familiarTargetY,
             duration: this.tileSize / this.moveSpeed * 1000,
             ease: 'Linear',
-            onComplete: () => {
-                this.currentPathIndex++;
-                this.moveBothCharacters();
-            }
         });
     }
 
-    moveToNextTile() {
-        if (this.currentPathIndex >= this.path.length) {
-            return;
+    checkPlayerInteractWithObject(target) {
+        if (!this.objectPositions[`${target.x}-${target.y}`]) {
+            return false
         }
 
-        // Движение игрока
-        const playerTarget = this.path[this.currentPathIndex];
-        const playerTargetX = playerTarget.x * this.tileSize + this.tileSize / 2;
-        const playerTargetY = playerTarget.y * this.tileSize + this.tileSize / 2;
+        const interactObject = [
+            ...this.enemies,
+            ...this.traps,
+            ...this.portals,
+            ...this.resources
+        ].find(obj => (obj.x === target.x) && (obj.y === target.y));
+        if (!interactObject) {
+            return false
+        }
 
-        this.tweens.add({
-            targets: this.player,
-            x: playerTargetX,
-            y: playerTargetY,
-            duration: this.tileSize / this.moveSpeed * 1000,
-            ease: 'Linear',
-            onComplete: () => {
-                // Движение фамильяра после игрока
-                if (this.currentPathIndex < this.familiarPath.length) {
-                    const familiarTarget = this.familiarPath[this.currentPathIndex];
-                    const familiarTargetX = familiarTarget.x * this.tileSize + this.tileSize / 2;
-                    const familiarTargetY = familiarTarget.y * this.tileSize + this.tileSize / 2;
+        switch (interactObject.type) {
+            case 'chest':
+                this.collectResource(interactObject)
+                break
+            case 'enemy':
+                this.startCombat(interactObject)
+                break
+            case 'boss':
+                this.startBossFight(interactObject)
+                break
+            case 'returnPortal':
+                this.goToPreviousLevel()
+                break
+            case 'exitPortal':
+                this.goToNextLevel()
+                break
+            case 'trap':
+                this.catchInTrap(interactObject)
+                break
+            default:
+                console.log('not found', interactObject)
+        }
+        console.log(interactObject, target)
 
-                    this.tweens.add({
-                        targets: this.familiar,
-                        x: familiarTargetX,
-                        y: familiarTargetY,
-                        duration: this.tileSize / this.moveSpeed * 1000,
-                        ease: 'Linear'
-                    });
-                }
-
-                this.currentPathIndex++;
-
-
-                // Проверяем сбор ресурсов
-                this.checkResourceCollection();
-                this.moveToNextTile();
-            }
-        });
+        return true
     }
 
     drawPath() {
+        return
         if (this.pathGraphics) this.pathGraphics.destroy();
 
         this.pathGraphics = this.add.graphics();
@@ -679,8 +708,9 @@ export class ExplorationLevel extends Phaser.Scene {
 
         // Обработчик атаки
         attackBtn.on('pointerdown', () => {
-            enemy.destroy();
+            enemy.sprite.destroy();
             combatUI.destroy();
+            this.enemies.delete(enemy)
             this.playerGold += 100;
             this.updateUI();
         });
@@ -759,7 +789,8 @@ export class ExplorationLevel extends Phaser.Scene {
 
         attackBtn.on('pointerdown', () => {
             // Упрощенная механика боя
-            boss.destroy();
+            boss.sprite.destroy();
+            this.enemies.delete(boss)
             combatUI.destroy();
 
             // Награда за победу
@@ -786,18 +817,16 @@ export class ExplorationLevel extends Phaser.Scene {
         const playerTileY = Math.floor(this.player.y / this.tileSize);
 
         // Проверяем все объекты в радиусе 5 клеток
-        [this.enemies, this.traps, this.chests, this.portals].forEach(group => {
-            group.getChildren().forEach(obj => {
-                const objTileX = Math.floor(obj.x / this.tileSize);
-                const objTileY = Math.floor(obj.y / this.tileSize);
+        [this.enemies, this.traps, this.portals].forEach(obj => {
+            const objTileX = Math.floor(obj.x / this.tileSize);
+            const objTileY = Math.floor(obj.y / this.tileSize);
 
-                const distance = Phaser.Math.Distance.Between(
-                    playerTileX, playerTileY,
-                    objTileX, objTileY
-                );
+            const distance = Phaser.Math.Distance.Between(
+                playerTileX, playerTileY,
+                objTileX, objTileY
+            );
 
-                obj.setVisible(distance < 5);
-            });
+            obj.setVisible(distance < 5);
         });
     }
 

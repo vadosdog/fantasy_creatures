@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia';
-import {BattleMap} from "../game/classes/BattleMap.js";
-import {Creature, CreatureAction} from "../game/classes/Creature.js";
+import {BattleMap} from "../game/classes/battle/BattleMap.js";
+import {Creature, CreatureAction} from "../game/classes/battle/Creature.js";
 
 export const BATTLE_STATE_PLAYER_TURN = 'PLAYER_TURN'
 export const BATTLE_STATE_ENGINE_TURN = 'ENGINE_TURN'
