@@ -113,12 +113,12 @@ export class Preloader extends Scene {
         /**
          * Craft Game Crucible Of Souls
          */
-        this.load.image('craft-game-crucible-of-souls-background', 'craftGames/crucibleOfSouls/background.jpg');
-        this.load.image('craft-game-crucible-of-souls-hammer', 'craftGames/crucibleOfSouls/hammer.png');
-        this.load.spritesheet('craft-game-crucible-of-souls-shard', 'craftGames/crucibleOfSouls/shard.png', {
-            frameWidth: 72,
-            frameHeight: 72
-        });
+        // this.load.image('craft-game-crucible-of-souls-background', 'craftGames/crucibleOfSouls/background.jpg');
+        // this.load.image('craft-game-crucible-of-souls-hammer', 'craftGames/crucibleOfSouls/hammer.png');
+        // this.load.spritesheet('craft-game-crucible-of-souls-shard', 'craftGames/crucibleOfSouls/shard.png', {
+        //     frameWidth: 72,
+        //     frameHeight: 72
+        // });
         // this.load.image('craft-game-crucible-of-souls-temperatureBar', 'assets/temperature_bar.png');
         // this.load.image('craft-game-crucible-of-souls-temperatureIndicator', 'assets/temp_indicator.png');
         // this.load.audio('hammerHit', 'assets/hammer_hit.wav');
@@ -129,17 +129,17 @@ export class Preloader extends Scene {
 
         // Загрузка текстур (заглушки)
         // Загружаем тайлы (временно - цветные прямоугольники)
-        this.load.image('grass', 'explorationLevel/1 Tiles/Tile_12.png');
-        this.load.image('floor', 'explorationLevel/1 Tiles/Tile_12.png');
-        this.load.image('tree', 'explorationLevel/3 Objects/Trees/1.png');
-        this.load.image('portal', 'explorationLevel/3 Objects/Ladders/1.png');
-        this.load.image('wall', 'explorationLevel/1 Tiles/Tile_31.png'); // Добавили текстуру стен
-
-        this.load.image('chest', 'explorationLevel/3 Objects/Boxes/1.png');
-        this.load.image('reward', 'explorationLevel/3 Objects/Stones/5.png');
-        this.load.image('enemy', 'bomb.png');
-        this.load.image('boss', 'star.png');
-        this.load.image('trap', 'explorationLevel/3 Objects/Pointers/1.png');
+        // this.load.image('grass', 'explorationLevel/1 Tiles/Tile_12.png');
+        // this.load.image('floor', 'explorationLevel/1 Tiles/Tile_12.png');
+        // this.load.image('tree', 'explorationLevel/3 Objects/Trees/1.png');
+        // this.load.image('portal', 'explorationLevel/3 Objects/Ladders/1.png');
+        // this.load.image('wall', 'explorationLevel/1 Tiles/Tile_31.png'); // Добавили текстуру стен
+        //
+        // this.load.image('chest', 'explorationLevel/3 Objects/Boxes/1.png');
+        // this.load.image('reward', 'explorationLevel/3 Objects/Stones/5.png');
+        // this.load.image('enemy', 'bomb.png');
+        // this.load.image('boss', 'star.png');
+        // this.load.image('trap', 'explorationLevel/3 Objects/Pointers/1.png');
     }
 
     create() {
