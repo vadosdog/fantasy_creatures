@@ -24,7 +24,7 @@ import {
 } from "../../store/battle.js";
 
 export class Battle extends Scene {
-    showGridIndexes = false
+    showGridIndexes = true
     hexagonGroup;
     store
     hexagonsArray;
@@ -226,7 +226,8 @@ export class Battle extends Scene {
             timeline.add({
                 at: 200 * (effects.length + 1) + 500, //гомосятина
                 run: () => {
-                    activeCreature.creatureSpriteContainer.destroy()
+                    activeCreature.creatureSpriteContainer.destroy(true)
+                    this.hexagonsArray.get(activeCreature.position.join(',')).content = null
                 }
             });
         } else {
@@ -422,7 +423,8 @@ export class Battle extends Scene {
                         timeline.add({
                             at: 200 * (path.length + 1) + 1000, //гомосятина
                             run: () => {
-                                targetCreature.creatureSpriteContainer.destroy()
+                                targetCreature.creatureSpriteContainer.destroy(true)
+                                this.hexagonsArray.get(targetCreature.position.join(',')).content = null
                             }
                         });
                     }
@@ -561,17 +563,6 @@ export class Battle extends Scene {
     }
 
     findPath(start, end) {
-        // Плохо что есть две разные точки поиска пути, надобы объеденить
-
-        if (!start || !end) {
-            throw new Error("Start or end point not found.");
-        }
-
-        // Очередь для BFS: элементы вида [x, y, path]
-        const queue = [];
-        queue.push([start[0], start[1], []]);
-
-        const visited = new Set();
         let obstacles = new Set()
 
         this.store.queue.forEach(item => {
@@ -585,6 +576,18 @@ export class Battle extends Scene {
             }
             obstacles.add(obstaclePosition)
         })
+        return this.store.battleMap.findPath(start, end, obstacles)
+        // Плохо что есть две разные точки поиска пути, надобы объеденить
+
+        if (!start || !end) {
+            throw new Error("Start or end point not found.");
+        }
+
+        // Очередь для BFS: элементы вида [x, y, path]
+        const queue = [];
+        queue.push([start[0], start[1], []]);
+
+        const visited = new Set();
 
         while (queue.length > 0) {
             const [x, y, path] = queue.shift();

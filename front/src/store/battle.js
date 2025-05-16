@@ -460,10 +460,20 @@ export const useBattleStore = defineStore('battle', {
                         return
                     }
 
-                    let pathLength = this.findPath(activeCreature.position, creature.position).length
-                    // if (pathLength === 0) {
-                    //     return;
-                    // }
+                    const obstacles = new Set()
+                    if (action.actionType === 'melee') {
+                        this.creatures.forEach(obstacleCreature => {
+                            if (obstacleCreature === creature || obstacleCreature === activeCreature) {
+                                return
+                            }
+                            obstacles.add(obstacleCreature)
+                        })
+                    }
+
+                    let pathLength = this.findPath(activeCreature.position, creature.position, obstacles).length
+                    if (action.actionType !== 'treat' && pathLength === 0) {
+                        return;
+                    }
 
                     let pathLimit = activeCreature.getSpeed()
                     if (action.actionType !== 'melee') {
@@ -500,6 +510,15 @@ export const useBattleStore = defineStore('battle', {
 
             // Если врагов не осталось, то ничего не приходится делать
             if (enemies.length === 0) {
+                    const obstacles = new Set()
+                    if (action.actionType === 'melee') {
+                        this.creatures.forEach(obstacleCreature => {
+                            if (obstacleCreature === creature || obstacleCreature === activeCreature) {
+                                return
+                            }
+                            obstacles.add(obstacleCreature)
+                        })
+                    }
                 return
             }
 
@@ -633,6 +652,22 @@ export const useBattleStore = defineStore('battle', {
             ]
         },
         findPath(start, end) {
+
+            let obstacles = new Set()
+
+            this.queue.forEach(item => {
+                let obstaclePosition = item.position.join(',')
+                // исключаем стартовые и конченые точки, тк они обязательно должны быть проходимые
+                if (
+                    obstaclePosition === start.join(',')
+                    || obstaclePosition === end.join(',')
+                ) {
+                    return
+                }
+                obstacles.add(obstaclePosition)
+            })
+
+            return this.battleMap.findPath(start, end, obstacles)
             // Плохо что есть две разные точки поиска пути, надобы объеденить
 
             if (!start || !end) {
