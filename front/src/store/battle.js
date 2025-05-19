@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia';
 import {BattleMap} from "../game/classes/battle/BattleMap.js";
 import {Creature, CreatureAction} from "../game/classes/battle/Creature.js";
+import {QueueController} from "../game/classes/battle/QueueController.js";
 
 export const BATTLE_STATE_PLAYER_TURN = 'PLAYER_TURN'
 export const BATTLE_STATE_ENGINE_TURN = 'ENGINE_TURN'
@@ -14,9 +15,9 @@ export const useBattleStore = defineStore('battle', {
         gridSizeX: 31,
         // Количество ячеек вертикально (каждый ряд)
         gridSizeY: 11,
-        creatures: new Set(),
+        queue: null,
         round: 0,
-        queue: [
+        creatures: [
             //Pink_Monster
             //Dude_Monster
             //Owlet_Monster
@@ -416,14 +417,15 @@ export const useBattleStore = defineStore('battle', {
     getters: {},
     actions: {
         load() {
+            this.queue = new QueueController(this.creatures)
             const contents = new Map()
-            this.queue.forEach(creature => {
+            this.creatures.forEach(creature => {
                 contents.set(creature.position.join(','), creature)
             })
             this.battleMap = BattleMap.create(this.gridSizeX, this.gridSizeY, contents)
         },
         handleRound() {
-            this.activeCreature = this.queue[this.round % this.queue.length]
+            this.activeCreature = this.queue.currentCreature
 
             this.availableActions = []
 
@@ -510,15 +512,15 @@ export const useBattleStore = defineStore('battle', {
 
             // Если врагов не осталось, то ничего не приходится делать
             if (enemies.length === 0) {
-                    const obstacles = new Set()
-                    if (action.actionType === 'melee') {
-                        this.creatures.forEach(obstacleCreature => {
-                            if (obstacleCreature === creature || obstacleCreature === activeCreature) {
-                                return
-                            }
-                            obstacles.add(obstacleCreature)
-                        })
-                    }
+                const obstacles = new Set()
+                if (action.actionType === 'melee') {
+                    this.creatures.forEach(obstacleCreature => {
+                        if (obstacleCreature === creature || obstacleCreature === activeCreature) {
+                            return
+                        }
+                        obstacles.add(obstacleCreature)
+                    })
+                }
                 return
             }
 
@@ -561,6 +563,8 @@ export const useBattleStore = defineStore('battle', {
             this.activeCreature.removeRoundEffects()
             this.checkBattleOver()
             this.round++
+            this.queue.endTurn()
+            this.queue.nextTurn()
         },
         checkBattleOver() {
             let sideA = 0
@@ -589,10 +593,10 @@ export const useBattleStore = defineStore('battle', {
             if (this.activeCreature.health <= 0) {
                 this.activeCreature.health = 0
                 // гомосятина переделать
-                let targetIndex = this.queue.findIndex(c => c === this.activeCreature)
-                this.queue.splice(targetIndex, 1)
+                let targetIndex = this.creatures.findIndex(c => c === this.activeCreature)
+                this.creatures.splice(targetIndex, 1)
                 this.battleMap.removeContent(...this.activeCreature.position)
-                targetIndex = this.queue.findIndex(c => c === this.activeCreature)
+                targetIndex = this.creatures.findIndex(c => c === this.activeCreature)
                 this.round = targetIndex
             }
 
@@ -655,7 +659,7 @@ export const useBattleStore = defineStore('battle', {
 
             let obstacles = new Set()
 
-            this.queue.forEach(item => {
+            this.creatures.forEach(item => {
                 let obstaclePosition = item.position.join(',')
                 // исключаем стартовые и конченые точки, тк они обязательно должны быть проходимые
                 if (
@@ -762,10 +766,10 @@ export const useBattleStore = defineStore('battle', {
             if (defender.health <= 0) {
                 defender.health = 0
                 // гомосятина переделать
-                let targetIndex = this.queue.findIndex(c => c === defender)
-                this.queue.splice(targetIndex, 1)
+                let targetIndex = this.creatures.findIndex(c => c === defender)
+                this.creatures.splice(targetIndex, 1)
                 this.battleMap.removeContent(...defender.position)
-                targetIndex = this.queue.findIndex(c => c === this.activeCreature)
+                targetIndex = this.creatures.findIndex(c => c === this.activeCreature)
                 this.round = targetIndex
             }
 

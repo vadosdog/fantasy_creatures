@@ -24,7 +24,7 @@ import {
 } from "../../store/battle.js";
 
 export class Battle extends Scene {
-    showGridIndexes = true
+    showGridIndexes = false
     hexagonGroup;
     store
     hexagonsArray;
@@ -178,7 +178,7 @@ export class Battle extends Scene {
                     hexagon.x,
                     hexagon.y,
                 )
-                this.store.creatures.add(creature)
+                // this.store.creatures.add(creature)
                 creature.creatureSpriteContainer.updateEffectsIcons()
             }
         })
@@ -565,7 +565,7 @@ export class Battle extends Scene {
     findPath(start, end) {
         let obstacles = new Set()
 
-        this.store.queue.forEach(item => {
+        this.store.creatures.forEach(item => {
             let obstaclePosition = item.position.join(',')
             // исключаем стартовые и конченые точки, тк они обязательно должны быть проходимые
             if (
