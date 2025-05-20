@@ -22,6 +22,7 @@ export const useBattleStore = defineStore('battle', {
             //Dude_Monster
             //Owlet_Monster
             new Creature({
+                id: 1,
                 name: 'Огонь/Танк',
                 texture: 'Pink_Monster',
                 element: 'fire',
@@ -81,6 +82,7 @@ export const useBattleStore = defineStore('battle', {
             }),
 
             new Creature({
+                id: 2,
                 name: 'ДД/Трава',
                 texture: 'Dude_Monster',
                 element: 'grass',
@@ -140,6 +142,7 @@ export const useBattleStore = defineStore('battle', {
             }),
 
             new Creature({
+                id: 3,
                 name: 'Сап/Вода',
                 texture: 'Owlet_Monster',
                 element: 'water',
@@ -199,6 +202,7 @@ export const useBattleStore = defineStore('battle', {
             }),
 
             new Creature({
+                id: 4,
                 name: 'Вода/Танк',
                 texture: 'Pink_Monster',
                 element: 'water',
@@ -278,6 +282,7 @@ export const useBattleStore = defineStore('battle', {
             }),
 
             new Creature({
+                id: 5,
                 name: 'Огонь / ДД',
                 texture: 'Dude_Monster',
                 element: 'fire',
@@ -352,6 +357,7 @@ export const useBattleStore = defineStore('battle', {
             }),
 
             new Creature({
+                id: 6,
                 name: 'Трава/САП',
                 texture: 'Owlet_Monster',
                 element: 'grass',
@@ -559,11 +565,11 @@ export const useBattleStore = defineStore('battle', {
         setBattleState(battleState) {
             this.battleState = battleState
         },
-        endOfRound() {
+        endTurn(isDelayTurn = false) {
             this.activeCreature.removeRoundEffects()
             this.checkBattleOver()
             this.round++
-            this.queue.endTurn()
+            this.queue.endTurn(isDelayTurn)
             this.queue.nextTurn()
         },
         checkBattleOver() {
@@ -866,6 +872,13 @@ export const useBattleStore = defineStore('battle', {
         playerActionMoveAndAttack(path, targetPosition, action) {
             this.playerActionMoveTo(path)
             return this.playerActionAttack(targetPosition, action)
+        },
+        playerActionDefense() {
+            this.activeCreature.pushEffect({type: 'defense', duration: 2})
+        },
+        playerActionDelayedTurn(afterCreature) {
+            this.queue.handleDelayedTurn(afterCreature)
+            this.activeCreature.pushEffect({type: 'confusion', duration: 3})
         },
         getCreatureByCoords(position) {
             return this.battleMap.get(position.join(','))?.content

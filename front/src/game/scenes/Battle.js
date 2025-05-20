@@ -30,6 +30,7 @@ export class Battle extends Scene {
     hexagonsArray;
     buttons = []
     selectedAction
+    delayTurnModelOpened = false
 
     constructor() {
         super('Battle');
@@ -185,6 +186,8 @@ export class Battle extends Scene {
     }
 
     handleStep() {
+        // вообще кнопки надо скрывать в конце прошлого раунда
+        this.hideButtons()
         this.hexagonsArray.forEach(hexagonSprite => {
             hexagonSprite.setHexState(HEX_STATE_NORMAL)
         })
@@ -241,7 +244,7 @@ export class Battle extends Scene {
 
         timeline.on('complete', () => {
             if (activeCreature.health <= 0) {
-                this.store.endOfRound();
+                this.store.endTurn();
                 if (
                     this.store.state === BATTLE_STATE_BATTLE_OVER_WIN
                     || this.store.state === BATTLE_STATE_BATTLE_OVER_LOSE
@@ -302,7 +305,7 @@ export class Battle extends Scene {
     }
 
     handleHexagonClick(position, hexagonSprite, args) {
-        if (this.store.battleState !== BATTLE_STATE_PLAYER_TURN) {
+        if (this.store.battleState !== BATTLE_STATE_PLAYER_TURN || this.delayTurnModelOpened) {
             return
         }
 
@@ -498,7 +501,7 @@ export class Battle extends Scene {
 
 
         timeline.on('complete', () => {
-            this.store.endOfRound();
+            this.store.endTurn();
             this.store.activeCreature.creatureSpriteContainer.updateEffectsIcons()
             if (
                 this.store.state === BATTLE_STATE_BATTLE_OVER_WIN
@@ -659,7 +662,7 @@ export class Battle extends Scene {
             ];
 
             // Создаем контейнер для кнопки
-            const buttonContainer = this.add.container(20 + i * 250, 20, [buttonBg, ...buttonTexts]);
+            const buttonContainer = this.add.container(20 + i * 215, 20, [buttonBg, ...buttonTexts]);
 
             buttonContainer.action = action
 
@@ -668,7 +671,9 @@ export class Battle extends Scene {
 
             // Сохраняем ссылку на background для удобства
             buttonContainer.buttonBg = buttonBg;
+            buttonContainer.buttonTexts = buttonTexts;
             buttonContainer.isActive = false;
+            this.buttons.push(buttonContainer)
 
             // Обработчики событий
             buttonBg.on('pointerover', () => {
@@ -706,10 +711,158 @@ export class Battle extends Scene {
                 buttonBg.setFillStyle(0x7a9a8d); // Цвет активной кнопки
             }
         });
+
+        const defenseButtonBg = this.add.rectangle(0, 0, 120, 60, 0x3e5a4d)
+            .setOrigin(0, 0)
+            .setInteractive()
+        const defenseButtonText = [this.add.text(20, 20, 'Защита', {fontFamily: "arial", fontSize: "14px"})]
+        const defenseButtonContainer = this.add.container(880, 20, [defenseButtonBg, ...defenseButtonText])
+
+        // Делаем весь контейнер интерактивным
+        defenseButtonContainer.setInteractive(new Phaser.Geom.Rectangle(0, 0, 120, 60), Phaser.Geom.Rectangle.Contains)
+
+        // Сохраняем ссылку на background для удобства
+        defenseButtonContainer.buttonBg = defenseButtonBg;
+        defenseButtonContainer.buttonTexts = defenseButtonText;
+        this.buttons.push(defenseButtonContainer)
+
+        // Обработчики событий
+        defenseButtonBg.on('pointerover', () => {
+            defenseButtonBg.setFillStyle(0x5a7a6d); // Цвет при наведении
+        });
+
+        defenseButtonBg.on('pointerout', () => {
+            defenseButtonBg.setFillStyle(0x3e5a4d); // Исходный цвет
+        });
+
+        defenseButtonBg.on('pointerdown', () => this.handleDefenseAction());
+
+        if (this.store.queue.canDelayTurn()) {
+            const delayButtonBg = this.add.rectangle(0, 0, 120, 60, 0x3e5a4d)
+                .setOrigin(0, 0)
+                .setInteractive()
+            const delayButtonText = [this.add.text(20, 20, 'Отложить', {fontFamily: "arial", fontSize: "14px"})]
+            const delayButtonContainer = this.add.container(880, 95, [delayButtonBg, ...delayButtonText])
+
+            // Делаем весь контейнер интерактивным
+            delayButtonContainer.setInteractive(new Phaser.Geom.Rectangle(0, 0, 120, 60), Phaser.Geom.Rectangle.Contains)
+
+            // Сохраняем ссылку на background для удобства
+            delayButtonContainer.buttonBg = delayButtonBg;
+            delayButtonContainer.buttonTexts = delayButtonText;
+            this.buttons.push(delayButtonContainer)
+
+            // Обработчики событий
+            delayButtonBg.on('pointerover', () => {
+                delayButtonBg.setFillStyle(0x5a7a6d); // Цвет при наведении
+            });
+
+            delayButtonBg.on('pointerout', () => {
+                delayButtonBg.setFillStyle(0x3e5a4d); // Исходный цвет
+            });
+
+            delayButtonBg.on('pointerdown', () => {
+                this.showDelayTurnOptions()
+            });
+        }
     }
 
     hideButtons() {
-        this.buttons.forEach(button => button.destroy())
+        this.buttons.forEach(button => {
+            button.buttonTexts.forEach(t => t.destroy())
+            button.buttonBg.destroy()
+            button.destroy()
+        })
         this.buttons = []
+    }
+
+    showDelayTurnOptions() {
+        this.delayTurnModelOpened = true
+        const currentCreature = this.store.activeCreature;
+
+        // Создаем модальное окно
+        const modal = this.add.rectangle(400, 300, 600, 400, 0x333333)
+            .setStrokeStyle(2, 0xffffff);
+
+        const title = this.add.text(400, 180, 'Выберите после кого ходить', {
+            fontSize: '28px',
+            fill: '#ffffff'
+        }).setOrigin(0.5);
+
+        const buttons = []
+
+        // Создаем кнопки для каждого существа, которое может быть после текущего
+        let yPosition = 230;
+        const queue = this.store.queue.getNextQueue()
+        for (let i = 0; i < queue.length; i++) {
+            const targetCreature = queue[i];
+
+            buttons.push(this.add.text(400, yPosition, `${targetCreature.name} (id: ${targetCreature.id}, Инициатива: ${targetCreature.getInitiative()})`, {
+                fontSize: '20px',
+                fill: '#ffffff',
+                backgroundColor: '#444444',
+                padding: {x: 10, y: 5}
+            })
+                .setOrigin(0.5)
+                .setInteractive()
+                .on('pointerup', () => {
+                    this.handleDelayTurn(targetCreature);
+                    modal.destroy();
+                    title.destroy();
+                    buttons.forEach(b => b.destroy())
+                    this.delayTurnModelOpened = false
+                }));
+
+            yPosition += 40;
+        }
+
+        // Кнопка отмены
+        buttons.push(this.add.text(400, yPosition + 20, 'Отмена', {
+            fontSize: '24px',
+            fill: '#ffffff',
+            backgroundColor: '#cc0000',
+            padding: {x: 10, y: 5}
+        })
+            .setOrigin(0.5)
+            .setInteractive()
+            .on('pointerup', () => {
+                modal.destroy();
+                title.destroy();
+                buttons.forEach(b => b.destroy())
+
+                this.delayTurnModelOpened = false
+            }));
+    }
+
+    handleDefenseAction() {
+        this.store.playerActionDefense()
+        const activeCreature = this.store.activeCreature
+        const timeline = this.add.timeline({});
+        timeline.add({
+            run: () => {
+                // для защиты можно и другой эффект
+                activeCreature.creatureSpriteContainer.setMonsterState('hurt_' + activeCreature.direction)
+                activeCreature.creatureSpriteContainer.updateVisual()
+                activeCreature.creatureSpriteContainer.updateEffectsIcons()
+            }
+        })
+        timeline.add({
+            at: 500, //гомосятина
+            run: () => {
+                activeCreature.creatureSpriteContainer.setDefaultState()
+            }
+        })
+        timeline.on('complete', () => {
+            this.store.endTurn();
+            this.handleStep()
+        })
+        timeline.play()
+    }
+
+    handleDelayTurn(targetCreature) {
+        this.store.playerActionDelayedTurn(targetCreature)
+        this.store.activeCreature.creatureSpriteContainer.updateVisual()
+        this.store.endTurn(true);
+        this.handleStep()
     }
 }

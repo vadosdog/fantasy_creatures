@@ -1,5 +1,6 @@
 export class Creature {
     constructor({
+                    id,
                     name,
                     texture,
                     position,
@@ -18,6 +19,7 @@ export class Creature {
                     effects = [],
                 }) {
 
+        this.id = id;
         this.name = name;
         this.texture = texture;
         this.position = position;
@@ -98,6 +100,9 @@ export class Creature {
     }
 
     getDefense() {
+        if (this.hasEffect('defense')) {
+            console.log('Effect: Защитная стойка увеличивает защиту')
+        }
         if (this.hasEffect('aegis')) {
             console.log('Effect: Защитная аура увеличивает защиту')
         }
@@ -108,6 +113,7 @@ export class Creature {
             console.log('Effect: Безумие -15% к защите')
         }
         return this.defenseStat
+            * (this.hasEffect('defense') ? 1.1 : 1) //Защитная стойка увеличивает защиту
             * (this.hasEffect('aegis') ? 1.1 : 1) //Защитная аура увеличивает защиту на 10%
             * (this.hasEffect('burn') ? 0.85 : 1) //Горение уменьшает защиту на 15%
             * (this.hasEffect('madness') ? 0.85 : 1) //Безумие -20% к защите
@@ -117,8 +123,16 @@ export class Creature {
         if (this.hasEffect('chill')) {
             console.log('Effect: Холод снижает инициативу')
         }
+        if (this.hasEffect('defense')) {
+            console.log('Effect: Защитная стойка увеличивает инициативу на 20%')
+        }
+        if (this.hasEffect('confusion')) {
+            console.log('Effect: Растерянность снижает инициативу на 20%')
+        }
         return this.initiativeStat
             * (this.hasEffect('сhill') ? 0.8 : 1)
+            * (this.hasEffect('defense') ? 1.2 : 1)
+            * (this.hasEffect('confusion') ? 0.8 : 1)
     }
 
     // Делаем отдельный метод для инициативы атаки, чтобы обыграть слепоту
@@ -193,7 +207,8 @@ export class Creature {
         }
 
         appliedEffects.forEach(effect => {
-            console.log(this.name + ' HP ' + effect.damage + ' (' + effect.effect + ')' + ' осталось еще: ' + effect.duration)
+            console.log(effect)
+            console.log(this.name + ' HP ' + effect.damage + ' (' + effect.type + ')' + ' осталось еще: ' + effect.duration)
             this.health += (effect.damage)
         })
 
@@ -204,10 +219,11 @@ export class Creature {
 
     removeRoundEffects() {
         this.effects.forEach(effect => {
+            console.log(effect)
             effect.duration--
 
             if (effect.duration === 0) {
-                console.log(effect.name + ' перестал действовать на ' + this.name)
+                console.log(effect.type + ' перестал действовать на ' + this.name)
             }
         })
         this.effects = this.effects.filter(effect => effect.duration > 0)

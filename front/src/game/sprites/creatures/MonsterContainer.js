@@ -12,15 +12,15 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
         this.creature = creature
 
 
-        let defaultDirection
+        this.defaultDirection
         if (creature.direction === 'left') {
-            defaultDirection = 'stand_left'
+            this.defaultDirection = 'stand_left'
         } else {
-            defaultDirection = 'stand_right'
+            this.defaultDirection = 'stand_right'
         }
 
 
-        this.creatureSprite = new Monster1(creature.texture, scene, 0, -20, defaultDirection);
+        this.creatureSprite = new Monster1(creature.texture, scene, 0, -20, this.defaultDirection);
         this.creatureSprite.setScale(1.7, 1.7)
         this.add(this.creatureSprite)
         this.creatureSprite.setDefaultState()
@@ -102,6 +102,7 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
             'regeneration': '💚',
             'thorns': '🌵',
             'aegis': '🛡️',
+            'defense': '🛡️', // можно какой-то другой
 
             // Дебафы
             'poison': '☠️',
@@ -111,7 +112,8 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
             'blind': '👁️‍🗨️',
             'curse': '📛',
             'madness': '🤪',
-            'fear': '😱'
+            'fear': '😱',
+            'confusion': '😖' // нужно какой-то другой
         };
 
         // Создаем новые иконки
