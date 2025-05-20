@@ -41,15 +41,14 @@ export class Creature {
         // Бафы
         // {type: 'empower', duration: 1},
         // {type: 'haste', duration: 1},
-        // {type: 'lifesteal', duration: 1}, //TODO Восстанавливает 30% от нанесённого урона как HP
-        // {type: 'luck', duration: 1}, //TODO шанс крита на +15% 
+        // {type: 'luck', duration: 1},
         // {type: 'regeneration', duration: 1},
         // {type: 'thorns', duration: 1}, //TODO Возвращает 20% полученного урона атакующему
         // {type: 'aegis', duration: 1}, //TODO сделать ауру
         //
         // // Дебафы
         // {type: 'poison', duration: 1},
-        // {type: 'bleed', duration: 1}, //TODO прекращается при лечении
+        // {type: 'bleed', duration: 1},
         // {type: 'burn', duration: 1},
         // {type: 'chill', duration: 1},
         // {type: 'blind', duration: 1},
@@ -147,6 +146,13 @@ export class Creature {
         return this.willStat
     }
 
+    getCritBonus() {
+        if (this.hasEffect('luck')) {
+            console.log('Effect: Удача увеличивает шанс критического урона')
+        }
+        return this.hasEffect('luck') ? 0.15 : 0
+    }
+
     getActions() {
         return this.actions
     }
@@ -207,7 +213,6 @@ export class Creature {
         }
 
         appliedEffects.forEach(effect => {
-            console.log(effect)
             console.log(this.name + ' HP ' + effect.damage + ' (' + effect.type + ')' + ' осталось еще: ' + effect.duration)
             this.health += (effect.damage)
         })
@@ -219,7 +224,6 @@ export class Creature {
 
     removeRoundEffects() {
         this.effects.forEach(effect => {
-            console.log(effect)
             effect.duration--
 
             if (effect.duration === 0) {
@@ -228,6 +232,16 @@ export class Creature {
         })
         this.effects = this.effects.filter(effect => effect.duration > 0)
     }
+
+    removeEffect(effectType) {
+        let existsEffectIndex = this.effects.findIndex(({type}) => effectType === type)
+        if (existsEffectIndex === -1) {
+            return
+        }
+
+        this.effects.splice(existsEffectIndex, 1)
+    }
+
 }
 
 export class CreatureAction {

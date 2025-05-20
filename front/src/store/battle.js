@@ -116,7 +116,7 @@ export const useBattleStore = defineStore('battle', {
                         critChance: 0.05,
                         actionType: 'ranged', // Дальняя атака
                         range: 30, // Дистанция 3 клетки
-                        effects: [{type: 'blind', chance: 0.6, target: 'target', duration: 2}],
+                        effects: [{type: 'bleed', chance: 0.6, target: 'target', duration: 2}],
                     }),
                     new CreatureAction({
                         name: 'Смертельный выстрел',
@@ -751,7 +751,7 @@ export const useBattleStore = defineStore('battle', {
             );
             result.hitChance = hitChance
             const isCrit = Math.random() < Math.min(0.25, (attack.critChance
-                + (attacker.getWill() - defender.getWill()) / 100));
+                + (attacker.getWill() - defender.getWill()) / 100 + attacker.getCritBonus()));
 
             const dice = Math.random()
             if (dice < hitChance) {
@@ -826,7 +826,7 @@ export const useBattleStore = defineStore('battle', {
             const hitChance = action.hitChance
                 + (treater.getWill() - treated.getWill()) / 100;
             result.hitChance = hitChance
-            const isCrit = Math.random() < (0.05 + treater.getWill() / 100);
+            const isCrit = Math.random() < (0.05 + treater.getWill() / 100 + treater.getCritBonus());
 
             const dice = Math.random()
             if (dice < hitChance) {
@@ -865,6 +865,11 @@ export const useBattleStore = defineStore('battle', {
                     treater.pushEffect(effect)
                 }
             })
+            
+            if (result.damage > 0) {
+                // При лечении эфект кровотечения убирается
+                treated.removeEffect('bleed')
+            }
 
             console.log(result)
             return result
