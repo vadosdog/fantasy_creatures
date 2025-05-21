@@ -2,6 +2,7 @@ import {defineStore} from 'pinia';
 import {BattleMap} from "../game/classes/battle/BattleMap.js";
 import {Creature, CreatureAction} from "../game/classes/battle/Creature.js";
 import {QueueController} from "../game/classes/battle/QueueController.js";
+import {BaseEffect} from "../game/classes/battle/Effects/BaseEffect.js";
 
 export const BATTLE_STATE_PLAYER_TURN = 'PLAYER_TURN'
 export const BATTLE_STATE_ENGINE_TURN = 'ENGINE_TURN'
@@ -46,7 +47,7 @@ export const useBattleStore = defineStore('battle', {
                         critChance: 0.05,
                         actionType: 'melee', // Ближняя атака
                         range: 1, // Дистанция 1 для ближней атаки
-                        effects: [{type: 'burn', chance: 0.7, target: 'target', duration: 2}],
+                        effects: [{effect: 'burn', chance: 0.7, target: 'target', duration: 2}],
                     }),
                     new CreatureAction({
                         name: 'Таран',
@@ -56,7 +57,7 @@ export const useBattleStore = defineStore('battle', {
                         critChance: 0.00,
                         actionType: 'melee',
                         range: 1,
-                        effects: [{type: 'chill', chance: 0.5, target: 'target', duration: 1}],
+                        effects: [{effect: 'chill', chance: 0.5, target: 'target', duration: 1}],
                     }),
                     new CreatureAction({
                         name: 'Щит пламени',
@@ -66,7 +67,7 @@ export const useBattleStore = defineStore('battle', {
                         critChance: 0,
                         actionType: 'treat',
                         range: 0, // Только на себя
-                        effects: [{type: 'aegis', chance: 1.0, target: 'self', duration: 3}],
+                        effects: [{effect: 'aegis', chance: 1.0, target: 'self', duration: 3}],
                     }),
                     new CreatureAction({
                         name: 'Грозный рёв',
@@ -76,9 +77,10 @@ export const useBattleStore = defineStore('battle', {
                         critChance: 0.00,
                         actionType: 'melee',
                         range: 1,
-                        effects: [{type: 'fear', chance: 0.8, target: 'target', duration: 2}],
+                        effects: [{effect: 'fear', chance: 0.8, target: 'target', duration: 2}],
                     }),
                 ],
+                effects: [BaseEffect.getEffectObject({effect: 'curse', duration: 1})]
             }),
 
             new Creature({
@@ -106,7 +108,7 @@ export const useBattleStore = defineStore('battle', {
                         critChance: 0.1,
                         actionType: 'melee',
                         range: 1,
-                        effects: [{type: 'poison', chance: 0.8, target: 'target', duration: 3}],
+                        effects: [{effect: 'poison', chance: 0.8, target: 'target', duration: 3}],
                     }),
                     new CreatureAction({
                         name: 'Шторм листьев',
@@ -116,7 +118,7 @@ export const useBattleStore = defineStore('battle', {
                         critChance: 0.05,
                         actionType: 'ranged', // Дальняя атака
                         range: 30, // Дистанция 3 клетки
-                        effects: [{type: 'bleed', chance: 0.6, target: 'target', duration: 2}],
+                        effects: [{effect: 'bleed', chance: 0.6, target: 'target', duration: 2}],
                     }),
                     new CreatureAction({
                         name: 'Смертельный выстрел',
@@ -136,7 +138,7 @@ export const useBattleStore = defineStore('battle', {
                         critChance: 0,
                         actionType: 'treat', // Лечение
                         range: 0, // Себя
-                        effects: [{type: 'empower', chance: 1.0, target: 'self', duration: 3}],
+                        effects: [{effect: 'empower', chance: 1.0, target: 'self', duration: 3}],
                     }),
                 ],
             }),
@@ -164,7 +166,7 @@ export const useBattleStore = defineStore('battle', {
                         hitChance: 0.9,
                         actionType: 'melee',
                         range: 1,
-                        effects: [{type: 'chill', target: 'target', duration: 2}], // Замедление
+                        effects: [{effect: 'chill', target: 'target', duration: 2}], // Замедление
                     }),
                     // 2. Дальний дебаф (без урона)
                     new CreatureAction({
@@ -174,7 +176,7 @@ export const useBattleStore = defineStore('battle', {
                         hitChance: 0.95,
                         actionType: 'ranged',
                         range: 5,
-                        effects: [{type: 'blind', target: 'target', duration: 3}], // Слепота
+                        effects: [{effect: 'blind', target: 'target', duration: 3}], // Слепота
                     }),
                     // 3. Баф на союзника
                     new CreatureAction({
@@ -184,7 +186,7 @@ export const useBattleStore = defineStore('battle', {
                         hitChance: 1.0,
                         actionType: 'treat',
                         range: 4,
-                        effects: [{type: 'aegis', target: 'target', duration: 4}], // -10% урона
+                        effects: [{effect: 'aegis', target: 'target', duration: 4}], // -10% урона
                     }),
                     // 4. Второй баф
                     new CreatureAction({
@@ -195,7 +197,7 @@ export const useBattleStore = defineStore('battle', {
                         critChance: 0.15,
                         actionType: 'treat',
                         range: 4,
-                        effects: [{type: 'regeneration', target: 'target', duration: 5}], // +5% HP/ход
+                        effects: [{effect: 'regeneration', target: 'target', duration: 5}], // +5% HP/ход
                     }),
                 ],
                 effects: []
@@ -227,7 +229,7 @@ export const useBattleStore = defineStore('battle', {
                         actionType: 'melee',
                         range: 1,
                         effects: [{
-                            type: 'chill',
+                            effect: 'chill',
                             chance: 0.8,
                             target: 'target',
                             duration: 2  // -1 скорость, -20% инициативы
@@ -242,7 +244,7 @@ export const useBattleStore = defineStore('battle', {
                         actionType: 'melee',
                         range: 1,
                         effects: [{
-                            type: 'fear',
+                            effect: 'fear',
                             chance: 0.6,
                             target: 'target',
                             duration: 1  // -15% атаки
@@ -257,7 +259,7 @@ export const useBattleStore = defineStore('battle', {
                         actionType: 'treat',
                         range: 0, // На себя
                         effects: [{
-                            type: 'aegis',
+                            effect: 'aegis',
                             chance: 1.0,
                             target: 'self',
                             duration: 3  // +15% защиты
@@ -272,7 +274,7 @@ export const useBattleStore = defineStore('battle', {
                         actionType: 'melee',
                         range: 15,
                         effects: [{
-                            type: 'fear',
+                            effect: 'fear',
                             chance: 0.7,
                             target: 'target',
                             duration: 2
@@ -307,7 +309,7 @@ export const useBattleStore = defineStore('battle', {
                         actionType: 'melee',
                         range: 1, // Дальняя дистанция
                         effects: [{
-                            type: 'burn',
+                            effect: 'burn',
                             chance: 0.9,
                             target: 'target',
                             duration: 3  // 7% урона за ход, -15% защиты
@@ -332,7 +334,7 @@ export const useBattleStore = defineStore('battle', {
                         actionType: 'ranged',
                         range: 30,
                         effects: [{
-                            type: 'burn',
+                            effect: 'burn',
                             chance: 0.7,
                             target: 'target',
                             duration: 2
@@ -347,7 +349,7 @@ export const useBattleStore = defineStore('battle', {
                         actionType: 'treat',
                         range: 0, //на себя
                         effects: [{
-                            type: 'empower',
+                            effect: 'empower',
                             chance: 1.0,
                             target: 'self',
                             duration: 3  // +30% к атаке
@@ -379,7 +381,7 @@ export const useBattleStore = defineStore('battle', {
                         hitChance: 0.85,
                         actionType: 'ranged',
                         range: 15,
-                        effects: [{type: 'poison', target: 'target', duration: 3}], // Яд
+                        effects: [{effect: 'poison', target: 'target', duration: 3}], // Яд
                     }),
                     // 2. Дальний дебаф (без урона)
                     new CreatureAction({
@@ -389,7 +391,7 @@ export const useBattleStore = defineStore('battle', {
                         hitChance: 0.9,
                         actionType: 'ranged',
                         range: 6,
-                        effects: [{type: 'curse', target: 'target', duration: 'permanent'}], // -20% max HP
+                        effects: [{effect: 'curse', target: 'target', duration: 'permanent'}], // -20% max HP
                     }),
                     // 3. Баф на союзника
                     new CreatureAction({
@@ -399,7 +401,7 @@ export const useBattleStore = defineStore('battle', {
                         hitChance: 1.0,
                         actionType: 'treat',
                         range: 4,
-                        effects: [{type: 'empower', target: 'target', duration: 4}], // +X к атаке
+                        effects: [{effect: 'empower', target: 'target', duration: 4}], // +X к атаке
                     }),
                     // 4. Второй баф
                     new CreatureAction({
@@ -410,7 +412,7 @@ export const useBattleStore = defineStore('battle', {
                         actionType: 'treat',
                         critChance: 0.2,
                         range: 3,
-                        effects: [{type: 'regeneration', target: 'target', duration: 5}], // +5% HP/ход
+                        effects: [{effect: 'regeneration', target: 'target', duration: 5}], // +5% HP/ход
                     }),
                 ],
             })
@@ -745,13 +747,13 @@ export const useBattleStore = defineStore('battle', {
             // Расчёт шанса попадания
             const hitChance = Phaser.Math.Clamp(
                 attack.hitChance
-                * attacker.getAttackModifier(),
+                * attacker.getHitChanceModifier(),
                 0.05, // всегда есть шанс на поподание
                 0.99 // всегда есть шанс на промах
             );
             result.hitChance = hitChance
             const isCrit = Math.random() < Math.min(0.25, (attack.critChance
-                + (attacker.getWill() - defender.getWill()) / 100 + attacker.getCritBonus()));
+                + (attacker.getWill() - defender.getWill()) / 100 + attacker.getCritChanceTerm()));
 
             const dice = Math.random()
             if (dice < hitChance) {
@@ -826,7 +828,7 @@ export const useBattleStore = defineStore('battle', {
             const hitChance = action.hitChance
                 + (treater.getWill() - treated.getWill()) / 100;
             result.hitChance = hitChance
-            const isCrit = Math.random() < (0.05 + treater.getWill() / 100 + treater.getCritBonus());
+            const isCrit = Math.random() < (0.05 + treater.getWill() / 100 + treater.getCritChanceTerm());
 
             const dice = Math.random()
             if (dice < hitChance) {
@@ -865,7 +867,7 @@ export const useBattleStore = defineStore('battle', {
                     treater.pushEffect(effect)
                 }
             })
-            
+
             if (result.damage > 0) {
                 // При лечении эфект кровотечения убирается
                 treated.removeEffect('bleed')
@@ -879,11 +881,11 @@ export const useBattleStore = defineStore('battle', {
             return this.playerActionAttack(targetPosition, action)
         },
         playerActionDefense() {
-            this.activeCreature.pushEffect({type: 'defense', duration: 2})
+            this.activeCreature.pushEffect({effect: 'defense', duration: 2})
         },
         playerActionDelayedTurn(afterCreature) {
             this.queue.handleDelayedTurn(afterCreature)
-            this.activeCreature.pushEffect({type: 'confusion', duration: 3})
+            this.activeCreature.pushEffect({effect: 'confusion', duration: 3})
         },
         getCreatureByCoords(position) {
             return this.battleMap.get(position.join(','))?.content

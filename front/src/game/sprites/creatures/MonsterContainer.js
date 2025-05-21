@@ -121,7 +121,7 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
         let offsetX = -20;     // Смещение по X
 
         this.creature.effects.forEach((effect, i) => {
-            const emoji = effectEmojis[effect.type];
+            const emoji = effectEmojis[effect.effect];
             if (!emoji) return; // Пропускаем неизвестные эффекты
 
             // Создаем текстовый объект для эмодзи

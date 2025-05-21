@@ -210,7 +210,7 @@ export class Battle extends Scene {
                 'bleed': '💉',
                 'burn': '🔥',
                 'madness': '🤪',
-            }[effect.type] || ''
+            }[effect.effect] || ''
             timeline.add({
                 at: i * 200, //гомосятина
                 run: () => {
@@ -636,7 +636,7 @@ export class Battle extends Scene {
                 .setOrigin(0, 0)
                 .setInteractive();
 
-            const effects = (action.effects || []).map(effect => effect.type).join(', ')
+            const effects = (action.effects || []).map(effect => effect.effect).join(', ')
             const buttonTexts = [
                 this.add.text(20, 20, action.name, {fontFamily: "arial", fontSize: "14px"}).setOrigin(0, 0),
                 this.add.text(20, 40, 'Стихия: ' + action.element, {

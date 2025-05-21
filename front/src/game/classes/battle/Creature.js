@@ -1,3 +1,5 @@
+import {BaseEffect} from "./Effects/BaseEffect.js";
+
 export class Creature {
     constructor({
                     id,
@@ -63,94 +65,38 @@ export class Creature {
     }
 
     getMaxHealth() {
-        if (this.hasEffect('curse')) {
-            console.log('Effect: Проклятие снижает max HP на 10%')
-        }
-        return this.maxHealthStat
-            * (this.hasEffect('curse') ? 0.9 : 1)
+        return this.effects.reduce((maxHealth, effect) => {
+            console.log(effect)
+            return maxHealth * effect.getMaxHealthMultiplier()
+        }, this.maxHealthStat)
     }
 
     getSpeed() {
-        if (this.hasEffect('haste')) {
-            console.log('Effect: Ускорение увеличивает скорость')
-        }
-        if (this.hasEffect('chill')) {
-            console.log('Effect: Холод снижает скорость')
-        }
-        return this.speedStat
-            + (this.hasEffect('haste') ? 2 : 0) // Ускорение
-            - (this.hasEffect('сhill') ? 1 : 0)
+        return this.effects.reduce((maxHealth, effect) => maxHealth + effect.getSpeedTerm(), this.speedStat)
     }
 
     getAttack() {
-        if (this.hasEffect('empower')) {
-            console.log('Effect: Усиление увеличивает атаку')
-        }
-        if (this.hasEffect('madness')) {
-            console.log('Effect: Безумие +20% к атаке')
-        }
-        if (this.hasEffect('fear')) {
-            console.log('Effect: Страх -15% к атаке')
-        }
-        return this.attackStat
-            * (this.hasEffect('empower') ? 1.1 : 1)
-            * (this.hasEffect('madness') ? 1.2 : 1)
-            * (this.hasEffect('fear') ? 0.85 : 1)
+        return this.effects.reduce((maxHealth, effect) => maxHealth * effect.getAttackMultiplier(), this.attackStat)
     }
 
     getDefense() {
-        if (this.hasEffect('defense')) {
-            console.log('Effect: Защитная стойка увеличивает защиту')
-        }
-        if (this.hasEffect('aegis')) {
-            console.log('Effect: Защитная аура увеличивает защиту')
-        }
-        if (this.hasEffect('burn')) {
-            console.log('Effect: Горение ухудшает защиту')
-        }
-        if (this.hasEffect('madness')) {
-            console.log('Effect: Безумие -15% к защите')
-        }
-        return this.defenseStat
-            * (this.hasEffect('defense') ? 1.1 : 1) //Защитная стойка увеличивает защиту
-            * (this.hasEffect('aegis') ? 1.1 : 1) //Защитная аура увеличивает защиту на 10%
-            * (this.hasEffect('burn') ? 0.85 : 1) //Горение уменьшает защиту на 15%
-            * (this.hasEffect('madness') ? 0.85 : 1) //Безумие -20% к защите
+        return this.effects.reduce((maxHealth, effect) => maxHealth * effect.getDefenseMultiplier(), this.defenseStat)
     }
 
     getInitiative() {
-        if (this.hasEffect('chill')) {
-            console.log('Effect: Холод снижает инициативу')
-        }
-        if (this.hasEffect('defense')) {
-            console.log('Effect: Защитная стойка увеличивает инициативу на 20%')
-        }
-        if (this.hasEffect('confusion')) {
-            console.log('Effect: Растерянность снижает инициативу на 20%')
-        }
-        return this.initiativeStat
-            * (this.hasEffect('сhill') ? 0.8 : 1)
-            * (this.hasEffect('defense') ? 1.2 : 1)
-            * (this.hasEffect('confusion') ? 0.8 : 1)
+        return this.effects.reduce((maxHealth, effect) => maxHealth * effect.getInitiativeMultiplier(), this.initiativeStat)
     }
 
-    // Делаем отдельный метод для инициативы атаки, чтобы обыграть слепоту
-    getAttackModifier() {
-        if (this.hasEffect('blind')) {
-            console.log('Effect: Слепота снижает шанс попадания')
-        }
-        return this.hasEffect('blind') ? 0.75 : 1
+    getHitChanceModifier() {
+        return this.effects.reduce((maxHealth, effect) => maxHealth * effect.getHitChanceMultiplier(), 1)
     }
 
     getWill() {
         return this.willStat
     }
 
-    getCritBonus() {
-        if (this.hasEffect('luck')) {
-            console.log('Effect: Удача увеличивает шанс критического урона')
-        }
-        return this.hasEffect('luck') ? 0.15 : 0
+    getCritChanceTerm() {
+        return this.effects.reduce((maxHealth, effect) => maxHealth * effect.getCritChanceTerm(), 0)
     }
 
     getActions() {
@@ -158,20 +104,22 @@ export class Creature {
     }
 
     hasEffect(effectType) {
-        return this.effects.some(effect => effect.type === effectType)
+        return this.effects.some(effect => effect.effect === effectType)
     }
 
-    pushEffect(effect) {
+    pushEffect(effectConfig) {
+        const effect = BaseEffect.getEffectObject(effectConfig)
+        console.log('push', effectConfig, effect)
         let existsEffect
         // Если такой эффект уже есть, то увеличиваем его длительность
-        existsEffect = this.effects.find(({type}) => effect.type === type)
+        existsEffect = this.effects.find(({effect}) => effectConfig.effect === effect)
         if (existsEffect) {
-            existsEffect.duration += effect.duration
-            console.log('Увеличен эфaект ' + effect.type + ' на ' + this.name, effect)
+            existsEffect.duration += effectConfig.duration
+            console.log('Увеличен эффект ' + effectConfig.effect + ' на ' + this.name, effectConfig)
             return
         }
 
-        console.log('Наложен эфaект ' + effect.type + ' на ' + this.name, effect)
+        console.log('Наложен эффект ' + effectConfig.effect + ' на ' + this.name, effectConfig)
         // TODO добавить невосприимчивость к некоторым эфектам
         this.effects.push(effect)
     }
@@ -181,44 +129,24 @@ export class Creature {
     applyRoundEffects() {
         const maxHealth = this.getMaxHealth()
         const appliedEffects = []
-        if (this.hasEffect('regeneration')) {
-            appliedEffects.push({
-                effect: 'regeneration',
-                damage: +0.05 * maxHealth
-            })
-        }
-        if (this.hasEffect('poison')) {
-            appliedEffects.push({
-                effect: 'poison',
-                damage: -0.05 * maxHealth
-            })
-        }
-        if (this.hasEffect('bleed')) {
-            appliedEffects.push({
-                effect: 'bleed',
-                damage: -0.08 * maxHealth
-            })
-        }
-        if (this.hasEffect('burn')) {
-            appliedEffects.push({
-                effect: 'burn',
-                damage: -0.07 * maxHealth
-            })
-        }
-        if (this.hasEffect('madness')) {
-            appliedEffects.push({
-                effect: 'madness',
-                damage: -0.1 * maxHealth
-            })
-        }
+        this.effects.forEach(effect => {
+            const damage = maxHealth * effect.getRoundHealthEffect()
+            if (damage === 0) {
+                return
+            }
 
-        appliedEffects.forEach(effect => {
-            console.log(this.name + ' HP ' + effect.damage + ' (' + effect.type + ')' + ' осталось еще: ' + effect.duration)
-            this.health += (effect.damage)
+            appliedEffects.push({
+                    type: effect.effect,
+                    damage,
+                    duration: effect.duration - 1
+                }
+            )
+            console.log(this.name + ' HP ' + effect.damage + ' (' + effect.effect + ')' + ' осталось еще: ' + effect.duration)
+            this.health += damage
         })
 
         this.health = Phaser.Math.Clamp(this.health, 0, maxHealth)
-
+        
         return appliedEffects
     }
 
@@ -227,7 +155,7 @@ export class Creature {
             effect.duration--
 
             if (effect.duration === 0) {
-                console.log(effect.type + ' перестал действовать на ' + this.name)
+                console.log(effect.effect + ' перестал действовать на ' + this.name)
             }
         })
         this.effects = this.effects.filter(effect => effect.duration > 0)
