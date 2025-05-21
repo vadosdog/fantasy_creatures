@@ -16,6 +16,7 @@ export class Creature {
                     initiativeStat, // инициатива
                     willStat, // воля, сопротивление бафам/дебафам
                     element,
+                    role,
 
                     actions,
                     effects = [],
@@ -35,7 +36,8 @@ export class Creature {
         this.defenseStat = defenseStat; //стойкость, защита
         this.initiativeStat = initiativeStat; // инициатива
         this.willStat = willStat; // воля, сопротивление бафам/дебафам
-        this.element = element; // Массивность
+        this.element = element;
+        this.role = role; 
 
         this.actions = actions;
 
@@ -66,7 +68,6 @@ export class Creature {
 
     getMaxHealth() {
         return this.effects.reduce((maxHealth, effect) => {
-            console.log(effect)
             return maxHealth * effect.getMaxHealthMultiplier()
         }, this.maxHealthStat)
     }

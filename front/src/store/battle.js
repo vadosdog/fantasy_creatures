@@ -3,12 +3,16 @@ import {BattleMap} from "../game/classes/battle/BattleMap.js";
 import {Creature, CreatureAction} from "../game/classes/battle/Creature.js";
 import {QueueController} from "../game/classes/battle/QueueController.js";
 import {BaseEffect} from "../game/classes/battle/Effects/BaseEffect.js";
+import {EasyAI} from "../game/classes/battle/AI/EasyAI.js";
 
 export const BATTLE_STATE_PLAYER_TURN = 'PLAYER_TURN'
 export const BATTLE_STATE_ENGINE_TURN = 'ENGINE_TURN'
 export const BATTLE_STATE_WAITING = 'WAITING'
 export const BATTLE_STATE_BATTLE_OVER_WIN = 'BATTLE_OVER_WIN'
 export const BATTLE_STATE_BATTLE_OVER_LOSE = 'BATTLE_OVER_LOSE'
+
+const player1 = 'player'//new EasyAI()
+const player2 = new EasyAI()
 
 export const useBattleStore = defineStore('battle', {
     state: () => ({
@@ -27,9 +31,10 @@ export const useBattleStore = defineStore('battle', {
                 name: 'Огонь/Танк',
                 texture: 'Pink_Monster',
                 element: 'fire',
+                role: 'tank',
                 position: [1, 3],
                 direction: 'right',
-                control: 'player',
+                control: player2,
 
                 maxHealthStat: 300,
                 speedStat: 6,
@@ -88,9 +93,10 @@ export const useBattleStore = defineStore('battle', {
                 name: 'ДД/Трава',
                 texture: 'Dude_Monster',
                 element: 'grass',
+                role: 'dd',
                 position: [3, 3],
                 direction: 'right',
-                control: 'player',
+                control: player2,
 
                 maxHealthStat: 200, // 1=10 - 20
                 speedStat: 10, // 5=1 - 25
@@ -148,9 +154,10 @@ export const useBattleStore = defineStore('battle', {
                 name: 'Сап/Вода',
                 texture: 'Owlet_Monster',
                 element: 'water',
+                role: 'support',
                 position: [4, 4],
                 direction: 'right',
-                control: 'player',
+                control: player2,
                 maxHealthStat: 90,
                 speedStat: 8,
                 attackStat: 30,
@@ -208,9 +215,10 @@ export const useBattleStore = defineStore('battle', {
                 name: 'Вода/Танк',
                 texture: 'Pink_Monster',
                 element: 'water',
+                role: 'tank',
                 position: [1, 28],
                 direction: 'left',
-                control: 'player',
+                control: player1,
 
                 maxHealthStat: 250,
                 speedStat: 8,
@@ -288,9 +296,10 @@ export const useBattleStore = defineStore('battle', {
                 name: 'Огонь / ДД',
                 texture: 'Dude_Monster',
                 element: 'fire',
+                role: 'dd',
                 position: [3, 28],
                 direction: 'left',
-                control: 'player',
+                control: player1,
 
                 maxHealthStat: 175,
                 speedStat: 12,
@@ -363,9 +372,10 @@ export const useBattleStore = defineStore('battle', {
                 name: 'Трава/САП',
                 texture: 'Owlet_Monster',
                 element: 'grass',
+                role: 'support',
                 position: [4, 28],
                 direction: 'left',
-                control: 'player',
+                control: player1,
                 maxHealthStat: 100,
                 speedStat: 6,
                 attackStat: 35,
@@ -442,7 +452,7 @@ export const useBattleStore = defineStore('battle', {
                 this.handlePlayerTurn()
                 this.setBattleState(BATTLE_STATE_PLAYER_TURN)
             } else {
-                this.handleEngineTurn()
+                this.handleEngineTurn(this.activeCreature.control)
                 this.setBattleState(BATTLE_STATE_ENGINE_TURN)
             }
         },
@@ -506,7 +516,9 @@ export const useBattleStore = defineStore('battle', {
                 }
             })
         },
-        handleEngineTurn() {
+        handleEngineTurn(engine) {
+            this.availableActions = [engine.getAction(this)]
+            return
             //Выбор всех активных врагов
             let enemies = []
             this.creatures.forEach(creature => {
@@ -663,21 +675,22 @@ export const useBattleStore = defineStore('battle', {
                 position[1] % 2 ? [1, -1] : [0, -1], //лево вниз
             ]
         },
-        findPath(start, end) {
-
+        findPath(start, end, useObstacles = true) {
             let obstacles = new Set()
 
-            this.creatures.forEach(item => {
-                let obstaclePosition = item.position.join(',')
-                // исключаем стартовые и конченые точки, тк они обязательно должны быть проходимые
-                if (
-                    obstaclePosition === start.join(',')
-                    || obstaclePosition === end.join(',')
-                ) {
-                    return
-                }
-                obstacles.add(obstaclePosition)
-            })
+            if (useObstacles) {
+                this.creatures.forEach(item => {
+                    let obstaclePosition = item.position.join(',')
+                    // исключаем стартовые и конченые точки, тк они обязательно должны быть проходимые
+                    if (
+                        obstaclePosition === start.join(',')
+                        || obstaclePosition === end.join(',')
+                    ) {
+                        return
+                    }
+                    obstacles.add(obstaclePosition)
+                })
+            }
 
             return this.battleMap.findPath(start, end, obstacles)
             // Плохо что есть две разные точки поиска пути, надобы объеденить

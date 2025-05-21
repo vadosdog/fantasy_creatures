@@ -24,7 +24,7 @@ import {
 } from "../../store/battle.js";
 
 export class Battle extends Scene {
-    showGridIndexes = false
+    showGridIndexes = true
     hexagonGroup;
     store
     hexagonsArray;
@@ -266,7 +266,7 @@ export class Battle extends Scene {
                         this.scene.start('BattleOver');
                         return
                     }
-                    this.handleAction(availableActions[0].action, availableActions[0].targets)
+                    this.handleAction(availableActions[0], availableActions[0].targets)
                 }
             }
         })
@@ -328,6 +328,7 @@ export class Battle extends Scene {
     }
 
     handleAction(action, position) {
+        console.log(action, position)
         this.store.setBattleState(BATTLE_STATE_WAITING)
 
         const timeline = this.add.timeline({});
@@ -554,75 +555,8 @@ export class Battle extends Scene {
         return timeline
     }
 
-    getDirections(position) {
-        return [
-            [0, -2], //влево
-            position[1] % 2 ? [0, -1] : [-1, -1], //лево вверх
-            position[1] % 2 ? [0, 1] : [-1, 1], //право вверх
-            [0, 2], //право
-            position[1] % 2 ? [1, 1] : [0, 1], //право вниз
-            position[1] % 2 ? [1, -1] : [0, -1], //лево вниз
-        ]
-    }
-
     findPath(start, end) {
-        let obstacles = new Set()
-
-        this.store.creatures.forEach(item => {
-            let obstaclePosition = item.position.join(',')
-            // исключаем стартовые и конченые точки, тк они обязательно должны быть проходимые
-            if (
-                obstaclePosition === start.join(',')
-                || obstaclePosition === end.join(',')
-            ) {
-                return
-            }
-            obstacles.add(obstaclePosition)
-        })
-        return this.store.battleMap.findPath(start, end, obstacles)
-        // Плохо что есть две разные точки поиска пути, надобы объеденить
-
-        if (!start || !end) {
-            throw new Error("Start or end point not found.");
-        }
-
-        // Очередь для BFS: элементы вида [x, y, path]
-        const queue = [];
-        queue.push([start[0], start[1], []]);
-
-        const visited = new Set();
-
-        while (queue.length > 0) {
-            const [x, y, path] = queue.shift();
-            const key = `${x},${y}`;
-            if (visited.has(key)) continue;
-            visited.add(key);
-
-            const newPath = path.concat([[x, y]]);
-
-            if (x === end[0] && y === end[1]) {
-                return newPath;
-            }
-
-            const directions = this.getDirections([x, y]);
-            for (const [dx, dy] of directions) {
-                const newX = x + dx;
-                const newY = y + dy;
-                const newKey = `${newX},${newY}`;
-
-                if (
-                    newX >= 0 &&
-                    newY >= 0 &&
-                    this.hexagonsArray.has(`${newX},${newY}`) &&
-                    !visited.has(newKey) &&
-                    !obstacles.has(newKey)
-                ) {
-                    queue.push([newX, newY, newPath]);
-                }
-            }
-        }
-
-        throw new Error("No path found.");
+        return this.store.findPath(start, end)
     }
 
     update(time, delta) {

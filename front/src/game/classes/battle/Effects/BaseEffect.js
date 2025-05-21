@@ -8,14 +8,11 @@ export class BaseEffect {
                     effect,
                     duration, //обязательна для эфектов типа round
                 }) {
-        console.log(123)
         this.effect = effect
         this.duration = duration
-        console.log('construct')
     }
 
     static getEffectObject(config) {
-        console.log(config.effect)
         switch (config.effect) {
             case 'empower':
                 return new EmpowerEffect(config)
