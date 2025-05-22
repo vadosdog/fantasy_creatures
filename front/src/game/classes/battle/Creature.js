@@ -110,7 +110,6 @@ export class Creature {
 
     pushEffect(effectConfig) {
         const effect = BaseEffect.getEffectObject(effectConfig)
-        console.log('push', effectConfig, effect)
         let existsEffect
         // Если такой эффект уже есть, то увеличиваем его длительность
         existsEffect = this.effects.find(({effect}) => effectConfig.effect === effect)

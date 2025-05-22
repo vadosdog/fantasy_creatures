@@ -328,8 +328,11 @@ export class Battle extends Scene {
     }
 
     handleAction(action, position) {
-        console.log(action, position)
         this.store.setBattleState(BATTLE_STATE_WAITING)
+
+        if (action.action === 'skip') {
+            return this.handleDefenseAction()
+        }
 
         const timeline = this.add.timeline({});
         const targetCreature = this.store.getCreatureByCoords(position)
@@ -495,6 +498,9 @@ export class Battle extends Scene {
                     });
                 }
                 break;
+            case 'skip':
+                this.handleDefenseAction()
+                break
             default:
                 // неизвестное действие
                 return

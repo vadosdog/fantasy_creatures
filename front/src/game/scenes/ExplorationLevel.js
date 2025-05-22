@@ -640,7 +640,6 @@ export class ExplorationLevel extends Phaser.Scene {
             default:
                 console.log('not found', interactObject)
         }
-        console.log(interactObject, target)
 
         return true
     }

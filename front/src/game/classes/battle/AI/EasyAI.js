@@ -3,38 +3,35 @@ export class EasyAI {
     activeCreature;
 
     getAction(store) {
-        this.store = store
-        //Выбор всех активных врагов
-        let enemies = []
-        let allies = []
-        let availableActions = []
-        const activeCreature = store.activeCreature;
-        this.activeCreature = activeCreature
+        this.store = store;
+        this.activeCreature = store.activeCreature;
 
+        let enemies = [];
+        let allies = [];
+        let availableActions = [];
+
+        // Разделение существ на союзников и врагов
         for (const creature of store.creatures) {
-            if (creature.health <= 0) {
-                continue
-            }
-            if (creature.direction === activeCreature.direction) {
-                allies.push(creature)
+            if (creature.health <= 0) continue;
+            if (creature.direction === this.activeCreature.direction) {
+                allies.push(creature);
             } else {
-                enemies.push(creature)
+                enemies.push(creature);
             }
         }
 
-        // Оценка для каждого навыка
-        activeCreature.getActions().forEach(action => {
-            let target = null
+        // Оценка действий
+        this.activeCreature.getActions().forEach(action => {
             if (action.actionType === 'melee' || action.actionType === 'ranged') {
-                availableActions.push(this.getAttackTarget(action, enemies))
+                availableActions.push(this.getAttackTarget(action, enemies));
             } else if (action.actionType === 'treat') {
-                availableActions.push(this.getTreatTarget(action, allies))
+                availableActions.push(this.getTreatTarget(action, allies));
             }
-        })
+        });
 
-        availableActions.push(this.getMoveTarget())
+        availableActions.push(this.getMoveTarget(enemies, allies));
 
-        return this.chooseAction(availableActions.filter(a => !!a))
+        return this.chooseAction(availableActions.filter(a => !!a));
     }
 
     getAttackTarget(attack, enemies) {
@@ -71,7 +68,7 @@ export class EasyAI {
             return {
                 weight: 50 - path.length, // Двигаться заведомо менее приоритетно
                 action: 'move',
-                targets: path[this.activeCreature.getSpeed() - 1],
+                targets: path[Math.min(this.activeCreature.getSpeed() - 1, path.length - 2)],
             }
         }
     }
@@ -116,8 +113,7 @@ export class EasyAI {
                 }
             } else {
                 // Если действие не лечит, то выбираем тех, у кого нет нужного эффекта
-                // TODO учесть, что эффектов может быть несколько
-                if (ally.hasEffect(treat.effects[0].effect)) {
+                if (treat.effects.some(effect => ally.hasEffect(effect))) {
                     return
                 }
 
@@ -159,7 +155,7 @@ export class EasyAI {
             return {
                 weight: 50 - path.length, // Двигаться заведомо менее приоритетно
                 action: 'move',
-                targets: path[this.activeCreature.getSpeed() - 1],
+                targets: path[Math.min(this.activeCreature.getSpeed() - 1, path.length - 2)],
             }
         }
     }
@@ -172,76 +168,48 @@ export class EasyAI {
         let attackAction
         let treatAction
         let moveAction
-        const allActions = this.activeCreature.getActions()
+
         availableActions.forEach(action => {
             switch (action.action) {
                 case 'attack':
-                    if (attackAction === undefined || attackAction.weight < action.weight) {
-                        attackAction = action
+                    if (!attackAction || attackAction.weight < action.weight) {
+                        attackAction = action;
                     }
-                    break
+                    break;
                 case 'treat':
-                    if (treatAction === undefined || treatAction.weight < action.weight) {
-                        treatAction = action
+                    if (!treatAction || treatAction.weight < action.weight) {
+                        treatAction = action;
                     }
-                    break
+                    break;
                 case 'move':
-                    if (moveAction === undefined || moveAction.weight < action.weight) {
-                        moveAction = action
+                    if (!moveAction || moveAction.weight < action.weight) {
+                        moveAction = action;
                     }
-                    break
+                    break;
             }
-        })
+        });
 
         const actionsWithWeight = []
+
+        // TODO: Уточнить веса для разных ролей и ситуаций
         if (this.activeCreature.role === 'support') {
-            if (attackAction) {
-                attackAction.weight = 30
-                actionsWithWeight.push(attackAction)
-            }
-            if (treatAction) {
-                treatAction.weight = 60
-                actionsWithWeight.push(treatAction)
-            }
-            if (moveAction) {
-                moveAction.weight = 10
-                actionsWithWeight.push(moveAction)
-            }
-
-            actionsWithWeight.push({
-                action: 'skip',
-                weight: 5
-            })
+            if (attackAction) actionsWithWeight.push({...attackAction, weight: 30});
+            if (treatAction) actionsWithWeight.push({...treatAction, weight: 60});
+            if (moveAction) actionsWithWeight.push({...moveAction, weight: 10});
         } else {
-
-            if (attackAction) {
-                attackAction.weight = 70
-                actionsWithWeight.push(attackAction)
-            }
-            if (treatAction) {
-                treatAction.weight = 20
-                actionsWithWeight.push(treatAction)
-            }
-            if (moveAction) {
-                moveAction.weight = 10
-                actionsWithWeight.push(moveAction)
-            }
-
-            actionsWithWeight.push({
-                action: 'skip',
-                weight: 5
-            })
+            if (attackAction) actionsWithWeight.push({...attackAction, weight: 70});
+            if (treatAction) actionsWithWeight.push({...treatAction, weight: 20});
+            if (moveAction) actionsWithWeight.push({...moveAction, weight: 10});
         }
 
         // Если доступно только одно действие (кроме пропуска)
         if (actionsWithWeight.length === 1) {
-            return actionsWithWeight[0].action;
+            return actionsWithWeight[0];
         }
-        console.log(actionsWithWeight)
 
         // Нормализуем веса, чтобы сумма была 100
-        const totalWeight = availableActions.reduce((sum, a) => sum + a.weight, 0);
-        const normalizedActions = availableActions.map(a => {
+        const totalWeight = actionsWithWeight.reduce((sum, a) => sum + a.weight, 0);
+        const normalizedActions = actionsWithWeight.map(a => {
             a.weight = a.weight / totalWeight * 100
             return a
         });
@@ -259,6 +227,6 @@ export class EasyAI {
         }
 
         // На всякий случай возвращаем пропуск
-        return {weight: 5};
+        return { action: 'skip' };
     }
 }
