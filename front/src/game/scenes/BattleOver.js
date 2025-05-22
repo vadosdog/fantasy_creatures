@@ -1,11 +1,14 @@
 import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
+import {useBattleStore} from "../../store/battle.js";
 
 export class BattleOver extends Scene
 {
+    store
     constructor ()
     {
         super('BattleOver');
+        this.store = useBattleStore()
     }
 
     create ()
@@ -21,5 +24,6 @@ export class BattleOver extends Scene
         }).setOrigin(0.5).setDepth(100);
 
         EventBus.emit('current-scene-ready', this);
+        console.log(JSON.stringify(this.battleLog))
     }
 }

@@ -26,6 +26,7 @@ export const useBattleStore = defineStore('battle', {
         queue: null,
         round: 0,
         battleLog: [],
+        speedAnims: 1,
         creatures: [
             ...getTeam('right', player1, [
                 [0, 2],
@@ -198,9 +199,11 @@ export const useBattleStore = defineStore('battle', {
         },
         endTurn(isDelayTurn = false) {
             this.activeCreature.removeRoundEffects().forEach(effect => this.recordLog(effect.effect + ' перестал действовать на ' + this.activeCreature.name))
-            this.checkBattleOver()
-            this.round++
             this.queue.endTurn(isDelayTurn)
+            if (this.checkBattleOver()) {
+                return true
+            }
+            this.round++
             this.queue.nextTurn()
         },
         checkBattleOver() {
@@ -220,9 +223,12 @@ export const useBattleStore = defineStore('battle', {
 
             if (sideA === 0) {
                 this.setBattleState(BATTLE_STATE_BATTLE_OVER_LOSE)
+                return true
             } else if (sideB === 0) {
                 this.setBattleState(BATTLE_STATE_BATTLE_OVER_WIN)
+                return true
             }
+            return false
         },
         getTurn() {
             const effects = this.activeCreature.applyRoundEffects()
@@ -537,7 +543,6 @@ export const useBattleStore = defineStore('battle', {
 
                 this.battleLog.push(`[ROUND: ${round}, TURN: ${turn}][Command: ${activeCreature.direction}}, Creature: ${activeCreature.name} (${activeCreature.id})]: ` + log)
             }
-            // console.log(JSON.stringify(this.battleLog))
 
         },
     },

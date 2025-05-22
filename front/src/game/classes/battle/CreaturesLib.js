@@ -44,6 +44,7 @@ const lib = [
         ,
         // effects: [BaseEffect.getEffectObject({effect: 'curse', duration: 1})]
     },
+// ], a = [
 
     {
         id: 2,

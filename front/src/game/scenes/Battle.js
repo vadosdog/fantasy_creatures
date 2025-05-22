@@ -31,6 +31,7 @@ export class Battle extends Scene {
     buttons = []
     selectedAction
     delayTurnModelOpened = false
+    gameSpeed = 1
 
     constructor() {
         super('Battle');
@@ -246,8 +247,8 @@ export class Battle extends Scene {
             if (activeCreature.health <= 0) {
                 this.store.endTurn();
                 if (
-                    this.store.state === BATTLE_STATE_BATTLE_OVER_WIN
-                    || this.store.state === BATTLE_STATE_BATTLE_OVER_LOSE
+                    this.store.battleState === BATTLE_STATE_BATTLE_OVER_WIN
+                    || this.store.battleState === BATTLE_STATE_BATTLE_OVER_LOSE
                 ) {
 
                     return this.scene.start('BattleOver');
@@ -270,6 +271,7 @@ export class Battle extends Scene {
                 }
             }
         })
+        this.timeLineBySpeed(timeline)
         timeline.play()
     }
 
@@ -335,9 +337,6 @@ export class Battle extends Scene {
         }
 
         const timeline = this.add.timeline({});
-        if (!position) {
-            console.log(action, this.store.activeCreature)
-        }
         const targetCreature = this.store.getCreatureByCoords(position)
         let path = []
         switch (action.action) {
@@ -512,16 +511,18 @@ export class Battle extends Scene {
 
         timeline.on('complete', () => {
             this.store.endTurn();
-            this.store.activeCreature.creatureSpriteContainer.updateEffectsIcons()
             if (
-                this.store.state === BATTLE_STATE_BATTLE_OVER_WIN
-                || this.store.state === BATTLE_STATE_BATTLE_OVER_LOSE
+                this.store.battleState === BATTLE_STATE_BATTLE_OVER_WIN
+                || this.store.battleState === BATTLE_STATE_BATTLE_OVER_LOSE
             ) {
 
                 return this.scene.start('BattleOver');
             }
+            this.store.activeCreature.creatureSpriteContainer.updateEffectsIcons()
             this.handleStep()
         })
+
+        this.timeLineBySpeed(timeline)
         timeline.play()
     }
 
@@ -799,6 +800,8 @@ export class Battle extends Scene {
             this.store.endTurn();
             this.handleStep()
         })
+        
+        this.timeLineBySpeed(timeline)
         timeline.play()
     }
 
@@ -807,5 +810,12 @@ export class Battle extends Scene {
         this.store.activeCreature.creatureSpriteContainer.updateVisual()
         this.store.endTurn(true);
         this.handleStep()
+    }
+    
+    timeLineBySpeed(timeline) {
+        timeline.events.forEach(event => {
+            event.at /= this.gameSpeed;
+            event.time /= this.gameSpeed;
+        });
     }
 }
