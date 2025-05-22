@@ -335,6 +335,9 @@ export class Battle extends Scene {
         }
 
         const timeline = this.add.timeline({});
+        if (!position) {
+            console.log(action, this.store.activeCreature)
+        }
         const targetCreature = this.store.getCreatureByCoords(position)
         let path = []
         switch (action.action) {

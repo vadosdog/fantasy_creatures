@@ -6,6 +6,7 @@ import {BaseEffect} from "../game/classes/battle/Effects/BaseEffect.js";
 import {EasyAI} from "../game/classes/battle/AI/EasyAI.js";
 import {CombatHandler} from "../game/classes/battle/CombatHandler.js";
 import {MediumAI} from "../game/classes/battle/AI/MediumAI.js";
+import {getTeam} from "../game/classes/battle/CreaturesLib.js";
 
 export const BATTLE_STATE_PLAYER_TURN = 'PLAYER_TURN'
 export const BATTLE_STATE_ENGINE_TURN = 'ENGINE_TURN'
@@ -24,486 +25,24 @@ export const useBattleStore = defineStore('battle', {
         gridSizeY: 11,
         queue: null,
         round: 0,
-        newCreatures: [
-            // Команда 1 (right)
-            new Creature({
-                id: 1,
-                name: 'Огненный Страж',
-                element: 'fire',
-                role: 'tank',
-                maxHealthStat: 320,  // Увеличен HP
-                speedStat: 5,       // Немного снижена скорость
-                attackStat: 35,     // Снижен урон
-                defenseStat: 65,    // Увеличен защита
-                initiativeStat: 35,
-                willStat: 30,
-                actions: [
-                    // Основная атака с поджигом
-                    new CreatureAction({
-                        name: 'Раскалённый удар',
-                        element: 'fire',
-                        baseDamage: 28,
-                        hitChance: 0.9,
-                        critChance: 0.05,
-                        actionType: 'melee',
-                        range: 1,
-                        effects: [{effect: 'burn', chance: 0.8, duration: 2}]
-                    }),
-                    // Защитный скилл
-                    new CreatureAction({
-                        name: 'Щит пламени',
-                        element: 'fire',
-                        baseDamage: 0,
-                        hitChance: 1,
-                        actionType: 'treat',
-                        range: 0,
-                        effects: [{effect: 'aegis', chance: 1.0, duration: 3}]
-                    })
-                ]
-            }),
-
-            new Creature({
-                id: 2,
-                name: 'Лесной Убийца',
-                element: 'grass',
-                role: 'dd',
-                maxHealthStat: 180,
-                speedStat: 12,     // Высокая скорость
-                attackStat: 70,    // Высокий урон
-                defenseStat: 25,
-                initiativeStat: 55,
-                willStat: 40,
-                actions: [
-                    // Основная атака с ядом
-                    new CreatureAction({
-                        name: 'Ядовитый укус',
-                        element: 'grass',
-                        baseDamage: 45,
-                        hitChance: 0.85,
-                        critChance: 0.1,
-                        actionType: 'melee',
-                        range: 1,
-                        effects: [{effect: 'poison', chance: 0.85, duration: 3}]
-                    }),
-                    // Дальнобойная атака
-                    new CreatureAction({
-                        name: 'Шторм листьев',
-                        element: 'grass',
-                        baseDamage: 38,
-                        hitChance: 0.9,
-                        critChance: 0.1,
-                        actionType: 'ranged',
-                        range: 30
-                    })
-                ]
-            }),
-
-            new Creature({
-                id: 3,
-                name: 'Водный Целитель',
-                element: 'water',
-                role: 'support',
-                maxHealthStat: 110,
-                speedStat: 7,
-                attackStat: 25,
-                defenseStat: 45,
-                initiativeStat: 50,
-                willStat: 75,
-                actions: [
-                    // Лечение + регенерация
-                    new CreatureAction({
-                        name: 'Исцеляющий поток',
-                        element: 'water',
-                        baseDamage: 30,
-                        hitChance: 0.95,
-                        critChance: 0.2,
-                        actionType: 'treat',
-                        range: 4,
-                        effects: [{effect: 'regeneration', duration: 4}]
-                    }),
-                    // Дебаф врага
-                    new CreatureAction({
-                        name: 'Глубинный шёпот',
-                        element: 'water',
-                        baseDamage: 0,
-                        hitChance: 0.95,
-                        actionType: 'ranged',
-                        range: 5,
-                        effects: [{effect: 'blind', duration: 3}]
-                    })
-                ]
-            }),
-
-            // Команда 2 (left)
-            new Creature({
-                id: 4,
-                name: 'Водный Страж',
-                element: 'water',
-                role: 'tank',
-                
-                maxHealthStat: 310,
-                speedStat: 6,
-                attackStat: 30,
-                defenseStat: 70,    // Высокая защита
-                initiativeStat: 40,
-                willStat: 35,
-                actions: [
-                    // Атака с замедлением
-                    new CreatureAction({
-                        name: 'Водяной таран',
-                        element: 'water',
-                        baseDamage: 25,
-                        hitChance: 0.92,
-                        critChance: 0.05,
-                        actionType: 'melee',
-                        range: 1,
-                        effects: [{effect: 'chill', chance: 0.85, duration: 2}]
-                    }),
-                    // Защитный скилл
-                    new CreatureAction({
-                        name: 'Кипящий щит',
-                        element: 'water',
-                        baseDamage: 0,
-                        hitChance: 1,
-                        actionType: 'treat',
-                        range: 0,
-                        effects: [{effect: 'aegis', duration: 3}]
-                    })
-                ]
-            }),
-
-            new Creature({
-                id: 5,
-                name: 'Огненный Разрушитель',
-                element: 'fire',
-                role: 'dd',
-                
-                maxHealthStat: 170,
-                speedStat: 11,
-                attackStat: 75,    // Очень высокий урон
-                defenseStat: 20,
-                initiativeStat: 60,
-                willStat: 45,
-                actions: [
-                    // Мощная атака с поджигом
-                    new CreatureAction({
-                        name: 'Раскалённый клинок',
-                        element: 'fire',
-                        baseDamage: 50,
-                        hitChance: 0.8,
-                        critChance: 0.15,
-                        actionType: 'melee',
-                        range: 1,
-                        effects: [{effect: 'burn', chance: 0.9, duration: 3}]
-                    }),
-                    // Дальнобойная атака
-                    new CreatureAction({
-                        name: 'Огненная стрела',
-                        element: 'fire',
-                        baseDamage: 45,
-                        hitChance: 0.9,
-                        critChance: 0.1,
-                        actionType: 'ranged',
-                        range: 30
-                    })
-                ]
-            }),
-
-            new Creature({
-                id: 6,
-                name: 'Травяной Шаман',
-                element: 'grass',
-                role: 'support',
-                
-                maxHealthStat: 120,
-                speedStat: 6,
-                attackStat: 30,
-                defenseStat: 50,
-                initiativeStat: 45,
-                willStat: 70,
-                actions: [
-                    // Лечение + баф
-                    new CreatureAction({
-                        name: 'Целительный споры',
-                        element: 'grass',
-                        baseDamage: 35,
-                        hitChance: 0.9,
-                        critChance: 0.25,
-                        actionType: 'treat',
-                        range: 4,
-                        effects: [{effect: 'regeneration', duration: 5}]
-                    }),
-                    // Дебаф врага
-                    new CreatureAction({
-                        name: 'Проклятие листвы',
-                        element: 'grass',
-                        baseDamage: 0,
-                        hitChance: 0.9,
-                        actionType: 'ranged',
-                        range: 6,
-                        effects: [{effect: 'curse', duration: 5}]
-                    })
-                ]
-            })
-        ],
+        battleLog: [],
         creatures: [
-            new Creature({
-                id: 1,
-                name: 'Огонь/Танк',
-                texture: 'Pink_Monster',
-                element: 'fire',
-                role: 'tank',
-                position: [1, 3],
-                direction: 'right',
-                control: player1,
-
-                maxHealthStat: 320,
-                speedStat: 5,
-                attackStat: 35,
-                defenseStat: 65,
-                initiativeStat: 35,
-                willStat: 30,
-
-                actions: [
-                    // Основная атака с поджигом
-                    new CreatureAction({
-                        name: 'Раскалённый удар',
-                        element: 'fire',
-                        baseDamage: 28,
-                        hitChance: 0.9,
-                        critChance: 0.05,
-                        actionType: 'melee',
-                        range: 1,
-                        effects: [{effect: 'burn', chance: 0.8, duration: 2}]
-                    }),
-                    // Защитный скилл
-                    new CreatureAction({
-                        name: 'Щит пламени',
-                        element: 'fire',
-                        baseDamage: 0,
-                        hitChance: 1,
-                        actionType: 'treat',
-                        range: 0,
-                        effects: [{effect: 'aegis', chance: 1.0, duration: 3}]
-                    })
-                ]
-                ,
-                // effects: [BaseEffect.getEffectObject({effect: 'curse', duration: 1})]
-            }),
-
-            new Creature({
-                id: 2,
-                name: 'ДД/Трава',
-                texture: 'Dude_Monster',
-                element: 'grass',
-                role: 'dd',
-                position: [3, 3],
-                direction: 'right',
-                control: player1,
-
-                maxHealthStat: 180, // 1=10 - 20
-                speedStat: 12, // 5=1 - 25
-                attackStat: 70, // 
-                defenseStat: 25,
-                initiativeStat: 55,
-                willStat: 40,
-
-                actions: [
-                    // Основная атака с ядом
-                    new CreatureAction({
-                        name: 'Ядовитый укус',
-                        element: 'grass',
-                        baseDamage: 45,
-                        hitChance: 0.85,
-                        critChance: 0.1,
-                        actionType: 'melee',
-                        range: 1,
-                        effects: [{effect: 'poison', chance: 0.85, duration: 3}]
-                    }),
-                    // Дальнобойная атака
-                    new CreatureAction({
-                        name: 'Шторм листьев',
-                        element: 'grass',
-                        baseDamage: 38,
-                        hitChance: 0.9,
-                        critChance: 0.1,
-                        actionType: 'ranged',
-                        range: 30
-                    })
-                ]
-                ,
-            }),
-
-            new Creature({
-                id: 3,
-                name: 'Сап/Вода',
-                texture: 'Owlet_Monster',
-                element: 'water',
-                role: 'support',
-                position: [4, 4],
-                direction: 'right',
-                control: player1,
-                
-                maxHealthStat: 110,
-                speedStat: 7,
-                attackStat: 25,
-                defenseStat: 45,
-                initiativeStat: 50,
-                willStat: 75,
-                actions: [
-                    // Лечение + регенерация
-                    new CreatureAction({
-                        name: 'Исцеляющий поток',
-                        element: 'water',
-                        baseDamage: 30,
-                        hitChance: 0.95,
-                        critChance: 0.2,
-                        actionType: 'treat',
-                        range: 4,
-                        effects: [{effect: 'regeneration', duration: 4}]
-                    }),
-                    // Дебаф врага
-                    new CreatureAction({
-                        name: 'Глубинный шёпот',
-                        element: 'water',
-                        baseDamage: 0,
-                        hitChance: 0.95,
-                        actionType: 'ranged',
-                        range: 5,
-                        effects: [{effect: 'blind', duration: 3}]
-                    })
-                ]
-                ,
-                effects: []
-            }),
-
-            new Creature({
-                id: 4,
-                name: 'Вода/Танк',
-                texture: 'Pink_Monster',
-                element: 'water',
-                role: 'tank',
-                position: [1, 28],
-                direction: 'left',
-                control: player2,
-
-                maxHealthStat: 310,
-                speedStat: 6,
-                attackStat: 30,
-                defenseStat: 70,    // Высокая защита
-                initiativeStat: 40,
-                willStat: 35,
-
-                actions: [
-                    // Атака с замедлением
-                    new CreatureAction({
-                        name: 'Водяной таран',
-                        element: 'water',
-                        baseDamage: 25,
-                        hitChance: 0.92,
-                        critChance: 0.05,
-                        actionType: 'melee',
-                        range: 1,
-                        effects: [{effect: 'chill', chance: 0.85, duration: 2}]
-                    }),
-                    // Защитный скилл
-                    new CreatureAction({
-                        name: 'Кипящий щит',
-                        element: 'water',
-                        baseDamage: 0,
-                        hitChance: 1,
-                        actionType: 'treat',
-                        range: 0,
-                        effects: [{effect: 'aegis', duration: 3}]
-                    })
-                ]
-                ,
-            }),
-
-            new Creature({
-                id: 5,
-                name: 'Огонь / ДД',
-                texture: 'Dude_Monster',
-                element: 'fire',
-                role: 'dd',
-                position: [3, 28],
-                direction: 'left',
-                control: player2,
-
-                maxHealthStat: 170,
-                speedStat: 11,
-                attackStat: 75,    // Очень высокий урон
-                defenseStat: 20,
-                initiativeStat: 60,
-                willStat: 45,
-
-                actions: [
-                    // Мощная атака с поджигом
-                    new CreatureAction({
-                        name: 'Раскалённый клинок',
-                        element: 'fire',
-                        baseDamage: 50,
-                        hitChance: 0.8,
-                        critChance: 0.15,
-                        actionType: 'melee',
-                        range: 1,
-                        effects: [{effect: 'burn', chance: 0.9, duration: 3}]
-                    }),
-                    // Дальнобойная атака
-                    new CreatureAction({
-                        name: 'Огненная стрела',
-                        element: 'fire',
-                        baseDamage: 45,
-                        hitChance: 0.9,
-                        critChance: 0.1,
-                        actionType: 'ranged',
-                        range: 30
-                    })
-                ]
-                ,
-            }),
-
-            new Creature({
-                id: 6,
-                name: 'Трава/САП',
-                texture: 'Owlet_Monster',
-                element: 'grass',
-                role: 'support',
-                position: [4, 28],
-                direction: 'left',
-                control: player2,
-
-                maxHealthStat: 120,
-                speedStat: 6,
-                attackStat: 30,
-                defenseStat: 50,
-                initiativeStat: 45,
-                willStat: 70,
-                actions: [
-                    // Лечение + баф
-                    new CreatureAction({
-                        name: 'Целительный споры',
-                        element: 'grass',
-                        baseDamage: 35,
-                        hitChance: 0.9,
-                        critChance: 0.25,
-                        actionType: 'treat',
-                        range: 4,
-                        effects: [{effect: 'regeneration', duration: 5}]
-                    }),
-                    // Дебаф врага
-                    new CreatureAction({
-                        name: 'Проклятие листвы',
-                        element: 'grass',
-                        baseDamage: 0,
-                        hitChance: 0.9,
-                        actionType: 'ranged',
-                        range: 6,
-                        effects: [{effect: 'curse', duration: 5}]
-                    })
-                ]
-                ,
-            })
+            ...getTeam('right', player1, [
+                [0, 2],
+                [1, 2],
+                [2, 2],
+                [3, 2],
+                [4, 2],
+                [5, 2],
+            ]),
+            ...getTeam('left', player2, [
+                [0, 28],
+                [1, 28],
+                [2, 28],
+                [3, 28],
+                [4, 28],
+                [5, 28],
+            ])
         ],
         battleState: BATTLE_STATE_WAITING,
         battleMap: undefined,
@@ -658,7 +197,7 @@ export const useBattleStore = defineStore('battle', {
             this.battleState = battleState
         },
         endTurn(isDelayTurn = false) {
-            this.activeCreature.removeRoundEffects()
+            this.activeCreature.removeRoundEffects().forEach(effect => this.recordLog(effect.effect + ' перестал действовать на ' + this.activeCreature.name))
             this.checkBattleOver()
             this.round++
             this.queue.endTurn(isDelayTurn)
@@ -687,6 +226,7 @@ export const useBattleStore = defineStore('battle', {
         },
         getTurn() {
             const effects = this.activeCreature.applyRoundEffects()
+            this.recordLog(effects.map(effect => this.activeCreature.name + ' HP ' + effect.damage + ' (' + effect.effect + ')'))
 
             if (this.activeCreature.health <= 0) {
                 this.activeCreature.health = 0
@@ -817,12 +357,13 @@ export const useBattleStore = defineStore('battle', {
         },
         playerActionMoveTo(path) {
             if (this.getCreatureByCoords(path[path.length - 1])) {
-                throw new Exception('Попытка перединуться в точку, где уже есть другое существо')
+                console.error(new Exception('Попытка перединуться в точку, где уже есть другое существо'))
             }
-            
+
             this.battleMap.removeContent(...this.activeCreature.position)
             this.activeCreature.position = path[path.length - 1]
             this.battleMap.setContent(...path[path.length - 1], this.activeCreature)
+            this.recordLog('Перемещение в ' + path[path.length - 1].join(','))
         },
         playerActionAttack(targetPosition, attack) {
             const result = {
@@ -866,6 +407,17 @@ export const useBattleStore = defineStore('battle', {
             }
 
             result.health = defender.health;
+            
+            let logText = `Атака ${defender.name} (${defender.id}) ${attack.name}: `
+            if (result.success) {
+                logText += 'Урон: ' + result.damage
+                if (result.isCrit) {
+                    logText += ' КРИТ!'
+                }
+            } else {
+                logText += 'Промах'
+            }
+            this.recordLog(logText)
 
             if (!result.success) {
                 return result
@@ -875,14 +427,13 @@ export const useBattleStore = defineStore('battle', {
             (attack.effects || []).forEach(effect => {
                 const chance = CombatHandler.getPushEffectChance(attacker, defender, effect)
                 if (Math.random() > chance) {
-                    console.log('Эфект не наложен')
                     return
                 }
 
                 if (effect.target === 'target') {
-                    defender.pushEffect(effect)
+                    this.recordLog(defender.pushEffect(effect))
                 } else {
-                    attacker.pushEffect(effect)
+                    this.recordLog(attacker.pushEffect(effect))
                 }
             })
 
@@ -924,6 +475,17 @@ export const useBattleStore = defineStore('battle', {
             result.health = treated.health;
 
 
+            let logText = `Лечение союзника ${treated.name} (${treated.id}) ${action.name}: `
+            if (result.success) {
+                logText += 'Лечение: ' + result.damage
+                if (result.isCrit) {
+                    logText += ' КРИТ!'
+                }
+            } else {
+                logText += 'Промах'
+            }
+            this.recordLog(logText);
+
             // накладываем эфекты
             (action.effects || []).forEach(effect => {
 
@@ -932,14 +494,13 @@ export const useBattleStore = defineStore('battle', {
                     chance = CombatHandler.getPushEffectChance(treater, treated, effect)
                 }
                 if (Math.random() > chance) {
-                    console.log('Эфект не наложен')
                     return
                 }
 
                 if (effect.target === 'target') {
-                    treated.pushEffect(effect)
+                    this.recordLog(treated.pushEffect(effect))
                 } else {
-                    treater.pushEffect(effect)
+                    this.recordLog(treater.pushEffect(effect))
                 }
             })
 
@@ -955,14 +516,29 @@ export const useBattleStore = defineStore('battle', {
             return this.playerActionAttack(targetPosition, action)
         },
         playerActionDefense() {
-            this.activeCreature.pushEffect({effect: 'defense', duration: 2})
+            this.recordLog(this.activeCreature.pushEffect({effect: 'defense', duration: 2}))
         },
         playerActionDelayedTurn(afterCreature) {
             this.queue.handleDelayedTurn(afterCreature)
-            this.activeCreature.pushEffect({effect: 'confusion', duration: 3})
+            this.recordLog(this.activeCreature.pushEffect({effect: 'confusion', duration: 3}))
         },
         getCreatureByCoords(position) {
             return this.battleMap.get(position.join(','))?.content
+        },
+        recordLog(log) {
+            if (typeof log === 'string') {
+                log = [log]
+            }
+            const round = this.queue.round
+            const turn = this.queue.currentTurnIndex + 1
+            const activeCreature = this.activeCreature
+
+            for (const text of log) {
+
+                this.battleLog.push(`[ROUND: ${round}, TURN: ${turn}][Command: ${activeCreature.direction}}, Creature: ${activeCreature.name} (${activeCreature.id})]: ` + log)
+            }
+            // console.log(JSON.stringify(this.battleLog))
+
         },
     },
 });

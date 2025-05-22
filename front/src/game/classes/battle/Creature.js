@@ -115,13 +115,13 @@ export class Creature {
         existsEffect = this.effects.find(({effect}) => effectConfig.effect === effect)
         if (existsEffect) {
             existsEffect.duration += effectConfig.duration
-            console.log('Увеличен эффект ' + effectConfig.effect + ' на ' + this.name, effectConfig)
-            return
+            return ['Увеличен эффект ' + effectConfig.effect + ` на ${this.name} (${this.id})`]
         }
 
-        console.log('Наложен эффект ' + effectConfig.effect + ' на ' + this.name, effectConfig)
         // TODO добавить невосприимчивость к некоторым эфектам
         this.effects.push(effect)
+        
+        return ['Наложен эффект ' + effectConfig.effect + ` на ${this.name} (${this.id})`]
     }
 
 
@@ -141,7 +141,6 @@ export class Creature {
                     duration: effect.duration - 1
                 }
             )
-            console.log(this.name + ' HP ' + effect.damage + ' (' + effect.effect + ')' + ' осталось еще: ' + effect.duration)
             this.health += damage
         })
 
@@ -151,14 +150,16 @@ export class Creature {
     }
 
     removeRoundEffects() {
+        const removedEffects = []
         this.effects.forEach(effect => {
             effect.duration--
 
             if (effect.duration === 0) {
-                console.log(effect.effect + ' перестал действовать на ' + this.name)
+                removedEffects.push(effect)
             }
         })
         this.effects = this.effects.filter(effect => effect.duration > 0)
+        return removedEffects
     }
 
     removeEffect(effectType) {
