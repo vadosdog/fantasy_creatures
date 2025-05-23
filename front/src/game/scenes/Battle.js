@@ -263,10 +263,6 @@ export class Battle extends Scene {
 
                     this.markActionAvailableHexs(false)
                 } else {
-                    if (availableActions.length === 0) {
-                        this.scene.start('BattleOver');
-                        return
-                    }
                     this.handleAction(availableActions[0], availableActions[0].targets)
                 }
             }

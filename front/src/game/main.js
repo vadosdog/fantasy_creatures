@@ -3,6 +3,7 @@ import {Game} from './scenes/Game';
 import {BattleOver} from './scenes/BattleOver.js';
 import {MainMenu} from './scenes/MainMenu';
 import {Battle} from './scenes/Battle';
+import {BattleAutoTest} from './scenes/BattleAutoTest';
 import Phaser from 'phaser';
 import {Preloader} from './scenes/Preloader';
 // import {CraftGameCrucibleOfSouls} from "./scenes/CraftGameCrucibleOfSouls";
@@ -35,6 +36,7 @@ const StartGame = (parent) => {
             Game,
             BattleOver,
             Battle,
+            BattleAutoTest,
         ],
         plugins: {
             scene: [

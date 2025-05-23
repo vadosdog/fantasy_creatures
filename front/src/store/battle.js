@@ -6,7 +6,7 @@ import {BaseEffect} from "../game/classes/battle/Effects/BaseEffect.js";
 import {EasyAI} from "../game/classes/battle/AI/EasyAI.js";
 import {CombatHandler} from "../game/classes/battle/CombatHandler.js";
 import {MediumAI} from "../game/classes/battle/AI/MediumAI.js";
-import {getTeam} from "../game/classes/battle/CreaturesLib.js";
+import {getTeam} from "../database/CreaturesLib.js";
 
 export const BATTLE_STATE_PLAYER_TURN = 'PLAYER_TURN'
 export const BATTLE_STATE_ENGINE_TURN = 'ENGINE_TURN'
@@ -14,8 +14,8 @@ export const BATTLE_STATE_WAITING = 'WAITING'
 export const BATTLE_STATE_BATTLE_OVER_WIN = 'BATTLE_OVER_WIN'
 export const BATTLE_STATE_BATTLE_OVER_LOSE = 'BATTLE_OVER_LOSE'
 
-const player1 = new MediumAI()
-const player2 = new EasyAI()
+const player1 = new EasyAI()
+const player2 = new MediumAI()
 
 export const useBattleStore = defineStore('battle', {
     state: () => ({
@@ -45,6 +45,8 @@ export const useBattleStore = defineStore('battle', {
                 [5, 28],
             ])
         ],
+        leftTeam: [],
+        rightTeam: [],
         battleState: BATTLE_STATE_WAITING,
         battleMap: undefined,
         activeCreature: undefined,
@@ -53,10 +55,45 @@ export const useBattleStore = defineStore('battle', {
     getters: {},
     actions: {
         load() {
+            this.resetBattle()
+        },
+        resetBattle() {
+            this.round = 0
+            this.battleLog = []
+            this.creatures = [
+                ...getTeam('right', player1, [
+                    [0, 2],
+                    [1, 2],
+                    [2, 2],
+                    [3, 2],
+                    [4, 2],
+                    [5, 2],
+                ]),
+                ...getTeam('left', player2, [
+                    [0, 28],
+                    [1, 28],
+                    [2, 28],
+                    [3, 28],
+                    [4, 28],
+                    [5, 28],
+                ])
+            ]
+
+            this.leftTeam = []
+            this.rightTeam = []
+            this.battleState = BATTLE_STATE_WAITING
+            this.activeCreature = undefined
+            this.availableActions = []
+
             this.queue = new QueueController(this.creatures)
             const contents = new Map()
             this.creatures.forEach(creature => {
                 contents.set(creature.position.join(','), creature)
+                if (creature.direction === 'right') {
+                    this.leftTeam.push(creature)
+                } else {
+                    this.rightTeam.push(creature)
+                }
             })
             this.battleMap = BattleMap.create(this.gridSizeX, this.gridSizeY, contents)
         },
@@ -64,6 +101,9 @@ export const useBattleStore = defineStore('battle', {
             this.activeCreature = this.queue.currentCreature
 
             this.availableActions = []
+            if (this.battleState === BATTLE_STATE_BATTLE_OVER_LOSE || this.battleState === BATTLE_STATE_BATTLE_OVER_WIN) {
+                return
+            }
 
             // переделать на что-то другое
             if (this.activeCreature.control === 'player') {
@@ -409,11 +449,11 @@ export const useBattleStore = defineStore('battle', {
                 this.creatures.splice(targetIndex, 1)
                 this.battleMap.removeContent(...defender.position)
                 targetIndex = this.creatures.findIndex(c => c === this.activeCreature)
-                this.round = targetIndex
+                // this.round = targetIndex
             }
 
             result.health = defender.health;
-            
+
             let logText = `Атака ${defender.name} (${defender.id}) ${attack.name}: `
             if (result.success) {
                 logText += 'Урон: ' + result.damage

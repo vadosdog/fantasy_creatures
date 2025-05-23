@@ -1,4 +1,4 @@
-import {Creature, CreatureAction} from "./Creature.js";
+import {Creature, CreatureAction} from "../game/classes/battle/Creature.js";
 
 const lib = [
     {
@@ -7,8 +7,6 @@ const lib = [
         texture: 'Pink_Monster',
         element: 'fire',
         role: 'tank',
-
-        direction: 'right',
 
 
         maxHealthStat: 320,
@@ -44,16 +42,14 @@ const lib = [
         ,
         // effects: [BaseEffect.getEffectObject({effect: 'curse', duration: 1})]
     },
-// ], a = [
-
+    // ]
+// const lib2 =[
     {
         id: 2,
         name: 'ДД/Трава',
         texture: 'Dude_Monster',
         element: 'grass',
         role: 'dd',
-
-        direction: 'right',
 
 
         maxHealthStat: 180, // 1=10 - 20
@@ -95,8 +91,6 @@ const lib = [
         texture: 'Owlet_Monster',
         element: 'water',
         role: 'support',
-
-        direction: 'right',
 
 
         maxHealthStat: 110,
@@ -257,13 +251,55 @@ const lib = [
         ,
     }
 ]
-let idIndex = 1
+let idIndex = 1;
+
+import creatures from './creatures.json';
+import creaturesActions from './creature-actions.json';
+import creaturesCreatureActions from './creatures-creature-actions.json';
+
+const creaturesLib = {}
+const creatureActionsLib = {}
+const creatureToActionLib = {}
+
+function prepare() {
+    for (const creaturesAction of creaturesActions) {
+        creatureActionsLib[creaturesAction.name] = creaturesAction
+    }
+
+    for (const action of creaturesCreatureActions) {
+        const key = action.element + '/' + action.form + '/' + action.role;
+        if (!creatureToActionLib[key]) {
+            creatureToActionLib[key] = []
+        }
+        creatureToActionLib[key].push(action)
+    }
+
+    for (const creature of creatures) {
+        creature.name = creature.element + '/' + creature.form + '/' + creature.role;
+        switch (creature.role) {
+            case 'tank':
+                creature.texture = 'Pink_Monster'
+                break
+            case 'dd':
+                creature.texture = 'Dude_Monster'
+                break
+            case 'support':
+                creature.texture = 'Owlet_Monster'
+                break
+        }
+        creature.actions = creatureToActionLib[creature.name]
+        creaturesLib[creature.name] = creature
+    }
+    console.log(creaturesLib)
+}
+
+prepare()
 
 export function getTeam(direction, control, positions) {
     const result = []
     lib.forEach((config, i) => {
         const creature = new Creature(config)
-        creature.id = idIndex++
+        creature.id += direction === 'left' ? 100 : 0
         creature.actions = config.actions.map(action => new CreatureAction(action))
         creature.direction = direction
         creature.control = control

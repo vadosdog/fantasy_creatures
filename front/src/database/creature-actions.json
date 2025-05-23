@@ -1,0 +1,1535 @@
+[
+    {
+        "ID": 5,
+        "name": "Водяной барьер",
+        "type": "Защитный",
+        "element": "water",
+        "baseDamage": 25,
+        "hitChance": 100,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 3,
+        "effects": [
+            {
+                "effect": "aegis",
+                "chance": 1,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Добавить отражение урона",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Водяной барьер (5)"
+    },
+    {
+        "ID": 6,
+        "name": "Вихревой рывок",
+        "type": "Поддерживающий",
+        "element": "normal",
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "speed",
+                "chance": 1,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Увеличить длительность",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Вихревой рывок (6)"
+    },
+    {
+        "ID": 7,
+        "name": "Гипнотический взгляд",
+        "type": "Контрольный",
+        "element": "dark",
+        "baseDamage": 0,
+        "hitChance": 70,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 4,
+        "effects": [
+            {
+                "effect": "blind",
+                "chance": 0.5,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Увеличить радиус действия",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Гипнотический взгляд (7)"
+    },
+    {
+        "ID": 8,
+        "name": "Возрождение феникса",
+        "type": "Уникальный",
+        "element": "fire",
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 0,
+        "effects": [
+            {
+                "effect": "revive",
+                "chance": 1,
+                "duration": 0
+            }
+        ],
+        "Комментарий": "Добавить временную неуязвимость",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Возрождение феникса (8)"
+    },
+    {
+        "ID": 9,
+        "name": "Шипастая защита",
+        "type": "Защитный",
+        "element": "grass",
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "thorns",
+                "chance": 1,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Увеличить возвращаемый урон",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Шипастая защита (9)"
+    },
+    {
+        "ID": 10,
+        "name": "Водоворот",
+        "type": "Контрольный",
+        "element": "water",
+        "baseDamage": 0,
+        "hitChance": 80,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "slow",
+                "chance": 0.4,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Добавить эффект сбивания с ног",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Водоворот (10)"
+    },
+    {
+        "ID": 12,
+        "name": "Исцеляющий родник",
+        "type": "Поддерживающий",
+        "element": "water",
+        "baseDamage": 60,
+        "hitChance": 100,
+        "critChance": 10,
+        "actionType": "treat",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "regen",
+                "chance": 1,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Увеличить количество лечения",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Исцеляющий родник (12)"
+    },
+    {
+        "ID": 13,
+        "name": "Гранитная броня",
+        "type": "Защитный",
+        "element": "grass",
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "defense",
+                "chance": 1,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Добавить сопротивление эффектам",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Гранитная броня (13)"
+    },
+    {
+        "ID": 16,
+        "name": "Ледяная темница",
+        "type": "Контрольный",
+        "element": "water",
+        "baseDamage": 0,
+        "hitChance": 60,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 3,
+        "effects": [
+            {
+                "effect": "freeze",
+                "chance": 0.6,
+                "duration": 1
+            }
+        ],
+        "Комментарий": "Увеличить длительность",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Ледяная темница (16)"
+    },
+    {
+        "ID": 18,
+        "name": "Молитва удачи",
+        "type": "Поддерживающий",
+        "element": "normal",
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "luck",
+                "chance": 1,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Увеличить бонус к криту",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Молитва удачи (18)"
+    },
+    {
+        "ID": 22,
+        "name": "Песнь глубин",
+        "type": "Контрольный",
+        "element": "water",
+        "baseDamage": 0,
+        "hitChance": 80,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "fear",
+                "chance": 0.45,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Увеличить радиус действия",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Песнь глубин (22)"
+    },
+    {
+        "ID": 24,
+        "name": "Лунное исцеление",
+        "type": "Поддерживающий",
+        "element": "normal",
+        "baseDamage": 50,
+        "hitChance": 100,
+        "critChance": 10,
+        "actionType": "treat",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "regen",
+                "chance": 1,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Добавить очищение дебафов",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Лунное исцеление (24)"
+    },
+    {
+        "ID": 26,
+        "name": "Ледяной панцирь",
+        "type": "Защитный",
+        "element": "water",
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "defense",
+                "chance": 1,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Добавить отражение урона",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Ледяной панцирь (26)"
+    },
+    {
+        "ID": 27,
+        "name": "Удушающие споры",
+        "type": "Контрольный",
+        "element": "grass",
+        "baseDamage": 0,
+        "hitChance": 90,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "poison",
+                "chance": 0.5,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Увеличить площадь поражения",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Удушающие споры (27)"
+    },
+    {
+        "ID": 29,
+        "name": "Прилив сил",
+        "type": "Поддерживающий",
+        "element": "water",
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "strength",
+                "chance": 1,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Увеличить бонус к атаке",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Прилив сил (29)"
+    },
+    {
+        "ID": 31,
+        "name": "Теневой щит",
+        "type": "Защитный",
+        "element": "dark",
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "curse",
+                "chance": 0.3,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Добавить поглощение урона",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Теневой щит (31)"
+    },
+    {
+        "ID": 34,
+        "name": "Хрустальный туман",
+        "type": "Контрольный",
+        "element": "water",
+        "baseDamage": 0,
+        "hitChance": 70,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "freeze",
+                "chance": 0.3,
+                "duration": 1
+            }
+        ],
+        "Комментарий": "Добавить замедление",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Хрустальный туман (34)"
+    },
+    {
+        "ID": 37,
+        "name": "Живой щит",
+        "type": "Защитный",
+        "element": "grass",
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 3,
+        "effects": [
+            {
+                "effect": "thorns",
+                "chance": 1,
+                "duration": 3
+            },
+            {
+                "effect": "regen",
+                "chance": 0.5,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Увеличить регенерацию",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Живой щит (37)"
+    },
+    {
+        "ID": 39,
+        "name": "Громовой рев",
+        "type": "Контрольный",
+        "element": "fire",
+        "baseDamage": 0,
+        "hitChance": 65,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "stun",
+                "chance": 0.35,
+                "duration": 1
+            }
+        ],
+        "Комментарий": "Увеличить радиус действия",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Громовой рев (39)"
+    },
+    {
+        "ID": 42,
+        "name": "Призрачная дымка",
+        "type": "Контрольный",
+        "element": "dark",
+        "baseDamage": 0,
+        "hitChance": 75,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "blind",
+                "chance": 0.55,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Увеличить область действия",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Призрачная дымка (42)"
+    },
+    {
+        "ID": 45,
+        "name": "Сияющий барьер",
+        "type": "Защитный",
+        "element": "normal",
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 3,
+        "effects": [
+            {
+                "effect": "aegis",
+                "chance": 1,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Добавить отражение магии",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Сияющий барьер (45)"
+    },
+    {
+        "ID": 47,
+        "name": "Пламенная аура",
+        "type": "Гибридный",
+        "element": "fire",
+        "baseDamage": 30,
+        "hitChance": 100,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "burn",
+                "chance": 0.35,
+                "duration": 2
+            },
+            {
+                "effect": "strength",
+                "chance": 0.4,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Расширить радиус",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Пламенная аура (47)"
+    },
+    {
+        "ID": 48,
+        "name": "Ледяная ловушка",
+        "type": "Контрольный",
+        "element": "water",
+        "baseDamage": 0,
+        "hitChance": 70,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 3,
+        "effects": [
+            {
+                "effect": "freeze",
+                "chance": 0.5,
+                "duration": 1
+            }
+        ],
+        "Комментарий": "Увеличить длительность",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Ледяная ловушка (48)"
+    },
+    {
+        "ID": 49,
+        "name": "Ядовитый туман",
+        "type": "Контрольный",
+        "element": "grass",
+        "baseDamage": 0,
+        "hitChance": 85,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "poison",
+                "chance": 0.6,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Добавить ослабление атаки",
+        "Использован": 2,
+        "Формула": "",
+        "Для поиска": "Ядовитый туман (49)"
+    },
+    {
+        "ID": 51,
+        "name": "Каменные объятия",
+        "type": "Контрольный",
+        "element": "grass",
+        "baseDamage": 0,
+        "hitChance": 75,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "stun",
+                "chance": 0.4,
+                "duration": 1
+            }
+        ],
+        "Комментарий": "Увеличить шанс оглушения",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Каменные объятия (51)"
+    },
+    {
+        "ID": 56,
+        "name": "Холодный фронт",
+        "type": "Контрольный",
+        "element": "water",
+        "baseDamage": 0,
+        "hitChance": 80,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "slow",
+                "chance": 0.6,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Добавить эффект обморожения",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Холодный фронт (56)"
+    },
+    {
+        "ID": 58,
+        "name": "Огненный талисман",
+        "type": "Защитный",
+        "element": "fire",
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 3,
+        "effects": [
+            {
+                "effect": "aegis",
+                "chance": 1,
+                "duration": 3
+            },
+            {
+                "effect": "thorns",
+                "chance": 0.5,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Добавить отражение заклинаний",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Огненный талисман (58)"
+    },
+    {
+        "ID": 59,
+        "name": "Удушающие водоросли",
+        "type": "Контрольный",
+        "element": "grass",
+        "baseDamage": 0,
+        "hitChance": 75,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 3,
+        "effects": [
+            {
+                "effect": "stun",
+                "chance": 0.35,
+                "duration": 1
+            },
+            {
+                "effect": "poison",
+                "chance": 0.4,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Увеличить радиус",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Удушающие водоросли (59)"
+    },
+    {
+        "ID": 63,
+        "name": "Вечная мерзлота",
+        "type": "Контрольный",
+        "element": "water",
+        "baseDamage": 0,
+        "hitChance": 65,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "freeze",
+                "chance": 0.4,
+                "duration": 1
+            },
+            {
+                "effect": "slow",
+                "chance": 0.8,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Увеличить радиус действия",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Вечная мерзлота (63)"
+    },
+    {
+        "ID": 65,
+        "name": "Сердце феникса",
+        "type": "Уникальный",
+        "element": "fire",
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 0,
+        "effects": [
+            {
+                "effect": "revive",
+                "chance": 1,
+                "duration": 0
+            },
+            {
+                "effect": "burn",
+                "chance": 0.5,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Добавить временную неуязвимость",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Сердце феникса (65)"
+    },
+    {
+        "ID": 1,
+        "name": "Огненный клык",
+        "type": "Атакующий",
+        "element": "fire",
+        "baseDamage": 40,
+        "hitChance": 90,
+        "critChance": 10,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "burn",
+                "chance": 0.3,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Добавить эффект страха при крите",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Огненный клык (1)"
+    },
+    {
+        "ID": 3,
+        "name": "Ядовитый шип",
+        "type": "Гибридный",
+        "element": "grass",
+        "baseDamage": 30,
+        "hitChance": 95,
+        "critChance": 5,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "poison",
+                "chance": 0.4,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Добавить эффект ослабления защиты",
+        "Использован": 1,
+        "Формула": "",
+        "Для поиска": "Ядовитый шип (3)"
+    },
+    {
+        "ID": 4,
+        "name": "Каменный молот",
+        "type": "Атакующий",
+        "element": "normal",
+        "baseDamage": 45,
+        "hitChance": 80,
+        "critChance": 10,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [],
+        "Комментарий": "Добавить эффект оглушения",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Каменный молот (4)"
+    },
+    {
+        "ID": 14,
+        "name": "Теневой клинок",
+        "type": "Атакующий",
+        "element": "dark",
+        "baseDamage": 55,
+        "hitChance": 85,
+        "critChance": 15,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [],
+        "Комментарий": "Добавить эффект кровотечения",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Теневой клинок (14)"
+    },
+    {
+        "ID": 17,
+        "name": "Яростный рывок",
+        "type": "Атакующий",
+        "element": "normal",
+        "baseDamage": 40,
+        "hitChance": 90,
+        "critChance": 10,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [],
+        "Комментарий": "Добавить эффект отталкивания",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Яростный рывок (17)"
+    },
+    {
+        "ID": 19,
+        "name": "Кровавые когти",
+        "type": "Гибридный",
+        "element": "normal",
+        "baseDamage": 35,
+        "hitChance": 95,
+        "critChance": 5,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "bleed",
+                "chance": 0.35,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Увеличить урон от кровотечения",
+        "Использован": 1,
+        "Формула": "",
+        "Для поиска": "Кровавые когти (19)"
+    },
+    {
+        "ID": 25,
+        "name": "Шквал клыков",
+        "type": "Атакующий",
+        "element": "normal",
+        "baseDamage": 42,
+        "hitChance": 85,
+        "critChance": 10,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [],
+        "Комментарий": "Добавить эффект кровотечения",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Шквал клыков (25)"
+    },
+    {
+        "ID": 30,
+        "name": "Гранитный таран",
+        "type": "Атакующий",
+        "element": "grass",
+        "baseDamage": 45,
+        "hitChance": 75,
+        "critChance": 5,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "stun",
+                "chance": 0.2,
+                "duration": 1
+            }
+        ],
+        "Комментарий": "Увеличить шанс оглушения",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Гранитный таран (30)"
+    },
+    {
+        "ID": 33,
+        "name": "Костер ярости",
+        "type": "Гибридный",
+        "element": "fire",
+        "baseDamage": 35,
+        "hitChance": 85,
+        "critChance": 0,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "burn",
+                "chance": 0.4,
+                "duration": 2
+            },
+            {
+                "effect": "strength",
+                "chance": 0.5,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Увеличить длительность баффа",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Костер ярости (33)"
+    },
+    {
+        "ID": 35,
+        "name": "Укус гадюки",
+        "type": "Гибридный",
+        "element": "grass",
+        "baseDamage": 32,
+        "hitChance": 95,
+        "critChance": 5,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "poison",
+                "chance": 0.6,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Увеличить урон яда",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Укус гадюки (35)"
+    },
+    {
+        "ID": 36,
+        "name": "Обсидиановый клинок",
+        "type": "Атакующий",
+        "element": "fire",
+        "baseDamage": 52,
+        "hitChance": 80,
+        "critChance": 15,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "burn",
+                "chance": 0.25,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Добавить пробивание брони",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Обсидиановый клинок (36)"
+    },
+    {
+        "ID": 40,
+        "name": "Клыки оборотня",
+        "type": "Атакующий",
+        "element": "normal",
+        "baseDamage": 47,
+        "hitChance": 85,
+        "critChance": 10,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "bleed",
+                "chance": 0.3,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Добавить самолечение",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Клыки оборотня (40)"
+    },
+    {
+        "ID": 43,
+        "name": "Жалящие корни",
+        "type": "Гибридный",
+        "element": "grass",
+        "baseDamage": 38,
+        "hitChance": 90,
+        "critChance": 5,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "poison",
+                "chance": 0.45,
+                "duration": 3
+            },
+            {
+                "effect": "slow",
+                "chance": 0.3,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Добавить эффект удушения",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Жалящие корни (43)"
+    },
+    {
+        "ID": 46,
+        "name": "Вихревой коготь",
+        "type": "Атакующий",
+        "element": "normal",
+        "baseDamage": 43,
+        "hitChance": 80,
+        "critChance": 10,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "bleed",
+                "chance": 0.25,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Увеличить шанс кровотечения",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Вихревой коготь (46)"
+    },
+    {
+        "ID": 50,
+        "name": "Удар судьбы",
+        "type": "Атакующий",
+        "element": "normal",
+        "baseDamage": 60,
+        "hitChance": 65,
+        "critChance": 25,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [],
+        "Комментарий": "Добавить игнорирование защиты",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Удар судьбы (50)"
+    },
+    {
+        "ID": 52,
+        "name": "Фантомный клинок",
+        "type": "Атакующий",
+        "element": "dark",
+        "baseDamage": 58,
+        "hitChance": 80,
+        "critChance": 20,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [],
+        "Комментарий": "Добавить невидимость после удара",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Фантомный клинок (52)"
+    },
+    {
+        "ID": 57,
+        "name": "Клыки мантикоры",
+        "type": "Атакующий",
+        "element": "normal",
+        "baseDamage": 50,
+        "hitChance": 85,
+        "critChance": 15,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "poison",
+                "chance": 0.35,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Добавить страх при крите",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Клыки мантикоры (57)"
+    },
+    {
+        "ID": 60,
+        "name": "Ледяной кинжал",
+        "type": "Атакующий",
+        "element": "water",
+        "baseDamage": 47,
+        "hitChance": 90,
+        "critChance": 10,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "freeze",
+                "chance": 0.25,
+                "duration": 1
+            }
+        ],
+        "Комментарий": "Добавить пронзание брони",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Ледяной кинжал (60)"
+    },
+    {
+        "ID": 62,
+        "name": "Теневой гамбит",
+        "type": "Гибридный",
+        "element": "dark",
+        "baseDamage": 40,
+        "hitChance": 85,
+        "critChance": 0,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "curse",
+                "chance": 0.5,
+                "duration": 3
+            },
+            {
+                "effect": "blind",
+                "chance": 0.3,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Увеличить шанс ослепления",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Теневой гамбит (62)"
+    },
+    {
+        "ID": 67,
+        "name": "Укус василиска",
+        "type": "Гибридный",
+        "element": "grass",
+        "baseDamage": 55,
+        "hitChance": 85,
+        "critChance": 15,
+        "actionType": "melee",
+        "range": 1,
+        "effects": [
+            {
+                "effect": "petrify",
+                "chance": 0.2,
+                "duration": 1
+            }
+        ],
+        "Комментарий": "Увеличить шанс окаменения",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Укус василиска (67)"
+    },
+    {
+        "ID": 2,
+        "name": "Ледяная игла",
+        "type": "Атакующий",
+        "element": "water",
+        "baseDamage": 35,
+        "hitChance": 85,
+        "critChance": 15,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "freeze",
+                "chance": 0.25,
+                "duration": 1
+            }
+        ],
+        "Комментарий": "Увеличить дальность при эволюции",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Ледяная игла (2)"
+    },
+    {
+        "ID": 11,
+        "name": "Громовой удар",
+        "type": "Атакующий",
+        "element": "fire",
+        "baseDamage": 50,
+        "hitChance": 75,
+        "critChance": 15,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [],
+        "Комментарий": "Добавить эффект оглушения",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Громовой удар (11)"
+    },
+    {
+        "ID": 15,
+        "name": "Огненный смерч",
+        "type": "Атакующий",
+        "element": "fire",
+        "baseDamage": 45,
+        "hitChance": 70,
+        "critChance": 5,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "burn",
+                "chance": 0.25,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Увеличить радиус действия",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Огненный смерч (15)"
+    },
+    {
+        "ID": 20,
+        "name": "Взрыв хаоса",
+        "type": "Гибридный",
+        "element": "fire",
+        "baseDamage": 30,
+        "hitChance": 65,
+        "critChance": 0,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "madness",
+                "chance": 0.3,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Увеличить шанс наложения",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Взрыв хаоса (20)"
+    },
+    {
+        "ID": 21,
+        "name": "Каменный ливень",
+        "type": "Атакующий",
+        "element": "grass",
+        "baseDamage": 38,
+        "hitChance": 75,
+        "critChance": 5,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [],
+        "Комментарий": "Добавить эффект замедления",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Каменный ливень (21)"
+    },
+    {
+        "ID": 23,
+        "name": "Вулканический выброс",
+        "type": "Атакующий",
+        "element": "fire",
+        "baseDamage": 55,
+        "hitChance": 70,
+        "critChance": 15,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "burn",
+                "chance": 0.35,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Добавить разрушение препятствий",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Вулканический выброс (23)"
+    },
+    {
+        "ID": 28,
+        "name": "Солнечный удар",
+        "type": "Атакующий",
+        "element": "fire",
+        "baseDamage": 48,
+        "hitChance": 80,
+        "critChance": 20,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [],
+        "Комментарий": "Добавить ослепление при крите",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Солнечный удар (28)"
+    },
+    {
+        "ID": 32,
+        "name": "Водяной бич",
+        "type": "Атакующий",
+        "element": "water",
+        "baseDamage": 40,
+        "hitChance": 90,
+        "critChance": 5,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [],
+        "Комментарий": "Добавить эффект отталкивания",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Водяной бич (32)"
+    },
+    {
+        "ID": 38,
+        "name": "Морозное дыхание",
+        "type": "Атакующий",
+        "element": "water",
+        "baseDamage": 44,
+        "hitChance": 75,
+        "critChance": 10,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "slow",
+                "chance": 0.4,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Добавить эффект обледенения",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Морозное дыхание (38)"
+    },
+    {
+        "ID": 41,
+        "name": "Лавовый всплеск",
+        "type": "Атакующий",
+        "element": "fire",
+        "baseDamage": 52,
+        "hitChance": 80,
+        "critChance": 15,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "burn",
+                "chance": 0.4,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Добавить разрушение брони",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Лавовый всплеск (41)"
+    },
+    {
+        "ID": 44,
+        "name": "Гидроудар",
+        "type": "Атакующий",
+        "element": "water",
+        "baseDamage": 45,
+        "hitChance": 85,
+        "critChance": 10,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [],
+        "Комментарий": "Добавить эффект сбивания с ног",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Гидроудар (44)"
+    },
+    {
+        "ID": 53,
+        "name": "Кипящий поток",
+        "type": "Атакующий",
+        "element": "water",
+        "baseDamage": 48,
+        "hitChance": 75,
+        "critChance": 5,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "burn",
+                "chance": 0.3,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Добавить замешательство",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Кипящий поток (53)"
+    },
+    {
+        "ID": 54,
+        "name": "Жгучие споры",
+        "type": "Гибридный",
+        "element": "grass",
+        "baseDamage": 35,
+        "hitChance": 90,
+        "critChance": 0,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "burn",
+                "chance": 0.4,
+                "duration": 2
+            },
+            {
+                "effect": "poison",
+                "chance": 0.3,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Увеличить площадь поражения",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Жгучие споры (54)"
+    },
+    {
+        "ID": 55,
+        "name": "Вспышка магмы",
+        "type": "Атакующий",
+        "element": "fire",
+        "baseDamage": 55,
+        "hitChance": 70,
+        "critChance": 15,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "burn",
+                "chance": 0.5,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Добавить ослепление",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Вспышка магмы (55)"
+    },
+    {
+        "ID": 61,
+        "name": "Грозовой разряд",
+        "type": "Атакующий",
+        "element": "fire",
+        "baseDamage": 65,
+        "hitChance": 70,
+        "critChance": 20,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [],
+        "Комментарий": "Добавить эффект оглушения при крите",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Грозовой разряд (61)"
+    },
+    {
+        "ID": 64,
+        "name": "Кислотный дождь",
+        "type": "Гибридный",
+        "element": "grass",
+        "baseDamage": 30,
+        "hitChance": 80,
+        "critChance": 0,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "poison",
+                "chance": 0.7,
+                "duration": 3
+            },
+            {
+                "effect": "defense_down",
+                "chance": 0.4,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Добавить разрушение брони",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Кислотный дождь (64)"
+    },
+    {
+        "ID": 66,
+        "name": "Приливная волна",
+        "type": "Контрольный",
+        "element": "water",
+        "baseDamage": 50,
+        "hitChance": 75,
+        "critChance": 10,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "knockback",
+                "chance": 1,
+                "duration": 0
+            }
+        ],
+        "Комментарий": "Добавить эффект затопления",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Приливная волна (66)"
+    },
+    {
+        "ID": 68,
+        "name": "Адское пламя",
+        "type": "Атакующий",
+        "element": "fire",
+        "baseDamage": 70,
+        "hitChance": 60,
+        "critChance": 25,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "burn",
+                "chance": 1,
+                "duration": 3
+            }
+        ],
+        "Комментарий": "Добавить игнорирование защиты",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Адское пламя (68)"
+    },
+    {
+        "ID": 70,
+        "name": "Апокалипсис",
+        "type": "Уникальный",
+        "element": "dark",
+        "baseDamage": 80,
+        "hitChance": 50,
+        "critChance": 30,
+        "actionType": "ranged",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "curse",
+                "chance": 1,
+                "duration": 3
+            },
+            {
+                "effect": "fear",
+                "chance": 0.8,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Ограничить использование в PvP",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Апокалипсис (70)"
+    },
+    {
+        "ID": 69,
+        "name": "Хоровод духов",
+        "type": "Поддерживающий",
+        "element": "normal",
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "actionType": "treat",
+        "range": 30,
+        "effects": [
+            {
+                "effect": "speed",
+                "chance": 1,
+                "duration": 3
+            },
+            {
+                "effect": "luck",
+                "chance": 0.5,
+                "duration": 2
+            }
+        ],
+        "Комментарий": "Добавить временную невидимость",
+        "Использован": 0,
+        "Формула": "",
+        "Для поиска": "Хоровод духов (69)"
+    }
+]

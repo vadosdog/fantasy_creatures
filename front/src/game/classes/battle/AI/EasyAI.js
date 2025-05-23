@@ -50,6 +50,10 @@ export class EasyAI {
                 target = enemy
             }
         })
+        
+        if (!target) {
+            return undefined
+        }
 
         // для ближних атак дальность ограничена шагом, для дальних атак дальность ограничена навыком
         let limit = attack.actionType === 'melee' ? this.activeCreature.getSpeed() : attack.range
