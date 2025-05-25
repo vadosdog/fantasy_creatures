@@ -14,8 +14,8 @@ export const BATTLE_STATE_WAITING = 'WAITING'
 export const BATTLE_STATE_BATTLE_OVER_WIN = 'BATTLE_OVER_WIN'
 export const BATTLE_STATE_BATTLE_OVER_LOSE = 'BATTLE_OVER_LOSE'
 
-const player1 = new EasyAI()
-const player2 = new MediumAI()
+const player1 = 'player'
+const player2 = new EasyAI()
 
 export const useBattleStore = defineStore('battle', {
     state: () => ({
@@ -482,6 +482,22 @@ export const useBattleStore = defineStore('battle', {
                     this.recordLog(attacker.pushEffect(effect))
                 }
             })
+            
+            // Проверка обратных эффектов шипов и вампиризма
+            if (result.damage > 0 && defender.hasEffect('thorns')) {
+                const backDamage = Math.floor(result.damage * 0.2)
+                attacker.health -= backDamage
+                result.backDamage = backDamage
+                
+                if (attacker.health <= 0) {
+                    attacker.health = 0
+                    // гомосятина переделать
+                    let targetIndex = this.creatures.findIndex(c => c === attacker)
+                    this.creatures.splice(targetIndex, 1)
+                    this.battleMap.removeContent(...attacker.position)
+                    targetIndex = this.creatures.findIndex(c => c === this.activeCreature)
+                }
+            }
 
             return result
         },

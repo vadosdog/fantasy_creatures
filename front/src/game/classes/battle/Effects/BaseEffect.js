@@ -14,14 +14,15 @@ export class BaseEffect {
 
     static getEffectObject(config) {
         switch (config.effect) {
+            // TODO cleanse (очищение дебаффов
             case 'empower':
                 return new EmpowerEffect(config)
             case 'haste':
                 return new HasteEffect(config)
             case 'luck':
                 return new LuckEffect(config)
-            case 'regeneration':
-                return new RegenerationEffect(config)
+            case 'regen':
+                return new RegenEffect(config)
             case 'thorns':
                 return new ThornsEffect(config)
             case 'aegis':
@@ -46,6 +47,10 @@ export class BaseEffect {
                 return new DefenseEffect(config)
             case 'confusion':
                 return new ConfusionEffect(config)
+            case 'freeze':
+                return new FreezeEffect(config)
+            case 'cleanse':
+                return new СleanseEffect(config)
 
         }
     }
@@ -194,7 +199,7 @@ export class PoisonEffect extends BaseEffect {
     }
 }
 
-export class RegenerationEffect extends BaseEffect {
+export class RegenEffect extends BaseEffect {
 
     getRoundHealthEffect() {
         return 0.05
@@ -202,4 +207,16 @@ export class RegenerationEffect extends BaseEffect {
 }
 
 export class ThornsEffect extends BaseEffect {
+}
+
+export class FreezeEffect extends BaseEffect { //TODO freeze заморозка, пропуск хода
+}
+
+export class TauntEffect extends BaseEffect { //TODO taunt (провокация, принуждение атаковать)
+}
+
+export class KnockbackEffect extends BaseEffect { //TODO knockback (отбрасывание
+}
+
+export class СleanseEffect extends BaseEffect { //TODO cleanse (очищение дебафов
 }

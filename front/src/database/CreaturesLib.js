@@ -40,7 +40,7 @@ const lib = [
             }
         ]
         ,
-        // effects: [BaseEffect.getEffectObject({effect: 'curse', duration: 1})]
+        effects: [BaseEffect.getEffectObject({effect: 'thorns', duration: 10})]
     },
     // ]
 // const lib2 =[
@@ -109,7 +109,7 @@ const lib = [
                 critChance: 0.2,
                 actionType: 'treat',
                 range: 4,
-                effects: [{effect: 'regeneration', duration: 4}]
+                effects: [{effect: 'regen', duration: 4}]
             },
             // Дебаф врага
             {
@@ -204,7 +204,7 @@ const lib = [
                 hitChance: 0.9,
                 critChance: 0.1,
                 actionType: 'ranged',
-                range: 30
+                range: 15
             }
         ]
         ,
@@ -235,7 +235,7 @@ const lib = [
                 critChance: 0.25,
                 actionType: 'treat',
                 range: 4,
-                effects: [{effect: 'regeneration', duration: 5}]
+                effects: [{effect: 'regen', duration: 5}]
             },
             // Дебаф врага
             {
@@ -256,6 +256,7 @@ let idIndex = 1;
 import creatures from './creatures.json';
 import creaturesActions from './creature-actions.json';
 import creaturesCreatureActions from './creatures-creature-actions.json';
+import {BaseEffect} from "../game/classes/battle/Effects/BaseEffect.js";
 
 const creaturesLib = {}
 const creatureActionsLib = {}
@@ -296,11 +297,64 @@ function prepare() {
 prepare()
 
 export function getTeam(direction, control, positions) {
+    let currentLib = [{
+        id: 1,
+        name: 'Огонь/Танк',
+        texture: 'Pink_Monster',
+        element: 'fire',
+        role: 'tank',
+
+
+        maxHealthStat: 1000,
+        speedStat: 20,
+        attackStat: 35,
+        defenseStat: 65,
+        initiativeStat: 35,
+        willStat: 30,
+
+        actions: [
+            // Основная атака с поджигом
+            {
+                name: 'Раскалённый удар',
+                element: 'fire',
+                baseDamage: 28,
+                hitChance: 0.9,
+                critChance: 0.05,
+                actionType: 'melee',
+                range: 1,
+                effects: [{effect: 'burn', chance: 0.8, duration: 2}]
+            },
+            // Защитный скилл
+            {
+                name: 'Щит пламени',
+                element: 'fire',
+                baseDamage: 0,
+                hitChance: 1,
+                actionType: 'treat',
+                range: 0,
+                effects: [{effect: 'aegis', chance: 1.0, duration: 3}]
+            }
+        ]
+        ,
+        effects: [BaseEffect.getEffectObject({effect: 'thorns', duration: 10})]
+    }]
+    if (direction !== 'right') {
+        currentLib = lib
+    }
     const result = []
-    lib.forEach((config, i) => {
+    currentLib.forEach((config, i) => {
         const creature = new Creature(config)
         creature.id += direction === 'left' ? 100 : 0
-        creature.actions = config.actions.map(action => new CreatureAction(action))
+        creature.actions = config.actions.map(action => {
+            if (action.effects) {
+                for (const effect of action.effects) {
+                    if (!effect.target) {
+                        effect.target = 'target'
+                    }
+                }
+            }
+            return new CreatureAction(action)
+        })
         creature.direction = direction
         creature.control = control
         creature.position = positions[i]

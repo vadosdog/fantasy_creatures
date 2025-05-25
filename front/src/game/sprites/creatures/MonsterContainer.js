@@ -98,7 +98,7 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
             'empower': '💪',
             'haste': '⚡',
             'luck': '🍀',
-            'regeneration': '💚',
+            'regen': '💚',
             'thorns': '🌵',
             'aegis': '🛡️',
             'defense': '🛡️', // можно какой-то другой

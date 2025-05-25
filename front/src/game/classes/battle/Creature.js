@@ -46,7 +46,7 @@ export class Creature {
         // {type: 'empower', duration: 1},
         // {type: 'haste', duration: 1},
         // {type: 'luck', duration: 1},
-        // {type: 'regeneration', duration: 1},
+        // {type: 'regen', duration: 1},
         // {type: 'thorns', duration: 1}, //TODO Возвращает 20% полученного урона атакующему
         // {type: 'aegis', duration: 1}, //TODO сделать ауру
         //

@@ -24,7 +24,7 @@ import {
 } from "../../store/battle.js";
 
 export class Battle extends Scene {
-    showGridIndexes = true
+    showGridIndexes = false
     hexagonGroup;
     store
     hexagonsArray;
@@ -206,7 +206,7 @@ export class Battle extends Scene {
 
         effects.forEach((effect, i) => {
             const emoji = {
-                'regeneration': '💚',
+                'regen': '💚',
                 'poison': '☠️',
                 'bleed': '💉',
                 'burn': '🔥',
@@ -377,13 +377,18 @@ export class Battle extends Scene {
                 }
 
 
+                let attackDirection = this.store.activeCreature.position[1] < position[1]
+                    ? 'right'
+                    : 'left'
+
+                let defenseDirection = this.store.activeCreature.position[1] < position[1]
+                    ? 'left'
+                    : 'right'
+                
                 timeline.add({
                     at: 200 * (path.length), //гомосятина
                     run: () => {
-                        let attackDirection = this.store.activeCreature.position[1] < position[1]
-                            ? 'attack_right'
-                            : 'attack_left'
-                        this.store.activeCreature.creatureSpriteContainer.setMonsterState(attackDirection)
+                        this.store.activeCreature.creatureSpriteContainer.setMonsterState('attack_' + attackDirection)
                     }
                 });
 
@@ -395,10 +400,6 @@ export class Battle extends Scene {
                     }
                 });
 
-
-                let defenseDirection = this.store.activeCreature.position[1] < position[1]
-                    ? 'left'
-                    : 'right'
                 if (attackResult.success) {
                     timeline.add({
                         at: 200 * (path.length), //гомосятина
@@ -432,6 +433,39 @@ export class Battle extends Scene {
                                 this.hexagonsArray.get(targetCreature.position.join(',')).content = null
                             }
                         });
+                    }
+                    if (attackResult.backDamage) {
+                        timeline.add({
+                            at: 200 * (path.length) + 500, //гомосятина
+                            run: () => {
+                                this.store.activeCreature.creatureSpriteContainer.setMonsterState('hurt_' + attackDirection)
+                                this.store.activeCreature.creatureSpriteContainer.updateVisual()
+                                this.store.activeCreature.creatureSpriteContainer.playActionText("-" + attackResult.backDamage, 'red')
+                            }
+                        });
+                        if (this.store.activeCreature.health) {
+                            timeline.add({
+                                at: 200 * (path.length) + 1000, //гомосятина
+                                run: () => {
+                                    this.store.activeCreature.creatureSpriteContainer.setDefaultState()
+                                }
+                            });
+                        } else {
+                            timeline.add({
+                                at: 200 * (path.length) + 1000, //гомосятина
+                                run: () => {
+                                    this.store.activeCreature.creatureSpriteContainer.setMonsterState('death_' + attackDirection)
+                                    this.store.activeCreature.creatureSpriteContainer.updateVisual()
+                                }
+                            });
+                            timeline.add({
+                                at: 200 * (path.length + 1) + 1500, //гомосятина
+                                run: () => {
+                                    this.store.activeCreature.creatureSpriteContainer.destroy(true)
+                                    this.hexagonsArray.get(this.store.activeCreature.position.join(',')).content = null
+                                }
+                            });
+                        }
                     }
                 } else {
                     timeline.add({
