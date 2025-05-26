@@ -210,6 +210,7 @@ export class Battle extends Scene {
                 'poison': '☠️',
                 'bleed': '💉',
                 'burn': '🔥',
+                'freeze': '🥶',
                 'madness': '🤪',
             }[effect.effect] || ''
             timeline.add({
@@ -244,8 +245,12 @@ export class Battle extends Scene {
         }
 
         timeline.on('complete', () => {
-            if (activeCreature.health <= 0) {
-                this.store.endTurn();
+            console.log(availableActions.length)
+            if (availableActions.length === 0) {
+                this.store.activeCreature.creatureSpriteContainer.setDefaultState()
+                this.store.endTurn()
+                this.handleStep()
+            } else if (activeCreature.health <= 0 || availableActions.length === 0) {
                 if (
                     this.store.battleState === BATTLE_STATE_BATTLE_OVER_WIN
                     || this.store.battleState === BATTLE_STATE_BATTLE_OVER_LOSE
@@ -326,6 +331,7 @@ export class Battle extends Scene {
     }
 
     handleAction(action, position) {
+        if (!position, action)
         this.store.setBattleState(BATTLE_STATE_WAITING)
 
         if (action.action === 'skip') {
@@ -384,7 +390,7 @@ export class Battle extends Scene {
                 let defenseDirection = this.store.activeCreature.position[1] < position[1]
                     ? 'left'
                     : 'right'
-                
+
                 timeline.add({
                     at: 200 * (path.length), //гомосятина
                     run: () => {
@@ -830,7 +836,7 @@ export class Battle extends Scene {
             this.store.endTurn();
             this.handleStep()
         })
-        
+
         this.timeLineBySpeed(timeline)
         timeline.play()
     }
@@ -841,7 +847,7 @@ export class Battle extends Scene {
         this.store.endTurn(true);
         this.handleStep()
     }
-    
+
     timeLineBySpeed(timeline) {
         timeline.events.forEach(event => {
             event.at /= this.gameSpeed;

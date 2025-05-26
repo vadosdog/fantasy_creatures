@@ -86,6 +86,10 @@ export class BaseEffect {
     getRoundHealthEffect() {
         return 0
     }
+
+    getRoundEffect() {
+        return false
+    }
 }
 
 
@@ -209,7 +213,10 @@ export class RegenEffect extends BaseEffect {
 export class ThornsEffect extends BaseEffect {
 }
 
-export class FreezeEffect extends BaseEffect { //TODO freeze заморозка, пропуск хода
+export class FreezeEffect extends BaseEffect {
+    getRoundEffect() {
+        return 'Пропуск хода'
+    }
 }
 
 export class TauntEffect extends BaseEffect { //TODO taunt (провокация, принуждение атаковать)

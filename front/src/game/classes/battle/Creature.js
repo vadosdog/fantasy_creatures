@@ -37,7 +37,7 @@ export class Creature {
         this.initiativeStat = initiativeStat; // инициатива
         this.willStat = willStat; // воля, сопротивление бафам/дебафам
         this.element = element;
-        this.role = role; 
+        this.role = role;
 
         this.actions = actions;
 
@@ -120,7 +120,7 @@ export class Creature {
 
         // TODO добавить невосприимчивость к некоторым эфектам
         this.effects.push(effect)
-        
+
         return ['Наложен эффект ' + effectConfig.effect + ` на ${this.name} (${this.id})`]
     }
 
@@ -130,6 +130,13 @@ export class Creature {
         const maxHealth = this.getMaxHealth()
         const appliedEffects = []
         this.effects.forEach(effect => {
+            if (effect.getRoundEffect()) {
+                appliedEffects.push({
+                    type: effect.effect,
+                    damage: effect.getRoundEffect(), //на самом деле не дамаг
+                    duration: effect.duration - 1
+                })
+            }
             const damage = maxHealth * effect.getRoundHealthEffect()
             if (damage === 0) {
                 return
@@ -145,7 +152,7 @@ export class Creature {
         })
 
         this.health = Phaser.Math.Clamp(this.health, 0, maxHealth)
-        
+
         return appliedEffects
     }
 

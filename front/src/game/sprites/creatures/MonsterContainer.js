@@ -107,6 +107,7 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
             'poison': '☠️',
             'bleed': '💉',
             'burn': '🔥',
+            'freeze': '🥶',
             'chill': '❄️',
             'blind': '👁️‍🗨️',
             'curse': '📛',

@@ -40,7 +40,9 @@ const lib = [
             }
         ]
         ,
-        effects: [BaseEffect.getEffectObject({effect: 'thorns', duration: 10})]
+        effects: [
+            BaseEffect.getEffectObject({effect: 'burn', duration: 10}),
+        ]
     },
     // ]
 // const lib2 =[
@@ -255,97 +257,34 @@ let idIndex = 1;
 
 import creatures from './creatures.json';
 import creaturesActions from './creature-actions.json';
-import creaturesCreatureActions from './creatures-creature-actions.json';
 import {BaseEffect} from "../game/classes/battle/Effects/BaseEffect.js";
 
 const creaturesLib = {}
 const creatureActionsLib = {}
-const creatureToActionLib = {}
 
-function prepare() {
-    for (const creaturesAction of creaturesActions) {
-        creatureActionsLib[creaturesAction.name] = creaturesAction
+for (const creature of creatures) {
+    switch (creature.role) {
+        
     }
-
-    for (const action of creaturesCreatureActions) {
-        const key = action.element + '/' + action.form + '/' + action.role;
-        if (!creatureToActionLib[key]) {
-            creatureToActionLib[key] = []
-        }
-        creatureToActionLib[key].push(action)
-    }
-
-    for (const creature of creatures) {
-        creature.name = creature.element + '/' + creature.form + '/' + creature.role;
-        switch (creature.role) {
-            case 'tank':
-                creature.texture = 'Pink_Monster'
-                break
-            case 'dd':
-                creature.texture = 'Dude_Monster'
-                break
-            case 'support':
-                creature.texture = 'Owlet_Monster'
-                break
-        }
-        creature.actions = creatureToActionLib[creature.name]
-        creaturesLib[creature.name] = creature
-    }
-    console.log(creaturesLib)
+    creaturesLib[creature.element + '-' + creature.form + '-' + creature.role] = creature
 }
 
-prepare()
+for (const creaturesAction of creaturesActions) {
+    const key = creaturesAction.element + '-' + creaturesAction.form + '-' + creaturesAction.role
+    if (!creatureActionsLib[key]) {
+        creatureActionsLib[key] = []
+    }
+
+    creatureActionsLib[key].push(creaturesAction)
+}
 
 export function getTeam(direction, control, positions) {
-    let currentLib = [{
-        id: 1,
-        name: 'Огонь/Танк',
-        texture: 'Pink_Monster',
-        element: 'fire',
-        role: 'tank',
-
-
-        maxHealthStat: 1000,
-        speedStat: 20,
-        attackStat: 35,
-        defenseStat: 65,
-        initiativeStat: 35,
-        willStat: 30,
-
-        actions: [
-            // Основная атака с поджигом
-            {
-                name: 'Раскалённый удар',
-                element: 'fire',
-                baseDamage: 28,
-                hitChance: 0.9,
-                critChance: 0.05,
-                actionType: 'melee',
-                range: 1,
-                effects: [{effect: 'burn', chance: 0.8, duration: 2}]
-            },
-            // Защитный скилл
-            {
-                name: 'Щит пламени',
-                element: 'fire',
-                baseDamage: 0,
-                hitChance: 1,
-                actionType: 'treat',
-                range: 0,
-                effects: [{effect: 'aegis', chance: 1.0, duration: 3}]
-            }
-        ]
-        ,
-        effects: [BaseEffect.getEffectObject({effect: 'thorns', duration: 10})]
-    }]
-    if (direction !== 'right') {
-        currentLib = lib
-    }
     const result = []
-    currentLib.forEach((config, i) => {
-        const creature = new Creature(config)
+    lib.forEach((config, i) => {
+        // console.log(getCreature(config.element, 'beast', config.role, 2))
+        const creature = new Creature(getCreature(config.element, 'beast', config.role, 2))
         creature.id += direction === 'left' ? 100 : 0
-        creature.actions = config.actions.map(action => {
+        creature.actions = creature.actions.map(action => {
             if (action.effects) {
                 for (const effect of action.effects) {
                     if (!effect.target) {
@@ -358,8 +297,49 @@ export function getTeam(direction, control, positions) {
         creature.direction = direction
         creature.control = control
         creature.position = positions[i]
+        // creature.pushEffect({effect: 'freeze', duration: 1})
         result.push(creature)
     })
 
     return result
+}
+
+export function getCreature(element, form, role, level) {
+    const creature = creaturesLib[element + '-' + form + '-' + role]
+    creature.name = element + '/' + role
+    const actions = [
+        ...creatureActionsLib[element + '-' + form + '-' + role],
+        ...creatureActionsLib['-' + '-' + role],
+        ...creatureActionsLib['-' + form + '-'],
+        ...creatureActionsLib[element + '-' + '-'],
+        ...creatureActionsLib['-' + form + '-' + role],
+        ...creatureActionsLib[element + '-' + '-' + role],
+        ...creatureActionsLib[element + '-' + form + '-'],
+    ]
+    
+    switch (creature.role) {
+        case 'tank':
+            creature.texture = 'Pink_Monster'
+            break
+        case 'dd':
+            creature.texture = 'Dude_Monster'
+            break
+        case 'support':
+            creature.texture = 'Owlet_Monster'
+            break
+    }
+    
+    creature.actions = actions.filter(action => action.level <= level).map(action => {
+        switch (action.actionType) {
+            case 'melee':
+                action.range = 1
+                break
+            case 'ranged':
+            case 'treat':
+                action.range = 15
+                break
+        }
+        return action
+    })
+    return creature
 }

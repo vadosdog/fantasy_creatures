@@ -6,7 +6,7 @@
         "maxHealthStat": 140,
         "attackStat": 25,
         "defenseStat": 30,
-        "speedStat": 2,
+        "speedStat": 6,
         "willStat": 10,
         "initiativeStat": 50,
         "Комментарий": "Низкая инициатива танков"
@@ -18,7 +18,7 @@
         "maxHealthStat": 120,
         "attackStat": 20,
         "defenseStat": 25,
-        "speedStat": 3,
+        "speedStat": 7,
         "willStat": 20,
         "initiativeStat": 65,
         "Комментарий": "Средний приоритет"
@@ -30,7 +30,7 @@
         "maxHealthStat": 110,
         "attackStat": 35,
         "defenseStat": 20,
-        "speedStat": 4,
+        "speedStat": 8,
         "willStat": 15,
         "initiativeStat": 80,
         "Комментарий": "Высокий приоритет атакующих"
@@ -42,7 +42,7 @@
         "maxHealthStat": 130,
         "attackStat": 22,
         "defenseStat": 28,
-        "speedStat": 3,
+        "speedStat": 7,
         "willStat": 12,
         "initiativeStat": 60,
         "Комментарий": "Птицы быстрее зверей"
@@ -54,7 +54,7 @@
         "maxHealthStat": 115,
         "attackStat": 18,
         "defenseStat": 22,
-        "speedStat": 4,
+        "speedStat": 8,
         "willStat": 22,
         "initiativeStat": 75,
         "Комментарий": "Поддержка с высоким приоритетом"
@@ -66,7 +66,7 @@
         "maxHealthStat": 100,
         "attackStat": 32,
         "defenseStat": 18,
-        "speedStat": 5,
+        "speedStat": 9,
         "willStat": 18,
         "initiativeStat": 90,
         "Комментарий": "Максимальная инициатива"
@@ -78,7 +78,7 @@
         "maxHealthStat": 145,
         "attackStat": 20,
         "defenseStat": 32,
-        "speedStat": 1,
+        "speedStat": 5,
         "willStat": 8,
         "initiativeStat": 45,
         "Комментарий": "Самые медленные танки"
@@ -90,7 +90,7 @@
         "maxHealthStat": 125,
         "attackStat": 15,
         "defenseStat": 26,
-        "speedStat": 2,
+        "speedStat": 6,
         "willStat": 25,
         "initiativeStat": 55,
         "Комментарий": "Рептилии-хилеры"
@@ -102,7 +102,7 @@
         "maxHealthStat": 105,
         "attackStat": 30,
         "defenseStat": 15,
-        "speedStat": 3,
+        "speedStat": 7,
         "willStat": 20,
         "initiativeStat": 70,
         "Комментарий": "Гибридный урон"
@@ -114,7 +114,7 @@
         "maxHealthStat": 150,
         "attackStat": 22,
         "defenseStat": 35,
-        "speedStat": 2,
+        "speedStat": 6,
         "willStat": 10,
         "initiativeStat": 55,
         "Комментарий": "Водные танки быстрее огненных"
@@ -126,7 +126,7 @@
         "maxHealthStat": 130,
         "attackStat": 18,
         "defenseStat": 28,
-        "speedStat": 3,
+        "speedStat": 7,
         "willStat": 25,
         "initiativeStat": 70,
         "Комментарий": "Исцеление с высоким приоритетом"
@@ -138,7 +138,7 @@
         "maxHealthStat": 115,
         "attackStat": 28,
         "defenseStat": 20,
-        "speedStat": 4,
+        "speedStat": 8,
         "willStat": 15,
         "initiativeStat": 85,
         "Комментарий": "Скорость водных ДД"
@@ -150,7 +150,7 @@
         "maxHealthStat": 135,
         "attackStat": 20,
         "defenseStat": 30,
-        "speedStat": 4,
+        "speedStat": 8,
         "willStat": 12,
         "initiativeStat": 65,
         "Комментарий": "Летающие танки"
@@ -162,7 +162,7 @@
         "maxHealthStat": 120,
         "attackStat": 15,
         "defenseStat": 25,
-        "speedStat": 5,
+        "speedStat": 9,
         "willStat": 28,
         "initiativeStat": 80,
         "Комментарий": "Быстрая поддержка"
@@ -174,7 +174,7 @@
         "maxHealthStat": 105,
         "attackStat": 25,
         "defenseStat": 18,
-        "speedStat": 6,
+        "speedStat": 50,
         "willStat": 20,
         "initiativeStat": 95,
         "Комментарий": "Лидеры инициативы"
@@ -186,7 +186,7 @@
         "maxHealthStat": 155,
         "attackStat": 18,
         "defenseStat": 38,
-        "speedStat": 1,
+        "speedStat": 5,
         "willStat": 5,
         "initiativeStat": 40,
         "Комментарий": "Минимальная инициатива"
@@ -198,7 +198,7 @@
         "maxHealthStat": 140,
         "attackStat": 12,
         "defenseStat": 30,
-        "speedStat": 2,
+        "speedStat": 6,
         "willStat": 30,
         "initiativeStat": 50,
         "Комментарий": "Медленные, но мощные хилы"
@@ -210,7 +210,7 @@
         "maxHealthStat": 110,
         "attackStat": 22,
         "defenseStat": 15,
-        "speedStat": 3,
+        "speedStat": 7,
         "willStat": 25,
         "initiativeStat": 65,
         "Комментарий": "Ядовитые атакующие"
@@ -222,7 +222,7 @@
         "maxHealthStat": 145,
         "attackStat": 20,
         "defenseStat": 33,
-        "speedStat": 2,
+        "speedStat": 6,
         "willStat": 8,
         "initiativeStat": 50,
         "Комментарий": "Баланс защиты и скорости"
@@ -234,7 +234,7 @@
         "maxHealthStat": 125,
         "attackStat": 15,
         "defenseStat": 26,
-        "speedStat": 3,
+        "speedStat": 7,
         "willStat": 22,
         "initiativeStat": 60,
         "Комментарий": "Травяные хилы"
@@ -246,7 +246,7 @@
         "maxHealthStat": 100,
         "attackStat": 30,
         "defenseStat": 18,
-        "speedStat": 4,
+        "speedStat": 8,
         "willStat": 18,
         "initiativeStat": 75,
         "Комментарий": "Ядовитые ДД"
@@ -258,7 +258,7 @@
         "maxHealthStat": 140,
         "attackStat": 18,
         "defenseStat": 30,
-        "speedStat": 4,
+        "speedStat": 8,
         "willStat": 10,
         "initiativeStat": 65,
         "Комментарий": "Мобильные танки"
@@ -270,7 +270,7 @@
         "maxHealthStat": 115,
         "attackStat": 12,
         "defenseStat": 24,
-        "speedStat": 6,
+        "speedStat": 50,
         "willStat": 26,
         "initiativeStat": 85,
         "Комментарий": "Самые быстрые саппорты"
@@ -282,7 +282,7 @@
         "maxHealthStat": 95,
         "attackStat": 28,
         "defenseStat": 15,
-        "speedStat": 7,
+        "speedStat": 51,
         "willStat": 20,
         "initiativeStat": 100,
         "Комментарий": "Абсолютные лидеры инициативы"
@@ -294,7 +294,7 @@
         "maxHealthStat": 160,
         "attackStat": 15,
         "defenseStat": 40,
-        "speedStat": 1,
+        "speedStat": 5,
         "willStat": 5,
         "initiativeStat": 35,
         "Комментарий": "Сверхмедленные броненосцы"
@@ -306,7 +306,7 @@
         "maxHealthStat": 135,
         "attackStat": 10,
         "defenseStat": 32,
-        "speedStat": 2,
+        "speedStat": 6,
         "willStat": 32,
         "initiativeStat": 45,
         "Комментарий": "Мощные, но медленные бафферы"
@@ -318,7 +318,7 @@
         "maxHealthStat": 105,
         "attackStat": 25,
         "defenseStat": 12,
-        "speedStat": 3,
+        "speedStat": 7,
         "willStat": 28,
         "initiativeStat": 60,
         "Комментарий": "Контроллеры с ядами"

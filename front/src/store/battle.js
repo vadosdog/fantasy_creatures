@@ -15,7 +15,7 @@ export const BATTLE_STATE_BATTLE_OVER_WIN = 'BATTLE_OVER_WIN'
 export const BATTLE_STATE_BATTLE_OVER_LOSE = 'BATTLE_OVER_LOSE'
 
 const player1 = 'player'
-const player2 = new EasyAI()
+const player2 = new MediumAI()
 
 export const useBattleStore = defineStore('battle', {
     state: () => ({
@@ -116,6 +116,9 @@ export const useBattleStore = defineStore('battle', {
         },
         handlePlayerTurn() {
             const activeCreature = this.activeCreature
+            if (activeCreature.hasEffect('freeze')) {
+                return
+            }
             const moveable = this.getMoveablePositions(activeCreature)
             if (moveable.length) {
                 this.availableActions.push({
@@ -134,7 +137,7 @@ export const useBattleStore = defineStore('battle', {
                         return
                     }
 
-                    if (creature.health <= 0) {
+                    if (creature.health <= 0) {availableActions.p
                         return
                     }
 
@@ -175,6 +178,10 @@ export const useBattleStore = defineStore('battle', {
             })
         },
         handleEngineTurn(engine) {
+            const activeCreature = this.activeCreature
+            if (activeCreature.hasEffect('freeze')) {
+                return
+            }
             this.availableActions = [engine.getAction(this)]
             return
             //Выбор всех активных врагов
