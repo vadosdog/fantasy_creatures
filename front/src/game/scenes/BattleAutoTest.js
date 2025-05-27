@@ -10,8 +10,9 @@ export class BattleAutoTest extends Scene {
         this.store = useBattleStore();
         this.testResults = [];
         this.currentTest = 0;
-        this.totalTests = 50;
+        this.totalTests = 200;
         this.creatureStats = new Map();
+        this.creatueActionStats = new Map();
     }
 
     create() {
@@ -75,6 +76,7 @@ export class BattleAutoTest extends Scene {
         this.currentTest = 0;
         this.testResults = [];
         this.creatureStats.clear();
+        this.creatueActionStats.clear();
 
         // Запускаем первый тест
         this.runNextTest();
@@ -154,13 +156,36 @@ export class BattleAutoTest extends Scene {
             }
         }, 0);
     }
+    
+    pushActionStat(creature, updateKey, value = 1) {
+        if (!this.creatueActionStats.has(creature.id)) {
+            this.creatueActionStats.set(creature.id, {
+                kills: 0,
+                damageDealt: 0,
+                damagePotentialTaken: 0,
+                damageTaken: 0,
+                healingDone: 0,
+                attacks: 0,
+                moves: 0,
+                treats: 0,
+                defenses: 0,
+                skips: 0,
+                addedEffects: 0,
+            });
+        }
+        const stats = this.creatueActionStats.get(creature.id);
+
+        stats[updateKey] += value
+    }
 
     handleAction(action, position) {
         if (action.action === 'skip') {
             this.store.playerActionDefense()
+            this.pushActionStat(this.store.activeCreature, 'skips')
         }
 
         let path = []
+        let result
         switch (action.action) {
             case 'move':
                 // Получаем путь от текущей позиции персонажа до выбранной клетки
@@ -168,12 +193,30 @@ export class BattleAutoTest extends Scene {
                 if (!path || path.length === 0) return;
 
                 this.store.playerActionMoveTo(path)
+                this.pushActionStat(this.store.activeCreature, 'moves')
                 break
             case 'attack':
-                this.store.playerActionAttack(position, action.actionObject)
+                const targetCreature = this.store.getCreatureByCoords(position)
+                this.pushActionStat(this.store.activeCreature, 'attacks')
+                result = this.store.playerActionAttack(position, action.actionObject)
+                if (result.success) {
+                    if (result.health === 0) {
+                        this.pushActionStat(this.store.activeCreature, 'kills')
+                    }
+
+                    this.pushActionStat(this.store.activeCreature, 'damageDealt', result.damage)
+                    this.pushActionStat(this.store.activeCreature, 'addedEffects', result.effects.length)
+                    this.pushActionStat(targetCreature, 'damageTaken', result.damage)
+                    this.pushActionStat(targetCreature, 'damagePotentialTaken', result.potentialDamage)
+                }
                 break
             case 'treat':
-                this.store.playerActionTreat(position, action.actionObject)
+                this.pushActionStat(this.store.activeCreature, 'treats')
+                result = this.store.playerActionTreat(position, action.actionObject)
+                if (result.success) {
+                    this.pushActionStat(this.store.activeCreature, 'healingDone', result.damage)
+                    this.pushActionStat(this.store.activeCreature, 'addedEffects', result.effects.length)
+                }
                 break;
             case 'skip':
                 this.store.playerActionDefense()
@@ -194,6 +237,7 @@ export class BattleAutoTest extends Scene {
                 this.creatureStats.set(creature.id, {
                     name: creature.name,
                     id: creature.id,
+                    maxHealth: creature.maxHealthStat,
                     team: this.store.leftTeam.includes(creature) ? 'left' : 'right',
                     battles: 0,
                     wins: 0,
@@ -202,13 +246,11 @@ export class BattleAutoTest extends Scene {
                     damageDealt: 0,
                     damageTaken: 0,
                     healingDone: 0,
-                    turnsActive: 0,
-                    actions: {
-                        attack: 0,
-                        move: 0,
-                        treat: 0,
-                        defense: 0
-                    }
+                    attacks: 0,
+                    moves: 0,
+                    treats: 0,
+                    defenses: 0,
+                    skip: 0,
                 });
             }
 
@@ -267,28 +309,28 @@ export class BattleAutoTest extends Scene {
 
         // Добавляем статистику для левой команды
         resultsText += `ЛЕВАЯ КОМАНДА:\n`;
-        leftTeamStats.forEach(stats => {
+        leftTeamStats.sort((a,b) => a.name.localeCompare(b.name)).forEach(stats => {
             const winRate = (stats.wins / stats.battles * 100).toFixed(1);
             const survivalRate = (stats.survived / stats.battles * 100).toFixed(1);
 
-            resultsText += `${stats.name} (${stats.id}):\n`;
-            resultsText += `  Побед: ${stats.wins}/${stats.battles} (${winRate}%)\n`;
-            resultsText += `  Выживаемость: ${stats.survived}/${stats.battles} (${survivalRate}%)\n`;
-            resultsText += `  Средний урон: ${(stats.damageDealt / stats.battles).toFixed(1)}\n`;
-            resultsText += `  Среднее лечение: ${(stats.healingDone / stats.battles).toFixed(1)}\n\n`;
+            resultsText += `${stats.name} (${stats.id}) | `;
+            resultsText += `  ${stats.wins}/${stats.battles} (${winRate}%) | `;
+            resultsText += `  ${stats.survived}/${stats.battles} (${survivalRate}%)\n`;
+            // resultsText += `  Средний урон: ${(stats.damageDealt / stats.battles).toFixed(1)}\n`;
+            // resultsText += `  Среднее лечение: ${(stats.healingDone / stats.battles).toFixed(1)}\n\n`;
         });
 
         // Добавляем статистику для правой команды
         resultsText += `ПРАВАЯ КОМАНДА:\n`;
-        rightTeamStats.forEach(stats => {
+        rightTeamStats.sort((a,b) => a.name.localeCompare(b.name)).forEach(stats => {
             const winRate = (stats.wins / stats.battles * 100).toFixed(1);
             const survivalRate = (stats.survived / stats.battles * 100).toFixed(1);
 
-            resultsText += `${stats.name} (${stats.id}):\n`;
-            resultsText += `  Побед: ${stats.wins}/${stats.battles} (${winRate}%)\n`;
-            resultsText += `  Выживаемость: ${stats.survived}/${stats.battles} (${survivalRate}%)\n`;
-            resultsText += `  Средний урон: ${(stats.damageDealt / stats.battles).toFixed(1)}\n`;
-            resultsText += `  Среднее лечение: ${(stats.healingDone / stats.battles).toFixed(1)}\n\n`;
+            resultsText += `${stats.name} (${stats.id}) | `;
+            resultsText += `  ${stats.wins}/${stats.battles} (${winRate}%) | `;
+            resultsText += `  ${stats.survived}/${stats.battles} (${survivalRate}%)\n`;
+            // resultsText += `  Средний урон: ${(stats.damageDealt / stats.battles).toFixed(1)}\n`;
+            // resultsText += `  Среднее лечение: ${(stats.healingDone / stats.battles).toFixed(1)}\n\n`;
         });
 
         // Отображаем результаты на экране
@@ -297,6 +339,48 @@ export class BattleAutoTest extends Scene {
         // Выводим результаты в консоль для удобного копирования
         console.log('=== РЕЗУЛЬТАТЫ АВТОТЕСТОВ БОЕВ ===');
         console.log(resultsText);
+        console.log('=== ЭФФЕКТИВНОСТЬ ===')
+        console.log('ЛЕВАЯ КОМАНДА')
+        leftTeamStats.sort((a,b) => a.name.localeCompare(b.name)).forEach(c => {
+            const stat = this.creatueActionStats.get(c.id)
+            const batles = c.battles
+            if (!stat) {
+                return
+            }
+            let resultText = `${c.name} (${c.id})`;
+            resultText += ' | K: ' + (stat.kills / c.battles).toFixed(2) ;
+            resultText += ' | DD: ' + (stat.damageDealt / c.battles / c.maxHealth).toFixed(2) ;
+            resultText += ' | DPT: ' + (stat.damagePotentialTaken / c.battles / c.maxHealth).toFixed(2);
+            resultText += ' | DT: ' + (stat.damageTaken / c.battles / c.maxHealth).toFixed(2);
+            resultText += ' | HD: ' + (stat.healingDone / c.battles / c.maxHealth).toFixed(2);
+            resultText += ' | A: ' + (stat.attacks / c.battles).toFixed(2);
+            resultText += ' | M: ' + (stat.moves / c.battles).toFixed(2);
+            resultText += ' | T: ' + (stat.treats / c.battles).toFixed(2);
+            resultText += ' | D: ' + (stat.defenses / c.battles).toFixed(2);
+            resultText += ' | S: ' + (stat.skips / c.battles).toFixed(2);
+            resultText += ' | E: ' + (stat.addedEffects / c.battles).toFixed(2);
+            console.log(resultText)
+        })
+        console.log('ПРАВА КОМАНДА')
+        rightTeamStats.sort((a,b) => a.name.localeCompare(b.name)).forEach(c => {
+            const stat = this.creatueActionStats.get(c.id)
+            if (!stat) {
+                return
+            }
+            let resultText = `${c.name} (${c.id})`;
+            resultText += ' | K: ' + (stat.kills / c.battles).toFixed(2) ;
+            resultText += ' | DD: ' + (stat.damageDealt / c.battles).toFixed(2) ;
+            resultText += ' | DPT: ' + (stat.damagePotentialTaken / c.battles).toFixed(2);
+            resultText += ' | DT: ' + (stat.damageTaken / c.battles).toFixed(2);
+            resultText += ' | HD: ' + (stat.healingDone / c.battles).toFixed(2);
+            resultText += ' | A: ' + (stat.attacks / c.battles).toFixed(2);
+            resultText += ' | M: ' + (stat.moves / c.battles).toFixed(2);
+            resultText += ' | T: ' + (stat.treats / c.battles).toFixed(2);
+            resultText += ' | D: ' + (stat.defenses / c.battles).toFixed(2);
+            resultText += ' | S: ' + (stat.skips / c.battles).toFixed(2);
+            resultText += ' | E: ' + (stat.addedEffects / c.battles).toFixed(2);
+            console.log(resultText)
+        })
 
         // Показываем кнопку для повторного запуска тестов
         this.startButton.setVisible(true).setText('Запустить тесты снова');

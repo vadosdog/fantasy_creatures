@@ -32,13 +32,14 @@ export class CombatHandler {
             + (attacker.getWill() - defender.getWill()) / 100 + attacker.getCritChanceTerm()))
     }
 
-    static getAttackDamage(attacker, defender, attack, isCrit) {
+    static getAttackDamage(attacker, defender, attack, isCrit = false, potential = false) {
         return Math.floor(Math.max(
             attack.baseDamage * 0.3,
             attack.baseDamage
             * (attacker.getAttack() / defender.getDefense())
             * this.getElementMultiplier(attack.element, defender.element)
             * (isCrit ? 1.1 : 1)
+            * (potential ? 1 : Math.random() * 0.5 + 0.85) // +- 15% рандом
         ))
     }
 

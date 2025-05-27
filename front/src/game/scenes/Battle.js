@@ -231,6 +231,7 @@ export class Battle extends Scene {
             timeline.add({
                 at: 200 * (effects.length + 1) + 500, //гомосятина
                 run: () => {
+                    console.log('destroy')
                     activeCreature.creatureSpriteContainer.destroy(true)
                     this.hexagonsArray.get(activeCreature.position.join(',')).content = null
                 }
@@ -435,6 +436,7 @@ export class Battle extends Scene {
                         timeline.add({
                             at: 200 * (path.length + 1) + 1000, //гомосятина
                             run: () => {
+                                console.log('destroy')
                                 targetCreature.creatureSpriteContainer.destroy(true)
                                 this.hexagonsArray.get(targetCreature.position.join(',')).content = null
                             }
@@ -467,6 +469,7 @@ export class Battle extends Scene {
                             timeline.add({
                                 at: 200 * (path.length + 1) + 1500, //гомосятина
                                 run: () => {
+                                    console.log('destroy')
                                     this.store.activeCreature.creatureSpriteContainer.destroy(true)
                                     this.hexagonsArray.get(this.store.activeCreature.position.join(',')).content = null
                                 }

@@ -45,7 +45,7 @@ export class MediumAI {
             const path = this.store.findPath(this.activeCreature.position, enemy.position, attack.actionType === 'melee');
             const distance = path.length - 1;
 
-            const estimatedDamage = CombatHandler.getAttackDamage(this.activeCreature, enemy, attack)
+            const estimatedDamage = CombatHandler.getAttackDamage(this.activeCreature, enemy, attack, false, true)
             const score = estimatedDamage *
                 (1 / Math.max(1, distance)) *
                 (2 - (enemy.health / enemy.getMaxHealth())) * // Больший вес раненым

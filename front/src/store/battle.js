@@ -6,16 +6,13 @@ import {BaseEffect} from "../game/classes/battle/Effects/BaseEffect.js";
 import {EasyAI} from "../game/classes/battle/AI/EasyAI.js";
 import {CombatHandler} from "../game/classes/battle/CombatHandler.js";
 import {MediumAI} from "../game/classes/battle/AI/MediumAI.js";
-import {getTeam} from "../database/CreaturesLib.js";
+import {getTeam, getTeam2, testElementTeam} from "../database/CreaturesLib.js";
 
 export const BATTLE_STATE_PLAYER_TURN = 'PLAYER_TURN'
 export const BATTLE_STATE_ENGINE_TURN = 'ENGINE_TURN'
 export const BATTLE_STATE_WAITING = 'WAITING'
 export const BATTLE_STATE_BATTLE_OVER_WIN = 'BATTLE_OVER_WIN'
 export const BATTLE_STATE_BATTLE_OVER_LOSE = 'BATTLE_OVER_LOSE'
-
-const player1 = 'player'
-const player2 = new MediumAI()
 
 export const useBattleStore = defineStore('battle', {
     state: () => ({
@@ -28,22 +25,24 @@ export const useBattleStore = defineStore('battle', {
         battleLog: [],
         speedAnims: 1,
         creatures: [
-            ...getTeam('right', player1, [
-                [0, 2],
-                [1, 2],
-                [2, 2],
-                [3, 2],
-                [4, 2],
-                [5, 2],
-            ]),
-            ...getTeam('left', player2, [
-                [0, 28],
-                [1, 28],
-                [2, 28],
-                [3, 28],
-                [4, 28],
-                [5, 28],
-            ])
+            // ...testElementTeam('fire', 2, 'left', player1),
+            // ...testElementTeam('fire', 2, 'right', player2),
+            // ...getTeam('right', player1, [
+            //     [0, 2],
+            //     [1, 2],
+            //     [2, 2],
+            //     [3, 2],
+            //     [4, 2],
+            //     [5, 2],
+            // ]),
+            // ...getTeam('left', player2, [
+            //     [0, 28],
+            //     [1, 28],
+            //     [2, 28],
+            //     [3, 28],
+            //     [4, 28],
+            //     [5, 28],
+            // ])
         ],
         leftTeam: [],
         rightTeam: [],
@@ -61,22 +60,8 @@ export const useBattleStore = defineStore('battle', {
             this.round = 0
             this.battleLog = []
             this.creatures = [
-                ...getTeam('right', player1, [
-                    [0, 2],
-                    [1, 2],
-                    [2, 2],
-                    [3, 2],
-                    [4, 2],
-                    [5, 2],
-                ]),
-                ...getTeam('left', player2, [
-                    [0, 28],
-                    [1, 28],
-                    [2, 28],
-                    [3, 28],
-                    [4, 28],
-                    [5, 28],
-                ])
+                ...testElementTeam('grass', 2, 'left', new MediumAI()),
+                ...testElementTeam('grass', 2, 'right', new MediumAI()),
             ]
 
             this.leftTeam = []
@@ -137,7 +122,8 @@ export const useBattleStore = defineStore('battle', {
                         return
                     }
 
-                    if (creature.health <= 0) {availableActions.p
+                    if (creature.health <= 0) {
+                        availableActions.p
                         return
                     }
 
@@ -423,9 +409,11 @@ export const useBattleStore = defineStore('battle', {
                 attack: attack.name,
                 success: false,
                 damage: 0,
+                potentialDamage: 0,
                 health: 0,
                 hitChance: 0,
                 isCrit: 0,
+                effects: [],
             }
             const attacker = this.activeCreature
             const defender = this.getCreatureByCoords(targetPosition)
@@ -438,6 +426,7 @@ export const useBattleStore = defineStore('battle', {
             const hitChance = CombatHandler.getHitChance(attacker, defender, attack);
             result.hitChance = hitChance
             const isCrit = Math.random() < CombatHandler.getCritAttackChance(attacker, defender, attack);
+            result.potentialDamage = CombatHandler.getAttackDamage(attacker, defender, attack, false, true)
 
             const dice = Math.random()
             if (dice < hitChance) {
@@ -483,19 +472,20 @@ export const useBattleStore = defineStore('battle', {
                     return
                 }
 
-                if (effect.target === 'target') {
-                    this.recordLog(defender.pushEffect(effect))
-                } else {
-                    this.recordLog(attacker.pushEffect(effect))
+                const effectTarget = effect.target === 'target' ? defender : attacker
+                if (!effectTarget.hasEffect(effect.effect)) {
+                    result.effects.push(effect.effect)
                 }
+
+                this.recordLog(effectTarget.pushEffect(effect))
             })
-            
+
             // Проверка обратных эффектов шипов и вампиризма
             if (result.damage > 0 && defender.hasEffect('thorns')) {
                 const backDamage = Math.floor(result.damage * 0.2)
                 attacker.health -= backDamage
                 result.backDamage = backDamage
-                
+
                 if (attacker.health <= 0) {
                     attacker.health = 0
                     // гомосятина переделать
@@ -516,6 +506,7 @@ export const useBattleStore = defineStore('battle', {
                 health: 0,
                 hitChance: 0,
                 isCrit: 0,
+                effects: [],
             }
             const treater = this.activeCreature
             const treated = this.getCreatureByCoords(targetPosition)
@@ -565,12 +556,13 @@ export const useBattleStore = defineStore('battle', {
                 if (Math.random() > chance) {
                     return
                 }
-
-                if (effect.target === 'target') {
-                    this.recordLog(treated.pushEffect(effect))
-                } else {
-                    this.recordLog(treater.pushEffect(effect))
+                
+                const effectTarget = effect.target === 'target' ? treated : treater
+                if (!effectTarget.hasEffect(effect.effect)) {
+                    result.effects.push(effect.effect)
                 }
+
+                this.recordLog(effectTarget.pushEffect(effect))
             })
 
             if (result.damage > 0) {

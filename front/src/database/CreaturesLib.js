@@ -262,12 +262,10 @@ import {BaseEffect} from "../game/classes/battle/Effects/BaseEffect.js";
 const creaturesLib = {}
 const creatureActionsLib = {}
 
-for (const creature of creatures) {
-    switch (creature.role) {
-        
-    }
+creatures.forEach((creature, index) => {
+    creature.id = index + 1
     creaturesLib[creature.element + '-' + creature.form + '-' + creature.role] = creature
-}
+})
 
 for (const creaturesAction of creaturesActions) {
     const key = creaturesAction.element + '-' + creaturesAction.form + '-' + creaturesAction.role
@@ -275,13 +273,15 @@ for (const creaturesAction of creaturesActions) {
         creatureActionsLib[key] = []
     }
 
+    creaturesAction.hitChance /= 100
+    creaturesAction.critChance /= 100
+
     creatureActionsLib[key].push(creaturesAction)
 }
 
 export function getTeam(direction, control, positions) {
     const result = []
     lib.forEach((config, i) => {
-        // console.log(getCreature(config.element, 'beast', config.role, 2))
         const creature = new Creature(getCreature(config.element, 'beast', config.role, 2))
         creature.id += direction === 'left' ? 100 : 0
         creature.actions = creature.actions.map(action => {
@@ -304,9 +304,33 @@ export function getTeam(direction, control, positions) {
     return result
 }
 
+export function getTeam2(direction, control, creatures) {
+    const result = []
+    creatures.forEach((config, i) => {
+        const creature = new Creature(config)
+        creature.id += direction === 'left' ? 100 : 0
+        creature.actions = creature.actions.map(action => {
+            if (action.effects) {
+                for (const effect of action.effects) {
+                    if (!effect.target) {
+                        effect.target = 'target'
+                    }
+                }
+            }
+            return new CreatureAction(action)
+        })
+        creature.direction = direction
+        creature.control = control
+        result.push(creature)
+    })
+
+    return result
+}
+
 export function getCreature(element, form, role, level) {
-    const creature = creaturesLib[element + '-' + form + '-' + role]
-    creature.name = element + '/' + role
+    // нужно копирование, иначе при повторении существ, будет один объект
+    const creature = Object.assign({}, creaturesLib[element + '-' + form + '-' + role]);
+    creature.name = element + '/' + form + '/' + role
     const actions = [
         ...creatureActionsLib[element + '-' + form + '-' + role],
         ...creatureActionsLib['-' + '-' + role],
@@ -316,7 +340,7 @@ export function getCreature(element, form, role, level) {
         ...creatureActionsLib[element + '-' + '-' + role],
         ...creatureActionsLib[element + '-' + form + '-'],
     ]
-    
+
     switch (creature.role) {
         case 'tank':
             creature.texture = 'Pink_Monster'
@@ -328,7 +352,8 @@ export function getCreature(element, form, role, level) {
             creature.texture = 'Owlet_Monster'
             break
     }
-    
+
+
     creature.actions = actions.filter(action => action.level <= level).map(action => {
         switch (action.actionType) {
             case 'melee':
@@ -339,7 +364,72 @@ export function getCreature(element, form, role, level) {
                 action.range = 15
                 break
         }
-        return action
+        return Object.assign({}, action)
     })
     return creature
+}
+
+function randomRole() {
+    return ['tank', 'dd', 'support'][Math.floor(Math.random() * 3)];
+}
+
+function randomForm() {
+    return ['beast', 'bird', 'reptile'][Math.floor(Math.random() * 3)];
+}
+
+function randomElement() {
+    return ['fire', 'water', 'grass'][Math.floor(Math.random() * 3)];
+}
+
+function getPositions(direction) {
+    if (direction === 'right') {
+        return [
+            [0, 2],
+            [1, 2],
+            [2, 2],
+            [3, 2],
+            [4, 2],
+            [5, 2],
+        ]
+    } else {
+        return [
+            [0, 28],
+            [1, 28],
+            [2, 28],
+            [3, 28],
+            [4, 28],
+            [5, 28],
+        ]
+    }
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        // Выбираем случайный индекс от 0 до i включительно
+        const j = Math.floor(Math.random() * (i + 1));
+        // Меняем элементы местами
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+export function testElementTeam(element, level, direction, control) {
+    const creatures = [
+        getCreature(element, randomForm(), 'tank', level),
+        getCreature(element, randomForm(), 'tank', level),
+        getCreature(element, randomForm(), 'support', level),
+        getCreature(element, randomForm(), 'support', level),
+        getCreature(element, randomForm(), 'dd', level),
+        getCreature(element, randomForm(), 'dd', level),
+    ]
+
+
+    shuffleArray(creatures)
+
+    const positions = getPositions(direction)
+    creatures.forEach((c, i) => {
+        c.position = positions[i]
+    })
+
+    return getTeam2(direction, control, creatures)
 }
