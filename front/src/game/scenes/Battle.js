@@ -246,7 +246,6 @@ export class Battle extends Scene {
         }
 
         timeline.on('complete', () => {
-            console.log(availableActions.length)
             if (availableActions.length === 0) {
                 this.store.activeCreature.creatureSpriteContainer.setDefaultState()
                 this.store.endTurn()

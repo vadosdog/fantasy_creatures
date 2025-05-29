@@ -1,4 +1,24 @@
 import {CombatHandler} from "../CombatHandler.js";
+import {
+    AegisEffect,
+    BleedEffect,
+    BlindEffect,
+    BurnEffect,
+    ChillEffect,
+    CleanseEffect,
+    ConfusionEffect,
+    CurseEffect,
+    DefenseEffect,
+    EmpowerEffect,
+    FearEffect,
+    FreezeEffect,
+    HasteEffect,
+    LuckEffect,
+    MadnessEffect,
+    PoisonEffect,
+    RegenEffect,
+    ThornsEffect
+} from "../Effects/BaseEffect.js";
 
 export class MediumAI {
     store;
@@ -36,6 +56,79 @@ export class MediumAI {
         return this.chooseAction(availableActions.filter(a => !!a));
     }
 
+    getDebuffWeight(effect, enemy) {
+        let weight = CombatHandler.getPushEffectChance(this.activeCreature, enemy, effect)
+        if (enemy.hasEffect(effect.effect) > 1) {
+            // если такой эффект уже есть, то вес меньше
+            weight *= 0.8
+        }
+        switch (effect.effect) {
+            case 'freeze':
+                weight *= 1.3
+                break
+            case 'bleed':
+            case 'burn':
+                weight *= 1.4
+                break
+            case 'poison':
+                weight *= 1.2
+                break
+            case 'blind':
+                weight *= 1.3
+                break
+            case 'fear':
+                weight *= 1.25
+                break
+            case 'madness':
+                switch (enemy.role) {
+                    case 'dd':
+                        weight = 0.5
+                        break
+                    default:
+                        weight *= 1.2
+                }
+                break
+            case 'chill':
+            case 'curse':
+            case 'confusion':
+                weight *= 1.1
+                break
+        }
+        return weight
+    }
+
+    getBuffWeight(effect, ally) {
+        let weight = 1
+        if (ally.hasEffect(effect.effect)) {
+            // если такой эффект уже есть, то вес меньше
+            weight *= 0.8
+        }
+        switch (effect.effect) {
+            case 'empower':
+            case 'madness':
+            case 'regen':
+            case 'luck':
+                weight *= (ally.role === 'dd' ? 1.5 : 1) * (ally.role === 'tank' ? 1.2 : 1);
+                break
+            case 'haste':
+                weight *= 1.3;
+                break
+            case 'thorns':
+            case 'aegis':
+            case 'defense':
+                weight *= (ally.role === 'dd' ? 1.2 : (ally.role === 'tank' ? 1.3 : 0.8));
+                break
+            case 'cleanse':
+                if (ally.hasDebuff()) {
+                    weight *= 1.5
+                } else {
+                    weight *= 0.5
+                }
+        }
+
+        return weight
+    }
+
     getAttackTarget(attack, enemies) {
         let bestTarget = null;
         let bestScore = -Infinity;
@@ -46,10 +139,13 @@ export class MediumAI {
             const distance = path.length - 1;
 
             const estimatedDamage = CombatHandler.getAttackDamage(this.activeCreature, enemy, attack, false, true)
-            const score = estimatedDamage *
+                * CombatHandler.getHitChance(this.activeCreature, enemy, attack)
+            let score = Math.min(30, estimatedDamage) *
                 (1 / Math.max(1, distance)) *
                 (2 - (enemy.health / enemy.getMaxHealth())) * // Больший вес раненым
-                (enemy.role === 'support' ? 1.5 : 1); // Приоритет саппортам
+                (enemy.role === 'support' ? 1.5 : 1) // Приоритет саппортам
+
+            attack.effects.forEach(effect => score *= this.getDebuffWeight(effect, enemy)) // докидываем веса за эффекты
 
             if (score > bestScore) {
                 bestScore = score;
@@ -61,10 +157,9 @@ export class MediumAI {
             }
         });
 
-        let weight
+        let weight = bestScore
         if (bestTarget) {
             if (bestTarget.distance <= limit) {
-                weight = 100 - bestTarget.distance
                 if (this.activeCreature.role !== 'support') {
                     weight *= 1.5
                 }
@@ -79,7 +174,7 @@ export class MediumAI {
                     bestTarget.path = this.store.findPath(this.activeCreature.position, bestTarget.enemy.position, true)
                 }
                 // Если не можем атаковать, двигаемся к лучшей цели
-                weight = 60 - bestTarget.distance
+                weight *= 0.85
                 if (this.activeCreature.role !== 'support') {
                     weight *= 1.5
                 }
@@ -100,34 +195,31 @@ export class MediumAI {
     getTreatTarget(treat, allies) {
         let bestTarget = null;
         let bestScore = -Infinity;
-        const limit = treat.actionType === 'melee' ? this.activeCreature.getSpeed() : treat.range;
+        const limit = treat.range;
 
         allies.forEach(ally => {
+            if (limit === 0 && ally.id !== this.activeCreature.id) {
+                return
+            }
             const path = this.store.findPath(this.activeCreature.position, ally.position);
             const distance = path.length - 1;
 
             if (distance <= treat.range) {
-                let score = 0;
+                let score = 30;
 
                 if (treat.baseDamage > 0) { // Лечение
                     if (ally.health >= ally.getMaxHealth()) return;
 
                     const healNeeded = ally.getMaxHealth() - ally.health;
-                    score = healNeeded * (ally.role === 'tank' ? 1.5 : 1) * (ally.role === 'dd' ? 1.3 : 1);
-                } else { // Бафы
-                    // TODO: Учесть ценность разных бафов для разных ролей
-                    const hasBuff = treat.effects.some(effect => ally.hasEffect(effect));
-                    if (hasBuff) return;
+                    score += healNeeded * (ally.role === 'tank' ? 1.5 : 1) * (ally.role === 'dd' ? 1.3 : 1);
 
-                    score = 50 * (ally.role === 'dd' ? 1.5 : 1) * (ally.role === 'tank' ? 1.2 : 1);
+                    if (ally.health > ally.getMaxHealth() * 0.8) {
+                        score /= 2; // Меньше лечить почти здоровых
+                    }
                 }
 
-                if (ally.health > ally.getMaxHealth() * 0.8) {
-                    score /= 2; // Меньше лечить почти здоровых
-                }
-                if (ally.role === 'dd' && treat.effects.some(e => e.effect === 'empower')) {
-                    score *= 1.5; // Чаще бафать ДД
-                }
+
+                treat.effects.forEach(effect => score *= this.getBuffWeight(effect, ally)) // докидываем веса за эффекты
 
                 if (score > bestScore) {
                     bestScore = score;
@@ -143,7 +235,7 @@ export class MediumAI {
         if (bestTarget) {
             if (bestTarget.distance <= limit) {
                 return {
-                    weight: 100 - bestTarget.distance,
+                    weight: bestScore,
                     action: 'treat',
                     actionObject: treat,
                     targets: bestTarget.ally.position,
@@ -152,7 +244,7 @@ export class MediumAI {
                 bestTarget.path = this.store.findPath(this.activeCreature.position, bestTarget.ally.position, true)
 
                 return {
-                    weight: 50 - bestTarget.distance,
+                    weight: bestScore * 0.85,
                     action: 'move',
                     targets: bestTarget.path[Math.min(this.activeCreature.getSpeed() - 1, bestTarget.path.length - 2)],
                 };
@@ -220,6 +312,7 @@ export class MediumAI {
     }
 
     chooseAction(availableActions) {
+        const role = this.activeCreature.role
         let attackAction;
         let treatAction;
         let moveAction;

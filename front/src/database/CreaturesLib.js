@@ -258,6 +258,8 @@ let idIndex = 1;
 import creatures from './creatures.json';
 import creaturesActions from './creature-actions.json';
 import {BaseEffect} from "../game/classes/battle/Effects/BaseEffect.js";
+import {MediumAI} from "../game/classes/battle/AI/MediumAI.js";
+import {EasyAI} from "../game/classes/battle/AI/EasyAI.js";
 
 const creaturesLib = {}
 const creatureActionsLib = {}
@@ -355,15 +357,6 @@ export function getCreature(element, form, role, level) {
 
 
     creature.actions = actions.filter(action => action.level <= level).map(action => {
-        switch (action.actionType) {
-            case 'melee':
-                action.range = 1
-                break
-            case 'ranged':
-            case 'treat':
-                action.range = 15
-                break
-        }
         return Object.assign({}, action)
     })
     return creature
@@ -374,7 +367,11 @@ function randomRole() {
 }
 
 function randomForm() {
-    return ['beast', 'bird', 'reptile'][Math.floor(Math.random() * 3)];
+    return [
+        'beast',
+        'bird',
+        'reptile'
+    ][Math.floor(Math.random() * 3)];
 }
 
 function randomElement() {
@@ -432,4 +429,196 @@ export function testElementTeam(element, level, direction, control) {
     })
 
     return getTeam2(direction, control, creatures)
+}
+
+export function testTeam(level, direction, control) {
+    const creatures = [
+        getCreature(randomElement(), randomForm(), 'tank', level),
+        getCreature(randomElement(), randomForm(), 'tank', level),
+        getCreature(randomElement(), randomForm(), 'support', level),
+        getCreature(randomElement(), randomForm(), 'support', level),
+        getCreature(randomElement(), randomForm(), 'dd', level),
+        getCreature(randomElement(), randomForm(), 'dd', level),
+    ]
+
+
+    shuffleArray(creatures)
+
+    const positions = getPositions(direction)
+    creatures.forEach((c, i) => {
+        c.position = positions[i]
+    })
+
+    return getTeam2(direction, control, creatures)
+}
+
+// Тест 1: Базовый урон (ДД vs Танк)
+export function testBaseDamageDDvsTank() {
+    const tank = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'tank']);
+    const dd = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'dd']);
+    tank.actions = []
+    dd.actions = [
+        // {
+        //     "name": "Свирепый укус",
+        //     "element": "",
+        //     "form": "beast",
+        //     "role": "",
+        //     "level": 1,
+        //     "Тип": "Атакующий",
+        //     "actionType": "melee",
+        //     "range": 1,
+        //     "baseDamage": 30,
+        //     "hitChance": 90,
+        //     "critChance": 12,
+        //     "effects": [
+        //         // {
+        //         //     "effect": "bleed",
+        //         //     "chance": 0.3,
+        //         //     "duration": 3
+        //         // }
+        //     ],
+        //     "": ""
+        // },
+        // {
+        //     "name": "Ветряной удар",
+        //     "element": "",
+        //     "form": "bird",
+        //     "role": "",
+        //     "level": 1,
+        //     "Тип": "Атакующий",
+        //     "actionType": "melee",
+        //     "range": 1,
+        //     "baseDamage": 27,
+        //     "hitChance": 98,
+        //     "critChance": 20,
+        //     "effects": [],
+        //     "": ""
+        // },
+        // {
+        //     "name": "Ядовитый плевок",
+        //     "element": "",
+        //     "form": "reptile",
+        //     "role": "",
+        //     "level": 1,
+        //     "Тип": "Гибридный",
+        //     "actionType": "melee",
+        //     "range": 1,
+        //     "baseDamage": 32,
+        //     "hitChance": 85,
+        //     "calcDamage": "25,5",
+        //     "critChance": 5,
+        //     "effects": [
+        //         // {
+        //         //     "effect": "poison",
+        //         //     "chance": 0.8,
+        //         //     "duration": 3
+        //         // }
+        //     ],
+        //     "": ""
+        // },
+        {
+            "name": "Огненный коготь",
+            "element": "fire",
+            "form": "",
+            "role": "",
+            "level": 1,
+            "Тип": "Атакующий",
+            "actionType": "melee",
+            "range": 1,
+            "baseDamage": 26,
+            "hitChance": 90,
+            "critChance": 15,
+            "effects": [
+                // {
+                //     "effect": "burn",
+                //     "chance": 0.15,
+                //     "duration": 3
+                // }
+            ],
+            "": ""
+        },
+        {
+            "name": "Ядовитый шип",
+            "element": "grass",
+            "form": "",
+            "role": "",
+            "level": 1,
+            "Тип": "Гибридный",
+            "actionType": "melee",
+            "range": 1,
+            "baseDamage": 25,
+            "hitChance": 95,
+            "calcDamage": "23,75",
+            "critChance": 7,
+            "effects": [
+                // {
+                //     "effect": "poison",
+                //     "chance": 0.4,
+                //     "duration": 3
+                // }
+            ],
+            "": ""
+        },
+        {
+            "name": "Ледяная игла",
+            "element": "water",
+            "form": "",
+            "role": "",
+            "level": 1,
+            "Тип": "Атакующий",
+            "actionType": "melee",
+            "range": 1,
+            "baseDamage": 28,
+            "hitChance": 85,
+            "calcDamage": "25,5",
+            "critChance": 10,
+            "effects": [
+                // {
+                //     "effect": "freeze",
+                //     "chance": 0.2,
+                //     "duration": 1
+                // }
+            ],
+            "": ""
+        },
+        // {
+        //     "name": "Смертельный удар",
+        //     "element": "",
+        //     "form": "",
+        //     "role": "dd",
+        //     "level": 2,
+        //     "Тип": "Атакующий",
+        //     "actionType": "ranged",
+        //     "range": 15,
+        //     "baseDamage": 35,
+        //     "hitChance": 85,
+        //     "calcDamage": "38,25",
+        //     "critChance": 5,
+        //     "effects": [],
+        //     "": ""
+        // },
+    ].map(a => {
+        a.hitChance /= 100
+        return a
+    })
+
+    dd.actions = [dd.actions[Math.floor(Math.random() * 3)]]
+
+    tank.name = 'tank'
+    dd.name = 'dd'
+
+    tank.texture = 'Pink_Monster'
+    dd.texture = 'Dude_Monster'
+    // support.texture = 'Owlet_Monster'
+
+    tank.position = getPositions('left')[0]
+    dd.position = getPositions('right')[0]
+
+    tank.id = 1
+    dd.id = 2
+
+    return [
+        ...getTeam2('left', new EasyAI(), [tank]),
+        ...getTeam2('right', new EasyAI(), [dd])
+    ]
 }

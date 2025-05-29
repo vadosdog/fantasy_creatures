@@ -286,7 +286,7 @@ _"Существа растут, как дети. Сначала неуклюж�
        skill.baseDamage * 
        (attacker.attackStat / defender.defenseStat) * 
        elementModifier * 
-       (isCrit ? 1.1 : 1)
+       (isCrit ? 1.2 : 1)
      )
    )
    ```

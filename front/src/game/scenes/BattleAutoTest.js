@@ -10,9 +10,10 @@ export class BattleAutoTest extends Scene {
         this.store = useBattleStore();
         this.testResults = [];
         this.currentTest = 0;
-        this.totalTests = 200;
+        this.totalTests = 1000;
         this.creatureStats = new Map();
         this.creatueActionStats = new Map();
+        this.actionStats = new Map()
     }
 
     create() {
@@ -77,6 +78,7 @@ export class BattleAutoTest extends Scene {
         this.testResults = [];
         this.creatureStats.clear();
         this.creatueActionStats.clear();
+        this.actionStats.clear();
 
         // Запускаем первый тест
         this.runNextTest();
@@ -157,7 +159,7 @@ export class BattleAutoTest extends Scene {
         }, 0);
     }
     
-    pushActionStat(creature, updateKey, value = 1) {
+    pushCreatureActionStat(creature, updateKey, value = 1) {
         if (!this.creatueActionStats.has(creature.id)) {
             this.creatueActionStats.set(creature.id, {
                 kills: 0,
@@ -177,11 +179,28 @@ export class BattleAutoTest extends Scene {
 
         stats[updateKey] += value
     }
+    
+    pushActionStat(action, updateKey, value = 1) {
+        if (!this.actionStats.has(action)) {
+            this.actionStats.set(action, {
+                name: action,
+                kills: 0,
+                damageDealt: 0,
+                healingDone: 0,
+                attacks: 0,
+                treats: 0,
+                addedEffects: 0,
+            });
+        }
+        const stats = this.actionStats.get(action);
+
+        stats[updateKey] += value
+    }
 
     handleAction(action, position) {
         if (action.action === 'skip') {
             this.store.playerActionDefense()
-            this.pushActionStat(this.store.activeCreature, 'skips')
+            this.pushCreatureActionStat(this.store.activeCreature, 'skips')
         }
 
         let path = []
@@ -193,29 +212,36 @@ export class BattleAutoTest extends Scene {
                 if (!path || path.length === 0) return;
 
                 this.store.playerActionMoveTo(path)
-                this.pushActionStat(this.store.activeCreature, 'moves')
+                this.pushCreatureActionStat(this.store.activeCreature, 'moves')
                 break
             case 'attack':
                 const targetCreature = this.store.getCreatureByCoords(position)
-                this.pushActionStat(this.store.activeCreature, 'attacks')
+                this.pushCreatureActionStat(this.store.activeCreature, 'attacks')
+                this.pushActionStat(action.actionObject.name, 'attacks')
                 result = this.store.playerActionAttack(position, action.actionObject)
                 if (result.success) {
                     if (result.health === 0) {
-                        this.pushActionStat(this.store.activeCreature, 'kills')
+                        this.pushCreatureActionStat(this.store.activeCreature, 'kills')
+                        this.pushActionStat(action.actionObject.name, 'kills')
                     }
 
-                    this.pushActionStat(this.store.activeCreature, 'damageDealt', result.damage)
-                    this.pushActionStat(this.store.activeCreature, 'addedEffects', result.effects.length)
-                    this.pushActionStat(targetCreature, 'damageTaken', result.damage)
-                    this.pushActionStat(targetCreature, 'damagePotentialTaken', result.potentialDamage)
+                    this.pushCreatureActionStat(this.store.activeCreature, 'damageDealt', result.damage)
+                    this.pushCreatureActionStat(this.store.activeCreature, 'addedEffects', result.effects.length)
+                    this.pushActionStat(action.actionObject.name, 'damageDealt', result.damage)
+                    this.pushActionStat(action.actionObject.name, 'addedEffects', result.effects.length)
+                    this.pushCreatureActionStat(targetCreature, 'damageTaken', result.damage)
+                    this.pushCreatureActionStat(targetCreature, 'damagePotentialTaken', result.potentialDamage)
                 }
                 break
             case 'treat':
-                this.pushActionStat(this.store.activeCreature, 'treats')
+                this.pushCreatureActionStat(this.store.activeCreature, 'treats')
+                this.pushActionStat(action.actionObject.name, 'treats')
                 result = this.store.playerActionTreat(position, action.actionObject)
                 if (result.success) {
-                    this.pushActionStat(this.store.activeCreature, 'healingDone', result.damage)
-                    this.pushActionStat(this.store.activeCreature, 'addedEffects', result.effects.length)
+                    this.pushCreatureActionStat(this.store.activeCreature, 'healingDone', result.damage)
+                    this.pushCreatureActionStat(this.store.activeCreature, 'addedEffects', result.effects.length)
+                    this.pushActionStat(action.actionObject.name, 'healingDone', result.damage)
+                    this.pushActionStat(action.actionObject.name, 'addedEffects', result.effects.length)
                 }
                 break;
             case 'skip':
@@ -380,6 +406,14 @@ export class BattleAutoTest extends Scene {
             resultText += ' | S: ' + (stat.skips / c.battles).toFixed(2);
             resultText += ' | E: ' + (stat.addedEffects / c.battles).toFixed(2);
             console.log(resultText)
+        })
+        
+        console.log('Эффективность навыков')
+        this.actionStats.forEach(s => {
+            console.log(s)
+            if (s.kills) {
+                console.log(s.attacks / s.kills)
+            }
         })
 
         // Показываем кнопку для повторного запуска тестов

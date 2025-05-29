@@ -105,7 +105,27 @@ export class Creature {
     }
 
     hasEffect(effectType) {
-        return this.effects.some(effect => effect.effect === effectType)
+        const existsEffect = this.effects.find(({effect}) => effectType === effect)
+        if (!existsEffect) {
+            return 0
+        }
+        
+        return existsEffect.duration
+    }
+
+    hasDebuff() {
+        const debuffs = ['freeze',
+            'bleed',
+            'burn',
+            'poison',
+            'blind',
+            'fear',
+            'chill',
+            'curse',
+            'confusion'
+        ]
+
+        return debuffs.some(debuff => this.hasEffect(debuff));
     }
 
     pushEffect(effectConfig) {

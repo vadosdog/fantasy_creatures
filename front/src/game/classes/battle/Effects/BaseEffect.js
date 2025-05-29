@@ -50,8 +50,7 @@ export class BaseEffect {
             case 'freeze':
                 return new FreezeEffect(config)
             case 'cleanse':
-                return new СleanseEffect(config)
-
+                return new CleanseEffect(config)
         }
     }
 
@@ -116,11 +115,11 @@ export class BlindEffect extends BaseEffect {
 export class BurnEffect extends BaseEffect {
 
     getDefenseMultiplier() {
-        return 0.85
+        return 0.95
     }
 
     getRoundHealthEffect() {
-        return -0.07
+        return -0.05
     }
 }
 
@@ -199,7 +198,7 @@ export class MadnessEffect extends BaseEffect {
 export class PoisonEffect extends BaseEffect {
 
     getRoundHealthEffect() {
-        return -0.05
+        return -0.07
     }
 }
 
@@ -225,5 +224,5 @@ export class TauntEffect extends BaseEffect { //TODO taunt (провокация
 export class KnockbackEffect extends BaseEffect { //TODO knockback (отбрасывание
 }
 
-export class СleanseEffect extends BaseEffect { //TODO cleanse (очищение дебафов
+export class CleanseEffect extends BaseEffect { //TODO cleanse (очищение дебафов
 }

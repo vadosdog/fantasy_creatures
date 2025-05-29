@@ -6,7 +6,7 @@ import {BaseEffect} from "../game/classes/battle/Effects/BaseEffect.js";
 import {EasyAI} from "../game/classes/battle/AI/EasyAI.js";
 import {CombatHandler} from "../game/classes/battle/CombatHandler.js";
 import {MediumAI} from "../game/classes/battle/AI/MediumAI.js";
-import {getTeam, getTeam2, testElementTeam} from "../database/CreaturesLib.js";
+import {getTeam, getTeam2, testBaseDamageDDvsTank, testElementTeam, testTeam} from "../database/CreaturesLib.js";
 
 export const BATTLE_STATE_PLAYER_TURN = 'PLAYER_TURN'
 export const BATTLE_STATE_ENGINE_TURN = 'ENGINE_TURN'
@@ -60,8 +60,9 @@ export const useBattleStore = defineStore('battle', {
             this.round = 0
             this.battleLog = []
             this.creatures = [
-                ...testElementTeam('grass', 2, 'left', new MediumAI()),
-                ...testElementTeam('grass', 2, 'right', new MediumAI()),
+                // ...testTeam(2, 'left', new MediumAI()),
+                // ...testTeam(2, 'right', new MediumAI()),
+                ...testBaseDamageDDvsTank(),
             ]
 
             this.leftTeam = []
@@ -556,7 +557,7 @@ export const useBattleStore = defineStore('battle', {
                 if (Math.random() > chance) {
                     return
                 }
-                
+
                 const effectTarget = effect.target === 'target' ? treated : treater
                 if (!effectTarget.hasEffect(effect.effect)) {
                     result.effects.push(effect.effect)

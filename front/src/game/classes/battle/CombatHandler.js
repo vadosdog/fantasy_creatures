@@ -1,6 +1,7 @@
 // Класс расчет всех формул битвы
 export class CombatHandler {
     static getElementMultiplier(attackElement, defenseElement) {
+        // return 1
         const normal = 1
         const enlarged = 1.5
         const reduced = 0.75
@@ -38,8 +39,8 @@ export class CombatHandler {
             attack.baseDamage
             * (attacker.getAttack() / defender.getDefense())
             * this.getElementMultiplier(attack.element, defender.element)
-            * (isCrit ? 1.1 : 1)
-            * (potential ? 1 : Math.random() * 0.5 + 0.85) // +- 15% рандом
+            * (isCrit ? 1.5 : 1)
+            * (potential ? 1 : Math.random() * 0.3 + 0.85) // +- 15% рандом
         ))
     }
 
@@ -64,7 +65,7 @@ export class CombatHandler {
         return Math.floor(action.baseDamage
             * (treater.getAttack() / treated.getDefense())
             * this.getElementMultiplier(action.element, treated.element)
-            * (isCrit ? 1.15 : 1)
+            * (isCrit ? 1.2 : 1)
         )
     }
 }
