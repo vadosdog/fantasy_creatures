@@ -169,7 +169,7 @@
         "Тип": "Поддерживающий",
         "actionType": "treat",
         "range": 10,
-        "baseDamage": 30,
+        "baseDamage": 25,
         "hitChance": 95,
         "calcDamage": 35,
         "critChance": 10,

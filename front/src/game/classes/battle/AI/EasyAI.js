@@ -39,18 +39,27 @@ export class EasyAI {
         let path = []
         let target = undefined
 
-        enemies.forEach((enemy, i) => {
-            const newPath = this.store.findPath(this.activeCreature.position, enemy.position, attack.actionType === 'melee')
-            if (
-                i === 0
-                || newPath.length < path.length
-                || enemy.health < target.health
-            ) {
-                path = newPath
-                target = enemy
-            }
-        })
-        
+        if (enemies.length === 1) {
+            target = enemies[0]
+            path = this.store.findPath(this.activeCreature.position, target.position, attack.actionType === 'melee')
+        } else {
+            enemies.forEach((enemy, i) => {
+                // для теста. позже убрать
+                if (enemy.role === 'support') {
+                    return
+                }
+                const newPath = this.store.findPath(this.activeCreature.position, enemy.position, attack.actionType === 'melee')
+                if (
+                    i === 0
+                    || newPath.length < path.length
+                    || enemy.health < target.health
+                ) {
+                    path = newPath
+                    target = enemy
+                }
+            })
+        }
+
         if (!target) {
             return undefined
         }
@@ -99,7 +108,7 @@ export class EasyAI {
             if (inRange && newPath.length - 1 >= treat.range) {
                 return
             }
-            
+
             // Если действие может лечить, то выбираем тех, кому лечение нужно
             if (treat.baseDamage > 0) {
                 // Лечение не требуется
@@ -231,6 +240,6 @@ export class EasyAI {
         }
 
         // На всякий случай возвращаем пропуск
-        return { action: 'skip' };
+        return {action: 'skip'};
     }
 }

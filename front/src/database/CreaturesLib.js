@@ -456,131 +456,151 @@ export function testTeam(level, direction, control) {
 export function testBaseDamageDDvsTank() {
     const tank = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'tank']);
     const dd = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'dd']);
+    const dd2 = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'dd']);
+    const support = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'support']);
     tank.actions = []
-    dd.actions = [
-        // {
-        //     "name": "Свирепый укус",
-        //     "element": "",
-        //     "form": "beast",
-        //     "role": "",
-        //     "level": 1,
-        //     "Тип": "Атакующий",
-        //     "actionType": "melee",
-        //     "range": 1,
-        //     "baseDamage": 30,
-        //     "hitChance": 90,
-        //     "critChance": 12,
-        //     "effects": [
-        //         // {
-        //         //     "effect": "bleed",
-        //         //     "chance": 0.3,
-        //         //     "duration": 3
-        //         // }
-        //     ],
-        //     "": ""
-        // },
-        // {
-        //     "name": "Ветряной удар",
-        //     "element": "",
-        //     "form": "bird",
-        //     "role": "",
-        //     "level": 1,
-        //     "Тип": "Атакующий",
-        //     "actionType": "melee",
-        //     "range": 1,
-        //     "baseDamage": 27,
-        //     "hitChance": 98,
-        //     "critChance": 20,
-        //     "effects": [],
-        //     "": ""
-        // },
-        // {
-        //     "name": "Ядовитый плевок",
-        //     "element": "",
-        //     "form": "reptile",
-        //     "role": "",
-        //     "level": 1,
-        //     "Тип": "Гибридный",
-        //     "actionType": "melee",
-        //     "range": 1,
-        //     "baseDamage": 32,
-        //     "hitChance": 85,
-        //     "calcDamage": "25,5",
-        //     "critChance": 5,
-        //     "effects": [
-        //         // {
-        //         //     "effect": "poison",
-        //         //     "chance": 0.8,
-        //         //     "duration": 3
-        //         // }
-        //     ],
-        //     "": ""
-        // },
+    dd2.actions = []
+    support.actions = [
         {
-            "name": "Огненный коготь",
-            "element": "fire",
+            "name": "Лечебная волна",
+            "element": "",
             "form": "",
+            "role": "support",
+            "level": 2,
+            "Тип": "Поддерживающий",
+            "actionType": "treat",
+            "range": 10,
+            "baseDamage": 25,
+            "hitChance": 95,
+            "critChance": 10,
+            "effects": [],
+            "": ""
+        }
+    ]
+    dd.actions = [
+        {
+            "name": "Свирепый укус",
+            "element": "",
+            "form": "beast",
             "role": "",
             "level": 1,
             "Тип": "Атакующий",
             "actionType": "melee",
             "range": 1,
-            "baseDamage": 26,
+            "baseDamage": 30,
             "hitChance": 90,
-            "critChance": 15,
+            "critChance": 12,
             "effects": [
                 // {
-                //     "effect": "burn",
-                //     "chance": 0.15,
+                //     "effect": "bleed",
+                //     "chance": 0.3,
                 //     "duration": 3
                 // }
             ],
             "": ""
         },
         {
-            "name": "Ядовитый шип",
-            "element": "grass",
-            "form": "",
+            "name": "Ветряной удар",
+            "element": "",
+            "form": "bird",
+            "role": "",
+            "level": 1,
+            "Тип": "Атакующий",
+            "actionType": "melee",
+            "range": 1,
+            "baseDamage": 27,
+            "hitChance": 98,
+            "critChance": 20,
+            "effects": [],
+            "": ""
+        },
+        {
+            "name": "Ядовитый плевок",
+            "element": "",
+            "form": "reptile",
             "role": "",
             "level": 1,
             "Тип": "Гибридный",
             "actionType": "melee",
             "range": 1,
-            "baseDamage": 25,
-            "hitChance": 95,
-            "calcDamage": "23,75",
-            "critChance": 7,
+            "baseDamage": 32,
+            "hitChance": 85,
+            "calcDamage": "25,5",
+            "critChance": 5,
             "effects": [
                 // {
                 //     "effect": "poison",
-                //     "chance": 0.4,
+                //     "chance": 0.8,
                 //     "duration": 3
                 // }
             ],
             "": ""
         },
-        {
-            "name": "Ледяная игла",
-            "element": "water",
-            "form": "",
-            "role": "",
-            "level": 1,
-            "Тип": "Атакующий",
-            "actionType": "melee",
-            "range": 1,
-            "baseDamage": 28,
-            "hitChance": 85,
-            "calcDamage": "25,5",
-            "critChance": 10,
-            "effects": [
-                // {
-                //     "effect": "freeze",
-                //     "chance": 0.2,
-                //     "duration": 1
-                // }
-            ],
-            "": ""
-        },
+        // {
+        //     "name": "Огненный коготь",
+        //     "element": "fire",
+        //     "form": "",
+        //     "role": "",
+        //     "level": 1,
+        //     "Тип": "Атакующий",
+        //     "actionType": "melee",
+        //     "range": 1,
+        //     "baseDamage": 26,
+        //     "hitChance": 90,
+        //     "critChance": 15,
+        //     "effects": [
+        //         // {
+        //         //     "effect": "burn",
+        //         //     "chance": 0.15,
+        //         //     "duration": 3
+        //         // }
+        //     ],
+        //     "": ""
+        // },
+        // {
+        //     "name": "Ядовитый шип",
+        //     "element": "grass",
+        //     "form": "",
+        //     "role": "",
+        //     "level": 1,
+        //     "Тип": "Гибридный",
+        //     "actionType": "melee",
+        //     "range": 1,
+        //     "baseDamage": 25,
+        //     "hitChance": 95,
+        //     "calcDamage": "23,75",
+        //     "critChance": 7,
+        //     "effects": [
+        //         // {
+        //         //     "effect": "poison",
+        //         //     "chance": 0.4,
+        //         //     "duration": 3
+        //         // }
+        //     ],
+        //     "": ""
+        // },
+        // {
+        //     "name": "Ледяная игла",
+        //     "element": "water",
+        //     "form": "",
+        //     "role": "",
+        //     "level": 1,
+        //     "Тип": "Атакующий",
+        //     "actionType": "melee",
+        //     "range": 1,
+        //     "baseDamage": 28,
+        //     "hitChance": 85,
+        //     "calcDamage": "25,5",
+        //     "critChance": 10,
+        //     "effects": [
+        //         // {
+        //         //     "effect": "freeze",
+        //         //     "chance": 0.2,
+        //         //     "duration": 1
+        //         // }
+        //     ],
+        //     "": ""
+        // },
         // {
         //     "name": "Смертельный удар",
         //     "element": "",
@@ -605,20 +625,28 @@ export function testBaseDamageDDvsTank() {
     dd.actions = [dd.actions[Math.floor(Math.random() * 3)]]
 
     tank.name = 'tank'
+    support.name = 'support'
+    support.maxHealthStat = 1
+    dd2.name = 'dd2'
     dd.name = 'dd'
 
     tank.texture = 'Pink_Monster'
     dd.texture = 'Dude_Monster'
-    // support.texture = 'Owlet_Monster'
+    dd2.texture = 'Dude_Monster'
+    support.texture = 'Owlet_Monster'
 
-    tank.position = getPositions('left')[0]
+    // tank.position = getPositions('left')[0]
+    dd2.position = getPositions('left')[0]
+    support.position = getPositions('left')[1]
     dd.position = getPositions('right')[0]
 
     tank.id = 1
-    dd.id = 2
+    dd2.id = 2
+    support.id = 3
+    dd.id = 4
 
     return [
-        ...getTeam2('left', new EasyAI(), [tank]),
+        ...getTeam2('left', new EasyAI(), [dd2, support]),
         ...getTeam2('right', new EasyAI(), [dd])
     ]
 }

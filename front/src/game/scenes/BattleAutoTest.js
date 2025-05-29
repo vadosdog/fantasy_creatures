@@ -411,8 +411,8 @@ export class BattleAutoTest extends Scene {
         console.log('Эффективность навыков')
         this.actionStats.forEach(s => {
             console.log(s)
-            if (s.kills) {
-                console.log(s.attacks / s.kills)
+            if (s.kills > 0) {
+                console.log((s.attacks - (s.kills / 2)) / (s.kills / 2))
             }
         })
 
