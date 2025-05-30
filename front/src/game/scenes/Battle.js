@@ -327,11 +327,14 @@ export class Battle extends Scene {
         }
 
         const action = targets.get(position.join(','))
-        this.handleAction(action, position)
+        const result = this.handleAction(action, position)
+        if (result === undefined) {
+            this.store.battleState !== BATTLE_STATE_PLAYER_TURN
+        }
     }
 
     handleAction(action, position) {
-        if (!position, action)
+        const prevState = this.store.battleState
         this.store.setBattleState(BATTLE_STATE_WAITING)
 
         if (action.action === 'skip') {
@@ -345,7 +348,10 @@ export class Battle extends Scene {
             case 'move':
                 // Получаем путь от текущей позиции персонажа до выбранной клетки
                 path = this.findPath(this.store.activeCreature.position, position);
-                if (!path || path.length === 0) return;
+                if (!path || path.length === 0) {
+                    this.store.setBattleState(prevState)
+                    return;
+                }
 
                 this.store.playerActionMoveTo(path)
                 this.moveCreatureAlongPath(timeline, this.store.activeCreature, path)
@@ -361,6 +367,14 @@ export class Battle extends Scene {
             case 'attack':
                 let attackResult
                 if (!targetCreature) {
+                    this.store.setBattleState(prevState)
+                    return
+                }
+
+                console.log(action.actionObject.pp, this.store.activeCreature.pp, action.actionObject.currentCooldown > 0)
+                if (action.actionObject.pp > this.store.activeCreature.pp || action.actionObject.currentCooldown > 0) {
+                    this.store.setBattleState(prevState)
+                    //навык недоступен
                     return
                 }
 
@@ -369,7 +383,10 @@ export class Battle extends Scene {
                 if (action.actionObject.actionType === 'melee') {
                     // Получаем путь от текущей позиции персонажа до выбранной клетки
                     path = this.findPath(this.store.activeCreature.position, position);
-                    if (!path || path.length === 0) return;
+                    if (!path || path.length === 0) {
+                        this.store.setBattleState(prevState)
+                        return;
+                    }
                     path = path.slice(0, path.length - 1)
 
                     if (path.length > 1) {
@@ -488,8 +505,17 @@ export class Battle extends Scene {
             case 'treat':
                 let treatResult
                 if (!targetCreature) {
+                    this.store.setBattleState(prevState)
                     return
                 }
+
+
+                if (action.actionObject.pp > this.store.activeCreature.pp || action.actionObject.currentCooldown > 0) {
+                    //навык недоступен
+                    this.store.setBattleState(prevState)
+                    return
+                }
+
                 treatResult = this.store.playerActionTreat(position, action.actionObject)
 
                 timeline.add({
@@ -543,6 +569,7 @@ export class Battle extends Scene {
                 break
             default:
                 // неизвестное действие
+                this.store.setBattleState(prevState)
                 return
         }
 
@@ -611,6 +638,16 @@ export class Battle extends Scene {
     }
 
     showButtons() {
+        const activeCreatureText = this.add.text(
+            0,
+            -20,
+            this.store.activeCreature.name + ' PP ' + this.store.activeCreature.pp + '/' + this.store.activeCreature.getMaxPP(),
+            {
+                fontFamily: "arial",
+                fontSize: "12px",
+                color: 'red',
+            }
+        )
 
         this.store.activeCreature.getActions().forEach((action, i) => {
             // Создаем элементы кнопки
@@ -619,15 +656,25 @@ export class Battle extends Scene {
                 .setInteractive();
 
             const effects = (action.effects || []).map(effect => effect.effect).join(', ')
+            let actionType = 'Тип атаки: ' + action.actionType + (action.actionType === 'ranged' ? ' (' + action.range + ')' : '');
+            if (action.element) {
+                actionType += ' (' + action.element + ')'
+            }
+            
+            const reload = action.currentCooldown > 0
+            const notEnoughtPP = action.pp > this.store.activeCreature.pp
+
             const buttonTexts = [
-                this.add.text(20, 20, action.name, {fontFamily: "arial", fontSize: "14px"}).setOrigin(0, 0),
-                this.add.text(20, 40, 'Стихия: ' + action.element, {
+                this.add.text(20, 20, action.name + (reload > 0 ? ' Reload' + action.currentCooldown : ''), {fontFamily: "arial", fontSize: "14px"}).setOrigin(0, 0),
+
+                this.add.text(20, 40, actionType, {
                     fontFamily: "arial",
                     fontSize: "12px"
                 }).setOrigin(0, 0),
-                this.add.text(20, 60, 'Тип атаки: ' + action.actionType + (action.actionType === 'ranged' ? ' (' + action.range + ')' : ''), {
+                this.add.text(20, 60, 'PP: ' + action.pp + ', CD: ' + action.cooldown, {
                     fontFamily: "arial",
-                    fontSize: "12px"
+                    fontSize: "12px",
+                    color: notEnoughtPP ? 'red' : 'white'
                 }).setOrigin(0, 0),
                 this.add.text(20, 80, 'Шанс (крит): ' + action.hitChance + ' (' + (action.critChance || 0) + ')', {
                     fontFamily: "arial",
@@ -644,7 +691,7 @@ export class Battle extends Scene {
             ];
 
             // Создаем контейнер для кнопки
-            const buttonContainer = this.add.container(20 + i * 215, 20, [buttonBg, ...buttonTexts]);
+            const buttonContainer = this.add.container(20 + i * 215, 20, [buttonBg, ...buttonTexts, activeCreatureText]);
 
             buttonContainer.action = action
 

@@ -61,7 +61,11 @@ export const useBattleStore = defineStore('battle', {
     getters: {},
     actions: {
         load() {
-            this.resetBattle(testEffects())
+            // this.resetBattle(testEffects())
+            this.resetBattle([
+                ...testTeam(2, 'left', 'player'),
+                ...testTeam(2, 'right', 'player')
+            ])
         },
         resetBattle(creatures) {
             this.round = 0
@@ -281,6 +285,8 @@ export const useBattleStore = defineStore('battle', {
                 this.round = targetIndex
             }
 
+            this.activeCreature.roundRestorePP()
+
             return {
                 activeCreature: this.activeCreature,
                 availableActions: this.availableActions,
@@ -421,9 +427,19 @@ export const useBattleStore = defineStore('battle', {
             }
             const attacker = this.activeCreature
             const defender = this.getCreatureByCoords(targetPosition)
+
+            if (attack.pp > attacker.pp || attack.currentCooldown > 0) {
+                //навык недоступен
+                return
+            }
+
             if (!defender) {
                 return
             }
+
+            // Выставляем кулдаун и обновляем pp
+            attack.currentCooldown = attack.cooldown
+            attacker.pp -= attack.pp
 
 
             // Расчёт шанса попадания
@@ -517,9 +533,19 @@ export const useBattleStore = defineStore('battle', {
             }
             const treater = this.activeCreature
             const treated = this.getCreatureByCoords(targetPosition)
+
+            if (action.pp > treater.pp || action.currentCooldown > 0) {
+                //навык недоступен
+                return
+            }
+
             if (!treated) {
                 return
             }
+
+            // Выставляем кулдаун и обновляем pp
+            action.currentCooldown = action.cooldown
+            treater.pp -= action.pp
 
 
             // Расчёт шанса попадания

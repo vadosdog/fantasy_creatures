@@ -20,6 +20,8 @@ export class Creature {
 
                     actions,
                     effects = [],
+
+                    maxPP = 10,
                 }) {
 
         this.id = id;
@@ -38,6 +40,9 @@ export class Creature {
         this.willStat = willStat; // воля, сопротивление бафам/дебафам
         this.element = element;
         this.role = role;
+
+        this.maxPP = maxPP
+        this.pp = maxPP
 
         this.actions = actions;
 
@@ -72,6 +77,12 @@ export class Creature {
         }, this.maxHealthStat)
     }
 
+    getMaxPP() {
+        return this.effects.reduce((maxPP, effect) => {
+            return maxPP * effect.getMaxPPMultiplier()
+        }, this.maxPP)
+    }
+
     getSpeed() {
         return this.effects.reduce((maxHealth, effect) => maxHealth + effect.getSpeedTerm(), this.speedStat)
     }
@@ -103,7 +114,7 @@ export class Creature {
     getActions() {
         return this.actions
     }
-    
+
     getBackDamageTerm() {
         return this.effects.reduce((backDamage, effect) => backDamage + effect.getBackDamage(), 0)
     }
@@ -113,7 +124,7 @@ export class Creature {
         if (!existsEffect) {
             return 0
         }
-        
+
         return existsEffect.duration
     }
 
@@ -202,6 +213,20 @@ export class Creature {
         this.effects.splice(existsEffectIndex, 1)
     }
 
+    // восстанавливает ПП каждый раунд
+    roundRestorePP() {
+        this.pp += 3 // Отбалансить и сделать зависимым от навыка
+        const maxPP = this.getMaxPP()
+        if (this.pp >= maxPP) {
+            this.pp = maxPP
+        }
+        
+        this.actions.forEach(action => {
+            if (action.currentCooldown > 0) {
+                action.currentCooldown--
+            }
+        })
+    }
 }
 
 export class CreatureAction {
@@ -214,6 +239,8 @@ export class CreatureAction {
                     effects,
                     actionType,
                     range,
+                    pp = 0,
+                    cooldown = 0,
                 }) {
 
         this.name = name
@@ -224,5 +251,8 @@ export class CreatureAction {
         this.actionType = actionType
         this.range = range
         this.effects = effects
+        this.pp = pp
+        this.cooldown = cooldown
+        this.currentCooldown = 0
     }
 }

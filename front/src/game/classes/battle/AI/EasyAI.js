@@ -22,6 +22,11 @@ export class EasyAI {
 
         // Оценка действий
         this.activeCreature.getActions().forEach(action => {
+            if (action.pp > this.activeCreature.pp || action.currentCooldown > 0) {
+                //навык недоступен
+                return
+            }
+            
             if (action.actionType === 'melee' || action.actionType === 'ranged') {
                 availableActions.push(this.getAttackTarget(action, enemies));
             } else if (action.actionType === 'treat') {

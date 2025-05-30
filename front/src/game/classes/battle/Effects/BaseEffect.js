@@ -58,6 +58,10 @@ export class BaseEffect {
         return 1
     }
 
+    getMaxPPMultiplier() {
+        return 1
+    }
+
     getAttackMultiplier() {
         return 1
     }

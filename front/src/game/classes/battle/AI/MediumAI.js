@@ -32,7 +32,7 @@ const EFFECT_WEIGHTS = {
     blind: {base: 2., perTurn: 0.25, max: 2.75},
     empower: {base: 2.5, perTurn: 0.3, max: 3.4},
     poison: {base: 2.8, perTurn: 0.35, max: 3.85},
-    bleed: {base: 3., perTurn: 0.3, max: 3.9},
+    bleed: {base: 3, perTurn: 0.3, max: 3.9},
     madness: {base: 3.5, perTurn: 0.45, max: 4.85},
 };
 
@@ -61,6 +61,12 @@ export class MediumAI {
 
         // Оценка действий
         this.activeCreature.getActions().forEach(action => {
+            // TODO можно добавить баланс, чтобы ИИ не тратил все PP до последнего
+            if (action.pp > this.activeCreature.pp || action.currentCooldown > 0) {
+                //навык недоступен
+                return
+            }
+            
             if (action.actionType === 'melee' || action.actionType === 'ranged') {
                 availableActions.push(this.getAttackTarget(action, enemies));
             } else if (action.actionType === 'treat') {
@@ -75,7 +81,7 @@ export class MediumAI {
 
     getEffectWeight(effect, enemy) {
         const effectWeight = EFFECT_WEIGHTS[effect.effect] || {}
-        let weight = effectWeight.base * CombatHandler.getPushEffectChance(this.activeCreature, enemy, effect)
+        let weight = effectWeight.base
 
         if (effect.duration > 1) {
             weight += effectWeight.perTurn * (effect.duration - 1);
@@ -85,6 +91,8 @@ export class MediumAI {
             // если такой эффект уже есть, то вес меньше
             weight *= 0.8
         }
+        
+        weight *= CombatHandler.getPushEffectChance(this.activeCreature, enemy, effect)
 
         return weight
     }
