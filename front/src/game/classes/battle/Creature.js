@@ -103,6 +103,10 @@ export class Creature {
     getActions() {
         return this.actions
     }
+    
+    getBackDamageTerm() {
+        return this.effects.reduce((backDamage, effect) => backDamage + effect.getBackDamage(), 0)
+    }
 
     hasEffect(effectType) {
         const existsEffect = this.effects.find(({effect}) => effectType === effect)

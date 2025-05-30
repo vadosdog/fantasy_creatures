@@ -34,13 +34,21 @@ export class CombatHandler {
     }
 
     static getAttackDamage(attacker, defender, attack, isCrit = false, potential = false) {
+        // урон рандомный +- 15%
+        let random = potential ? 1 : Math.random() * 0.3 + 0.85
+        if (attacker.hasEffect('luck')) {
+            // Если навык удача, то урон раздоится 1 - 1.15 (0 - +15%)
+            // При этом потенциальный урон вырастает на 7.5%
+            random = potential ? 1.075 : Math.random() * 0.15 + 1
+        }
+        
         return Math.floor(Math.max(
             attack.baseDamage * 0.3,
             attack.baseDamage
             * (attacker.getAttack() / defender.getDefense())
             * this.getElementMultiplier(attack.element, defender.element)
             * (isCrit ? 1.5 : 1)
-            * (potential ? 1 : Math.random() * 0.3 + 0.85) // +- 15% рандом
+            * random
         ))
     }
 

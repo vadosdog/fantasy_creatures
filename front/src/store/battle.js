@@ -6,7 +6,14 @@ import {BaseEffect} from "../game/classes/battle/Effects/BaseEffect.js";
 import {EasyAI} from "../game/classes/battle/AI/EasyAI.js";
 import {CombatHandler} from "../game/classes/battle/CombatHandler.js";
 import {MediumAI} from "../game/classes/battle/AI/MediumAI.js";
-import {getTeam, getTeam2, testBaseDamageDDvsTank, testElementTeam, testTeam} from "../database/CreaturesLib.js";
+import {
+    getTeam,
+    getTeam2,
+    testBaseDamageDDvsTank,
+    testEffects,
+    testElementTeam,
+    testTeam
+} from "../database/CreaturesLib.js";
 
 export const BATTLE_STATE_PLAYER_TURN = 'PLAYER_TURN'
 export const BATTLE_STATE_ENGINE_TURN = 'ENGINE_TURN'
@@ -54,16 +61,12 @@ export const useBattleStore = defineStore('battle', {
     getters: {},
     actions: {
         load() {
-            this.resetBattle()
+            this.resetBattle(testEffects())
         },
-        resetBattle() {
+        resetBattle(creatures) {
             this.round = 0
             this.battleLog = []
-            this.creatures = [
-                // ...testTeam(2, 'left', new MediumAI()),
-                // ...testTeam(2, 'right', new MediumAI()),
-                ...testBaseDamageDDvsTank(),
-            ]
+            this.creatures = creatures
 
             this.leftTeam = []
             this.rightTeam = []
@@ -482,18 +485,21 @@ export const useBattleStore = defineStore('battle', {
             })
 
             // Проверка обратных эффектов шипов и вампиризма
-            if (result.damage > 0 && defender.hasEffect('thorns')) {
-                const backDamage = Math.floor(result.damage * 0.2)
-                attacker.health -= backDamage
-                result.backDamage = backDamage
+            if (result.damage > 0) {
+                const backDamageTerm = defender.getBackDamageTerm()
+                if (backDamageTerm) {
+                    const backDamage = Math.floor(result.damage * backDamageTerm)
+                    attacker.health -= backDamage
+                    result.backDamage = backDamage
 
-                if (attacker.health <= 0) {
-                    attacker.health = 0
-                    // гомосятина переделать
-                    let targetIndex = this.creatures.findIndex(c => c === attacker)
-                    this.creatures.splice(targetIndex, 1)
-                    this.battleMap.removeContent(...attacker.position)
-                    targetIndex = this.creatures.findIndex(c => c === this.activeCreature)
+                    if (attacker.health <= 0) {
+                        attacker.health = 0
+                        // гомосятина переделать
+                        let targetIndex = this.creatures.findIndex(c => c === attacker)
+                        this.creatures.splice(targetIndex, 1)
+                        this.battleMap.removeContent(...attacker.position)
+                        targetIndex = this.creatures.findIndex(c => c === this.activeCreature)
+                    }
                 }
             }
 

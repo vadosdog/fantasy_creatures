@@ -650,3 +650,85 @@ export function testBaseDamageDDvsTank() {
         ...getTeam2('right', new EasyAI(), [dd])
     ]
 }
+
+// Тест 1: Базовый урон (ДД vs Танк)
+export function testEffects(effect, chanceEffect, duration) {
+    const tank1 = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'tank']);
+    const tank2 = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'tank']);
+    tank1.actions = [
+        {
+            "name": "Свирепый укус с эффектом",
+            "element": "",
+            "form": "beast",
+            "role": "",
+            "level": 1,
+            "Тип": "Атакующий",
+            "actionType": "melee",
+            "range": 1,
+            "baseDamage": 30,
+            "hitChance": 90,
+            "critChance": 12,
+            "effects": [],
+            "": ""
+        },
+    ].map(a => {
+        a.hitChance /= 100
+        return a
+    })
+    tank2.actions = [
+        {
+            "name": "Свирепый укус без эффекта",
+            "element": "",
+            "form": "beast",
+            "role": "",
+            "level": 1,
+            "Тип": "Атакующий",
+            "actionType": "melee",
+            "range": 1,
+            "baseDamage": 30,
+            "hitChance": 90,
+            "critChance": 12,
+            "effects": [
+                // {
+                //     "effect": "bleed",
+                //     "chance": 0.3,
+                //     "duration": 3
+                // }
+            ],
+            "": ""
+        },
+    ].map(a => {
+        a.hitChance /= 100
+        return a
+    })
+
+    tank1.name = 'tank1'
+    tank2.name = 'tank2'
+
+    tank1.texture = 'Pink_Monster'
+    tank2.texture = 'Pink_Monster'
+
+    tank1.position = getPositions('right')[0]
+    tank2.position = getPositions('left')[0]
+
+    tank1.id = 1
+    tank2.id = 4
+
+    if (Math.random() < chanceEffect) {
+        tank1.effects = [BaseEffect.getEffectObject({
+            "effect": effect,
+            "duration": duration
+        })]
+    }
+    
+    // tank1.actions[0].effects = [{
+    //     "effect": effect,
+    //     "chance": chanceEffect,
+    //     "duration": duration
+    // }]
+
+    return [
+        ...getTeam2('left', new EasyAI(), [tank2]),
+        ...getTeam2('right', new EasyAI(), [tank1])
+    ]
+}

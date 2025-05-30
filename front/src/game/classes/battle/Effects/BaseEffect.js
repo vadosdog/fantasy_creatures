@@ -89,20 +89,24 @@ export class BaseEffect {
     getRoundEffect() {
         return false
     }
+    
+    getBackDamage() {
+        return 0
+    }
 }
 
 
 export class AegisEffect extends BaseEffect {
 
     getDefenseMultiplier() {
-        return 1.1
+        return 1.3
     }
 }
 
 export class BleedEffect extends BaseEffect {
 
     getRoundHealthEffect() {
-        return -0.08
+        return -0.06
     }
 }
 
@@ -159,7 +163,7 @@ export class DefenseEffect extends BaseEffect {
 
 export class EmpowerEffect extends BaseEffect {
     getAttackMultiplier() {
-        return 1.1
+        return 1.3
     }
 }
 
@@ -176,6 +180,7 @@ export class HasteEffect extends BaseEffect {
 }
 
 export class LuckEffect extends BaseEffect {
+    // делает разброс урона 0 - +15% вместо +/-15% (см CombatHandler.getAttackDamage())
     getCritChanceTerm() {
         return 0.15
     }
@@ -210,6 +215,9 @@ export class RegenEffect extends BaseEffect {
 }
 
 export class ThornsEffect extends BaseEffect {
+    getBackDamage() {
+        return 0.2
+    }
 }
 
 export class FreezeEffect extends BaseEffect {

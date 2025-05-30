@@ -20,6 +20,23 @@ import {
     ThornsEffect
 } from "../Effects/BaseEffect.js";
 
+const EFFECT_WEIGHTS = {
+    defense: {base: 0.8, perTurn: 0.1, max: 1.1},
+    luck: {base: 0.9, perTurn: 0.1, max: 1.2},
+    thorns: {base: 1.3, perTurn: 0.15, max: 1.75},
+    freeze: {base: 1.3, perTurn: 0.15, max: 1.75},
+    regen: {base: 1.6, perTurn: 0.2, max: 2.2},
+    fear: {base: 1.7, perTurn: 0.2, max: 2.3},
+    aegis: {base: 1.8, perTurn: 0.25, max: 2.55},
+    burn: {base: 2., perTurn: 0.25, max: 2.75},
+    blind: {base: 2., perTurn: 0.25, max: 2.75},
+    empower: {base: 2.5, perTurn: 0.3, max: 3.4},
+    poison: {base: 2.8, perTurn: 0.35, max: 3.85},
+    bleed: {base: 3., perTurn: 0.3, max: 3.9},
+    madness: {base: 3.5, perTurn: 0.45, max: 4.85},
+};
+
+
 export class MediumAI {
     store;
     activeCreature;
@@ -56,74 +73,17 @@ export class MediumAI {
         return this.chooseAction(availableActions.filter(a => !!a));
     }
 
-    getDebuffWeight(effect, enemy) {
-        let weight = CombatHandler.getPushEffectChance(this.activeCreature, enemy, effect)
+    getEffectWeight(effect, enemy) {
+        const effectWeight = EFFECT_WEIGHTS[effect.effect] || {}
+        let weight = effectWeight.base * CombatHandler.getPushEffectChance(this.activeCreature, enemy, effect)
+
+        if (effect.duration > 1) {
+            weight += effectWeight.perTurn * (effect.duration - 1);
+        }
+        
         if (enemy.hasEffect(effect.effect) > 1) {
             // если такой эффект уже есть, то вес меньше
             weight *= 0.8
-        }
-        switch (effect.effect) {
-            case 'freeze':
-                weight *= 1.3
-                break
-            case 'bleed':
-            case 'burn':
-                weight *= 1.4
-                break
-            case 'poison':
-                weight *= 1.2
-                break
-            case 'blind':
-                weight *= 1.3
-                break
-            case 'fear':
-                weight *= 1.25
-                break
-            case 'madness':
-                switch (enemy.role) {
-                    case 'dd':
-                        weight = 0.5
-                        break
-                    default:
-                        weight *= 1.2
-                }
-                break
-            case 'chill':
-            case 'curse':
-            case 'confusion':
-                weight *= 1.1
-                break
-        }
-        return weight
-    }
-
-    getBuffWeight(effect, ally) {
-        let weight = 1
-        if (ally.hasEffect(effect.effect)) {
-            // если такой эффект уже есть, то вес меньше
-            weight *= 0.8
-        }
-        switch (effect.effect) {
-            case 'empower':
-            case 'madness':
-            case 'regen':
-            case 'luck':
-                weight *= (ally.role === 'dd' ? 1.5 : 1) * (ally.role === 'tank' ? 1.2 : 1);
-                break
-            case 'haste':
-                weight *= 1.3;
-                break
-            case 'thorns':
-            case 'aegis':
-            case 'defense':
-                weight *= (ally.role === 'dd' ? 1.2 : (ally.role === 'tank' ? 1.3 : 0.8));
-                break
-            case 'cleanse':
-                if (ally.hasDebuff()) {
-                    weight *= 1.5
-                } else {
-                    weight *= 0.5
-                }
         }
 
         return weight
@@ -145,7 +105,7 @@ export class MediumAI {
                 (2 - (enemy.health / enemy.getMaxHealth())) * // Больший вес раненым
                 (enemy.role === 'support' ? 1.5 : 1) // Приоритет саппортам
 
-            attack.effects.forEach(effect => score *= this.getDebuffWeight(effect, enemy)) // докидываем веса за эффекты
+            attack.effects.forEach(effect => score += this.getEffectWeight(effect, enemy)) // докидываем веса за эффекты
 
             if (score > bestScore) {
                 bestScore = score;
@@ -219,7 +179,7 @@ export class MediumAI {
                 }
 
 
-                treat.effects.forEach(effect => score *= this.getBuffWeight(effect, ally)) // докидываем веса за эффекты
+                treat.effects.forEach(effect => score *= this.getEffectWeight(effect, ally)) // докидываем веса за эффекты
 
                 if (score > bestScore) {
                     bestScore = score;

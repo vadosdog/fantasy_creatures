@@ -45,7 +45,7 @@
         "role": "tank",
         "maxHealthStat": 143,
         "attackStat": 89,
-        "defenseStat": 83,
+        "defenseStat": 89,
         "willStat": 42,
         "initiativeStat": 58,
         "attackStatO": 22,
