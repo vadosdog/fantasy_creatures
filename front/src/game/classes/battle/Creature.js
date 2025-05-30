@@ -172,7 +172,7 @@ export class Creature {
                     duration: effect.duration - 1
                 })
             }
-            const damage = maxHealth * effect.getRoundHealthEffect()
+            const damage = Math.floor(maxHealth * effect.getRoundHealthEffect())
             if (damage === 0) {
                 return
             }
@@ -183,7 +183,7 @@ export class Creature {
                     duration: effect.duration - 1
                 }
             )
-            this.health += damage
+            this.health = Math.floor(this.health + damage)
         })
 
         this.health = Phaser.Math.Clamp(this.health, 0, maxHealth)

@@ -454,7 +454,7 @@ export const useBattleStore = defineStore('battle', {
 
                 // считаем урон
                 result.damage = CombatHandler.getAttackDamage(attacker, defender, attack, isCrit)
-                defender.health -= result.damage
+                defender.health = Math.floor(defender.health - result.damage)
             }
 
 
@@ -505,7 +505,7 @@ export const useBattleStore = defineStore('battle', {
                 const backDamageTerm = defender.getBackDamageTerm()
                 if (backDamageTerm) {
                     const backDamage = Math.floor(result.damage * backDamageTerm)
-                    attacker.health -= backDamage
+                    attacker.health = Math.floor(attacker.health - backDamage)
                     result.backDamage = backDamage
 
                     if (attacker.health <= 0) {
@@ -559,7 +559,7 @@ export const useBattleStore = defineStore('battle', {
 
                 // считаем урон
                 result.damage = CombatHandler.getTreatDamage(treater, treated, action, isCrit)
-                treated.health += result.damage
+                treated.health = Math.floor(treated.health + result.damage)
                 if (treated.health > treated.getMaxHealth()) {
                     treated.health = treated.getMaxHealth()
                 }

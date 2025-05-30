@@ -357,8 +357,6 @@ export function getCreature(element, form, role, level) {
 
 
     creature.actions = actions.filter(action => action.level <= level).map(action => {
-        action.pp = 5
-        action.cooldown = 5
         return Object.assign({}, action)
     })
     return creature
