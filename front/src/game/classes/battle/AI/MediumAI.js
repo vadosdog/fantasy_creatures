@@ -1,24 +1,4 @@
 import {CombatHandler} from "../CombatHandler.js";
-import {
-    AegisEffect,
-    BleedEffect,
-    BlindEffect,
-    BurnEffect,
-    ChillEffect,
-    CleanseEffect,
-    ConfusionEffect,
-    CurseEffect,
-    DefenseEffect,
-    EmpowerEffect,
-    FearEffect,
-    FreezeEffect,
-    HasteEffect,
-    LuckEffect,
-    MadnessEffect,
-    PoisonEffect,
-    RegenEffect,
-    ThornsEffect
-} from "../Effects/BaseEffect.js";
 
 const EFFECT_WEIGHTS = {
     defense: {base: 0.8, perTurn: 0.1, max: 1.1},
@@ -36,6 +16,27 @@ const EFFECT_WEIGHTS = {
     madness: {base: 3.5, perTurn: 0.45, max: 4.85},
 };
 
+// Веса действий по ролям
+const ROLE_WEIGHTS = {
+    tank: {
+        attack: 1.0,
+        treat: 15, // тк у танков по умолчанию нет лечилок, без большого приоритета защиты не будут использованы никогда
+        move: 0.8,
+        skip: 0.3
+    },
+    dd: {
+        attack: 1.5,
+        treat: 5,
+        move: 1.0,
+        skip: 0.2
+    },
+    support: {
+        attack: 0.8,
+        treat: 1.8,
+        move: 1.0,
+        skip: 0.4
+    }
+};
 
 export class MediumAI {
     store;
@@ -45,73 +46,110 @@ export class MediumAI {
         this.store = store;
         this.activeCreature = store.activeCreature;
 
-        let enemies = [];
-        let allies = [];
+        const enemies = store.creatures.filter(c => c.health > 0 && c.direction !== this.activeCreature.direction);
+        const allies = store.creatures.filter(c => c.health > 0 && c.direction === this.activeCreature.direction && c.id !== this.activeCreature.id);
+
         let availableActions = [];
 
-        // Разделение существ на союзников и врагов
-        for (const creature of store.creatures) {
-            if (creature.health <= 0) continue;
-            if (creature.direction === this.activeCreature.direction) {
-                allies.push(creature);
-            } else {
-                enemies.push(creature);
-            }
-        }
-
-        // Оценка действий
+        // Оценка действий        
+        // 1. Действия навыков
         this.activeCreature.getActions().forEach(action => {
-            // TODO можно добавить баланс, чтобы ИИ не тратил все PP до последнего
             if (action.pp > this.activeCreature.pp || action.currentCooldown > 0) {
-                //навык недоступен
-                return
+                return;
             }
-            
+
             if (action.actionType === 'melee' || action.actionType === 'ranged') {
-                availableActions.push(this.getAttackTarget(action, enemies));
+                const attackAction = this.getAttackTarget(action, enemies);
+                if (attackAction) availableActions.push(attackAction);
             } else if (action.actionType === 'treat') {
-                availableActions.push(this.getTreatTarget(action, allies));
+                const treatAction = this.getTreatTarget(action, [...allies, this.activeCreature]);
+                if (treatAction) availableActions.push(treatAction);
             }
         });
 
-        availableActions.push(this.getMoveTarget(enemies, allies));
+        // 2. Перемещение
+        const moveAction = this.getMoveTarget(enemies, allies);
+        if (moveAction) availableActions.push(moveAction);
 
-        return this.chooseAction(availableActions.filter(a => !!a));
+        // 3. Защита и пропуск хода
+        availableActions.push({
+            action: 'defense',
+            weight: ROLE_WEIGHTS[this.activeCreature.role].skip,
+            ppCost: 0
+        });
+
+        // 4. Учет PP
+        availableActions = availableActions.map(action => {
+            const ppModifier = this.getPpModifier(action.ppCost);
+            return {
+                ...action,
+                weight: action.weight * ppModifier
+            };
+        });
+
+        // Выбор лучшего действия
+        return this.chooseAction(availableActions);
     }
 
-    getEffectWeight(effect, enemy) {
-        const effectWeight = EFFECT_WEIGHTS[effect.effect] || {}
-        let weight = effectWeight.base
+    getPpModifier(ppCost) {
+        const ppRatio = this.activeCreature.pp / this.activeCreature.getMaxPP();
+
+        // Для дорогих навыков при низком PP
+        if (ppCost > 5 && ppRatio < 0.3) return 0.4;
+
+        // Для дешевых навыков
+        if (ppCost <= 2) return 1.2;
+
+        // Стандартный модификатор
+        return Math.min(1.0, 0.7 + ppRatio * 0.6);
+    }
+
+    getEffectWeight(effect, target) {
+        const effectWeight = EFFECT_WEIGHTS[effect.effect] || {};
+        let weight = effectWeight.base || 1.0;
 
         if (effect.duration > 1) {
-            weight += effectWeight.perTurn * (effect.duration - 1);
+            weight += (effectWeight.perTurn || 0.1) * (effect.duration - 1);
         }
-        
-        if (enemy.hasEffect(effect.effect) > 1) {
-            // если такой эффект уже есть, то вес меньше
-            weight *= 0.8
-        }
-        
-        weight *= CombatHandler.getPushEffectChance(this.activeCreature, enemy, effect)
 
-        return weight
+        if (target.hasEffect(effect.effect)) {
+            weight *= 0.6; // Уменьшаем вес если эффект уже есть
+        }
+
+        weight *= CombatHandler.getPushEffectChance(this.activeCreature, target, effect);
+        return weight;
     }
 
     getAttackTarget(attack, enemies) {
+        const role = this.activeCreature.role;
+
         let bestTarget = null;
         let bestScore = -Infinity;
-        const limit = attack.actionType === 'melee' ? this.activeCreature.getSpeed() : attack.range;
+        const rangeLimit = attack.actionType === 'melee' ?
+            this.activeCreature.getSpeed() :
+            attack.range;
+
 
         enemies.forEach(enemy => {
             const path = this.store.findPath(this.activeCreature.position, enemy.position, attack.actionType === 'melee');
             const distance = path.length - 1;
 
-            const estimatedDamage = CombatHandler.getAttackDamage(this.activeCreature, enemy, attack, false, true)
-                * CombatHandler.getHitChance(this.activeCreature, enemy, attack)
-            let score = Math.min(30, estimatedDamage) *
-                (1 / Math.max(1, distance)) *
-                (2 - (enemy.health / enemy.getMaxHealth())) * // Больший вес раненым
-                (enemy.role === 'support' ? 1.5 : 1) // Приоритет саппортам
+            let score = CombatHandler.getAttackDamage(
+                this.activeCreature,
+                enemy,
+                attack,
+                false,
+                true
+            ) * CombatHandler.getHitChance(this.activeCreature, enemy, attack);
+
+            // Приоритет целей
+            score *= 1.0 + (1.0 - enemy.health / enemy.getMaxHealth()); // Раненым целям
+            if (enemy.role === 'support') {
+                score *= 1.4; // Приоритет саппортов
+            }
+            if (enemy.role === 'dd') {
+                score *= 1.2; // Приоритет ДД
+            }
 
             attack.effects.forEach(effect => score += this.getEffectWeight(effect, enemy)) // докидываем веса за эффекты
 
@@ -125,45 +163,38 @@ export class MediumAI {
             }
         });
 
-        let weight = bestScore
-        if (bestTarget) {
-            if (bestTarget.distance <= limit) {
-                if (this.activeCreature.role !== 'support') {
-                    weight *= 1.5
-                }
-                return {
-                    weight: weight,
-                    action: 'attack',
-                    actionObject: attack,
-                    targets: bestTarget.enemy.position,
-                };
-            } else {
-                if (attack.actionType !== 'melee') {
-                    bestTarget.path = this.store.findPath(this.activeCreature.position, bestTarget.enemy.position, true)
-                }
-                // Если не можем атаковать, двигаемся к лучшей цели
-                weight *= 0.85
-                if (this.activeCreature.role !== 'support') {
-                    weight *= 1.5
-                }
-                return {
-                    weight: weight,
-                    action: 'move',
-                    targets: bestTarget.path[Math.min(this.activeCreature.getSpeed() - 1, bestTarget.path.length - 2)],
-                };
-
-            }
-
+        if (!bestTarget) {
+            return null
         }
 
+        let weight = bestScore
+        if (bestTarget.distance <= rangeLimit) {
+            weight *= ROLE_WEIGHTS[role].attack // докидываем за действие атаки
+            return {
+                weight: weight,
+                action: 'attack',
+                actionObject: attack,
+                targets: bestTarget.enemy.position,
+            };
+        } else {
+            if (attack.actionType !== 'melee') {
+                bestTarget.path = this.store.findPath(this.activeCreature.position, bestTarget.enemy.position, true)
+            }
+            weight *= ROLE_WEIGHTS[role].move // докидываем за действие движения
+            return {
+                weight: weight,
+                action: 'move',
+                targets: bestTarget.path[Math.min(this.activeCreature.getSpeed() - 1, bestTarget.path.length - 2)],
+            };
 
-        return null;
+        }
     }
 
     getTreatTarget(treat, allies) {
         let bestTarget = null;
         let bestScore = -Infinity;
         const limit = treat.range;
+        const role = this.activeCreature.role;
 
         allies.forEach(ally => {
             if (limit === 0 && ally.id !== this.activeCreature.id) {
@@ -172,59 +203,56 @@ export class MediumAI {
             const path = this.store.findPath(this.activeCreature.position, ally.position);
             const distance = path.length - 1;
 
-            if (distance <= treat.range) {
-                let score = 30;
+            let score = 0; //не знаю надо побалансить
 
-                if (treat.baseDamage > 0) { // Лечение
-                    if (ally.health >= ally.getMaxHealth()) return;
-
-                    const healNeeded = ally.getMaxHealth() - ally.health;
-                    score += healNeeded * (ally.role === 'tank' ? 1.5 : 1) * (ally.role === 'dd' ? 1.3 : 1);
-
-                    if (ally.health > ally.getMaxHealth() * 0.8) {
-                        score /= 2; // Меньше лечить почти здоровых
-                    }
-                }
+            if (treat.baseDamage > 0) { // Лечение
+                const healNeeded = ally.getMaxHealth() - ally.health;
+                score += healNeeded * (ally.role === 'tank' ? 1.5 : 1) * (ally.role === 'dd' ? 1.3 : 1);
+            }
 
 
-                treat.effects.forEach(effect => score *= this.getEffectWeight(effect, ally)) // докидываем веса за эффекты
+            treat.effects.forEach(effect => score += this.getEffectWeight(effect, ally)) // докидываем веса за эффекты
 
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestTarget = {
-                        ally,
-                        path,
-                        distance
-                    };
-                }
+
+            // Увеличение при низком здоровье
+            if (ally.health < ally.getMaxHealth() * 0.7) {
+                score *= 1.4;
+            }
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestTarget = {
+                    ally,
+                    path,
+                    distance
+                };
             }
         });
 
-        if (bestTarget) {
-            if (bestTarget.distance <= limit) {
-                return {
-                    weight: bestScore,
-                    action: 'treat',
-                    actionObject: treat,
-                    targets: bestTarget.ally.position,
-                };
-            } else {
-                bestTarget.path = this.store.findPath(this.activeCreature.position, bestTarget.ally.position, true)
+        if (!bestTarget) {
+            return
+        }
+        if (bestTarget.distance <= limit) {
+            return {
+                weight: bestScore * ROLE_WEIGHTS[role].treat,
+                action: 'treat',
+                actionObject: treat,
+                targets: bestTarget.ally.position,
+            };
+        } else {
+            bestTarget.path = this.store.findPath(this.activeCreature.position, bestTarget.ally.position, true)
 
-                return {
-                    weight: bestScore * 0.85,
-                    action: 'move',
-                    targets: bestTarget.path[Math.min(this.activeCreature.getSpeed() - 1, bestTarget.path.length - 2)],
-                };
-
-            }
+            return {
+                weight: bestScore * ROLE_WEIGHTS[role].move,
+                action: 'move',
+                targets: bestTarget.path[Math.min(this.activeCreature.getSpeed() - 1, bestTarget.path.length - 2)],
+            };
 
         }
-
-        return null;
     }
 
     getMoveTarget(enemies, allies) {
+        return undefined
         // В getMoveTarget добавить:
         if (enemies.length === 1) {
             const enemy = enemies[0]
@@ -236,6 +264,7 @@ export class MediumAI {
             }
 
             // Если остался 1 враг - двигаемся агрессивно
+            // При таком подходе он просто дойдет до врага и остановится
             return {
                 weight: 80,
                 action: 'move',
@@ -279,7 +308,7 @@ export class MediumAI {
         } : null;
     }
 
-    chooseAction(availableActions) {
+    chooseAction(availableActions, enemiesCount) {
         const role = this.activeCreature.role
         let attackAction;
         let treatAction;
@@ -305,13 +334,14 @@ export class MediumAI {
             }
         });
 
+        // Костылька, если остался один враг и его нельзя атаковать то двигаемся к нему
+        if (enemiesCount === 1 && !attackAction) {
+            moveAction.weight *= 2
+        }
+
         const actionsWithWeight = [];
 
         if (this.activeCreature.role === 'tank') {
-            if (treatAction && this.activeCreature.health > this.activeCreature.getMaxHealth() * 0.7) {
-                treatAction.weight = 5;
-            }
-
             if (attackAction) actionsWithWeight.push({...attackAction,});
             if (treatAction) actionsWithWeight.push({...treatAction,});
             if (moveAction) actionsWithWeight.push({...moveAction});
@@ -325,12 +355,6 @@ export class MediumAI {
             if (treatAction) actionsWithWeight.push({...treatAction});
             if (moveAction) actionsWithWeight.push({...moveAction});
         }
-
-        // Добавляем пропуск хода с низким приоритетом
-        actionsWithWeight.push({
-            action: 'skip',
-            weight: 5
-        });
 
         if (actionsWithWeight.length === 0) {
             return {action: 'skip'};

@@ -63,8 +63,8 @@ export const useBattleStore = defineStore('battle', {
         load() {
             // this.resetBattle(testEffects())
             this.resetBattle([
-                ...testTeam(2, 'left', 'player'),
-                ...testTeam(2, 'right', 'player')
+                ...testTeam(2, 'left', new MediumAI()),
+                ...testTeam(2, 'right', new MediumAI())
             ])
         },
         resetBattle(creatures) {

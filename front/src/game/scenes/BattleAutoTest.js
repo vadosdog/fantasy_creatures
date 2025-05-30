@@ -3,7 +3,8 @@ import {
     BATTLE_STATE_BATTLE_OVER_LOSE,
     BATTLE_STATE_BATTLE_OVER_WIN, useBattleStore
 } from "../../store/battle.js";
-import {testEffects} from "../../database/CreaturesLib.js";
+import {testEffects, testTeam} from "../../database/CreaturesLib.js";
+import {MediumAI} from "../classes/battle/AI/MediumAI.js";
 
 export class BattleAutoTest extends Scene {
     constructor() {
@@ -11,7 +12,7 @@ export class BattleAutoTest extends Scene {
         this.store = useBattleStore();
         this.testResults = [];
         this.currentTest = 0;
-        this.totalTests = 15000;
+        this.totalTests = 1000;
         this.creatureStats = new Map();
         this.creatueActionStats = new Map();
         this.actionStats = new Map()
@@ -94,21 +95,8 @@ export class BattleAutoTest extends Scene {
         this.currentTest++;
         this.updateProgress();
 
-        //каждые 3к изменяется шанс на поджог
-        const chanceEffect = 1 - (Math.floor(this.currentTest / 3000) * 0.2)
-        // каждую тысячу меняется шанс 1-3
-        const duration = 1 + Math.floor((this.currentTest % 3000) / 1000)
-        
         // Сбрасываем состояние боя
-        this.store.resetBattle(testEffects('luck', chanceEffect, duration + 1));
-        
-        if (this.currentTest % 1000 === 0) {
-            this.showFinalResults();
-            this.testResults = [];
-            this.creatureStats.clear();
-            this.creatueActionStats.clear();
-            this.actionStats.clear();
-        }
+        this.store.resetBattle([...testTeam(2, 'right', new MediumAI()), ...testTeam(2, 'left', new MediumAI())]);
 
         // Запускаем тестовый бой
         this.simulateBattle();
@@ -172,7 +160,7 @@ export class BattleAutoTest extends Scene {
             }
         }, 0);
     }
-    
+
     pushCreatureActionStat(creature, updateKey, value = 1) {
         if (!this.creatueActionStats.has(creature.id)) {
             this.creatueActionStats.set(creature.id, {
@@ -183,7 +171,6 @@ export class BattleAutoTest extends Scene {
                 healingDone: 0,
                 attacks: 0,
                 moves: 0,
-                treats: 0,
                 defenses: 0,
                 skips: 0,
                 addedEffects: 0,
@@ -193,16 +180,14 @@ export class BattleAutoTest extends Scene {
 
         stats[updateKey] += value
     }
-    
+
     pushActionStat(action, updateKey, value = 1) {
         if (!this.actionStats.has(action)) {
             this.actionStats.set(action, {
                 name: action,
                 kills: 0,
                 damageDealt: 0,
-                healingDone: 0,
                 attacks: 0,
-                treats: 0,
                 addedEffects: 0,
             });
         }
@@ -248,13 +233,13 @@ export class BattleAutoTest extends Scene {
                 }
                 break
             case 'treat':
-                this.pushCreatureActionStat(this.store.activeCreature, 'treats')
-                this.pushActionStat(action.actionObject.name, 'treats')
+                this.pushCreatureActionStat(this.store.activeCreature, 'attacks')
+                this.pushActionStat(action.actionObject.name, 'attacks')
                 result = this.store.playerActionTreat(position, action.actionObject)
                 if (result.success) {
                     this.pushCreatureActionStat(this.store.activeCreature, 'healingDone', result.damage)
                     this.pushCreatureActionStat(this.store.activeCreature, 'addedEffects', result.effects.length)
-                    this.pushActionStat(action.actionObject.name, 'healingDone', result.damage)
+                    this.pushActionStat(action.actionObject.name, 'damageDealt', result.damage)
                     this.pushActionStat(action.actionObject.name, 'addedEffects', result.effects.length)
                 }
                 break;
@@ -285,10 +270,8 @@ export class BattleAutoTest extends Scene {
                     kills: 0,
                     damageDealt: 0,
                     damageTaken: 0,
-                    healingDone: 0,
                     attacks: 0,
                     moves: 0,
-                    treats: 0,
                     defenses: 0,
                     skip: 0,
                 });
@@ -323,8 +306,8 @@ export class BattleAutoTest extends Scene {
         // Рассчитываем общую статистику
         const leftWins = this.testResults.filter(r => r.winner === 'left').length;
         const rightWins = this.testResults.filter(r => r.winner === 'right').length;
-        const leftWinRate = (leftWins / (this.totalTests / 15) * 100).toFixed(1);
-        const rightWinRate = (rightWins / (this.totalTests / 15) * 100).toFixed(1);
+        const leftWinRate = (leftWins / (this.totalTests) * 100).toFixed(1);
+        const rightWinRate = (rightWins / (this.totalTests) * 100).toFixed(1);
         const avgTurns = (this.testResults.reduce((sum, r) => sum + r.turns, 0) / this.totalTests).toFixed(1);
 
         // Формируем текст результатов
@@ -333,45 +316,45 @@ export class BattleAutoTest extends Scene {
         resultsText += `Побед правой команды: ${rightWins} (${rightWinRate}%)\n`;
         resultsText += `Средняя продолжительность боя: ${avgTurns} ходов\n\n`;
 
-        // resultsText += `=== СТАТИСТИКА ПО СУЩЕСТВАМ ===\n`;
-        //
-        // // Группируем существа по командам
-        // const leftTeamStats = [];
-        // const rightTeamStats = [];
-        //
-        // this.creatureStats.forEach(stats => {
-        //     if (stats.team === 'left') {
-        //         leftTeamStats.push(stats);
-        //     } else {
-        //         rightTeamStats.push(stats);
-        //     }
-        // });
-        //
-        // // Добавляем статистику для левой команды
-        // resultsText += `ЛЕВАЯ КОМАНДА:\n`;
-        // leftTeamStats.sort((a,b) => a.name.localeCompare(b.name)).forEach(stats => {
-        //     const winRate = (stats.wins / stats.battles * 100).toFixed(1);
-        //     const survivalRate = (stats.survived / stats.battles * 100).toFixed(1);
-        //
-        //     resultsText += `${stats.name} (${stats.id}) | `;
-        //     resultsText += `  ${stats.wins}/${stats.battles} (${winRate}%) | `;
-        //     resultsText += `  ${stats.survived}/${stats.battles} (${survivalRate}%)\n`;
-        //     // resultsText += `  Средний урон: ${(stats.damageDealt / stats.battles).toFixed(1)}\n`;
-        //     // resultsText += `  Среднее лечение: ${(stats.healingDone / stats.battles).toFixed(1)}\n\n`;
-        // });
-        //
-        // // Добавляем статистику для правой команды
-        // resultsText += `ПРАВАЯ КОМАНДА:\n`;
-        // rightTeamStats.sort((a,b) => a.name.localeCompare(b.name)).forEach(stats => {
-        //     const winRate = (stats.wins / stats.battles * 100).toFixed(1);
-        //     const survivalRate = (stats.survived / stats.battles * 100).toFixed(1);
-        //
-        //     resultsText += `${stats.name} (${stats.id}) | `;
-        //     resultsText += `  ${stats.wins}/${stats.battles} (${winRate}%) | `;
-        //     resultsText += `  ${stats.survived}/${stats.battles} (${survivalRate}%)\n`;
-        //     // resultsText += `  Средний урон: ${(stats.damageDealt / stats.battles).toFixed(1)}\n`;
-        //     // resultsText += `  Среднее лечение: ${(stats.healingDone / stats.battles).toFixed(1)}\n\n`;
-        // });
+        resultsText += `=== СТАТИСТИКА ПО СУЩЕСТВАМ ===\n`;
+
+        // Группируем существа по командам
+        const leftTeamStats = [];
+        const rightTeamStats = [];
+
+        this.creatureStats.forEach(stats => {
+            if (stats.team === 'left') {
+                leftTeamStats.push(stats);
+            } else {
+                rightTeamStats.push(stats);
+            }
+        });
+
+        // Добавляем статистику для левой команды
+        resultsText += `ЛЕВАЯ КОМАНДА:\n`;
+        leftTeamStats.sort((a, b) => a.name.localeCompare(b.name)).forEach(stats => {
+            const winRate = (stats.wins / stats.battles * 100).toFixed(1);
+            const survivalRate = (stats.survived / stats.battles * 100).toFixed(1);
+
+            resultsText += `${stats.name} (${stats.id}) | `;
+            resultsText += `  ${stats.wins}/${stats.battles} (${winRate}%) | `;
+            resultsText += `  ${stats.survived}/${stats.battles} (${survivalRate}%)\n`;
+            // resultsText += `  Средний урон: ${(stats.damageDealt / stats.battles).toFixed(1)}\n`;
+            // resultsText += `  Среднее лечение: ${(stats.healingDone / stats.battles).toFixed(1)}\n\n`;
+        });
+
+        // Добавляем статистику для правой команды
+        resultsText += `ПРАВАЯ КОМАНДА:\n`;
+        rightTeamStats.sort((a, b) => a.name.localeCompare(b.name)).forEach(stats => {
+            const winRate = (stats.wins / stats.battles * 100).toFixed(1);
+            const survivalRate = (stats.survived / stats.battles * 100).toFixed(1);
+
+            resultsText += `${stats.name} (${stats.id}) | `;
+            resultsText += `  ${stats.wins}/${stats.battles} (${winRate}%) | `;
+            resultsText += `  ${stats.survived}/${stats.battles} (${survivalRate}%)\n`;
+            // resultsText += `  Средний урон: ${(stats.damageDealt / stats.battles).toFixed(1)}\n`;
+            // resultsText += `  Среднее лечение: ${(stats.healingDone / stats.battles).toFixed(1)}\n\n`;
+        });
 
         // Отображаем результаты на экране
         this.resultsText.setText(resultsText);
@@ -379,61 +362,56 @@ export class BattleAutoTest extends Scene {
         // Выводим результаты в консоль для удобного копирования
         console.log('=== РЕЗУЛЬТАТЫ АВТОТЕСТОВ БОЕВ ===');
         console.log(resultsText);
-        // console.log('=== ЭФФЕКТИВНОСТЬ ===')
-        // console.log('ЛЕВАЯ КОМАНДА')
-        // leftTeamStats.sort((a,b) => a.name.localeCompare(b.name)).forEach(c => {
-        //     const stat = this.creatueActionStats.get(c.id)
-        //     const batles = c.battles
-        //     if (!stat) {
-        //         return
-        //     }
-        //     let resultText = `${c.name} (${c.id})`;
-        //     resultText += ' | K: ' + (stat.kills / c.battles).toFixed(2) ;
-        //     resultText += ' | DD: ' + (stat.damageDealt / c.battles / c.maxHealth).toFixed(2) ;
-        //     resultText += ' | DPT: ' + (stat.damagePotentialTaken / c.battles / c.maxHealth).toFixed(2);
-        //     resultText += ' | DT: ' + (stat.damageTaken / c.battles / c.maxHealth).toFixed(2);
-        //     resultText += ' | HD: ' + (stat.healingDone / c.battles / c.maxHealth).toFixed(2);
-        //     resultText += ' | A: ' + (stat.attacks / c.battles).toFixed(2);
-        //     resultText += ' | M: ' + (stat.moves / c.battles).toFixed(2);
-        //     resultText += ' | T: ' + (stat.treats / c.battles).toFixed(2);
-        //     resultText += ' | D: ' + (stat.defenses / c.battles).toFixed(2);
-        //     resultText += ' | S: ' + (stat.skips / c.battles).toFixed(2);
-        //     resultText += ' | E: ' + (stat.addedEffects / c.battles).toFixed(2);
-        //     console.log(resultText)
-        // })
-        // console.log('ПРАВА КОМАНДА')
-        // rightTeamStats.sort((a,b) => a.name.localeCompare(b.name)).forEach(c => {
-        //     const stat = this.creatueActionStats.get(c.id)
-        //     if (!stat) {
-        //         return
-        //     }
-        //     let resultText = `${c.name} (${c.id})`;
-        //     resultText += ' | K: ' + (stat.kills / c.battles).toFixed(2) ;
-        //     resultText += ' | DD: ' + (stat.damageDealt / c.battles).toFixed(2) ;
-        //     resultText += ' | DPT: ' + (stat.damagePotentialTaken / c.battles).toFixed(2);
-        //     resultText += ' | DT: ' + (stat.damageTaken / c.battles).toFixed(2);
-        //     resultText += ' | HD: ' + (stat.healingDone / c.battles).toFixed(2);
-        //     resultText += ' | A: ' + (stat.attacks / c.battles).toFixed(2);
-        //     resultText += ' | M: ' + (stat.moves / c.battles).toFixed(2);
-        //     resultText += ' | T: ' + (stat.treats / c.battles).toFixed(2);
-        //     resultText += ' | D: ' + (stat.defenses / c.battles).toFixed(2);
-        //     resultText += ' | S: ' + (stat.skips / c.battles).toFixed(2);
-        //     resultText += ' | E: ' + (stat.addedEffects / c.battles).toFixed(2);
-        //     console.log(resultText)
-        // })
-        
-        console.log('Эффективность навыков')
-        this.actionStats.forEach(s => {
-            console.log(s)
-            console.log(s.attacks / this.totalTests)
+        console.log('=== ЭФФЕКТИВНОСТЬ ===')
+        console.log('ЛЕВАЯ КОМАНДА')
+        leftTeamStats.sort((a, b) => a.name.localeCompare(b.name)).forEach(c => {
+            const stat = this.creatueActionStats.get(c.id)
+            const batles = c.battles
+            if (!stat) {
+                return
+            }
+            let resultText = `${c.name} (${c.id})`;
+            resultText += ' | K: ' + (stat.kills / c.battles).toFixed(2);
+            resultText += ' | DD: ' + (stat.damageDealt / c.battles / c.maxHealth).toFixed(2);
+            resultText += ' | DPT: ' + (stat.damagePotentialTaken / c.battles / c.maxHealth).toFixed(2);
+            resultText += ' | DT: ' + (stat.damageTaken / c.battles / c.maxHealth).toFixed(2);
+            resultText += ' | HD: ' + (stat.healingDone / c.battles / c.maxHealth).toFixed(2);
+            const actions = stat.attacks + stat.moves + stat.defenses + stat.skips
+            resultText += ' | Ac: ' + actions;
+            resultText += ' | A: ' + (stat.attacks / actions).toFixed(2);
+            resultText += ' | M: ' + (stat.moves / actions).toFixed(2);
+            resultText += ' | D: ' + (stat.defenses / actions).toFixed(2);
+            resultText += ' | S: ' + (stat.skips / actions).toFixed(2);
+            resultText += ' | E: ' + (stat.addedEffects / actions).toFixed(2);
+            console.log(resultText)
+        })
+        console.log('ПРАВА КОМАНДА')
+        rightTeamStats.sort((a, b) => a.name.localeCompare(b.name)).forEach(c => {
+            const stat = this.creatueActionStats.get(c.id)
+            if (!stat) {
+                return
+            }
+            let resultText = `${c.name} (${c.id})`;
+            resultText += ' | K: ' + (stat.kills / c.battles).toFixed(2);
+            resultText += ' | DD: ' + (stat.damageDealt / c.battles).toFixed(2);
+            resultText += ' | DPT: ' + (stat.damagePotentialTaken / c.battles).toFixed(2);
+            resultText += ' | DT: ' + (stat.damageTaken / c.battles).toFixed(2);
+            resultText += ' | HD: ' + (stat.healingDone / c.battles).toFixed(2);
+            const actions = stat.attacks + stat.moves + stat.defenses + stat.skips
+            resultText += ' | Ac: ' + actions;
+            resultText += ' | A: ' + (stat.attacks / actions).toFixed(2);
+            resultText += ' | M: ' + (stat.moves / actions).toFixed(2);
+            resultText += ' | D: ' + (stat.defenses / actions).toFixed(2);
+            resultText += ' | S: ' + (stat.skips / actions).toFixed(2);
+            resultText += ' | E: ' + (stat.addedEffects / actions).toFixed(2);
+            console.log(resultText)
         })
 
-
-        //каждые 3к изменяется шанс на поджог
-        const chanceEffect = 1 - (Math.floor(this.currentTest / 3000) * 0.2)
-        // каждую тысячу меняется шанс 1-3
-        const duration = Math.floor((this.currentTest % 3000) / 1000)
-        console.log('chance: ' + chanceEffect, ' duration: ' + duration)
+        console.log('Использование навыков навыков')
+        this.actionStats.forEach(s => {
+            console.log(s)
+            console.log(s.attacks / this.totalTests )
+        })
 
         // Показываем кнопку для повторного запуска тестов
         this.startButton.setVisible(true).setText('Запустить тесты снова');

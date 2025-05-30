@@ -1,42 +1,5 @@
 [
     {
-        "name": "Ветряной удар",
-        "element": "",
-        "form": "bird",
-        "role": "",
-        "level": 1,
-        "Тип": "Атакующий",
-        "actionType": "melee",
-        "range": 1,
-        "baseDamage": 27,
-        "hitChance": 98,
-        "critChance": 20,
-        "effects": [],
-        "": ""
-    },
-    {
-        "name": "Ледяная игла",
-        "element": "water",
-        "form": "",
-        "role": "",
-        "level": 1,
-        "Тип": "Атакующий",
-        "actionType": "melee",
-        "range": 1,
-        "baseDamage": 28,
-        "hitChance": 85,
-        "calcDamage": "25,5",
-        "critChance": 10,
-        "effects": [
-             {
-                 "effect": "freeze",
-                 "chance": 0.2,
-                 "duration": 1
-             }
-        ],
-        "": ""
-    },
-    {
         "name": "Огненный коготь",
         "element": "fire",
         "form": "",
@@ -45,17 +8,18 @@
         "Тип": "Атакующий",
         "actionType": "melee",
         "range": 1,
-        "baseDamage": 26,
+        "baseDamage": 35,
         "hitChance": 90,
-        "critChance": 15,
+        "critChance": 5,
         "effects": [
-             {
-                 "effect": "burn",
-                 "chance": 0.15,
-                 "duration": 3
-             }
+            {
+                "effect": "burn",
+                "chance": 0.4,
+                "duration": 3
+            }
         ],
-        "": ""
+        "pp": 7,
+        "cooldown": 1
     },
     {
         "name": "Ядовитый шип",
@@ -66,23 +30,61 @@
         "Тип": "Гибридный",
         "actionType": "melee",
         "range": 1,
-        "baseDamage": 25,
+        "baseDamage": 30,
         "hitChance": 95,
-        "calcDamage": "23,75",
-        "critChance": 7,
+        "critChance": 10,
         "effects": [
-             {
-                 "effect": "poison",
-                 "chance": 0.4,
-                 "duration": 3
-             }
+            {
+                "effect": "poison",
+                "chance": 0.2,
+                "duration": 3
+            }
         ],
-        "": ""
+        "pp": 6,
+        "cooldown": 1
     },
     {
-        "name": "Свирепый укус",
+        "name": "Ледяная игла",
+        "element": "water",
+        "form": "",
+        "role": "",
+        "level": 1,
+        "Тип": "Атакующий",
+        "actionType": "melee",
+        "range": 1,
+        "baseDamage": 35,
+        "hitChance": 80,
+        "critChance": 10,
+        "effects": [
+            {
+                "effect": "freeze",
+                "chance": 0.2,
+                "duration": 1
+            }
+        ],
+        "pp": 6,
+        "cooldown": 1
+    },
+    {
+        "name": "Толчок",
         "element": "",
         "form": "beast",
+        "role": "",
+        "level": 1,
+        "Тип": "Атакующий",
+        "actionType": "melee",
+        "range": 1,
+        "baseDamage": 28,
+        "hitChance": 85,
+        "critChance": 6,
+        "effects": [],
+        "pp": 3,
+        "cooldown": 0
+    },
+    {
+        "name": "Удар",
+        "element": "",
+        "form": "bird",
         "role": "",
         "level": 1,
         "Тип": "Атакующий",
@@ -91,17 +93,12 @@
         "baseDamage": 30,
         "hitChance": 90,
         "critChance": 12,
-        "effects": [
-             {
-                 "effect": "bleed",
-                 "chance": 0.3,
-                 "duration": 3
-             }
-        ],
-        "": ""
+        "effects": [],
+        "pp": 3,
+        "cooldown": 0
     },
     {
-        "name": "Ядовитый плевок",
+        "name": "Укус",
         "element": "",
         "form": "reptile",
         "role": "",
@@ -109,18 +106,12 @@
         "Тип": "Гибридный",
         "actionType": "melee",
         "range": 1,
-        "baseDamage": 32,
-        "hitChance": 85,
-        "calcDamage": "25,5",
-        "critChance": 5,
-        "effects": [
-             {
-                 "effect": "poison",
-                 "chance": 0.8,
-                 "duration": 3
-             }
-        ],
-        "": ""
+        "baseDamage": 30,
+        "hitChance": 95,
+        "critChance": 12,
+        "effects": [],
+        "pp": 3,
+        "cooldown": 0
     },
     {
         "name": "Смертельный удар",
@@ -128,15 +119,31 @@
         "form": "",
         "role": "dd",
         "level": 2,
-        "Тип": "Атакующий",
+        "Тип": [],
         "actionType": "ranged",
         "range": 15,
-        "baseDamage": 35,
+        "baseDamage": 40,
         "hitChance": 85,
-        "calcDamage": "38,25",
-        "critChance": 5,
+        "critChance": 10,
         "effects": [],
-        "": ""
+        "pp": 10,
+        "cooldown": 3
+    },
+    {
+        "name": "Лечебная волна",
+        "element": "",
+        "form": "",
+        "role": "support",
+        "level": 2,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 10,
+        "baseDamage": 30,
+        "hitChance": 95,
+        "critChance": 10,
+        "effects": [],
+        "pp": 7,
+        "cooldown": 3
     },
     {
         "name": "Железная стойка",
@@ -149,7 +156,6 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 90,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -158,72 +164,8 @@
                 "duration": 2
             }
         ],
-        "": ""
-    },
-    {
-        "name": "Лечебная волна",
-        "element": "",
-        "form": "",
-        "role": "support",
-        "level": 2,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 10,
-        "baseDamage": 25,
-        "hitChance": 95,
-        "calcDamage": 35,
-        "critChance": 10,
-        "effects": [],
-        "": ""
-    },
-    {
-        "name": "Глубокая рана",
-        "element": "water",
-        "form": "",
-        "role": "dd",
-        "level": 3,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 55,
-        "hitChance": 100,
-        "calcDamage": 55,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "bleed",
-                "chance": 0.4,
-                "duration": 3
-            }
-        ],
-        "": ""
-    },
-    {
-        "name": "Живая броня",
-        "element": "grass",
-        "form": "",
-        "role": "tank",
-        "level": 3,
-        "Тип": "Защитный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "regen",
-                "chance": 1,
-                "duration": 3
-            },
-            {
-                "effect": "thorns",
-                "chance": 0.5,
-                "duration": 3
-            }
-        ],
-        "": ""
+        "pp": 5,
+        "cooldown": 4
     },
     {
         "name": "Огненный адреналин",
@@ -236,7 +178,6 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -250,29 +191,8 @@
                 "duration": 3
             }
         ],
-        "": ""
-    },
-    {
-        "name": "Ядовитые клыки",
-        "element": "grass",
-        "form": "",
-        "role": "dd",
-        "level": 3,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 50,
-        "hitChance": 100,
-        "calcDamage": 50,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "poison",
-                "chance": 0.7,
-                "duration": 3
-            }
-        ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Костер боевого духа",
@@ -285,7 +205,6 @@
         "range": 10,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -299,34 +218,8 @@
                 "duration": 2
             }
         ],
-        "": ""
-    },
-    {
-        "name": "Ледяная стена",
-        "element": "water",
-        "form": "",
-        "role": "tank",
-        "level": 3,
-        "Тип": "Защитный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "defense",
-                "chance": 1,
-                "duration": 3
-            },
-            {
-                "effect": "freeze",
-                "chance": 0.3,
-                "duration": 1
-            }
-        ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Раскалённый доспех",
@@ -339,7 +232,6 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -353,23 +245,30 @@
                 "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Родник жизни",
-        "element": "water",
+        "name": "Ядовитые клыки",
+        "element": "grass",
         "form": "",
-        "role": "support",
+        "role": "dd",
         "level": 3,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
+        "Тип": "Атакующий",
+        "actionType": "ranged",
         "range": 15,
-        "baseDamage": 60,
+        "baseDamage": 50,
         "hitChance": 100,
-        "calcDamage": 60,
         "critChance": 0,
-        "effects": [],
-        "": ""
+        "effects": [
+            {
+                "effect": "poison",
+                "chance": 0.7,
+                "duration": 3
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Целительный нектар",
@@ -382,7 +281,6 @@
         "range": 15,
         "baseDamage": 55,
         "hitChance": 100,
-        "calcDamage": 55,
         "critChance": 0,
         "effects": [
             {
@@ -391,7 +289,144 @@
                 "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Живая броня",
+        "element": "grass",
+        "form": "",
+        "role": "tank",
+        "level": 3,
+        "Тип": "Защитный",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "regen",
+                "chance": 1,
+                "duration": 3
+            },
+            {
+                "effect": "thorns",
+                "chance": 0.5,
+                "duration": 3
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Глубокая рана",
+        "element": "water",
+        "form": "",
+        "role": "dd",
+        "level": 3,
+        "Тип": "Атакующий",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 55,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "bleed",
+                "chance": 0.4,
+                "duration": 3
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Родник жизни",
+        "element": "water",
+        "form": "",
+        "role": "support",
+        "level": 3,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 15,
+        "baseDamage": 60,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Ледяная стена",
+        "element": "water",
+        "form": "",
+        "role": "tank",
+        "level": 3,
+        "Тип": "Защитный",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "defense",
+                "chance": 1,
+                "duration": 3
+            },
+            {
+                "effect": "freeze",
+                "chance": 0.3,
+                "duration": 1
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Разрывающий клык",
+        "element": "",
+        "form": "beast",
+        "role": "dd",
+        "level": 5,
+        "Тип": "Атакующий",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 55,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "bleed",
+                "chance": 0.6,
+                "duration": 3
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Мотивирующий рык",
+        "element": "",
+        "form": "beast",
+        "role": "support",
+        "level": 5,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 10,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "empower",
+                "chance": 1,
+                "duration": 2
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Берсеркский рык",
@@ -404,7 +439,6 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -418,7 +452,52 @@
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Смертельное пике",
+        "element": "",
+        "form": "bird",
+        "role": "dd",
+        "level": 5,
+        "Тип": "Атакующий",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 60,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "luck",
+                "chance": 0.3,
+                "duration": 0
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Исцеляющий полет",
+        "element": "",
+        "form": "bird",
+        "role": "support",
+        "level": 5,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 15,
+        "baseDamage": 45,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "regen",
+                "chance": 0.5,
+                "duration": 2
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Ветряной барьер",
@@ -431,7 +510,6 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -445,95 +523,8 @@
                 "duration": 2
             }
         ],
-        "": ""
-    },
-    {
-        "name": "Исцеляющий полет",
-        "element": "",
-        "form": "bird",
-        "role": "support",
-        "level": 5,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 15,
-        "baseDamage": 45,
-        "hitChance": 100,
-        "calcDamage": 45,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "regen",
-                "chance": 0.5,
-                "duration": 2
-            }
-        ],
-        "": ""
-    },
-    {
-        "name": "Смертельное пике",
-        "element": "",
-        "form": "bird",
-        "role": "dd",
-        "level": 5,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 60,
-        "hitChance": 100,
-        "calcDamage": 60,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "luck",
-                "chance": 0.3,
-                "duration": 0
-            }
-        ],
-        "": ""
-    },
-    {
-        "name": "Мотивирующий рык",
-        "element": "",
-        "form": "beast",
-        "role": "support",
-        "level": 5,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 10,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "empower",
-                "chance": 1,
-                "duration": 2
-            }
-        ],
-        "": ""
-    },
-    {
-        "name": "Разрывающий клык",
-        "element": "",
-        "form": "beast",
-        "role": "dd",
-        "level": 5,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 55,
-        "hitChance": 100,
-        "calcDamage": 55,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "bleed",
-                "chance": 0.6,
-                "duration": 3
-            }
-        ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Смертельный укус",
@@ -546,7 +537,6 @@
         "range": 15,
         "baseDamage": 50,
         "hitChance": 100,
-        "calcDamage": 50,
         "critChance": 0,
         "effects": [
             {
@@ -555,7 +545,8 @@
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Целительный яд",
@@ -568,7 +559,6 @@
         "range": 15,
         "baseDamage": 30,
         "hitChance": 100,
-        "calcDamage": 30,
         "critChance": 0,
         "effects": [
             {
@@ -582,7 +572,8 @@
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Ядовитый панцирь",
@@ -595,7 +586,6 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -609,7 +599,8 @@
                 "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Пламенный рывок",
@@ -622,26 +613,10 @@
         "range": 1,
         "baseDamage": 45,
         "hitChance": 85,
-        "calcDamage": "38,25",
         "critChance": 15,
         "effects": [],
-        "": ""
-    },
-    {
-        "name": "Целебный поток",
-        "element": "water",
-        "form": "",
-        "role": "",
-        "level": 7,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 40,
-        "hitChance": 100,
-        "calcDamage": 40,
-        "critChance": 0,
-        "effects": [],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Шипастая броня",
@@ -654,7 +629,6 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -663,7 +637,24 @@
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Целебный поток",
+        "element": "water",
+        "form": "",
+        "role": "",
+        "level": 7,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 40,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [],
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Ярость охотника",
@@ -676,7 +667,6 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -685,29 +675,8 @@
                 "duration": 2
             }
         ],
-        "": ""
-    },
-    {
-        "name": "Провокация",
-        "element": "",
-        "form": "",
-        "role": "tank",
-        "level": 9,
-        "Тип": "Контрольный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 90,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "taunt",
-                "chance": 1,
-                "duration": 2
-            }
-        ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Щит веры",
@@ -720,7 +689,6 @@
         "range": 10,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -729,7 +697,30 @@
                 "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Провокация",
+        "element": "",
+        "form": "",
+        "role": "tank",
+        "level": 9,
+        "Тип": "Контрольный",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 90,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "taunt",
+                "chance": 1,
+                "duration": 2
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Горящая ярость",
@@ -742,7 +733,6 @@
         "range": 1,
         "baseDamage": 55,
         "hitChance": 85,
-        "calcDamage": "46,75",
         "critChance": 15,
         "effects": [
             {
@@ -751,51 +741,8 @@
                 "duration": 2
             }
         ],
-        "": ""
-    },
-    {
-        "name": "Ледяной клык",
-        "element": "water",
-        "form": "beast",
-        "role": "",
-        "level": 10,
-        "Тип": "Атакующий",
-        "actionType": "melee",
-        "range": 1,
-        "baseDamage": 50,
-        "hitChance": 90,
-        "calcDamage": 45,
-        "critChance": 10,
-        "effects": [
-            {
-                "effect": "freeze",
-                "chance": 0.3,
-                "duration": 1
-            }
-        ],
-        "": ""
-    },
-    {
-        "name": "Ледяной вихрь",
-        "element": "water",
-        "form": "bird",
-        "role": "",
-        "level": 10,
-        "Тип": "Контрольный",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 0,
-        "hitChance": 75,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "slow",
-                "chance": 0.8,
-                "duration": 2
-            }
-        ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Огненное пике",
@@ -808,7 +755,6 @@
         "range": 1,
         "baseDamage": 60,
         "hitChance": 80,
-        "calcDamage": 48,
         "critChance": 25,
         "effects": [
             {
@@ -817,29 +763,8 @@
                 "duration": 1
             }
         ],
-        "": ""
-    },
-    {
-        "name": "Песнь леса",
-        "element": "grass",
-        "form": "bird",
-        "role": "",
-        "level": 10,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "regen",
-                "chance": 1,
-                "duration": 3
-            }
-        ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Раскаленная чешуя",
@@ -852,7 +777,6 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -866,7 +790,8 @@
                 "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Удушающий укус",
@@ -879,7 +804,6 @@
         "range": 1,
         "baseDamage": 45,
         "hitChance": 90,
-        "calcDamage": "40,5",
         "critChance": 10,
         "effects": [
             {
@@ -888,29 +812,30 @@
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Ядовитый плевок",
-        "element": "water",
-        "form": "reptile",
+        "name": "Песнь леса",
+        "element": "grass",
+        "form": "bird",
         "role": "",
         "level": 10,
-        "Тип": "Гибридный",
-        "actionType": "ranged",
-        "range": 5,
-        "baseDamage": 35,
-        "hitChance": 85,
-        "calcDamage": "29,75",
-        "critChance": 5,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
         "effects": [
             {
-                "effect": "poison",
-                "chance": 0.6,
+                "effect": "regen",
+                "chance": 1,
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Ядовитый шип",
@@ -923,7 +848,6 @@
         "range": 1,
         "baseDamage": 40,
         "hitChance": 85,
-        "calcDamage": 34,
         "critChance": 5,
         "effects": [
             {
@@ -932,7 +856,74 @@
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Ледяной клык",
+        "element": "water",
+        "form": "beast",
+        "role": "",
+        "level": 10,
+        "Тип": "Атакующий",
+        "actionType": "melee",
+        "range": 1,
+        "baseDamage": 50,
+        "hitChance": 90,
+        "critChance": 10,
+        "effects": [
+            {
+                "effect": "freeze",
+                "chance": 0.3,
+                "duration": 1
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Ледяной вихрь",
+        "element": "water",
+        "form": "bird",
+        "role": "",
+        "level": 10,
+        "Тип": "Контрольный",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 0,
+        "hitChance": 75,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "slow",
+                "chance": 0.8,
+                "duration": 2
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Ядовитый плевок",
+        "element": "water",
+        "form": "reptile",
+        "role": "",
+        "level": 10,
+        "Тип": "Гибридный",
+        "actionType": "ranged",
+        "range": 5,
+        "baseDamage": 35,
+        "hitChance": 85,
+        "critChance": 5,
+        "effects": [
+            {
+                "effect": "poison",
+                "chance": 0.6,
+                "duration": 3
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Берсерк",
@@ -945,7 +936,6 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -953,29 +943,8 @@
                 "duration": 2
             }
         ],
-        "": ""
-    },
-    {
-        "name": "Костяная броня",
-        "element": "",
-        "form": "reptile",
-        "role": "",
-        "level": 12,
-        "Тип": "Защитный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "aegis",
-                "chance": 1,
-                "duration": 3
-            }
-        ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Пикирование",
@@ -988,7 +957,6 @@
         "range": 1,
         "baseDamage": 50,
         "hitChance": 80,
-        "calcDamage": 40,
         "critChance": 25,
         "effects": [
             {
@@ -997,29 +965,30 @@
                 "chance": 0.2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Водоворот",
-        "element": "water",
-        "form": "",
+        "name": "Костяная броня",
+        "element": "",
+        "form": "reptile",
         "role": "",
-        "level": 13,
-        "Тип": "Контрольный",
-        "actionType": "ranged",
-        "range": 10,
+        "level": 12,
+        "Тип": "Защитный",
+        "actionType": "treat",
+        "range": 0,
         "baseDamage": 0,
-        "hitChance": 80,
-        "calcDamage": 0,
+        "hitChance": 100,
         "critChance": 0,
         "effects": [
             {
-                "effect": "chill",
-                "chance": 0.4,
-                "duration": 2
+                "effect": "aegis",
+                "chance": 1,
+                "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Огненный щит",
@@ -1032,7 +1001,6 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -1041,7 +1009,8 @@
                 "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Удушающие лианы",
@@ -1054,7 +1023,6 @@
         "range": 1,
         "baseDamage": 50,
         "hitChance": 80,
-        "calcDamage": 40,
         "critChance": 10,
         "effects": [
             {
@@ -1063,61 +1031,30 @@
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Грибной щит",
-        "element": "grass",
+        "name": "Водоворот",
+        "element": "water",
         "form": "",
-        "role": "tank",
-        "level": 15,
-        "Тип": "Защитный",
-        "actionType": "treat",
-        "range": 0,
+        "role": "",
+        "level": 13,
+        "Тип": "Контрольный",
+        "actionType": "ranged",
+        "range": 10,
         "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
+        "hitChance": 80,
         "critChance": 0,
         "effects": [
             {
-                "effect": "defense",
-                "chance": 1,
-                "duration": 3
-            },
-            {
-                "effect": "poison",
+                "effect": "chill",
                 "chance": 0.4,
                 "duration": 2
             }
         ],
-        "": ""
-    },
-    {
-        "name": "Жаркая мотивация",
-        "element": "fire",
-        "form": "",
-        "role": "support",
-        "level": 15,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 15,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "haste",
-                "chance": 1,
-                "duration": 2
-            },
-            {
-                "effect": "luck",
-                "chance": 0.7,
-                "duration": 2
-            }
-        ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Клинок феникса",
@@ -1130,7 +1067,6 @@
         "range": 15,
         "baseDamage": 65,
         "hitChance": 100,
-        "calcDamage": 65,
         "critChance": 0,
         "effects": [
             {
@@ -1144,51 +1080,35 @@
                 "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Ледяной шип",
-        "element": "water",
+        "name": "Жаркая мотивация",
+        "element": "fire",
         "form": "",
-        "role": "dd",
+        "role": "support",
         "level": 15,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
         "range": 15,
-        "baseDamage": 70,
+        "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 70,
         "critChance": 0,
         "effects": [
             {
-                "effect": "freeze",
-                "chance": 0.25,
-                "duration": 1
-            }
-        ],
-        "": ""
-    },
-    {
-        "name": "Проклятый шип",
-        "element": "grass",
-        "form": "",
-        "role": "dd",
-        "level": 15,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 65,
-        "hitChance": 100,
-        "calcDamage": 65,
-        "critChance": 0,
-        "effects": [
+                "effect": "haste",
+                "chance": 1,
+                "duration": 2
+            },
             {
-                "effect": "curse",
-                "chance": 0.5,
-                "duration": 3
+                "effect": "luck",
+                "chance": 0.7,
+                "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Пламенный форт",
@@ -1201,7 +1121,6 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -1215,34 +1134,30 @@
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Приливная защита",
-        "element": "water",
+        "name": "Проклятый шип",
+        "element": "grass",
         "form": "",
-        "role": "tank",
+        "role": "dd",
         "level": 15,
-        "Тип": "Защитный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
+        "Тип": "Атакующий",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 65,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
-                "effect": "aegis",
-                "chance": 1,
-                "duration": 1
-            },
-            {
-                "effect": "slow",
-                "chance": 0.6,
-                "duration": 2
+                "effect": "curse",
+                "chance": 0.5,
+                "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Споровое облако",
@@ -1255,7 +1170,6 @@
         "range": 15,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -1269,7 +1183,57 @@
                 "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Грибной щит",
+        "element": "grass",
+        "form": "",
+        "role": "tank",
+        "level": 15,
+        "Тип": "Защитный",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "defense",
+                "chance": 1,
+                "duration": 3
+            },
+            {
+                "effect": "poison",
+                "chance": 0.4,
+                "duration": 2
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Ледяной шип",
+        "element": "water",
+        "form": "",
+        "role": "dd",
+        "level": 15,
+        "Тип": "Атакующий",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 70,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "freeze",
+                "chance": 0.25,
+                "duration": 1
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Умиротворение",
@@ -1282,7 +1246,6 @@
         "range": 15,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -1296,34 +1259,84 @@
                 "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Аура змеи",
+        "name": "Приливная защита",
+        "element": "water",
+        "form": "",
+        "role": "tank",
+        "level": 15,
+        "Тип": "Защитный",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "aegis",
+                "chance": 1,
+                "duration": 1
+            },
+            {
+                "effect": "slow",
+                "chance": 0.6,
+                "duration": 2
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Ярость хищника",
         "element": "",
-        "form": "reptile",
+        "form": "beast",
+        "role": "dd",
+        "level": 16,
+        "Тип": "Атакующий",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 70,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "empower",
+                "chance": 0.5,
+                "duration": 2
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Шерстяной щит",
+        "element": "",
+        "form": "beast",
         "role": "support",
         "level": 16,
-        "Тип": "Поддерживающий",
+        "Тип": "Защитный",
         "actionType": "treat",
         "range": 10,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
-                "effect": "cleanse",
-                "chance": 1,
-                "duration": 0
+                "effect": "aegis",
+                "chance": 0.8,
+                "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Костяная крепость",
+        "name": "Шкура буйвола",
         "element": "",
-        "form": "reptile",
+        "form": "beast",
         "role": "tank",
         "level": 16,
         "Тип": "Защитный",
@@ -1331,21 +1344,43 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
                 "effect": "aegis",
                 "chance": 1,
-                "duration": 2
+                "duration": 1
             },
             {
                 "effect": "thorns",
-                "chance": 0.5,
+                "chance": 0.3,
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Шторм когтей",
+        "element": "",
+        "form": "bird",
+        "role": "dd",
+        "level": 16,
+        "Тип": "Атакующий",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 80,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "knockback",
+                "chance": 1,
+                "duration": 0
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Крылья ангела",
@@ -1358,7 +1393,6 @@
         "range": 0,
         "baseDamage": 60,
         "hitChance": 100,
-        "calcDamage": 60,
         "critChance": 0,
         "effects": [
             {
@@ -1372,7 +1406,8 @@
                 "duration": 0
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Щит перьев",
@@ -1385,7 +1420,6 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -1399,29 +1433,8 @@
                 "duration": 3
             }
         ],
-        "": ""
-    },
-    {
-        "name": "Шторм когтей",
-        "element": "",
-        "form": "bird",
-        "role": "dd",
-        "level": 16,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 80,
-        "hitChance": 100,
-        "calcDamage": 80,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "knockback",
-                "chance": 1,
-                "duration": 0
-            }
-        ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Хвост скорпиона",
@@ -1434,7 +1447,6 @@
         "range": 15,
         "baseDamage": 65,
         "hitChance": 100,
-        "calcDamage": 65,
         "critChance": 0,
         "effects": [
             {
@@ -1448,34 +1460,35 @@
                 "duration": 1
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Шерстяной щит",
+        "name": "Аура змеи",
         "element": "",
-        "form": "beast",
+        "form": "reptile",
         "role": "support",
         "level": 16,
-        "Тип": "Защитный",
+        "Тип": "Поддерживающий",
         "actionType": "treat",
         "range": 10,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
-                "effect": "aegis",
-                "chance": 0.8,
-                "duration": 2
+                "effect": "cleanse",
+                "chance": 1,
+                "duration": 0
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Шкура буйвола",
+        "name": "Костяная крепость",
         "element": "",
-        "form": "beast",
+        "form": "reptile",
         "role": "tank",
         "level": 16,
         "Тип": "Защитный",
@@ -1483,65 +1496,21 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
                 "effect": "aegis",
                 "chance": 1,
-                "duration": 1
+                "duration": 2
             },
             {
                 "effect": "thorns",
-                "chance": 0.3,
+                "chance": 0.5,
                 "duration": 3
             }
         ],
-        "": ""
-    },
-    {
-        "name": "Ярость хищника",
-        "element": "",
-        "form": "beast",
-        "role": "dd",
-        "level": 16,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 70,
-        "hitChance": 100,
-        "calcDamage": 70,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "empower",
-                "chance": 0.5,
-                "duration": 2
-            }
-        ],
-        "": ""
-    },
-    {
-        "name": "Глаз бури",
-        "element": "",
-        "form": "bird",
-        "role": "",
-        "level": 17,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "haste",
-                "duration": 3,
-                "chance": 1
-            }
-        ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Разрывающие когти",
@@ -1554,10 +1523,32 @@
         "range": 1,
         "baseDamage": 55,
         "hitChance": 85,
-        "calcDamage": "46,75",
         "critChance": 20,
         "effects": [],
-        "": ""
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Глаз бури",
+        "element": "",
+        "form": "bird",
+        "role": "",
+        "level": 17,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "haste",
+                "duration": 3,
+                "chance": 1
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Смертельный клей",
@@ -1570,7 +1561,6 @@
         "range": 10,
         "baseDamage": 0,
         "hitChance": 70,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -1579,7 +1569,8 @@
                 "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Вулканический взрыв",
@@ -1592,7 +1583,6 @@
         "range": 1,
         "baseDamage": 60,
         "hitChance": 75,
-        "calcDamage": 45,
         "critChance": 20,
         "effects": [
             {
@@ -1601,7 +1591,8 @@
                 "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Грибное облако",
@@ -1614,7 +1605,6 @@
         "range": 10,
         "baseDamage": 0,
         "hitChance": 90,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -1628,7 +1618,8 @@
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Приливная волна",
@@ -1641,7 +1632,6 @@
         "range": 1,
         "baseDamage": 55,
         "hitChance": 75,
-        "calcDamage": "41,25",
         "critChance": 10,
         "effects": [
             {
@@ -1650,51 +1640,8 @@
                 "duration": 2
             }
         ],
-        "": ""
-    },
-    {
-        "name": "Несокрушимость",
-        "element": "",
-        "form": "",
-        "role": "tank",
-        "level": 19,
-        "Тип": "Защитный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "aegis",
-                "chance": 1,
-                "duration": 1
-            }
-        ],
-        "": ""
-    },
-    {
-        "name": "Очищающий свет",
-        "element": "",
-        "form": "",
-        "role": "support",
-        "level": 19,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 10,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "cleanse",
-                "chance": 1,
-                "duration": 0
-            }
-        ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Гибельный клинок",
@@ -1707,7 +1654,6 @@
         "range": 15,
         "baseDamage": 70,
         "hitChance": 75,
-        "calcDamage": "52,5",
         "critChance": 30,
         "effects": [
             {
@@ -1716,34 +1662,52 @@
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Болотная броня",
-        "element": "water",
-        "form": "reptile",
-        "role": "",
-        "level": 20,
+        "name": "Очищающий свет",
+        "element": "",
+        "form": "",
+        "role": "support",
+        "level": 19,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 10,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "cleanse",
+                "chance": 1,
+                "duration": 0
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Несокрушимость",
+        "element": "",
+        "form": "",
+        "role": "tank",
+        "level": 19,
         "Тип": "Защитный",
         "actionType": "treat",
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
-                "effect": "defense",
+                "effect": "aegis",
                 "chance": 1,
-                "duration": 3
-            },
-            {
-                "effect": "poison",
-                "chance": 0.4,
-                "duration": 2
+                "duration": 1
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Вулканический клык",
@@ -1756,7 +1720,6 @@
         "range": 1,
         "baseDamage": 70,
         "hitChance": 75,
-        "calcDamage": "52,5",
         "critChance": 20,
         "effects": [
             {
@@ -1765,7 +1728,90 @@
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Фениксово перо",
+        "element": "fire",
+        "form": "bird",
+        "role": "",
+        "level": 20,
+        "Тип": "Гибридный",
+        "actionType": "melee",
+        "range": 1,
+        "baseDamage": 40,
+        "hitChance": 90,
+        "critChance": 10,
+        "effects": "[{\"effect\": \"burn\", \"chance\": 1.0, \"duration\": 4}, {\"effect\": \"regen\", \"chance\": 0.8, \"duration\": 3",
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Огненный хвост",
+        "element": "fire",
+        "form": "reptile",
+        "role": "",
+        "level": 20,
+        "Тип": "Гибридный",
+        "actionType": "melee",
+        "range": 1,
+        "baseDamage": 45,
+        "hitChance": 85,
+        "critChance": 5,
+        "effects": [
+            {
+                "effect": "knockback",
+                "chance": 0.8,
+                "duration": 0
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Кровавые когти",
+        "element": "grass",
+        "form": "beast",
+        "role": "",
+        "level": 20,
+        "Тип": "Атакующий",
+        "actionType": "melee",
+        "range": 1,
+        "baseDamage": 60,
+        "hitChance": 80,
+        "critChance": 15,
+        "effects": [
+            {
+                "effect": "bleed",
+                "chance": 0.5,
+                "duration": 3
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Шторм листьев",
+        "element": "grass",
+        "form": "bird",
+        "role": "",
+        "level": 20,
+        "Тип": "Контрольный",
+        "actionType": "ranged",
+        "range": 5,
+        "baseDamage": 30,
+        "hitChance": 85,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "blind",
+                "chance": 0.5,
+                "duration": 1
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Корневой щит",
@@ -1778,7 +1824,6 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -1792,51 +1837,8 @@
                 "duration": 3
             }
         ],
-        "": ""
-    },
-    {
-        "name": "Кровавые когти",
-        "element": "grass",
-        "form": "beast",
-        "role": "",
-        "level": 20,
-        "Тип": "Атакующий",
-        "actionType": "melee",
-        "range": 1,
-        "baseDamage": 60,
-        "hitChance": 80,
-        "calcDamage": 48,
-        "critChance": 15,
-        "effects": [
-            {
-                "effect": "bleed",
-                "chance": 0.5,
-                "duration": 3
-            }
-        ],
-        "": ""
-    },
-    {
-        "name": "Огненный хвост",
-        "element": "fire",
-        "form": "reptile",
-        "role": "",
-        "level": 20,
-        "Тип": "Гибридный",
-        "actionType": "melee",
-        "range": 1,
-        "baseDamage": 45,
-        "hitChance": 85,
-        "calcDamage": "38,25",
-        "critChance": 5,
-        "effects": [
-            {
-                "effect": "knockback",
-                "chance": 0.8,
-                "duration": 0
-            }
-        ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Приливная сила",
@@ -1849,7 +1851,6 @@
         "range": 1,
         "baseDamage": 65,
         "hitChance": 80,
-        "calcDamage": 52,
         "critChance": 15,
         "effects": [
             {
@@ -1858,23 +1859,8 @@
                 "duration": 0
             }
         ],
-        "": ""
-    },
-    {
-        "name": "Фениксово перо",
-        "element": "fire",
-        "form": "bird",
-        "role": "",
-        "level": 20,
-        "Тип": "Гибридный",
-        "actionType": "melee",
-        "range": 1,
-        "baseDamage": 40,
-        "hitChance": 90,
-        "calcDamage": 36,
-        "critChance": 10,
-        "effects": "[{\"effect\": \"burn\", \"chance\": 1.0, \"duration\": 4}, {\"effect\": \"regen\", \"chance\": 0.8, \"duration\": 3",
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Циклон",
@@ -1887,7 +1873,6 @@
         "range": 5,
         "baseDamage": 40,
         "hitChance": 70,
-        "calcDamage": 28,
         "critChance": 0,
         "effects": [
             {
@@ -1896,73 +1881,35 @@
                 "duration": 1
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Шторм листьев",
-        "element": "grass",
-        "form": "bird",
+        "name": "Болотная броня",
+        "element": "water",
+        "form": "reptile",
         "role": "",
         "level": 20,
-        "Тип": "Контрольный",
-        "actionType": "ranged",
-        "range": 5,
-        "baseDamage": 30,
-        "hitChance": 85,
-        "calcDamage": "25,5",
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "blind",
-                "chance": 0.5,
-                "duration": 1
-            }
-        ],
-        "": ""
-    },
-    {
-        "name": "Ледяная тюрьма",
-        "element": "water",
-        "form": "",
-        "role": "",
-        "level": 21,
-        "Тип": "Контрольный",
-        "actionType": "ranged",
-        "range": 5,
+        "Тип": "Защитный",
+        "actionType": "treat",
+        "range": 0,
         "baseDamage": 0,
-        "hitChance": 70,
-        "calcDamage": 0,
+        "hitChance": 100,
         "critChance": 0,
         "effects": [
             {
-                "effect": "freeze",
-                "chance": 0.6,
-                "duration": 1
-            }
-        ],
-        "": ""
-    },
-    {
-        "name": "Смертельный нектар",
-        "element": "grass",
-        "form": "",
-        "role": "",
-        "level": 21,
-        "Тип": "Гибридный",
-        "actionType": "melee",
-        "range": 1,
-        "baseDamage": 45,
-        "hitChance": 85,
-        "calcDamage": "38,25",
-        "critChance": 15,
-        "effects": [
+                "effect": "defense",
+                "chance": 1,
+                "duration": 3
+            },
             {
                 "effect": "poison",
-                "chance": 0.7,
-                "duration": 3
+                "chance": 0.4,
+                "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Ярость дракона",
@@ -1975,7 +1922,6 @@
         "range": 0,
         "baseDamage": 40,
         "hitChance": 95,
-        "calcDamage": 38,
         "critChance": 5,
         "effects": [
             {
@@ -1984,34 +1930,101 @@
                 "chance": 0.5
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Айсберг",
+        "name": "Смертельный нектар",
+        "element": "grass",
+        "form": "",
+        "role": "",
+        "level": 21,
+        "Тип": "Гибридный",
+        "actionType": "melee",
+        "range": 1,
+        "baseDamage": 45,
+        "hitChance": 85,
+        "critChance": 15,
+        "effects": [
+            {
+                "effect": "poison",
+                "chance": 0.7,
+                "duration": 3
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Ледяная тюрьма",
         "element": "water",
         "form": "",
-        "role": "tank",
-        "level": 23,
-        "Тип": "Гибридный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 50,
-        "hitChance": 100,
-        "calcDamage": 50,
+        "role": "",
+        "level": 21,
+        "Тип": "Контрольный",
+        "actionType": "ranged",
+        "range": 5,
+        "baseDamage": 0,
+        "hitChance": 70,
         "critChance": 0,
         "effects": [
             {
                 "effect": "freeze",
-                "chance": 0.5,
+                "chance": 0.6,
                 "duration": 1
-            },
-            {
-                "effect": "taunt",
-                "chance": 1,
-                "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Танец дракона",
+        "element": "fire",
+        "form": "",
+        "role": "dd",
+        "level": 23,
+        "Тип": "Атакующий",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 80,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "burn",
+                "chance": 1,
+                "duration": 3
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Солнечное благословение",
+        "element": "fire",
+        "form": "",
+        "role": "support",
+        "level": 23,
+        "Тип": "Уникальный",
+        "actionType": "treat",
+        "range": 10,
+        "baseDamage": 40,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "cleanse",
+                "chance": 1,
+                "duration": 0
+            },
+            {
+                "effect": "regen",
+                "chance": 1,
+                "duration": 3
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Вулканическая ярость",
@@ -2024,7 +2037,6 @@
         "range": 0,
         "baseDamage": 30,
         "hitChance": 100,
-        "calcDamage": 30,
         "critChance": 0,
         "effects": [
             {
@@ -2038,7 +2050,35 @@
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Цветок смерти",
+        "element": "grass",
+        "form": "",
+        "role": "dd",
+        "level": 23,
+        "Тип": "Гибридный",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 40,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "poison",
+                "chance": 1,
+                "duration": 4
+            },
+            {
+                "effect": "bleed",
+                "chance": 0.5,
+                "duration": 3
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Древо жизни",
@@ -2051,7 +2091,6 @@
         "range": 10,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -2065,7 +2104,8 @@
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Корневой капкан",
@@ -2078,7 +2118,6 @@
         "range": 5,
         "baseDamage": 30,
         "hitChance": 100,
-        "calcDamage": 30,
         "critChance": 0,
         "effects": [
             {
@@ -2092,7 +2131,30 @@
                 "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
+    },
+    {
+        "name": "Цунами клинков",
+        "element": "water",
+        "form": "",
+        "role": "dd",
+        "level": 23,
+        "Тип": "Атакующий",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 90,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "knockback",
+                "chance": 1,
+                "duration": 0
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Океанская песня",
@@ -2105,7 +2167,6 @@
         "range": 10,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -2119,105 +2180,35 @@
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Солнечное благословение",
-        "element": "fire",
-        "form": "",
-        "role": "support",
-        "level": 23,
-        "Тип": "Уникальный",
-        "actionType": "treat",
-        "range": 10,
-        "baseDamage": 40,
-        "hitChance": 100,
-        "calcDamage": 40,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "cleanse",
-                "chance": 1,
-                "duration": 0
-            },
-            {
-                "effect": "regen",
-                "chance": 1,
-                "duration": 3
-            }
-        ],
-        "": ""
-    },
-    {
-        "name": "Танец дракона",
-        "element": "fire",
-        "form": "",
-        "role": "dd",
-        "level": 23,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 80,
-        "hitChance": 100,
-        "calcDamage": 80,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "burn",
-                "chance": 1,
-                "duration": 3
-            }
-        ],
-        "": ""
-    },
-    {
-        "name": "Цветок смерти",
-        "element": "grass",
-        "form": "",
-        "role": "dd",
-        "level": 23,
-        "Тип": "Гибридный",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 40,
-        "hitChance": 100,
-        "calcDamage": 40,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "poison",
-                "chance": 1,
-                "duration": 4
-            },
-            {
-                "effect": "bleed",
-                "chance": 0.5,
-                "duration": 3
-            }
-        ],
-        "": ""
-    },
-    {
-        "name": "Цунами клинков",
+        "name": "Айсберг",
         "element": "water",
         "form": "",
-        "role": "dd",
+        "role": "tank",
         "level": 23,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 90,
+        "Тип": "Гибридный",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 50,
         "hitChance": 100,
-        "calcDamage": 90,
         "critChance": 0,
         "effects": [
             {
-                "effect": "knockback",
+                "effect": "freeze",
+                "chance": 0.5,
+                "duration": 1
+            },
+            {
+                "effect": "taunt",
                 "chance": 1,
-                "duration": 0
+                "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Астральный рык",
@@ -2230,7 +2221,6 @@
         "range": 5,
         "baseDamage": 0,
         "hitChance": 80,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -2239,29 +2229,8 @@
                 "duration": 2
             }
         ],
-        "": ""
-    },
-    {
-        "name": "Каменный хвост",
-        "element": "",
-        "form": "reptile",
-        "role": "",
-        "level": 25,
-        "Тип": "Атакующий",
-        "actionType": "melee",
-        "range": 1,
-        "baseDamage": 60,
-        "hitChance": 75,
-        "calcDamage": 45,
-        "critChance": 10,
-        "effects": [
-            {
-                "effect": "freeze",
-                "chance": 0.25,
-                "duration": 1
-            }
-        ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Торнадо",
@@ -2274,7 +2243,6 @@
         "range": 5,
         "baseDamage": 45,
         "hitChance": 75,
-        "calcDamage": "33,75",
         "critChance": 5,
         "effects": [
             {
@@ -2283,29 +2251,30 @@
                 "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Пробуждение леса",
-        "element": "grass",
-        "form": "",
+        "name": "Каменный хвост",
+        "element": "",
+        "form": "reptile",
         "role": "",
-        "level": 27,
-        "Тип": "Уникальный",
-        "actionType": "treat",
-        "range": 10,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
+        "level": 25,
+        "Тип": "Атакующий",
+        "actionType": "melee",
+        "range": 1,
+        "baseDamage": 60,
+        "hitChance": 75,
+        "critChance": 10,
         "effects": [
             {
-                "effect": "regen",
-                "chance": 0.8,
-                "duration": 3
+                "effect": "freeze",
+                "chance": 0.25,
+                "duration": 1
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Фениксово возрождение",
@@ -2318,10 +2287,32 @@
         "range": 0,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": "",
-        "": "ПЕРЕДЕЛАТЬ"
+        "pp": "ПЕРЕДЕЛАТЬ",
+        "cooldown": ""
+    },
+    {
+        "name": "Пробуждение леса",
+        "element": "grass",
+        "form": "",
+        "role": "",
+        "level": 27,
+        "Тип": "Уникальный",
+        "actionType": "treat",
+        "range": 10,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "regen",
+                "chance": 0.8,
+                "duration": 3
+            }
+        ],
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Цунами",
@@ -2334,7 +2325,6 @@
         "range": 5,
         "baseDamage": 70,
         "hitChance": 65,
-        "calcDamage": "45,5",
         "critChance": 25,
         "effects": [
             {
@@ -2343,29 +2333,24 @@
                 "duration": 2
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Землетрясение",
+        "name": "Танец смерти",
         "element": "",
         "form": "",
-        "role": "tank",
+        "role": "dd",
         "level": 28,
-        "Тип": "Гибридный",
+        "Тип": "Атакующий",
         "actionType": "ranged",
-        "range": 5,
-        "baseDamage": 40,
-        "hitChance": 80,
-        "calcDamage": 32,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "confusion",
-                "chance": 0.3,
-                "duration": 1
-            }
-        ],
-        "": ""
+        "range": 15,
+        "baseDamage": 90,
+        "hitChance": 65,
+        "critChance": 40,
+        "effects": [],
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Пламенное восстановление",
@@ -2378,7 +2363,6 @@
         "range": 10,
         "baseDamage": 0,
         "hitChance": 100,
-        "calcDamage": 0,
         "critChance": 0,
         "effects": [
             {
@@ -2392,666 +2376,30 @@
                 "duration": 3
             }
         ],
-        "": ""
+        "pp": "",
+        "cooldown": ""
     },
     {
-        "name": "Танец смерти",
+        "name": "Землетрясение",
         "element": "",
         "form": "",
-        "role": "dd",
+        "role": "tank",
         "level": 28,
-        "Тип": "Атакующий",
+        "Тип": "Гибридный",
         "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 90,
-        "hitChance": 65,
-        "calcDamage": "58,5",
-        "critChance": 40,
-        "effects": [],
-        "": ""
-    },
-    {
-        "name": "Болотный страж",
-        "element": "water",
-        "form": "reptile",
-        "role": "tank",
-        "level": 30,
-        "Тип": "Защитный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
+        "range": 5,
+        "baseDamage": 40,
+        "hitChance": 80,
         "critChance": 0,
         "effects": [
             {
-                "effect": "defense",
-                "chance": 1,
-                "duration": 3
-            },
-            {
-                "effect": "poison",
-                "chance": 0.7,
-                "duration": 3
-            }
-        ],
-        "": "Покрывает себя ядовитой слизью, отравляя атакующих"
-    },
-    {
-        "name": "Броня Горыныча",
-        "element": "grass",
-        "form": "reptile",
-        "role": "tank",
-        "level": 30,
-        "Тип": "Защитный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "defense",
-                "chance": 1,
-                "duration": 4
-            },
-            {
-                "effect": "poison",
-                "chance": 0.8,
-                "duration": 3
-            }
-        ],
-        "": "Покрывается ядовитой броней, отравляя атакующих"
-    },
-    {
-        "name": "Великий огненный страж",
-        "element": "fire",
-        "form": "beast",
-        "role": "tank",
-        "level": 30,
-        "Тип": "Защитный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "aegis",
-                "chance": 1,
-                "duration": 2
-            },
-            {
-                "effect": "taunt",
-                "chance": 1,
-                "duration": 3
-            },
-            {
-                "effect": "burn",
-                "chance": 0.8,
-                "duration": 3
-            }
-        ],
-        "": "Призывает огненный барьер, который поглощает весь урон на 2 хода и принуждает врагов атаковать вас, нанося им поджог"
-    },
-    {
-        "name": "Глубокая рана",
-        "element": "water",
-        "form": "beast",
-        "role": "dd",
-        "level": 30,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 95,
-        "hitChance": 100,
-        "calcDamage": 95,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "bleed",
-                "chance": 0.8,
-                "duration": 4
-            },
-            {
-                "effect": "slow",
-                "chance": 0.6,
-                "duration": 2
-            }
-        ],
-        "": "Наносит глубокую рану, вызывающую кровотечение и замедление"
-    },
-    {
-        "name": "Дыхание жизни",
-        "element": "grass",
-        "form": "reptile",
-        "role": "support",
-        "level": 30,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 10,
-        "baseDamage": 85,
-        "hitChance": 100,
-        "calcDamage": 85,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "regen",
-                "chance": 1,
-                "duration": 5
-            },
-            {
-                "effect": "aegis",
-                "chance": 0.5,
-                "duration": 1
-            }
-        ],
-        "": "Воскрешает союзника с 40% HP и дает регенерацию"
-    },
-    {
-        "name": "Жар жизни",
-        "element": "fire",
-        "form": "reptile",
-        "role": "support",
-        "level": 30,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 10,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "regen",
-                "chance": 1,
-                "duration": 5
-            },
-            {
-                "effect": "cleanse",
-                "chance": 1,
-                "duration": 0
-            }
-        ],
-        "": "Исцеляет союзников и снимает все негативные эффекты"
-    },
-    {
-        "name": "Исцеляющий туман",
-        "element": "water",
-        "form": "reptile",
-        "role": "support",
-        "level": 30,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 10,
-        "baseDamage": 70,
-        "hitChance": 100,
-        "calcDamage": 70,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "regen",
-                "chance": 1,
-                "duration": 4
-            },
-            {
-                "effect": "cleanse",
-                "chance": 0.5,
-                "duration": 0
-            }
-        ],
-        "": "Окутывает союзников целебным туманом, снимая дебаффы"
-    },
-    {
-        "name": "Клыки оборотня",
-        "element": "grass",
-        "form": "beast",
-        "role": "dd",
-        "level": 30,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 105,
-        "hitChance": 100,
-        "calcDamage": 105,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "bleed",
-                "chance": 1,
-                "duration": 4
-            },
-            {
-                "effect": "empower",
-                "chance": 0.5,
-                "duration": 2
-            }
-        ],
-        "": "Смертельный укус, вызывающий кровотечение и усиливающий атаку"
-    },
-    {
-        "name": "Корневой исполин",
-        "element": "grass",
-        "form": "beast",
-        "role": "tank",
-        "level": 30,
-        "Тип": "Защитный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "defense",
-                "chance": 1,
-                "duration": 4
-            },
-            {
-                "effect": "taunt",
-                "chance": 1,
-                "duration": 3
-            }
-        ],
-        "": "Превращается в дерево-исполина, притягивая атаки врагов"
-    },
-    {
-        "name": "Ледяной страж",
-        "element": "water",
-        "form": "beast",
-        "role": "tank",
-        "level": 30,
-        "Тип": "Защитный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "defense",
-                "chance": 1,
-                "duration": 3
-            },
-            {
-                "effect": "freeze",
-                "chance": 0.5,
-                "duration": 1
-            }
-        ],
-        "": "Замораживает атакующих и повышает защиту"
-    },
-    {
-        "name": "Прилив исцеления",
-        "element": "water",
-        "form": "beast",
-        "role": "support",
-        "level": 30,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 10,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "regen",
-                "chance": 1,
-                "duration": 3
-            }
-        ],
-        "": "Волна исцеления, которая восстанавливает здоровье и дает регенерацию"
-    },
-    {
-        "name": "Раскаленный бастион",
-        "element": "fire",
-        "form": "reptile",
-        "role": "tank",
-        "level": 30,
-        "Тип": "Защитный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "defense",
-                "chance": 1,
-                "duration": 4
-            },
-            {
-                "effect": "thorns",
-                "chance": 1,
-                "duration": 4
-            }
-        ],
-        "": "Укрепляет броню и возвращает 30% полученного урона"
-    },
-    {
-        "name": "Рев жизни",
-        "element": "grass",
-        "form": "beast",
-        "role": "support",
-        "level": 30,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 10,
-        "baseDamage": 90,
-        "hitChance": 100,
-        "calcDamage": 90,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "regen",
-                "chance": 1,
-                "duration": 5
-            }
-        ],
-        "": "Мощный рык, исцеляющий союзников и дающий регенерацию"
-    },
-    {
-        "name": "Сердце феникса",
-        "element": "fire",
-        "form": "beast",
-        "role": "support",
-        "level": 30,
-        "Тип": "Уникальный",
-        "actionType": "treat",
-        "range": 10,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "regen",
-                "chance": 1,
-                "duration": 5
-            },
-            {
-                "effect": "cleanse",
-                "chance": 1,
-                "duration": 0
-            }
-        ],
-        "": "Воскрешает павшего союзника с 50% HP и восстанавливает всем регенерацию"
-    },
-    {
-        "name": "Ледяной форт",
-        "element": "water",
-        "form": "bird",
-        "role": "tank",
-        "level": 30,
-        "Тип": "Защитный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "aegis",
-                "chance": 1,
-                "duration": 2
-            },
-            {
-                "effect": "freeze",
-                "chance": 0.4,
-                "duration": 1
-            }
-        ],
-        "": "Создает ледяную крепость, которая защищает и замораживает врагов"
-    },
-    {
-        "name": "Укус Василиска",
-        "element": "grass",
-        "form": "reptile",
-        "role": "dd",
-        "level": 30,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 95,
-        "hitChance": 100,
-        "calcDamage": 95,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "freeze",
+                "effect": "confusion",
                 "chance": 0.3,
                 "duration": 1
-            },
-            {
-                "effect": "poison",
-                "chance": 1,
-                "duration": 4
             }
         ],
-        "": "Укус с шансом окаменения и гарантированным отравлением."
-    },
-    {
-        "name": "Мелодия океана",
-        "element": "water",
-        "form": "bird",
-        "role": "support",
-        "level": 30,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 10,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "cleanse",
-                "chance": 1,
-                "duration": 0
-            },
-            {
-                "effect": "haste",
-                "chance": 1,
-                "duration": 3
-            }
-        ],
-        "": "Очищает негативные эффекты и увеличивает скорость союзников"
-    },
-    {
-        "name": "Хвост дракона",
-        "element": "fire",
-        "form": "reptile",
-        "role": "dd",
-        "level": 30,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 110,
-        "hitChance": 100,
-        "calcDamage": 110,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "burn",
-                "chance": 1,
-                "duration": 4
-            },
-            {
-                "effect": "knockback",
-                "chance": 1,
-                "duration": 0
-            }
-        ],
-        "": "Мощный удар хвостом, который отбрасывает врагов и поджигает их"
-    },
-    {
-        "name": "Песнь леса",
-        "element": "grass",
-        "form": "bird",
-        "role": "support",
-        "level": 30,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 10,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "cleanse",
-                "chance": 1,
-                "duration": 0
-            },
-            {
-                "effect": "regen",
-                "chance": 1,
-                "duration": 4
-            }
-        ],
-        "": "Мелодия, очищающая дебаффы и исцеляющая союзников"
-    },
-    {
-        "name": "Песнь пламени",
-        "element": "fire",
-        "form": "bird",
-        "role": "support",
-        "level": 30,
-        "Тип": "Поддерживающий",
-        "actionType": "treat",
-        "range": 10,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "empower",
-                "chance": 1,
-                "duration": 3
-            },
-            {
-                "effect": "haste",
-                "chance": 1,
-                "duration": 3
-            }
-        ],
-        "": "Вдохновляет союзников, увеличивая их атаку и скорость"
-    },
-    {
-        "name": "Пламенный кокон",
-        "element": "fire",
-        "form": "bird",
-        "role": "tank",
-        "level": 30,
-        "Тип": "Защитный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "aegis",
-                "chance": 1,
-                "duration": 2
-            },
-            {
-                "effect": "burn",
-                "chance": 0.7,
-                "duration": 3
-            }
-        ],
-        "": "Окутывает себя огненным щитом, отражая атаки и поджигая врагов"
-    },
-    {
-        "name": "Шипастый ураган",
-        "element": "grass",
-        "form": "bird",
-        "role": "tank",
-        "level": 30,
-        "Тип": "Защитный",
-        "actionType": "treat",
-        "range": 0,
-        "baseDamage": 0,
-        "hitChance": 100,
-        "calcDamage": 0,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "thorns",
-                "chance": 1,
-                "duration": 4
-            },
-            {
-                "effect": "knockback",
-                "chance": 0.8,
-                "duration": 0
-            }
-        ],
-        "": "Вращается, отражая урон и отбрасывая врагов"
-    },
-    {
-        "name": "Ядовитый смерч",
-        "element": "water",
-        "form": "reptile",
-        "role": "dd",
-        "level": 30,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 75,
-        "hitChance": 100,
-        "calcDamage": 75,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "poison",
-                "chance": 1,
-                "duration": 4
-            },
-            {
-                "effect": "slow",
-                "chance": 0.8,
-                "duration": 2
-            }
-        ],
-        "": "Создает вихрь яда, который замедляет и отравляет врагов"
-    },
-    {
-        "name": "Лиственный смерч",
-        "element": "grass",
-        "form": "bird",
-        "role": "dd",
-        "level": 30,
-        "Тип": "Атакующий",
-        "actionType": "ranged",
-        "range": 15,
-        "baseDamage": 80,
-        "hitChance": 100,
-        "calcDamage": 80,
-        "critChance": 0,
-        "effects": [
-            {
-                "effect": "blind",
-                "chance": 0.7,
-                "duration": 2
-            },
-            {
-                "effect": "bleed",
-                "chance": 0.5,
-                "duration": 3
-            }
-        ],
-        "": "Создает вихрь листьев, ослепляющий и ранящий врагов"
+        "pp": "",
+        "cooldown": ""
     },
     {
         "name": "Ярость вулкана",
@@ -3064,7 +2412,6 @@
         "range": 15,
         "baseDamage": 100,
         "hitChance": 100,
-        "calcDamage": 100,
         "critChance": 0,
         "effects": [
             {
@@ -3078,7 +2425,67 @@
                 "duration": 3
             }
         ],
-        "": "Взрыв лавы, который наносит огромный урон и усиливает вашу атаку на 3 хода."
+        "pp": "Взрыв лавы, который наносит огромный урон и усиливает вашу атаку на 3 хода.",
+        "cooldown": ""
+    },
+    {
+        "name": "Сердце феникса",
+        "element": "fire",
+        "form": "beast",
+        "role": "support",
+        "level": 30,
+        "Тип": "Уникальный",
+        "actionType": "treat",
+        "range": 10,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "regen",
+                "chance": 1,
+                "duration": 5
+            },
+            {
+                "effect": "cleanse",
+                "chance": 1,
+                "duration": 0
+            }
+        ],
+        "pp": "Воскрешает павшего союзника с 50% HP и восстанавливает всем регенерацию",
+        "cooldown": ""
+    },
+    {
+        "name": "Великий огненный страж",
+        "element": "fire",
+        "form": "beast",
+        "role": "tank",
+        "level": 30,
+        "Тип": "Защитный",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "aegis",
+                "chance": 1,
+                "duration": 2
+            },
+            {
+                "effect": "taunt",
+                "chance": 1,
+                "duration": 3
+            },
+            {
+                "effect": "burn",
+                "chance": 0.8,
+                "duration": 3
+            }
+        ],
+        "pp": "Призывает огненный барьер, который поглощает весь урон на 2 хода и принуждает врагов атаковать вас, нанося им поджог",
+        "cooldown": ""
     },
     {
         "name": "Танец солнечного ястреба",
@@ -3091,7 +2498,6 @@
         "range": 15,
         "baseDamage": 90,
         "hitChance": 100,
-        "calcDamage": 90,
         "critChance": 0,
         "effects": [
             {
@@ -3105,7 +2511,457 @@
                 "duration": 0
             }
         ],
-        "": "Быстрая серия ударов с высоким шансом крита и ослепления"
+        "pp": "Быстрая серия ударов с высоким шансом крита и ослепления",
+        "cooldown": ""
+    },
+    {
+        "name": "Песнь пламени",
+        "element": "fire",
+        "form": "bird",
+        "role": "support",
+        "level": 30,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 10,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "empower",
+                "chance": 1,
+                "duration": 3
+            },
+            {
+                "effect": "haste",
+                "chance": 1,
+                "duration": 3
+            }
+        ],
+        "pp": "Вдохновляет союзников, увеличивая их атаку и скорость",
+        "cooldown": ""
+    },
+    {
+        "name": "Пламенный кокон",
+        "element": "fire",
+        "form": "bird",
+        "role": "tank",
+        "level": 30,
+        "Тип": "Защитный",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "aegis",
+                "chance": 1,
+                "duration": 2
+            },
+            {
+                "effect": "burn",
+                "chance": 0.7,
+                "duration": 3
+            }
+        ],
+        "pp": "Окутывает себя огненным щитом, отражая атаки и поджигая врагов",
+        "cooldown": ""
+    },
+    {
+        "name": "Хвост дракона",
+        "element": "fire",
+        "form": "reptile",
+        "role": "dd",
+        "level": 30,
+        "Тип": "Атакующий",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 110,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "burn",
+                "chance": 1,
+                "duration": 4
+            },
+            {
+                "effect": "knockback",
+                "chance": 1,
+                "duration": 0
+            }
+        ],
+        "pp": "Мощный удар хвостом, который отбрасывает врагов и поджигает их",
+        "cooldown": ""
+    },
+    {
+        "name": "Жар жизни",
+        "element": "fire",
+        "form": "reptile",
+        "role": "support",
+        "level": 30,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 10,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "regen",
+                "chance": 1,
+                "duration": 5
+            },
+            {
+                "effect": "cleanse",
+                "chance": 1,
+                "duration": 0
+            }
+        ],
+        "pp": "Исцеляет союзников и снимает все негативные эффекты",
+        "cooldown": ""
+    },
+    {
+        "name": "Раскаленный бастион",
+        "element": "fire",
+        "form": "reptile",
+        "role": "tank",
+        "level": 30,
+        "Тип": "Защитный",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "defense",
+                "chance": 1,
+                "duration": 4
+            },
+            {
+                "effect": "thorns",
+                "chance": 1,
+                "duration": 4
+            }
+        ],
+        "pp": "Укрепляет броню и возвращает 30% полученного урона",
+        "cooldown": ""
+    },
+    {
+        "name": "Клыки оборотня",
+        "element": "grass",
+        "form": "beast",
+        "role": "dd",
+        "level": 30,
+        "Тип": "Атакующий",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 105,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "bleed",
+                "chance": 1,
+                "duration": 4
+            },
+            {
+                "effect": "empower",
+                "chance": 0.5,
+                "duration": 2
+            }
+        ],
+        "pp": "Смертельный укус, вызывающий кровотечение и усиливающий атаку",
+        "cooldown": ""
+    },
+    {
+        "name": "Рев жизни",
+        "element": "grass",
+        "form": "beast",
+        "role": "support",
+        "level": 30,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 10,
+        "baseDamage": 90,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "regen",
+                "chance": 1,
+                "duration": 5
+            }
+        ],
+        "pp": "Мощный рык, исцеляющий союзников и дающий регенерацию",
+        "cooldown": ""
+    },
+    {
+        "name": "Корневой исполин",
+        "element": "grass",
+        "form": "beast",
+        "role": "tank",
+        "level": 30,
+        "Тип": "Защитный",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "defense",
+                "chance": 1,
+                "duration": 4
+            },
+            {
+                "effect": "taunt",
+                "chance": 1,
+                "duration": 3
+            }
+        ],
+        "pp": "Превращается в дерево-исполина, притягивая атаки врагов",
+        "cooldown": ""
+    },
+    {
+        "name": "Лиственный смерч",
+        "element": "grass",
+        "form": "bird",
+        "role": "dd",
+        "level": 30,
+        "Тип": "Атакующий",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 80,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "blind",
+                "chance": 0.7,
+                "duration": 2
+            },
+            {
+                "effect": "bleed",
+                "chance": 0.5,
+                "duration": 3
+            }
+        ],
+        "pp": "Создает вихрь листьев, ослепляющий и ранящий врагов",
+        "cooldown": ""
+    },
+    {
+        "name": "Песнь леса",
+        "element": "grass",
+        "form": "bird",
+        "role": "support",
+        "level": 30,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 10,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "cleanse",
+                "chance": 1,
+                "duration": 0
+            },
+            {
+                "effect": "regen",
+                "chance": 1,
+                "duration": 4
+            }
+        ],
+        "pp": "Мелодия, очищающая дебаффы и исцеляющая союзников",
+        "cooldown": ""
+    },
+    {
+        "name": "Шипастый ураган",
+        "element": "grass",
+        "form": "bird",
+        "role": "tank",
+        "level": 30,
+        "Тип": "Защитный",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "thorns",
+                "chance": 1,
+                "duration": 4
+            },
+            {
+                "effect": "knockback",
+                "chance": 0.8,
+                "duration": 0
+            }
+        ],
+        "pp": "Вращается, отражая урон и отбрасывая врагов",
+        "cooldown": ""
+    },
+    {
+        "name": "Укус Василиска",
+        "element": "grass",
+        "form": "reptile",
+        "role": "dd",
+        "level": 30,
+        "Тип": "Атакующий",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 95,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "freeze",
+                "chance": 0.3,
+                "duration": 1
+            },
+            {
+                "effect": "poison",
+                "chance": 1,
+                "duration": 4
+            }
+        ],
+        "pp": "Укус с шансом окаменения и гарантированным отравлением.",
+        "cooldown": ""
+    },
+    {
+        "name": "Дыхание жизни",
+        "element": "grass",
+        "form": "reptile",
+        "role": "support",
+        "level": 30,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 10,
+        "baseDamage": 85,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "regen",
+                "chance": 1,
+                "duration": 5
+            },
+            {
+                "effect": "aegis",
+                "chance": 0.5,
+                "duration": 1
+            }
+        ],
+        "pp": "Воскрешает союзника с 40% HP и дает регенерацию",
+        "cooldown": ""
+    },
+    {
+        "name": "Броня Горыныча",
+        "element": "grass",
+        "form": "reptile",
+        "role": "tank",
+        "level": 30,
+        "Тип": "Защитный",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "defense",
+                "chance": 1,
+                "duration": 4
+            },
+            {
+                "effect": "poison",
+                "chance": 0.8,
+                "duration": 3
+            }
+        ],
+        "pp": "Покрывается ядовитой броней, отравляя атакующих",
+        "cooldown": ""
+    },
+    {
+        "name": "Глубокая рана",
+        "element": "water",
+        "form": "beast",
+        "role": "dd",
+        "level": 30,
+        "Тип": "Атакующий",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 95,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "bleed",
+                "chance": 0.8,
+                "duration": 4
+            },
+            {
+                "effect": "slow",
+                "chance": 0.6,
+                "duration": 2
+            }
+        ],
+        "pp": "Наносит глубокую рану, вызывающую кровотечение и замедление",
+        "cooldown": ""
+    },
+    {
+        "name": "Прилив исцеления",
+        "element": "water",
+        "form": "beast",
+        "role": "support",
+        "level": 30,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 10,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "regen",
+                "chance": 1,
+                "duration": 3
+            }
+        ],
+        "pp": "Волна исцеления, которая восстанавливает здоровье и дает регенерацию",
+        "cooldown": ""
+    },
+    {
+        "name": "Ледяной страж",
+        "element": "water",
+        "form": "beast",
+        "role": "tank",
+        "level": 30,
+        "Тип": "Защитный",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "defense",
+                "chance": 1,
+                "duration": 3
+            },
+            {
+                "effect": "freeze",
+                "chance": 0.5,
+                "duration": 1
+            }
+        ],
+        "pp": "Замораживает атакующих и повышает защиту",
+        "cooldown": ""
     },
     {
         "name": "Штормовой клинок",
@@ -3118,7 +2974,6 @@
         "range": 15,
         "baseDamage": 85,
         "hitChance": 100,
-        "calcDamage": 85,
         "critChance": 0,
         "effects": [
             {
@@ -3132,6 +2987,142 @@
                 "duration": 0
             }
         ],
-        "": "Быстрая атака с шансом оглушения и отбрасывания"
+        "pp": "Быстрая атака с шансом оглушения и отбрасывания",
+        "cooldown": ""
+    },
+    {
+        "name": "Мелодия океана",
+        "element": "water",
+        "form": "bird",
+        "role": "support",
+        "level": 30,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 10,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "cleanse",
+                "chance": 1,
+                "duration": 0
+            },
+            {
+                "effect": "haste",
+                "chance": 1,
+                "duration": 3
+            }
+        ],
+        "pp": "Очищает негативные эффекты и увеличивает скорость союзников",
+        "cooldown": ""
+    },
+    {
+        "name": "Ледяной форт",
+        "element": "water",
+        "form": "bird",
+        "role": "tank",
+        "level": 30,
+        "Тип": "Защитный",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "aegis",
+                "chance": 1,
+                "duration": 2
+            },
+            {
+                "effect": "freeze",
+                "chance": 0.4,
+                "duration": 1
+            }
+        ],
+        "pp": "Создает ледяную крепость, которая защищает и замораживает врагов",
+        "cooldown": ""
+    },
+    {
+        "name": "Ядовитый смерч",
+        "element": "water",
+        "form": "reptile",
+        "role": "dd",
+        "level": 30,
+        "Тип": "Атакующий",
+        "actionType": "ranged",
+        "range": 15,
+        "baseDamage": 75,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "poison",
+                "chance": 1,
+                "duration": 4
+            },
+            {
+                "effect": "slow",
+                "chance": 0.8,
+                "duration": 2
+            }
+        ],
+        "pp": "Создает вихрь яда, который замедляет и отравляет врагов",
+        "cooldown": ""
+    },
+    {
+        "name": "Исцеляющий туман",
+        "element": "water",
+        "form": "reptile",
+        "role": "support",
+        "level": 30,
+        "Тип": "Поддерживающий",
+        "actionType": "treat",
+        "range": 10,
+        "baseDamage": 70,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "regen",
+                "chance": 1,
+                "duration": 4
+            },
+            {
+                "effect": "cleanse",
+                "chance": 0.5,
+                "duration": 0
+            }
+        ],
+        "pp": "Окутывает союзников целебным туманом, снимая дебаффы",
+        "cooldown": ""
+    },
+    {
+        "name": "Болотный страж",
+        "element": "water",
+        "form": "reptile",
+        "role": "tank",
+        "level": 30,
+        "Тип": "Защитный",
+        "actionType": "treat",
+        "range": 0,
+        "baseDamage": 0,
+        "hitChance": 100,
+        "critChance": 0,
+        "effects": [
+            {
+                "effect": "defense",
+                "chance": 1,
+                "duration": 3
+            },
+            {
+                "effect": "poison",
+                "chance": 0.7,
+                "duration": 3
+            }
+        ],
+        "pp": "Покрывает себя ядовитой слизью, отравляя атакующих",
+        "cooldown": ""
     }
 ]

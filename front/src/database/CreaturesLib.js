@@ -434,11 +434,11 @@ export function testElementTeam(element, level, direction, control) {
 export function testTeam(level, direction, control) {
     const creatures = [
         getCreature(randomElement(), randomForm(), 'tank', level),
-        // getCreature(randomElement(), randomForm(), 'tank', level),
-        // getCreature(randomElement(), randomForm(), 'support', level),
-        // getCreature(randomElement(), randomForm(), 'support', level),
-        // getCreature(randomElement(), randomForm(), 'dd', level),
-        // getCreature(randomElement(), randomForm(), 'dd', level),
+        getCreature(randomElement(), randomForm(), 'tank', level),
+        getCreature(randomElement(), randomForm(), 'support', level),
+        getCreature(randomElement(), randomForm(), 'support', level),
+        getCreature(randomElement(), randomForm(), 'dd', level),
+        getCreature(randomElement(), randomForm(), 'dd', level),
     ]
 
 
@@ -646,7 +646,7 @@ export function testBaseDamageDDvsTank() {
     dd.id = 4
 
     return [
-        ...getTeam2('left', 'player', [dd2, support]),
+        ...getTeam2('left', 'player', [dd2]),
         ...getTeam2('right', 'player', [dd])
     ]
 }
