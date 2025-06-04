@@ -1,4 +1,5 @@
 import {CombatHandler} from "../CombatHandler.js";
+import {CreatureAPI} from "../Creature.js";
 
 const EFFECT_WEIGHTS = {
     defense: {base: 0.8, perTurn: 0.1, max: 1.1},
@@ -53,7 +54,7 @@ export class MediumAI {
 
         // Оценка действий        
         // 1. Действия навыков
-        this.activeCreature.getActions().forEach(action => {
+        this.activeCreature.actions.forEach(action => {
             if (action.pp > this.activeCreature.pp || action.currentCooldown > 0) {
                 return;
             }
@@ -92,7 +93,7 @@ export class MediumAI {
     }
 
     getPpModifier(ppCost) {
-        const ppRatio = this.activeCreature.pp / this.activeCreature.getMaxPP();
+        const ppRatio = this.activeCreature.pp / CreatureAPI.getMaxPP(this.activeCreature);
 
         // Для дорогих навыков при низком PP
         if (ppCost > 5 && ppRatio < 0.3) return 0.4;
@@ -112,7 +113,7 @@ export class MediumAI {
             weight += (effectWeight.perTurn || 0.1) * (effect.duration - 1);
         }
 
-        if (target.hasEffect(effect.effect)) {
+        if (CreatureAPI.hasEffect(target, effect.effect)) {
             weight *= 0.6; // Уменьшаем вес если эффект уже есть
         }
 
@@ -125,8 +126,9 @@ export class MediumAI {
 
         let bestTarget = null;
         let bestScore = -Infinity;
+        const speed = CreatureAPI.getSpeed(this.activeCreature)
         const rangeLimit = attack.actionType === 'melee' ?
-            this.activeCreature.getSpeed() :
+            speed :
             attack.range;
 
 
@@ -143,7 +145,7 @@ export class MediumAI {
             ) * CombatHandler.getHitChance(this.activeCreature, enemy, attack);
 
             // Приоритет целей
-            score *= 1.0 + (1.0 - enemy.health / enemy.getMaxHealth()); // Раненым целям
+            score *= 1.0 + (1.0 - enemy.health / CreatureAPI.getMaxHealth(enemy)); // Раненым целям
             if (enemy.role === 'support') {
                 score *= 1.4; // Приоритет саппортов
             }
@@ -184,7 +186,7 @@ export class MediumAI {
             return {
                 weight: weight,
                 action: 'move',
-                targets: bestTarget.path[Math.min(this.activeCreature.getSpeed() - 1, bestTarget.path.length - 2)],
+                targets: bestTarget.path[Math.min(speed - 1, bestTarget.path.length - 2)],
             };
 
         }
@@ -197,6 +199,7 @@ export class MediumAI {
         const role = this.activeCreature.role;
 
         allies.forEach(ally => {
+            const allyMaxHealth = CreatureAPI.getMaxHealth(ally)
             if (limit === 0 && ally.id !== this.activeCreature.id) {
                 return
             }
@@ -206,7 +209,7 @@ export class MediumAI {
             let score = 0; //не знаю надо побалансить
 
             if (treat.baseDamage > 0) { // Лечение
-                const healNeeded = ally.getMaxHealth() - ally.health;
+                const healNeeded = allyMaxHealth - ally.health;
                 score += healNeeded * (ally.role === 'tank' ? 1.5 : 1) * (ally.role === 'dd' ? 1.3 : 1);
             }
 
@@ -215,7 +218,7 @@ export class MediumAI {
 
 
             // Увеличение при низком здоровье
-            if (ally.health < ally.getMaxHealth() * 0.7) {
+            if (ally.health < allyMaxHealth * 0.7) {
                 score *= 1.4;
             }
 
@@ -245,7 +248,7 @@ export class MediumAI {
             return {
                 weight: bestScore * ROLE_WEIGHTS[role].move,
                 action: 'move',
-                targets: bestTarget.path[Math.min(this.activeCreature.getSpeed() - 1, bestTarget.path.length - 2)],
+                targets: bestTarget.path[Math.min(CreatureAPI.getSpeed(this.activeCreature) - 1, bestTarget.path.length - 2)],
             };
 
         }
@@ -253,6 +256,7 @@ export class MediumAI {
 
     getMoveTarget(enemies, allies) {
         return undefined
+        const speed = CreatureAPI.getSpeed(this.activeCreature)
         // В getMoveTarget добавить:
         if (enemies.length === 1) {
             const enemy = enemies[0]
@@ -268,7 +272,7 @@ export class MediumAI {
             return {
                 weight: 80,
                 action: 'move',
-                targets: path[Math.min(this.activeCreature.getSpeed() - 1, path.length - 2)]
+                targets: path[Math.min(speed - 1, path.length - 2)]
             };
         }
         // TODO: Реализовать более умное позиционирование (укрытия, фланги и т.д.)
@@ -280,11 +284,11 @@ export class MediumAI {
         if (this.activeCreature.role === 'support') {
             // Для саппортов ищем раненых союзников
             allies.forEach(ally => {
-                if (ally.health < ally.getMaxHealth() * 0.7) {
+                if (ally.health < CreatureAPI.getMaxHealth(ally) * 0.7) {
                     const path = this.store.findPath(this.activeCreature.position, ally.position);
                     if (path.length - 1 < minDistance) {
                         minDistance = path.length - 1;
-                        targetPos = path[Math.min(this.activeCreature.getSpeed() - 1, path.length - 2)];
+                        targetPos = path[Math.min(speed - 1, path.length - 2)];
                     }
                 }
             });
@@ -296,7 +300,7 @@ export class MediumAI {
                 const path = this.store.findPath(this.activeCreature.position, enemy.position);
                 if (path.length - 1 < minDistance) {
                     minDistance = path.length - 1;
-                    targetPos = path[Math.min(this.activeCreature.getSpeed() - 1, path.length - 2)];
+                    targetPos = path[Math.min(speed - 1, path.length - 2)];
                 }
             });
         }

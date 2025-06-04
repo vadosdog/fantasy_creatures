@@ -1,19 +1,11 @@
 import {defineStore} from 'pinia';
 import {BattleMap} from "../game/classes/battle/BattleMap.js";
-import {Creature, CreatureAction} from "../game/classes/battle/Creature.js";
 import {QueueController} from "../game/classes/battle/QueueController.js";
-import {BaseEffect} from "../game/classes/battle/Effects/BaseEffect.js";
-import {EasyAI} from "../game/classes/battle/AI/EasyAI.js";
 import {CombatHandler} from "../game/classes/battle/CombatHandler.js";
-import {MediumAI} from "../game/classes/battle/AI/MediumAI.js";
 import {
-    getTeam,
-    getTeam2,
-    testBaseDamageDDvsTank,
-    testEffects,
-    testElementTeam,
     testTeam
 } from "../database/CreaturesLib.js";
+import {CreatureAPI} from "../game/classes/battle/Creature.js";
 
 export const BATTLE_STATE_PLAYER_TURN = 'PLAYER_TURN'
 export const BATTLE_STATE_ENGINE_TURN = 'ENGINE_TURN'
@@ -63,11 +55,13 @@ export const useBattleStore = defineStore('battle', {
         load() {
             // this.resetBattle(testEffects())
             this.resetBattle([
-                ...testTeam(2, 'left', new MediumAI()),
-                ...testTeam(2, 'right', new MediumAI())
+                ...testTeam(2, 'left', 'player'),
+                ...testTeam(2, 'right', 'player')
             ])
         },
         resetBattle(creatures) {
+            this.$reset();
+
             this.round = 0
             this.battleLog = []
             this.creatures = creatures
@@ -109,7 +103,7 @@ export const useBattleStore = defineStore('battle', {
         },
         handlePlayerTurn() {
             const activeCreature = this.activeCreature
-            if (activeCreature.hasEffect('freeze')) {
+            if (CreatureAPI.hasEffect(activeCreature, 'freeze')) {
                 return
             }
             const moveable = this.getMoveablePositions(activeCreature)
@@ -120,7 +114,7 @@ export const useBattleStore = defineStore('battle', {
                 })
             }
 
-            activeCreature.getActions().forEach(action => {
+            activeCreature.actions.forEach(action => {
                 const actionTargets = []
                 this.creatures.forEach(creature => {
                     if (action.actionType === 'treat'
@@ -150,7 +144,7 @@ export const useBattleStore = defineStore('battle', {
                         return;
                     }
 
-                    let pathLimit = activeCreature.getSpeed()
+                    let pathLimit = CreatureAPI.getSpeed(activeCreature)
                     if (action.actionType !== 'melee') {
                         pathLimit = action.range
                     }
@@ -173,7 +167,8 @@ export const useBattleStore = defineStore('battle', {
         },
         handleEngineTurn(engine) {
             const activeCreature = this.activeCreature
-            if (activeCreature.hasEffect('freeze')) {
+            const speed = CreatureAPI.getSpeed(activeCreature)
+            if (CreatureAPI.hasEffect(activeCreature, 'freeze')) {
                 return
             }
             this.availableActions = [engine.getAction(this)]
@@ -220,7 +215,7 @@ export const useBattleStore = defineStore('battle', {
             }
 
             // Если можем дойти до цели, то атакуем ее
-            if ((path.length - 1) <= this.activeCreature.speed) {
+            if ((path.length - 1) <= speed) {
                 this.availableActions.push(
                     {
                         action: 'attack',
@@ -231,7 +226,7 @@ export const useBattleStore = defineStore('battle', {
             else {
                 this.availableActions.push({
                     action: 'move',
-                    targets: path[this.activeCreature.speed - 1],
+                    targets: path[speed - 1],
                 })
             }
         },
@@ -239,7 +234,7 @@ export const useBattleStore = defineStore('battle', {
             this.battleState = battleState
         },
         endTurn(isDelayTurn = false) {
-            this.activeCreature.removeRoundEffects().forEach(effect => this.recordLog(effect.effect + ' перестал действовать на ' + this.activeCreature.name))
+            CreatureAPI.removeRoundEffects(this.activeCreature).forEach(effect => this.recordLog(effect.effect + ' перестал действовать на ' + this.activeCreature.name))
             this.queue.endTurn(isDelayTurn)
             if (this.checkBattleOver()) {
                 return true
@@ -272,20 +267,24 @@ export const useBattleStore = defineStore('battle', {
             return false
         },
         getTurn() {
-            const effects = this.activeCreature.applyRoundEffects()
+            if (!this.activeCreature) return null; // Добавьте эту проверку
+
+            const creatureId = this.activeCreature.id
+            const effects = CreatureAPI.applyRoundEffects(this.activeCreature)
             this.recordLog(effects.map(effect => this.activeCreature.name + ' HP ' + effect.damage + ' (' + effect.effect + ')'))
 
             if (this.activeCreature.health <= 0) {
                 this.activeCreature.health = 0
                 // гомосятина переделать
                 let targetIndex = this.creatures.findIndex(c => c === this.activeCreature)
-                this.creatures.splice(targetIndex, 1)
+                this.creatures = this.creatures.filter(c => c.id !== creatureId);
                 this.battleMap.removeContent(...this.activeCreature.position)
                 targetIndex = this.creatures.findIndex(c => c === this.activeCreature)
                 this.round = targetIndex
+                this.activeCreature = undefined
+            } else {
+                CreatureAPI.roundRestorePP(this.activeCreature)
             }
-
-            this.activeCreature.roundRestorePP()
 
             return {
                 activeCreature: this.activeCreature,
@@ -295,7 +294,7 @@ export const useBattleStore = defineStore('battle', {
         },
         getMoveablePositions(activeCreature) {
             let start = activeCreature.position
-            let speed = activeCreature.getSpeed()
+            let speed = CreatureAPI.getSpeed(activeCreature)
             const visited = new Set();
             let currentPositions = [start];
             visited.add(start.join(','));
@@ -415,6 +414,12 @@ export const useBattleStore = defineStore('battle', {
             this.recordLog('Перемещение в ' + path[path.length - 1].join(','))
         },
         playerActionAttack(targetPosition, attack) {
+            // Добавьте проверку в начале метода
+            if (!this.activeCreature || this.activeCreature.health <= 0) {
+                console.error("No active creature or creature is dead");
+                return;
+            }
+
             const result = {
                 attack: attack.name,
                 success: false,
@@ -437,6 +442,9 @@ export const useBattleStore = defineStore('battle', {
                 return
             }
 
+
+            const defenderId = defender.id
+
             // Выставляем кулдаун и обновляем pp
             attack.currentCooldown = attack.cooldown
             attacker.pp -= attack.pp
@@ -454,7 +462,14 @@ export const useBattleStore = defineStore('battle', {
 
                 // считаем урон
                 result.damage = CombatHandler.getAttackDamage(attacker, defender, attack, isCrit)
-                defender.health = Math.floor(defender.health - result.damage)
+                this.$patch(state => {
+                    // Используйте иммутабельные обновления
+                    const defenderStateObject = state.creatures.find(c => c.id === defenderId);
+                    if (defenderStateObject) {
+                        defenderStateObject.health = Math.floor(defenderStateObject.health - result.damage);
+                    }
+                });
+
             }
 
 
@@ -493,16 +508,16 @@ export const useBattleStore = defineStore('battle', {
                 }
 
                 const effectTarget = effect.target === 'target' ? defender : attacker
-                if (!effectTarget.hasEffect(effect.effect)) {
+                if (!CreatureAPI.hasEffect(effectTarget, effect.effect)) {
                     result.effects.push(effect.effect)
                 }
 
-                this.recordLog(effectTarget.pushEffect(effect))
+                this.recordLog(CreatureAPI.pushEffect(effectTarget, effect))
             })
 
             // Проверка обратных эффектов шипов и вампиризма
             if (result.damage > 0) {
-                const backDamageTerm = defender.getBackDamageTerm()
+                const backDamageTerm = CreatureAPI.getBackDamageTerm(defender)
                 if (backDamageTerm) {
                     const backDamage = Math.floor(result.damage * backDamageTerm)
                     attacker.health = Math.floor(attacker.health - backDamage)
@@ -560,8 +575,9 @@ export const useBattleStore = defineStore('battle', {
                 // считаем урон
                 result.damage = CombatHandler.getTreatDamage(treater, treated, action, isCrit)
                 treated.health = Math.floor(treated.health + result.damage)
-                if (treated.health > treated.getMaxHealth()) {
-                    treated.health = treated.getMaxHealth()
+                const treatedMaxHealth = CreatureAPI.getMaxHealth(treated)
+                if (treated.health > treatedMaxHealth) {
+                    treated.health = treatedMaxHealth
                 }
             }
 
@@ -591,16 +607,16 @@ export const useBattleStore = defineStore('battle', {
                 }
 
                 const effectTarget = effect.target === 'target' ? treated : treater
-                if (!effectTarget.hasEffect(effect.effect)) {
+                if (!CreatureAPI.hasEffect(effectTarget, effect.effect)) {
                     result.effects.push(effect.effect)
                 }
 
-                this.recordLog(effectTarget.pushEffect(effect))
+                this.recordLog(CreatureAPI.pushEffect(effectTarget, effect))
             })
 
             if (result.damage > 0) {
                 // При лечении эфект кровотечения убирается
-                treated.removeEffect('bleed')
+                CreatureAPI.removeEffect(treated, 'bleed')
             }
 
             return result
@@ -610,11 +626,11 @@ export const useBattleStore = defineStore('battle', {
             return this.playerActionAttack(targetPosition, action)
         },
         playerActionDefense() {
-            this.recordLog(this.activeCreature.pushEffect({effect: 'defense', duration: 2}))
+            this.recordLog(CreatureAPI.pushEffect(this.activeCreature, {effect: 'defense', duration: 2}))
         },
         playerActionDelayedTurn(afterCreature) {
             this.queue.handleDelayedTurn(afterCreature)
-            this.recordLog(this.activeCreature.pushEffect({effect: 'confusion', duration: 3}))
+            this.recordLog(CreatureAPI.pushEffect(this.activeCreature, {effect: 'confusion', duration: 3}))
         },
         getCreatureByCoords(position) {
             return this.battleMap.get(position.join(','))?.content
@@ -628,8 +644,7 @@ export const useBattleStore = defineStore('battle', {
             const activeCreature = this.activeCreature
 
             for (const text of log) {
-
-                this.battleLog.push(`[ROUND: ${round}, TURN: ${turn}][Command: ${activeCreature.direction}}, Creature: ${activeCreature.name} (${activeCreature.id})]: ` + log)
+                this.battleLog.push(`[ROUND: ${round}, TURN: ${turn}][Command: ${activeCreature?.direction || 'none'}, Creature: ${activeCreature?.name || 'unknown'}]: ${text}`);
             }
 
         },

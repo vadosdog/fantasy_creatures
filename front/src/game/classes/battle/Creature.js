@@ -1,134 +1,107 @@
-import {BaseEffect} from "./Effects/BaseEffect.js";
+import {EffectAPI} from "./Effects/BaseEffect.js";
 
-export class Creature {
-    constructor({
-                    id,
-                    name,
-                    texture,
-                    position,
-                    direction,
-                    control,
+export function createCreature(config) {
+    return {
+        id: config.id,
+        name: config.name,
+        texture: config.texture,
+        position: config.position,
+        direction: config.direction,
+        control: config.control,
 
-                    maxHealthStat,
-                    speedStat,
-                    attackStat,
-                    defenseStat, //стойкость, защита
-                    initiativeStat, // инициатива
-                    willStat, // воля, сопротивление бафам/дебафам
-                    element,
-                    role,
+        maxHealthStat: config.maxHealthStat,
+        health: config.maxHealthStat,
+        speedStat: config.speedStat,
+        attackStat: config.attackStat,
+        defenseStat: config.defenseStat,
+        initiativeStat: config.initiativeStat,
+        willStat: config.willStat,
+        element: config.element,
+        role: config.role,
+        form: config.form,
+        level: config.level,
 
-                    actions,
-                    effects = [],
+        maxPP: config.maxPP || 100,
+        pp: config.maxPP || 10,
 
-                    maxPP = 10,
-                }) {
+        actions: config.actions.map(action => createCreatureAction(action)),
 
-        this.id = id;
-        this.name = name;
-        this.texture = texture;
-        this.position = position;
-        this.direction = direction;
-        this.control = control;
+        effects: config.effects || []
+    }
+}
 
-        this.maxHealthStat = maxHealthStat
-        this.health = maxHealthStat
-        this.speedStat = speedStat;
-        this.attackStat = attackStat;
-        this.defenseStat = defenseStat; //стойкость, защита
-        this.initiativeStat = initiativeStat; // инициатива
-        this.willStat = willStat; // воля, сопротивление бафам/дебафам
-        this.element = element;
-        this.role = role;
-
-        this.maxPP = maxPP
-        this.pp = maxPP
-
-        this.actions = actions;
-
-
-        // Бафы
-        // {type: 'empower', duration: 1},
-        // {type: 'haste', duration: 1},
-        // {type: 'luck', duration: 1},
-        // {type: 'regen', duration: 1},
-        // {type: 'thorns', duration: 1}, //TODO Возвращает 20% полученного урона атакующему
-        // {type: 'aegis', duration: 1}, //TODO сделать ауру
-        //
-        // // Дебафы
-        // {type: 'poison', duration: 1},
-        // {type: 'bleed', duration: 1},
-        // {type: 'burn', duration: 1},
-        // {type: 'chill', duration: 1},
-        // {type: 'blind', duration: 1},
-        // {type: 'curse', duration: 1},
-        // {type: 'madness', duration: 1},
-        // {type: 'fear', duration: 1}
-        this.effects = effects // бафы и дебафы
+export function createCreatureAction(config) {
+    return {
+        name: config.name,
+        element: config.element,
+        baseDamage: config.baseDamage,
+        hitChance: config.hitChance,
+        critChance: config.critChance,
+        effects: config.effects,
+        actionType: config.actionType,
+        range: config.range,
+        pp: config.pp,
+        cooldown: config.cooldown,
+        currentCooldown: 0
     }
 
-    getControl() {
-        return this.control
-    }
+}
 
-    getMaxHealth() {
-        return this.effects.reduce((maxHealth, effect) => {
-            return maxHealth * effect.getMaxHealthMultiplier()
-        }, this.maxHealthStat)
-    }
+export const CreatureAPI = {
+    getMaxHealth(creature) {
+        return Math.floor(creature.effects.reduce((maxHealth, effect) => {
+            return maxHealth * EffectAPI.getMaxHealthMultiplier(effect)
+        }, creature.maxHealthStat))
+    },
 
-    getMaxPP() {
-        return this.effects.reduce((maxPP, effect) => {
-            return maxPP * effect.getMaxPPMultiplier()
-        }, this.maxPP)
-    }
+    getMaxPP(creature) {
+        return Math.floor(creature.effects.reduce((maxPP, effect) => {
+            return maxPP * EffectAPI.getMaxPPMultiplier(effect)
+        }, creature.maxPP))
+    },
 
-    getSpeed() {
-        return this.effects.reduce((maxHealth, effect) => maxHealth + effect.getSpeedTerm(), this.speedStat)
-    }
+    getSpeed(creature) {
+        return Math.floor(creature.effects.reduce((maxHealth, effect) => maxHealth + EffectAPI.getSpeedTerm(effect), creature.speedStat))
+    },
 
-    getAttack() {
-        return this.effects.reduce((maxHealth, effect) => maxHealth * effect.getAttackMultiplier(), this.attackStat)
-    }
+    getAttack(creature) {
+        return Math.floor(creature.effects.reduce((maxHealth, effect) => maxHealth * EffectAPI.getAttackMultiplier(effect), creature.attackStat))
+    },
 
-    getDefense() {
-        return this.effects.reduce((maxHealth, effect) => maxHealth * effect.getDefenseMultiplier(), this.defenseStat)
-    }
+    getDefense(creature) {
+        return Math.floor(creature.effects.reduce((maxHealth, effect) => maxHealth * EffectAPI.getDefenseMultiplier(effect), creature.defenseStat))
+    },
 
-    getInitiative() {
-        return this.effects.reduce((maxHealth, effect) => maxHealth * effect.getInitiativeMultiplier(), this.initiativeStat)
-    }
+    getInitiative(creature) {
+        return Math.floor(creature.effects.reduce((maxHealth, effect) => maxHealth * EffectAPI.getInitiativeMultiplier(effect), creature.initiativeStat))
+    },
 
-    getHitChanceModifier() {
-        return this.effects.reduce((maxHealth, effect) => maxHealth * effect.getHitChanceMultiplier(), 1)
-    }
+    getHitChanceModifier(creature) {
+        return Math.floor(creature.effects.reduce((maxHealth, effect) => maxHealth * EffectAPI.getHitChanceMultiplier(effect), 1))
+    },
 
-    getWill() {
-        return this.willStat
-    }
+    getWill(creature) {
+        return Math.floor(creature.willStat)
+    },
 
-    getCritChanceTerm() {
-        return this.effects.reduce((maxHealth, effect) => maxHealth * effect.getCritChanceTerm(), 0)
-    }
+    getCritChanceTerm(creature) {
+        return Math.floor(creature.effects.reduce((maxHealth, effect) => maxHealth * EffectAPI.getCritChanceTerm(effect), 0))
+    },
 
-    getActions() {
-        return this.actions
-    }
+    getBackDamageTerm(creature) {
+        return Math.floor(creature.effects.reduce((backDamage, effect) => backDamage + EffectAPI.getBackDamage(effect), 0))
+    },
 
-    getBackDamageTerm() {
-        return this.effects.reduce((backDamage, effect) => backDamage + effect.getBackDamage(), 0)
-    }
-
-    hasEffect(effectType) {
-        const existsEffect = this.effects.find(({effect}) => effectType === effect)
+    hasEffect(creature, effectType) {
+        const existsEffect = creature.effects.find(({effect}) => effectType === effect)
         if (!existsEffect) {
             return 0
         }
 
         return existsEffect.duration
-    }
+    },
 
-    hasDebuff() {
+    hasDebuff(creature) {
         const debuffs = ['freeze',
             'bleed',
             'burn',
@@ -140,39 +113,38 @@ export class Creature {
             'confusion'
         ]
 
-        return debuffs.some(debuff => this.hasEffect(debuff));
-    }
+        return debuffs.some(debuff => CreatureAPI.hasEffect(creature, debuff));
+    },
 
-    pushEffect(effectConfig) {
-        const effect = BaseEffect.getEffectObject(effectConfig)
-        let existsEffect
+    pushEffect(creature, effectConfig) {
+        const effect = effectConfig
         // Если такой эффект уже есть, то увеличиваем его длительность
-        existsEffect = this.effects.find(({effect}) => effectConfig.effect === effect)
+        const existsEffect = creature.effects.find(({effect}) => effectConfig.effect === effect)
         if (existsEffect) {
             existsEffect.duration += effectConfig.duration
             return ['Увеличен эффект ' + effectConfig.effect + ` на ${this.name} (${this.id})`]
         }
 
         // TODO добавить невосприимчивость к некоторым эфектам
-        this.effects.push(effect)
+        creature.effects.push(effect)
 
         return ['Наложен эффект ' + effectConfig.effect + ` на ${this.name} (${this.id})`]
-    }
+    },
 
 
     //Применить эффекты в начале раунда
-    applyRoundEffects() {
-        const maxHealth = this.getMaxHealth()
+    applyRoundEffects(creature) {
+        const maxHealth = this.getMaxHealth(creature)
         const appliedEffects = []
-        this.effects.forEach(effect => {
-            if (effect.getRoundEffect()) {
+        creature.effects.forEach(effect => {
+            if (EffectAPI.getRoundEffect(effect)) {
                 appliedEffects.push({
                     type: effect.effect,
-                    damage: effect.getRoundEffect(), //на самом деле не дамаг
+                    damage: EffectAPI.getRoundEffect(effect), //на самом деле не дамаг
                     duration: effect.duration - 1
                 })
             }
-            const damage = Math.floor(maxHealth * effect.getRoundHealthEffect())
+            const damage = Math.floor(maxHealth * EffectAPI.getRoundHealthEffect(effect))
             if (damage === 0) {
                 return
             }
@@ -183,76 +155,48 @@ export class Creature {
                     duration: effect.duration - 1
                 }
             )
-            this.health = Math.floor(this.health + damage)
+            creature.health = Math.floor(creature.health + damage)
         })
 
-        this.health = Phaser.Math.Clamp(this.health, 0, maxHealth)
+        creature.health = Phaser.Math.Clamp(creature.health, 0, maxHealth)
 
         return appliedEffects
-    }
+    },
 
-    removeRoundEffects() {
+    removeRoundEffects(creature) {
         const removedEffects = []
-        this.effects.forEach(effect => {
+        creature.effects.forEach(effect => {
             effect.duration--
 
             if (effect.duration === 0) {
                 removedEffects.push(effect)
             }
         })
-        this.effects = this.effects.filter(effect => effect.duration > 0)
+        creature.effects = creature.effects.filter(effect => effect.duration > 0)
         return removedEffects
-    }
+    },
 
-    removeEffect(effectType) {
-        let existsEffectIndex = this.effects.findIndex(({type}) => effectType === type)
+    removeEffect(creature, effectType) {
+        let existsEffectIndex = creature.effects.findIndex(({type}) => effectType === type)
         if (existsEffectIndex === -1) {
             return
         }
 
-        this.effects.splice(existsEffectIndex, 1)
-    }
+        creature.effects.splice(existsEffectIndex, 1)
+    },
 
     // восстанавливает ПП каждый раунд
-    roundRestorePP() {
-        this.pp += 3 // Отбалансить и сделать зависимым от навыка
-        const maxPP = this.getMaxPP()
-        if (this.pp >= maxPP) {
-            this.pp = maxPP
+    roundRestorePP(creature) {
+        creature.pp += 3 // Отбалансить и сделать зависимым от навыка
+        const maxPP = this.getMaxPP(creature)
+        if (creature.pp >= maxPP) {
+            creature.pp = maxPP
         }
-        
-        this.actions.forEach(action => {
+
+        creature.actions.forEach(action => {
             if (action.currentCooldown > 0) {
                 action.currentCooldown--
             }
         })
-    }
-}
-
-export class CreatureAction {
-    constructor({
-                    name,
-                    element,
-                    baseDamage,
-                    hitChance,
-                    critChance,
-                    effects,
-                    actionType,
-                    range,
-                    pp = 0,
-                    cooldown = 0,
-                }) {
-
-        this.name = name
-        this.element = element
-        this.baseDamage = baseDamage
-        this.hitChance = hitChance
-        this.critChance = critChance
-        this.actionType = actionType
-        this.range = range
-        this.effects = effects
-        this.pp = pp
-        this.cooldown = cooldown
-        this.currentCooldown = 0
     }
 }

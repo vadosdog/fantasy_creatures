@@ -1,4 +1,6 @@
 // Класс расчет всех формул битвы
+import {CreatureAPI} from "./Creature.js";
+
 export class CombatHandler {
     static getElementMultiplier(attackElement, defenseElement) {
         // return 1
@@ -18,11 +20,11 @@ export class CombatHandler {
             'grass->fire': reduced,
         }[attackElement + '->' + defenseElement] || 1.0
     }
-    
+
     static getHitChance(attacker, defender, attack) {
         return Phaser.Math.Clamp(
             attack.hitChance
-            * attacker.getHitChanceModifier(),
+            * CreatureAPI.getHitChanceModifier(attacker),
             0.05, // всегда есть шанс на поподание
             0.99 // всегда есть шанс на промах
         )
@@ -30,22 +32,22 @@ export class CombatHandler {
 
     static getCritAttackChance(attacker, defender, attack) {
         return Math.min(0.25, (attack.critChance
-            + (attacker.getWill() - defender.getWill()) / 100 + attacker.getCritChanceTerm()))
+            + (CreatureAPI.getWill(attacker) - CreatureAPI.getWill(defender)) / 100 + CreatureAPI.getCritChanceTerm(attacker)))
     }
 
     static getAttackDamage(attacker, defender, attack, isCrit = false, potential = false) {
         // урон рандомный +- 15%
         let random = potential ? 1 : Math.random() * 0.3 + 0.85
-        if (attacker.hasEffect('luck')) {
+        if (CreatureAPI.hasEffect(attacker, 'luck')) {
             // Если навык удача, то урон раздоится 1 - 1.15 (0 - +15%)
             // При этом потенциальный урон вырастает на 7.5%
             random = potential ? 1.075 : Math.random() * 0.15 + 1
         }
-        
+
         return Math.floor(Math.max(
             attack.baseDamage * 0.3,
             attack.baseDamage
-            * (attacker.getAttack() / defender.getDefense())
+            * (CreatureAPI.getAttack(attacker) / CreatureAPI.getDefense(defender))
             * this.getElementMultiplier(attack.element, defender.element)
             * (isCrit ? 1.5 : 1)
             * random
@@ -55,23 +57,23 @@ export class CombatHandler {
     static getPushEffectChance(attacker, defender, effect) {
         let chance = effect.chance
         if (effect.target === 'target') {
-            chance += (attacker.getWill() - defender.getWill()) / 100 // если цель - противник, то добавляем к шансу разницу воли
+            chance += (CreatureAPI.getWill(attacker) - CreatureAPI.getWill(defender)) / 100 // если цель - противник, то добавляем к шансу разницу воли
         }
         return chance
     }
-    
+
     static getTreatHitChance(treater, treated, action) {
         return action.hitChance
-            + (treater.getWill() - treated.getWill()) / 100
+            + (CreatureAPI.getWill(treater) - CreatureAPI.getWill(treated)) / 100
     }
-    
+
     static getTreatCritChance(treater, treated, action) {
-        return (0.05 + treater.getWill() / 100 + treater.getCritChanceTerm())
+        return (0.05 + CreatureAPI.getWill(treater) / 100 + CreatureAPI.getCritChanceTerm(treater))
     }
-    
+
     static getTreatDamage(treater, treated, action, isCrit) {
         return Math.floor(action.baseDamage
-            * (treater.getAttack() / treated.getDefense())
+            * (CreatureAPI.getAttack(treater) / CreatureAPI.getDefense(treated))
             * this.getElementMultiplier(action.element, treated.element)
             * (isCrit ? 1.2 : 1)
         )

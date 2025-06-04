@@ -1,3 +1,5 @@
+import {CreatureAPI} from "../Creature.js";
+
 export class EasyAI {
     store;
     activeCreature;
@@ -21,7 +23,7 @@ export class EasyAI {
         }
 
         // Оценка действий
-        this.activeCreature.getActions().forEach(action => {
+        this.activeCreature.actions.forEach(action => {
             if (action.pp > this.activeCreature.pp || action.currentCooldown > 0) {
                 //навык недоступен
                 return
@@ -68,9 +70,11 @@ export class EasyAI {
         if (!target) {
             return undefined
         }
+        
+        const speed = CreatureAPI.getSpeed(this.activeCreature)
 
         // для ближних атак дальность ограничена шагом, для дальних атак дальность ограничена навыком
-        let limit = attack.actionType === 'melee' ? this.activeCreature.getSpeed() : attack.range
+        let limit = attack.actionType === 'melee' ? speed : attack.range
 
         // Если можем атаковать, то выбираем атаку
         if ((path.length - 1) <= limit) {
@@ -86,7 +90,7 @@ export class EasyAI {
             return {
                 weight: 50 - path.length, // Двигаться заведомо менее приоритетно
                 action: 'move',
-                targets: path[Math.min(this.activeCreature.getSpeed() - 1, path.length - 2)],
+                targets: path[Math.min(speed - 1, path.length - 2)],
             }
         }
     }
@@ -117,7 +121,7 @@ export class EasyAI {
             // Если действие может лечить, то выбираем тех, кому лечение нужно
             if (treat.baseDamage > 0) {
                 // Лечение не требуется
-                if (ally.health >= ally.getMaxHealth()) {
+                if (ally.health >= CreatureAPI.getMaxHealth(ally)) {
                     return
                 }
 
@@ -131,7 +135,7 @@ export class EasyAI {
                 }
             } else {
                 // Если действие не лечит, то выбираем тех, у кого нет нужного эффекта
-                if (treat.effects.some(effect => ally.hasEffect(effect))) {
+                if (treat.effects.some(effect => CreatureAPI.hasEffect(ally, effect))) {
                     return
                 }
 

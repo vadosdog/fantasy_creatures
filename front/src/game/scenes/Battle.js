@@ -22,6 +22,7 @@ import {
     BATTLE_STATE_WAITING,
     useBattleStore
 } from "../../store/battle.js";
+import {CreatureAPI} from "../classes/battle/Creature.js";
 
 export class Battle extends Scene {
     showGridIndexes = false
@@ -637,7 +638,7 @@ export class Battle extends Scene {
         const activeCreatureText = this.add.text(
             0,
             -20,
-            this.store.activeCreature.name + ' PP ' + this.store.activeCreature.pp + '/' + this.store.activeCreature.getMaxPP(),
+            this.store.activeCreature.name + ' PP ' + this.store.activeCreature.pp + '/' + CreatureAPI.getMaxPP(this.store.activeCreature),
             {
                 fontFamily: "arial",
                 fontSize: "12px",
@@ -645,7 +646,7 @@ export class Battle extends Scene {
             }
         )
 
-        this.store.activeCreature.getActions().forEach((action, i) => {
+        this.store.activeCreature.actions.forEach((action, i) => {
             // Создаем элементы кнопки
             const buttonBg = this.add.rectangle(0, 0, 200, 150, 0x3e5a4d)
                 .setOrigin(0, 0)
@@ -822,7 +823,7 @@ export class Battle extends Scene {
         for (let i = 0; i < queue.length; i++) {
             const targetCreature = queue[i];
 
-            buttons.push(this.add.text(400, yPosition, `${targetCreature.name} (id: ${targetCreature.id}, Инициатива: ${targetCreature.getInitiative()})`, {
+            buttons.push(this.add.text(400, yPosition, `${targetCreature.name} (id: ${targetCreature.id}, Инициатива: ${CreatureAPI.getInitiative(targetCreature)})`, {
                 fontSize: '20px',
                 fill: '#ffffff',
                 backgroundColor: '#444444',

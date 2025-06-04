@@ -1,240 +1,119 @@
-export const EFFECT_TYPE_ROUND = 'effect_type_round' // Эффекты, которе длятся определенное количество раундов
-export const EFFECT_TYPE_LOCATION = 'effect_type_location' // Эффекты, которые работают, пока существо находится на определенной ячейке
-export const EFFECT_TYPE_PASSIVE = 'effect_type_passive' // Пассивные эффекты работают весь бой
-export const EFFECT_TYPE_SYNERGY = 'effect_Type_synergy' // Эффекты боя, пока работает синергия
+// export class TauntEffect extends BaseEffect { //TODO taunt (провокация, принуждение атаковать)
+// }
+//
+// export class KnockbackEffect extends BaseEffect { //TODO knockback (отбрасывание
+// }
+//
+// export class CleanseEffect extends BaseEffect { //TODO cleanse (очищение дебафов
+// }
 
-export class BaseEffect {
-    constructor({
-                    effect,
-                    duration, //обязательна для эфектов типа round
-                }) {
-        this.effect = effect
-        this.duration = duration
-    }
+export const EffectAPI = {
 
-    static getEffectObject(config) {
-        switch (config.effect) {
-            // TODO cleanse (очищение дебаффов
-            case 'empower':
-                return new EmpowerEffect(config)
-            case 'haste':
-                return new HasteEffect(config)
-            case 'luck':
-                return new LuckEffect(config)
-            case 'regen':
-                return new RegenEffect(config)
-            case 'thorns':
-                return new ThornsEffect(config)
+    getMaxHealthMultiplier(effect) {
+        switch (effect.effect) {
             case 'aegis':
-                return new AegisEffect(config)
-            case 'poison':
-                return new PoisonEffect(config)
-            case 'bleed':
-                return new BleedEffect(config)
-            case 'burn':
-                return new BurnEffect(config)
-            case 'chill':
-                return new ChillEffect(config)
-            case 'blind':
-                return new BlindEffect(config)
+                return 1.3
             case 'curse':
-                return new CurseEffect(config)
-            case 'madness':
-                return new MadnessEffect(config)
-            case 'fear':
-                return new FearEffect(config)
-            case 'defense':
-                return new DefenseEffect(config)
-            case 'confusion':
-                return new ConfusionEffect(config)
-            case 'freeze':
-                return new FreezeEffect(config)
-            case 'cleanse':
-                return new CleanseEffect(config)
+                return 1.3
         }
-    }
-
-    getMaxHealthMultiplier() {
         return 1
-    }
+    },
 
-    getMaxPPMultiplier() {
+    getMaxPPMultiplier(effect) {
         return 1
-    }
+    },
 
-    getAttackMultiplier() {
+    getAttackMultiplier(effect) {
+        switch (effect.effect) {
+            case 'empower':
+                return 1.3
+            case 'fear':
+                return 0.85
+            case 'madness':
+                return 1.2
+        }
         return 1
-    }
+    },
 
-    getDefenseMultiplier() {
+    getDefenseMultiplier(effect) {
+        switch (effect.effect) {
+            case 'burn':
+                return 0.95
+            case 'defense':
+                return 1.1
+            case 'madness':
+                return 0.85
+        }
         return 1
-    }
+    },
 
-    getInitiativeMultiplier() {
+    getInitiativeMultiplier(effect) {
+        switch (effect.effect) {
+            case 'chill':
+                return 0.8
+            case 'confusion':
+                return 0.8
+            case 'defense':
+                return 1.2
+        }
         return 1
-    }
+    },
 
-    getHitChanceMultiplier() {
+    getHitChanceMultiplier(effect) {
+        switch (effect.effect) {
+            case 'blind':
+                return 0.75
+        }
         return 1
-    }
+    },
 
-    getCritChanceTerm() {
+    getCritChanceTerm(effect) {
+        switch (effect.effect) {
+            case 'luck':
+                return 0.15
+        }
         return 0
-    }
+    },
 
-    getSpeedTerm() {
+    getSpeedTerm(effect) {
+        switch (effect.effect) {
+            case 'chill':
+                return -1
+            case 'haste':
+                return 2
+        }
         return 0
-    }
+    },
 
-    getRoundHealthEffect() {
+    getRoundHealthEffect(effect) {
+        switch (effect.effect) {
+            case 'bleed':
+                return -0.06
+            case 'burn':
+                return -0.05
+            case 'madness':
+                return -0.1
+            case 'poison':
+                return -0.07
+            case 'regen':
+                return 0.05
+        }
         return 0
-    }
+    },
 
-    getRoundEffect() {
+    getRoundEffect(effect) {
+        switch (effect.effect) {
+            case 'bleed':
+                return 'Пропуск хода'
+        }
         return false
-    }
-    
-    getBackDamage() {
+    },
+
+    getBackDamage(effect) {
+        switch (effect.effect) {
+            case 'thorns':
+                return 0.2
+        }
         return 0
-    }
-}
-
-
-export class AegisEffect extends BaseEffect {
-
-    getDefenseMultiplier() {
-        return 1.3
-    }
-}
-
-export class BleedEffect extends BaseEffect {
-
-    getRoundHealthEffect() {
-        return -0.06
-    }
-}
-
-export class BlindEffect extends BaseEffect {
-    getHitChanceMultiplier() {
-        return 0.75
-    }
-}
-
-export class BurnEffect extends BaseEffect {
-
-    getDefenseMultiplier() {
-        return 0.95
-    }
-
-    getRoundHealthEffect() {
-        return -0.05
-    }
-}
-
-export class ChillEffect extends BaseEffect {
-    getSpeedTerm() {
-        return -1
-    }
-
-    getInitiativeMultiplier() {
-        return 0.8
-    }
-}
-
-export class ConfusionEffect extends BaseEffect {
-
-    getInitiativeMultiplier() {
-        return 0.8
-    }
-}
-
-export class CurseEffect extends BaseEffect {
-
-    getMaxHealthMultiplier() {
-        return 0.9
-    }
-}
-
-export class DefenseEffect extends BaseEffect {
-    getDefenseMultiplier() {
-        return 1.1
-    }
-
-    getInitiativeMultiplier() {
-        return 1.2
-    }
-}
-
-export class EmpowerEffect extends BaseEffect {
-    getAttackMultiplier() {
-        return 1.3
-    }
-}
-
-export class FearEffect extends BaseEffect {
-    getAttackMultiplier() {
-        return 0.85
-    }
-}
-
-export class HasteEffect extends BaseEffect {
-    getSpeedTerm() {
-        return 2
-    }
-}
-
-export class LuckEffect extends BaseEffect {
-    // делает разброс урона 0 - +15% вместо +/-15% (см CombatHandler.getAttackDamage())
-    getCritChanceTerm() {
-        return 0.15
-    }
-}
-
-export class MadnessEffect extends BaseEffect {
-    getAttackMultiplier() {
-        return 1.2
-    }
-
-    getDefenseMultiplier() {
-        return 0.85
-    }
-
-    getRoundHealthEffect() {
-        return -0.1
-    }
-}
-
-export class PoisonEffect extends BaseEffect {
-
-    getRoundHealthEffect() {
-        return -0.07
-    }
-}
-
-export class RegenEffect extends BaseEffect {
-
-    getRoundHealthEffect() {
-        return 0.05
-    }
-}
-
-export class ThornsEffect extends BaseEffect {
-    getBackDamage() {
-        return 0.2
-    }
-}
-
-export class FreezeEffect extends BaseEffect {
-    getRoundEffect() {
-        return 'Пропуск хода'
-    }
-}
-
-export class TauntEffect extends BaseEffect { //TODO taunt (провокация, принуждение атаковать)
-}
-
-export class KnockbackEffect extends BaseEffect { //TODO knockback (отбрасывание
-}
-
-export class CleanseEffect extends BaseEffect { //TODO cleanse (очищение дебафов
+    },
 }

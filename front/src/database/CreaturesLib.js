@@ -1,4 +1,4 @@
-import {Creature, CreatureAction} from "../game/classes/battle/Creature.js";
+import {createCreature, createCreatureAction} from "../game/classes/battle/Creature.js";
 
 const lib = [
     {
@@ -41,7 +41,7 @@ const lib = [
         ]
         ,
         effects: [
-            BaseEffect.getEffectObject({effect: 'burn', duration: 10}),
+            {effect: 'burn', duration: 10},
         ]
     },
     // ]
@@ -257,7 +257,6 @@ let idIndex = 1;
 
 import creatures from './creatures.json';
 import creaturesActions from './creature-actions.json';
-import {BaseEffect} from "../game/classes/battle/Effects/BaseEffect.js";
 import {MediumAI} from "../game/classes/battle/AI/MediumAI.js";
 import {EasyAI} from "../game/classes/battle/AI/EasyAI.js";
 
@@ -284,7 +283,7 @@ for (const creaturesAction of creaturesActions) {
 export function getTeam(direction, control, positions) {
     const result = []
     lib.forEach((config, i) => {
-        const creature = new Creature(getCreature(config.element, 'beast', config.role, 2))
+        const creature = createCreature(getCreature(config.element, 'beast', config.role, 2))
         creature.id += direction === 'left' ? 100 : 0
         creature.actions = creature.actions.map(action => {
             if (action.effects) {
@@ -294,7 +293,7 @@ export function getTeam(direction, control, positions) {
                     }
                 }
             }
-            return new CreatureAction(action)
+            return createCreatureAction(action)
         })
         creature.direction = direction
         creature.control = control
@@ -309,7 +308,7 @@ export function getTeam(direction, control, positions) {
 export function getTeam2(direction, control, creatures) {
     const result = []
     creatures.forEach((config, i) => {
-        const creature = new Creature(config)
+        const creature = createCreature(config)
         creature.id += direction === 'left' ? 100 : 0
         creature.actions = creature.actions.map(action => {
             if (action.effects) {
@@ -319,7 +318,7 @@ export function getTeam2(direction, control, creatures) {
                     }
                 }
             }
-            return new CreatureAction(action)
+            return createCreatureAction(action)
         })
         creature.direction = direction
         creature.control = control
@@ -333,6 +332,7 @@ export function getCreature(element, form, role, level) {
     // нужно копирование, иначе при повторении существ, будет один объект
     const creature = Object.assign({}, creaturesLib[element + '-' + form + '-' + role]);
     creature.name = element + '/' + form + '/' + role
+    creature.level = level
     const actions = [
         ...creatureActionsLib[element + '-' + form + '-' + role],
         ...creatureActionsLib['-' + '-' + role],
@@ -715,10 +715,10 @@ export function testEffects(effect, chanceEffect, duration) {
     tank2.id = 4
 
     if (Math.random() < chanceEffect) {
-        tank1.effects = [BaseEffect.getEffectObject({
+        tank1.effects = [{
             "effect": effect,
             "duration": duration
-        })]
+        }]
     }
     
     // tank1.actions[0].effects = [{

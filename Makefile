@@ -106,6 +106,10 @@ tail-logs:
 	cd ./docker \
 	&& docker compose -f $(DOCKER_F) logs -f
 
+node-logs:
+	cd ./docker \
+	&& docker compose -f $(DOCKER_F) logs -f node
+
 openapi-gen:
 	cd ./docker \
 	&& $(ARTISAN) openapi:generate > ../docs/swagger.json

@@ -1,3 +1,5 @@
+import {CreatureAPI} from "./Creature.js";
+
 export class QueueController {
     constructor(creatures) {
         this.creatures = creatures
@@ -20,8 +22,8 @@ export class QueueController {
 
         // Сортируем по инициативе (с учетом бафов/дебафов)
         aliveCreatures.sort((a, b) => {
-            const aInitiative = a.getInitiative();
-            const bInitiative = b.getInitiative();
+            const aInitiative = CreatureAPI.getInitiative(a);
+            const bInitiative = CreatureAPI.getInitiative(b);
 
             if (aInitiative === bInitiative) {
                 // В случае ничьи - случайный выбор

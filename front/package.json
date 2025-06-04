@@ -27,14 +27,18 @@
         "build-nolog": "vite build --config vite/config.prod.mjs"
     },
     "dependencies": {
+        "@quasar/extras": "^1.17.0",
         "easystarjs": "^0.4.4",
         "phaser": "^3.88.2",
         "pinia": "^3.0.2",
+        "quasar": "^2.18.1",
         "vue": "3.5.13",
         "vue-router": "^4.5.1"
     },
     "devDependencies": {
+        "@quasar/vite-plugin": "^1.9.0",
         "@vitejs/plugin-vue": "^5.2.2",
+        "sass-embedded": "^1.89.1",
         "terser": "^5.31.0",
         "vite": "^6.3.1"
     }

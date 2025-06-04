@@ -1,4 +1,5 @@
 import Monster1 from "./Monster1.js";
+import {CreatureAPI} from "../../classes/battle/Creature.js";
 
 export default class MonsterContainer extends Phaser.GameObjects.Container {
     creatureSprite
@@ -28,7 +29,7 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
         this.creatureText = scene.add.text(
             0,
             12,
-            creature.name + "\n" + Math.ceil(creature.health) + "/" + creature.getMaxHealth(),
+            creature.name + "\n" + Math.ceil(creature.health) + "/" + CreatureAPI.getMaxHealth(creature),
             {
                 fontFamily: "arial",
                 fontSize: "11px",
@@ -48,7 +49,7 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
     }
 
     updateVisual() {
-        this.creatureText.setText(this.creature.name + "\n" + this.creature.health + "/" + this.creature.getMaxHealth());
+        this.creatureText.setText(this.creature.name + "\n" + this.creature.health + "/" + CreatureAPI.getMaxHealth(this.creature));
     }
 
     // Можно добавить метод для обновления позиции или логики
