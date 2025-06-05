@@ -49,6 +49,7 @@ export const useBattleStore = defineStore('battle', {
         battleMap: undefined,
         activeCreature: undefined,
         availableActions: [],
+        selectedActionId: undefined
     }),
     getters: {},
     actions: {
@@ -125,7 +126,6 @@ export const useBattleStore = defineStore('battle', {
                     }
 
                     if (creature.health <= 0) {
-                        availableActions.p
                         return
                     }
 
@@ -164,6 +164,12 @@ export const useBattleStore = defineStore('battle', {
 
                 }
             })
+            
+            if (this.availableActions.length > 0) {
+                this.selectedActionId = this.activeCreature.actions.filter(a => {
+                                    return a.pp <= this.activeCreature.pp && a.currentCooldown === 0
+                                })[0]?.id
+            }
         },
         handleEngineTurn(engine) {
             const activeCreature = this.activeCreature
@@ -648,5 +654,8 @@ export const useBattleStore = defineStore('battle', {
             }
 
         },
+        selectAction(actionId) {
+            this.selectedActionId = actionId
+        }
     },
 });

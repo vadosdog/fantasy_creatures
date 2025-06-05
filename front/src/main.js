@@ -4,13 +4,14 @@ import {createMemoryHistory, createRouter} from "vue-router";
 import routes from "./router/routes.js";
 import {createPinia} from 'pinia';
 import {
+    ClosePopup,
     QAvatar, QBadge,
     QBtn,
     QCard, QCardActions,
-    QCardSection,
+    QCardSection, QDialog,
     QDrawer,
     QFooter,
-    QHeader, QIcon, QImg,
+    QHeader, QIcon, QImg, QKnob,
     QLayout, QLinearProgress, QPageContainer,
     QRouteTab, QSeparator, QSpace, QTab,
     QTabs,
@@ -69,7 +70,10 @@ app.use(Quasar, {
         QLinearProgress,
         QTab,
         QSeparator,
-    }
+        QKnob,
+        QDialog,
+    },
+    directives: { ClosePopup },
 })
 
 

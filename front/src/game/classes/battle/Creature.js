@@ -32,8 +32,11 @@ export function createCreature(config) {
 
 export function createCreatureAction(config) {
     return {
+        id: config.id,
         name: config.name,
         element: config.element,
+        form: config.form,
+        role: config.role,
         baseDamage: config.baseDamage,
         hitChance: config.hitChance,
         critChance: config.critChance,

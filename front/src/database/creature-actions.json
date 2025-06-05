@@ -159,8 +159,8 @@
         "critChance": 0,
         "effects": [
             {
-                "effect": "defense",
-                "chance": 0.9,
+                "effect": "aegis",
+                "chance": 1,
                 "duration": 2
             }
         ],

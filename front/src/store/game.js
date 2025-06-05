@@ -2,7 +2,7 @@ import {defineStore} from 'pinia';
 import {BattleMap} from "../game/classes/battle/BattleMap.js";
 
 export const useGameStore = defineStore('game', {
-    state: () => ({}),
+    state: () => ({scene: undefined}),
     getters: {},
     actions: {
         load() {

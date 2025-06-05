@@ -296,7 +296,7 @@ export class Battle extends Scene {
                 })
                 return
             }
-            if (this.selectedAction.action.name !== actionObject.name) {
+            if (this.selectedAction.action.id !== actionObject.id) {
                 return
             }
 
@@ -308,13 +308,14 @@ export class Battle extends Scene {
     }
 
     handleHexagonClick(position, hexagonSprite, args) {
+        console.log('click')
         if (this.store.battleState !== BATTLE_STATE_PLAYER_TURN || this.delayTurnModelOpened) {
             return
         }
 
         const targets = new Map
         this.store.availableActions.forEach((action) => {
-            if (action.action !== 'move' && this.selectedAction.action.name !== action.actionObject.name) {
+            if (action.action !== 'move' && this.selectedAction.action.id !== action.actionObject.id) {
                 return
             }
             action.targets.forEach(target => {
@@ -715,26 +716,12 @@ export class Battle extends Scene {
             });
 
             buttonBg.on('pointerdown', () => {
-                // Сбрасываем предыдущую активную кнопку
-                if (this.selectedAction) {
-                    this.selectedAction.buttonBg.setFillStyle(0x3e5a4d);
-                    this.selectedAction.isActive = false;
-                }
-
-                // Устанавливаем новую активную кнопку
-                this.selectedAction = buttonContainer;
-                buttonContainer.isActive = true;
-                buttonBg.setFillStyle(0x7a9a8d); // Цвет активной кнопки
-
-                this.markActionAvailableHexs()
+                this.selectActionOutside(action.id)
             });
 
             // устанавливаем первой активность по умолчанию
             if (i === 0) {
-                // Устанавливаем новую активную кнопку
-                this.selectedAction = buttonContainer;
-                buttonContainer.isActive = true;
-                buttonBg.setFillStyle(0x7a9a8d); // Цвет активной кнопки
+                this.selectActionOutside(action.id)
             }
         });
 
@@ -791,6 +778,30 @@ export class Battle extends Scene {
                 this.showDelayTurnOptions()
             });
         }
+    }
+    
+    selectActionOutside(action) {
+        if (action === 'skip') {
+            return this.handleDefenseAction()
+        }
+        // Сбрасываем предыдущую активную кнопку
+        if (this.selectedAction) {
+            this.selectedAction.buttonBg.setFillStyle(0x3e5a4d);
+            this.selectedAction.isActive = false;
+        }
+
+        this.buttons.forEach(buttonContainer => {
+            if (!buttonContainer.action || buttonContainer.action.id !== action) {
+                return
+            }
+
+            // Устанавливаем новую активную кнопку
+            this.selectedAction = buttonContainer;
+            buttonContainer.isActive = true;
+            buttonContainer.buttonBg.setFillStyle(0x7a9a8d); // Цвет активной кнопки
+
+            this.markActionAvailableHexs()
+        })
     }
 
     hideButtons() {

@@ -268,7 +268,13 @@ creatures.forEach((creature, index) => {
     creaturesLib[creature.element + '-' + creature.form + '-' + creature.role] = creature
 })
 
-for (const creaturesAction of creaturesActions) {
+for (const actionIndex of creaturesActions.keys()) {
+    const creaturesAction = creaturesActions[actionIndex]
+    
+    // Убрать, когда появятся нормальные ид
+    if (!creaturesAction.id) {
+        creaturesAction.id = actionIndex + 100
+    }
     const key = creaturesAction.element + '-' + creaturesAction.form + '-' + creaturesAction.role
     if (!creatureActionsLib[key]) {
         creatureActionsLib[key] = []

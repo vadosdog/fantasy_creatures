@@ -19,7 +19,7 @@ const props = defineProps({
             level: 1
         },
         required: true
-    }
+    },
 })
 const maxHealth = computed(() => CreatureAPI.getMaxHealth(props.creature));
 const healthProgress = computed(() => props.creature?.health / (maxHealth.value || 1));
@@ -36,9 +36,8 @@ const healthColor = computed(() => {
     return healthColor
 })
 
-const roleIcon = computed(() => {
-
-    switch (props.creature?.role) {
+function getRoleIcon(role) {
+    switch (role) {
         case 'tank':
             return 'shield'
         case 'dd':
@@ -47,11 +46,11 @@ const roleIcon = computed(() => {
             return 'emergency'
     }
 
-    return 'favorite'
-})
+    return undefined
+}
 
-const formIcon = computed(() => {
-    switch (props.creature?.form) {
+function getFormIcon(form) {
+    switch (form) {
         case 'beast':
             return 'pets'
         case 'bird':
@@ -60,12 +59,12 @@ const formIcon = computed(() => {
             return 'smart_toy'
     }
 
-    return 'favorite'
-})
+    return undefined
+}
 
-const elementIcon = computed(() => {
+function getElementIcon(element) {
     const elementIcon = {icon: '', color: ''}
-    switch (props.creature?.element) {
+    switch (element) {
         case 'fire':
             elementIcon.icon = 'whatshot'
             elementIcon.color = 'red-9'
@@ -79,7 +78,17 @@ const elementIcon = computed(() => {
             elementIcon.color = 'green-9'
             break;
     }
+
     return elementIcon
+}
+const roleIcon = computed(() => {
+    return getRoleIcon(props.creature?.role) || 'favorite'
+})
+const formIcon = computed(() => {
+    return getFormIcon(props.creature?.form) || 'favorite'
+})
+const elementIcon = computed(() => {
+    return getElementIcon(props.creature?.element)
 })
 
 function getEffectIcon(effect) {
@@ -152,7 +161,6 @@ const attackStat = computed(() => {
 const defenseStat = computed(() => {
     const value = CreatureAPI.getDefense(props.creature)
     const multiplier = compare(value, props.creature.defenseStat)
-    console.log(value, props.creature.defenseStat)
     return {
         value,
         multiplier,
@@ -179,15 +187,6 @@ const initiativeStat = computed(() => {
 })
 
 const safeCreature = ref(true)
-
-function getActionIcon(action)
-{
-    if (action.range === 0) {
-        return '🛡️'
-    }
-    
-    return {"melee": '🗡️', 'ranged': '🏹', 'treat': '❤'}[action.actionType]
-}
 
 
 </script>
@@ -238,29 +237,6 @@ function getActionIcon(action)
             · 🛡️ <span :class="defenseStat.color">{{ defenseStat.value }}</span>
             · ✨ <span :class="willStat.color">{{ willStat.value }}</span>
             · 💡 <span :class="initiativeStat.color">{{ initiativeStat.value }}</span>
-        </q-card-section>
-    </q-card>
-    <q-card>
-        <q-card-section class="row">
-            <q-btn
-                v-for="action in creature.actions"
-                class="col-12 text-teal q-mb-sm"
-                no-caps
-                align="left"
-            >
-                <div class="col-12 text-left">{{ getActionIcon(action) }} ️{{ action.name }}</div>
-                <div class="col-12 text-left" v-if="action.range > 1">📏 {{ action.range }}</div>
-                <div class="col-12 text-left">PP: {{ action.pp }} <span v-if="action.cooldown > 0">CD: {{ action.cooldown }}</span></div>
-                <div class="col-12 text-left">🎯 {{ action.hitChance * 100 }}% <span v-if="action.critChance > 0">💢 {{ action.critChance * 100 }}%</span> 💥 {{ action.baseDamage }}</div>
-                <div class="col-12 text-left" v-if="action.effects.length">
-                    <q-separator />
-                    <div v-for="effect in action.effects">
-                        {{ getEffectIcon(effect).icon }} {{ effect.effect }} <span v-if="effect.duration > 1">x{{effect.duration}}</span> 🎲 {{ effect.chance * 100 }}%
-                    </div>
-                </div>
-            </q-btn>
-            <q-btn class="col-6 text-teal" label="Пропустить"/>
-            <q-btn class="col-6 text-teal" label="Защита"/>
         </q-card-section>
     </q-card>
 </template>
