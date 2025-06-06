@@ -147,7 +147,7 @@ export class BattleAutoTest extends Scene {
                 // Продолжаем бой
                 let {activeCreature, availableActions} = this.store.getTurn()
 
-                if (activeCreature.health > 0 && availableActions.length > 0) {
+                if (activeCreature && activeCreature.health > 0 && availableActions.length > 0) {
 
                     // Автоматический выбор действия для ИИ
                     const randomAction = availableActions[0];

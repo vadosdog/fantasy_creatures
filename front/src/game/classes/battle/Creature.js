@@ -167,6 +167,9 @@ export const CreatureAPI = {
     },
 
     removeRoundEffects(creature) {
+        if (!creature) {
+            return []
+        }
         const removedEffects = []
         creature.effects.forEach(effect => {
             effect.duration--
