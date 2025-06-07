@@ -125,13 +125,13 @@ export const CreatureAPI = {
         const existsEffect = creature.effects.find(({effect}) => effectConfig.effect === effect)
         if (existsEffect) {
             existsEffect.duration += effectConfig.duration
-            return ['Увеличен эффект ' + effectConfig.effect + ` на ${this.name} (${this.id})`]
+            return true
         }
 
         // TODO добавить невосприимчивость к некоторым эфектам
         creature.effects.push(effect)
 
-        return ['Наложен эффект ' + effectConfig.effect + ` на ${this.name} (${this.id})`]
+        return true
     },
 
 
@@ -172,6 +172,9 @@ export const CreatureAPI = {
         }
         const removedEffects = []
         creature.effects.forEach(effect => {
+            if (!effect) {
+                console.error('Почему-то нет effect', creature.effects)
+            }
             effect.duration--
 
             if (effect.duration === 0) {
@@ -204,5 +207,20 @@ export const CreatureAPI = {
                 action.currentCooldown--
             }
         })
+    },
+
+    getSimpleObject(creature) {
+        return {
+            control: creature.control,
+            direction: creature.direction,
+            element: creature.element,
+            form: creature.form,
+            role: creature.role,
+            health: creature.health,
+            id: creature.id,
+            name: creature.name,
+            position: creature.position,
+            texture: creature.texture,
+        }
     }
 }

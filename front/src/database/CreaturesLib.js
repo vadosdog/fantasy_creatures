@@ -304,7 +304,7 @@ export function getTeam(direction, control, positions) {
         creature.direction = direction
         creature.control = control
         creature.position = positions[i]
-        // creature.pushEffect({effect: 'freeze', duration: 1})
+        // creature.pushEffect({effect: 'burn', duration: 1})
         result.push(creature)
     })
 

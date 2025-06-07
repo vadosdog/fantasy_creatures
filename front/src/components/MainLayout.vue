@@ -85,9 +85,7 @@ const toggleRightDrawer = () => {
         </q-page-container>
 
         <q-footer elevated class="bg-grey-8 text-white">
-            <q-toolbar>
-                <component :is="currentFooterComponent"/>
-            </q-toolbar>
+            <component :is="currentFooterComponent"/>
         </q-footer>
 
     </q-layout>

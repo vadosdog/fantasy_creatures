@@ -6,12 +6,15 @@ import {
     testTeam
 } from "../database/CreaturesLib.js";
 import {CreatureAPI} from "../game/classes/battle/Creature.js";
+import {useBattleLogStore} from "./battleLog.js";
 
 export const BATTLE_STATE_PLAYER_TURN = 'PLAYER_TURN'
 export const BATTLE_STATE_ENGINE_TURN = 'ENGINE_TURN'
 export const BATTLE_STATE_WAITING = 'WAITING'
 export const BATTLE_STATE_BATTLE_OVER_WIN = 'BATTLE_OVER_WIN'
 export const BATTLE_STATE_BATTLE_OVER_LOSE = 'BATTLE_OVER_LOSE'
+
+const battleLog = useBattleLogStore()
 
 export const useBattleStore = defineStore('battle', {
     state: () => ({
@@ -21,7 +24,6 @@ export const useBattleStore = defineStore('battle', {
         gridSizeY: 11,
         queue: null,
         round: 0,
-        battleLog: [],
         speedAnims: 1,
         creatures: [
             // ...testElementTeam('fire', 2, 'left', player1),
@@ -54,7 +56,6 @@ export const useBattleStore = defineStore('battle', {
     getters: {},
     actions: {
         load() {
-            // this.resetBattle(testEffects())
             this.resetBattle([
                 ...testTeam(2, 'left', 'player'),
                 ...testTeam(2, 'right', 'player')
@@ -64,7 +65,7 @@ export const useBattleStore = defineStore('battle', {
             this.$reset();
 
             this.round = 0
-            this.battleLog = []
+            battleLog.resetLog()
             this.creatures = creatures
 
             this.leftTeam = []
@@ -164,11 +165,11 @@ export const useBattleStore = defineStore('battle', {
 
                 }
             })
-            
+
             if (this.availableActions.length > 0) {
                 this.selectedActionId = this.activeCreature.actions.filter(a => {
-                                    return a.pp <= this.activeCreature.pp && a.currentCooldown === 0
-                                })[0]?.id
+                    return a.pp <= this.activeCreature.pp && a.currentCooldown === 0
+                })[0]?.id
             }
         },
         handleEngineTurn(engine) {
@@ -240,7 +241,14 @@ export const useBattleStore = defineStore('battle', {
             this.battleState = battleState
         },
         endTurn(isDelayTurn = false) {
-            CreatureAPI.removeRoundEffects(this.activeCreature).forEach(effect => this.recordLog(effect.effect + ' перестал действовать на ' + this.activeCreature.name))
+            const removedRoundEffects = CreatureAPI.removeRoundEffects(this.activeCreature)
+            for (const effect of removedRoundEffects) {
+                this.recordLog({
+                    type: 'endOfEffect',
+                    effect,
+                    target: CreatureAPI.getSimpleObject(this.activeCreature),
+                })
+            }
             this.queue.endTurn(isDelayTurn)
             if (this.checkBattleOver()) {
                 return true
@@ -277,7 +285,13 @@ export const useBattleStore = defineStore('battle', {
 
             const creatureId = this.activeCreature.id
             const effects = CreatureAPI.applyRoundEffects(this.activeCreature)
-            this.recordLog(effects.map(effect => this.activeCreature.name + ' HP ' + effect.damage + ' (' + effect.effect + ')'))
+            for (const effect of effects) {
+                this.recordLog({
+                    type: 'roundEffect',
+                    effect,
+                    target: CreatureAPI.getSimpleObject(this.activeCreature),
+                })
+            }
 
             if (this.activeCreature.health <= 0) {
                 this.activeCreature.health = 0
@@ -417,7 +431,11 @@ export const useBattleStore = defineStore('battle', {
             this.battleMap.removeContent(...this.activeCreature.position)
             this.activeCreature.position = path[path.length - 1]
             this.battleMap.setContent(...path[path.length - 1], this.activeCreature)
-            this.recordLog('Перемещение в ' + path[path.length - 1].join(','))
+            this.recordLog({
+                type: 'move',
+                actor: CreatureAPI.getSimpleObject(this.activeCreature),
+                newPosition: path[path.length - 1],
+            })
         },
         playerActionAttack(targetPosition, attack) {
             // Добавьте проверку в начале метода
@@ -427,7 +445,7 @@ export const useBattleStore = defineStore('battle', {
             }
 
             const result = {
-                attack: attack.name,
+                attack: attack,
                 success: false,
                 damage: 0,
                 potentialDamage: 0,
@@ -491,16 +509,12 @@ export const useBattleStore = defineStore('battle', {
 
             result.health = defender.health;
 
-            let logText = `Атака ${defender.name} (${defender.id}) ${attack.name}: `
-            if (result.success) {
-                logText += 'Урон: ' + result.damage
-                if (result.isCrit) {
-                    logText += ' КРИТ!'
-                }
-            } else {
-                logText += 'Промах'
-            }
-            this.recordLog(logText)
+            this.recordLog({
+                ...result,
+                type: 'attack',
+                actor: CreatureAPI.getSimpleObject(attacker),
+                target: CreatureAPI.getSimpleObject(defender)
+            })
 
             if (!result.success) {
                 return result
@@ -518,7 +532,14 @@ export const useBattleStore = defineStore('battle', {
                     result.effects.push(effect.effect)
                 }
 
-                this.recordLog(CreatureAPI.pushEffect(effectTarget, effect))
+                const pushEffect = CreatureAPI.pushEffect(effectTarget, effect)
+                if (pushEffect) {
+                    this.recordLog({
+                        type: 'pushEffect',
+                        effect,
+                        target: CreatureAPI.getSimpleObject(effectTarget),
+                    })
+                }
             })
 
             // Проверка обратных эффектов шипов и вампиризма
@@ -544,7 +565,7 @@ export const useBattleStore = defineStore('battle', {
         },
         playerActionTreat(targetPosition, action) {
             const result = {
-                attack: action.name,
+                attack: action,
                 success: false,
                 damage: 0,
                 health: 0,
@@ -590,16 +611,12 @@ export const useBattleStore = defineStore('battle', {
             result.health = treated.health;
 
 
-            let logText = `Лечение союзника ${treated.name} (${treated.id}) ${action.name}: `
-            if (result.success) {
-                logText += 'Лечение: ' + result.damage
-                if (result.isCrit) {
-                    logText += ' КРИТ!'
-                }
-            } else {
-                logText += 'Промах'
-            }
-            this.recordLog(logText);
+            this.recordLog({
+                ...result,
+                type: 'treat',
+                actor: CreatureAPI.getSimpleObject(treater),
+                target: CreatureAPI.getSimpleObject(treated)
+            });
 
             // накладываем эфекты
             (action.effects || []).forEach(effect => {
@@ -617,7 +634,14 @@ export const useBattleStore = defineStore('battle', {
                     result.effects.push(effect.effect)
                 }
 
-                this.recordLog(CreatureAPI.pushEffect(effectTarget, effect))
+                const pushEffect = CreatureAPI.pushEffect(effectTarget, effect)
+                if (pushEffect) {
+                    this.recordLog({
+                        type: 'pushEffect',
+                        effect,
+                        target: CreatureAPI.getSimpleObject(effectTarget),
+                    })
+                }
             })
 
             if (result.damage > 0) {
@@ -632,27 +656,27 @@ export const useBattleStore = defineStore('battle', {
             return this.playerActionAttack(targetPosition, action)
         },
         playerActionDefense() {
-            this.recordLog(CreatureAPI.pushEffect(this.activeCreature, {effect: 'defense', duration: 2}))
+            this.recordLog({
+                type: 'defense',
+                actor: CreatureAPI.getSimpleObject(this.activeCreature),
+            })
         },
         playerActionDelayedTurn(afterCreature) {
             this.queue.handleDelayedTurn(afterCreature)
-            this.recordLog(CreatureAPI.pushEffect(this.activeCreature, {effect: 'confusion', duration: 3}))
+            this.recordLog({
+                type: 'delayTurn',
+                actor: CreatureAPI.getSimpleObject(this.activeCreature),
+            })
+
         },
         getCreatureByCoords(position) {
             return this.battleMap.get(position.join(','))?.content
         },
         recordLog(log) {
-            if (typeof log === 'string') {
-                log = [log]
-            }
             const round = this.queue.round
             const turn = this.queue.currentTurnIndex + 1
-            const activeCreature = this.activeCreature
 
-            for (const text of log) {
-                this.battleLog.push(`[ROUND: ${round}, TURN: ${turn}][Command: ${activeCreature?.direction || 'none'}, Creature: ${activeCreature?.name || 'unknown'}]: ${text}`);
-            }
-
+            battleLog.recordLog(round, turn, log)
         },
         selectAction(actionId) {
             this.selectedActionId = actionId

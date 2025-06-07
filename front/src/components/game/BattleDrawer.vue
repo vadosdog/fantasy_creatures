@@ -4,6 +4,7 @@ import CreatureCard from "./CreatureCard.vue";
 import {computed, ref} from "vue";
 import {useBattleStore} from "../../store/battle.js";
 import {useGlobalStore} from "../../store/global.js";
+import EffectSpan from "./EffectSpan.vue";
 
 const battleStore = useBattleStore()
 const globalStore = useGlobalStore()
@@ -12,46 +13,6 @@ const activeCreature = computed(() => battleStore.activeCreature)
 const selectedActionId = computed(() => {
     return battleStore.selectedActionId
 })
-
-function getEffectIcon(effect) { //TODO унести в какое нибудь единое место
-    const icon = {
-        // Бафы
-        'empower': '💪',
-        'haste': '⚡',
-        'luck': '🍀',
-        'regen': '💚',
-        'thorns': '🌵',
-        'aegis': '🛡️',
-        'defense': '🛡️', // можно какой-то другой
-
-        // Дебафы
-        'poison': '☠️',
-        'bleed': '💉',
-        'burn': '🔥',
-        'freeze': '🥶',
-        'chill': '❄️',
-        'blind': '👁️‍🗨️',
-        'curse': '📛',
-        'madness': '🤪',
-        'fear': '😱',
-        'confusion': '😖' // нужно какой-то другой
-    }[effect.effect] || ''
-    const text = icon + ' ' + effect.duration
-
-    let color = 'negative'
-    if (
-        // Бафы
-        ['empower',
-            'haste',
-            'luck',
-            'regen',
-            'thorns',
-            'aegis',
-            'defense',].some(e => e === effect.effect)) {
-        color = 'positive'
-    }
-    return {...effect, text, icon, color}
-}
 
 
 function getActionTypeIcon(action) {
@@ -228,7 +189,7 @@ function closeDialog() {
                 <div class="col-12 text-left" v-if="action.effects.length">
                     <q-separator/>
                     <div v-for="effect in action.effects">
-                        {{ getEffectIcon(effect).icon }} {{ effect.effect }} <span
+                        <EffectSpan :effect="effect"/> <span
                         v-if="effect.duration > 1">x{{ effect.duration }}</span> 🎲 {{ effect.chance * 100 }}%
                     </div>
                 </div>
