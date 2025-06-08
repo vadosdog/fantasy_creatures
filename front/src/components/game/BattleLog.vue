@@ -4,202 +4,110 @@ import {useBattleLogStore} from "../../store/battleLog.js";
 import EffectSpan from "./EffectSpan.vue";
 
 const battleLogStore = useBattleLogStore()
-
 const battleLog = computed(() => battleLogStore.battleLog)
+
+function getColorClass(creature) {
+    if (!creature) return '';
+    return creature.direction === 'right' ? 'text-positive' : 'text-negative';
+}
 </script>
 
 <template>
     <q-timeline color="secondary" v-if="battleLog">
         <q-timeline-entry
             v-for="log in battleLog"
-            :subtitle="`Раунд ${log.round}. Ход ${log.turn}`"
+            :key="`${log.round}-${log.turn}`"
+            :subtitle="`Раунд ${log.round} · Ход ${log.turn}`"
         >
-            <div v-for="record in log.log">
+            <div v-for="(record, idx) in log.log" :key="idx">
+                -
+                <!-- Эффекты -->
                 <template v-if="record.type === 'pushEffect'">
-                    Наложен эффект
-                    <EffectSpan :effect="record.effect" v-if="record.effect"/>
-                    на
-                    <span :class="{
-                                'text-positive': record.target.direction === 'right',
-                                'text-negative': record.target.direction === 'left',
-                            }">
-                                {{ record.target.name || 'Unknown' }}
-                            </span>
+                    <span :class="getColorClass(record.target)">{{ record.target.name }}</span>
+                    получает эффект: <EffectSpan :effect="record.effect"/>
                 </template>
-                <template v-if="record.type === 'endOfEffect'">
-                    Эффект
-                    <EffectSpan :effect="record.effect" v-if="record.effect"/>
-                    перестал действовать на
-                    <span :class="{
-                                'text-positive': record.target.direction === 'right',
-                                'text-negative': record.target.direction === 'left',
-                            }">
-                                {{ record.target.name || 'Unknown' }}
-                            </span>
+
+                <template v-else-if="record.type === 'endOfEffect'">
+                    Эффект <EffectSpan :effect="record.effect"/>
+                    спадает с <span :class="getColorClass(record.target)">{{ record.target.name }}</span>
                 </template>
-                <template v-if="record.type === 'roundEffect'">
-                    Эффект
-                    <EffectSpan :effect="{effect: record.effect.type}" v-if="record.effect"/>
-                    <span :class="{
-                                'text-positive': record.effect.damage > 0,
-                                'text-negative': record.effect.damage < 0,
-                            }" class="q-ml-xs q-mr-xs"
-                    >
-                                {{ record.effect.damage }}
-                            </span>
-                    <span :class="{
-                                'text-positive': record.target.direction === 'right',
-                                'text-negative': record.target.direction === 'left',
-                            }">
-                                {{ record.target.name || 'Unknown' }}
-                            </span>
+
+                <template v-else-if="record.type === 'roundEffect'">
+                    <span :class="getColorClass(record.target)">{{ record.target.name }}</span>
+                    <span v-if="record.effect.damage < 0" class="text-negative">
+                        теряет {{ -record.effect.damage }} HP
+                    </span>
+                    <span v-else class="text-positive">
+                        восстанавливает {{ record.effect.damage }} HP
+                    </span>
+                    (<EffectSpan :effect="{effect: record.effect.type}"/>)
                 </template>
-                <template v-if="record.type === 'attack'">
-                    <span :class="{
-                                'text-positive': record.actor.direction === 'right',
-                                'text-negative': record.actor.direction === 'left',
-                            }">
-                                {{ record.actor.name || 'Unknown' }}
-                            </span>
-                    {{ record.attack.name }} на
-                    <span :class="{
-                                'text-positive': record.target.direction === 'right',
-                                'text-negative': record.target.direction === 'left',
-                            }">
-                                {{ record.target.name || 'Unknown' }}
-                            </span>
+
+                <!-- Атаки -->
+                <template v-else-if="record.type === 'attack'">
+                    <span :class="getColorClass(record.actor)">{{ record.actor.name }}</span>
+                    применяет <span class="text-weight-bold">«{{ record.attack.name }}»</span> на
+                    <span :class="getColorClass(record.target)">{{ record.target.name }}</span>
+
                     <template v-if="record.success">
-                        <span v-if="record.isCrit" class="text-negative">💢 Критический удар!</span>
-                        <span class="text-negative">💥 {{ -record.damage }} HP</span>
+                        <span v-if="record.isCrit" class="text-negative"> · КРИТ!</span>
+                        <span class="text-negative"> · Урон: {{ -record.damage }}</span>
                     </template>
-                    <span v-else class="text-negative">Промах!</span>
+                    <span v-else class="text-italic"> · Промах</span>
                 </template>
-                <template v-if="record.type === 'defense'">
-                    <span :class="{
-                                'text-positive': record.actor.direction === 'right',
-                                'text-negative': record.actor.direction === 'left',
-                            }">
-                                {{ record.actor.name || 'Unknown' }}
-                            </span>
-                    <QIcon name="shield" class="q-ml-xs"/> Защищается
-                </template>
-                <template v-if="record.type === 'treat'">
-                    <span :class="{
-                                'text-positive': record.actor.direction === 'right',
-                                'text-negative': record.actor.direction === 'left',
-                            }">
-                                {{ record.actor.name || 'Unknown' }}
-                            </span>
-                    {{ record.attack.name }} на
-                    <span :class="{
-                                'text-positive': record.target.direction === 'right',
-                                'text-negative': record.target.direction === 'left',
-                            }">
-                                {{ record.target.name || 'Unknown' }}
-                            </span>
+
+                <!-- Лечение -->
+                <template v-else-if="record.type === 'treat'">
+                    <span :class="getColorClass(record.actor)">{{ record.actor.name }}</span>
+                    применяет <span class="text-positive text-weight-bold">«{{ record.attack.name }}»</span> на
+                    <span :class="getColorClass(record.target)">{{ record.target.name }}</span>
+
                     <template v-if="record.success">
-                        <span v-if="record.isCrit" class="text-negative">💢 Критических успех!</span>
-                        <span class="text-positive"><QIcon name="emergency" class="q-ml-xs"/> +{{ record.damage }} HP</span>
+                        <span v-if="record.isCrit" class="text-positive"> · КРИТ!</span>
+                        <span class="text-positive"> · +{{ record.damage }} HP</span>
                     </template>
-                    <span v-else class="text-negative">Промах!</span>
+                    <span v-else class="text-italic"> · Неудача</span>
                 </template>
-                <template v-if="record.type === 'defense'">
-                    <span :class="{
-                                'text-positive': record.actor.direction === 'right',
-                                'text-negative': record.actor.direction === 'left',
-                            }">
-                                {{ record.actor.name || 'Unknown' }}
-                            </span>
-                    <QIcon name="shield" class="q-ml-xs"/> Защищается
+
+                <!-- Действия -->
+                <template v-else-if="record.type === 'defense'">
+                    <span :class="getColorClass(record.actor)">{{ record.actor.name }}</span>
+                    <span class="text-warning"> концентрируется на защите</span>
                 </template>
-                <template v-if="record.type === 'delayTurn'">
-                    <span :class="{
-                                'text-positive': record.actor.direction === 'right',
-                                'text-negative': record.actor.direction === 'left',
-                            }">
-                                {{ record.actor.name || 'Unknown' }}
-                            </span>
-                    <QIcon name="fast_forward" class="q-ml-xs"/> Отложил ход
+
+                <template v-else-if="record.type === 'delayTurn'">
+                    <span :class="getColorClass(record.actor)">{{ record.actor.name }}</span>
+                    <span class="text-info"> откладывает ход</span>
                 </template>
-                <template v-if="record.type === 'move'">
-                    <span :class="{
-                                'text-positive': record.actor.direction === 'right',
-                                'text-negative': record.actor.direction === 'left',
-                            }">
-                                {{ record.actor.name || 'Unknown' }}
-                            </span>
-                    <QIcon name="fast_forward" class="q-ml-xs"/> Перемещение
+
+                <template v-else-if="record.type === 'move'">
+                    <span :class="getColorClass(record.actor)">{{ record.actor.name }}</span>
+                    <span class="text-info"> перемещается</span>
+                </template>
+                <!-- Выбывание из боя -->
+                <template v-else-if="record.type === 'defeated'">
+                    <span :class="getColorClass(record.target)">{{ record.target.name }}</span>
+                    <span class="text-negative text-weight-bold"> не может продолжать бой!</span>
                 </template>
             </div>
         </q-timeline-entry>
-        <!--                <q-timeline-entry-->
-        <!--                    subtitle="February 22, 1986"-->
-        <!--                >-->
-        <!--                    <div>-->
-        <!--                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.-->
-        <!--                    </div>-->
-        <!--                </q-timeline-entry>-->
-
-        <!--                <q-timeline-entry-->
-        <!--                    title="Event Title"-->
-        <!--                    subtitle="February 21, 1986"-->
-        <!--                    icon="delete"-->
-        <!--                >-->
-        <!--                    <div>-->
-        <!--                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.-->
-        <!--                    </div>-->
-        <!--                </q-timeline-entry>-->
-
-        <!--                <q-timeline-entry-->
-        <!--                    title="Event Title"-->
-        <!--                    subtitle="February 22, 1986"-->
-        <!--                    avatar="https://cdn.quasar.dev/img/avatar2.jpg"-->
-        <!--                >-->
-        <!--                    <div>-->
-        <!--                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.-->
-        <!--                    </div>-->
-        <!--                </q-timeline-entry>-->
-
-        <!--                <q-timeline-entry-->
-        <!--                    title="Event Title"-->
-        <!--                    subtitle="February 22, 1986"-->
-        <!--                >-->
-        <!--                    <div>-->
-        <!--                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.-->
-        <!--                    </div>-->
-        <!--                </q-timeline-entry>-->
-
-        <!--                <q-timeline-entry-->
-        <!--                    title="Event Title"-->
-        <!--                    subtitle="February 22, 1986"-->
-        <!--                    color="orange"-->
-        <!--                    icon="done_all"-->
-        <!--                >-->
-        <!--                    <div>-->
-        <!--                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.-->
-        <!--                    </div>-->
-        <!--                </q-timeline-entry>-->
-
-        <!--                <q-timeline-entry-->
-        <!--                    title="Event Title"-->
-        <!--                    subtitle="February 22, 1986"-->
-        <!--                >-->
-        <!--                    <div>-->
-        <!--                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.-->
-        <!--                    </div>-->
-        <!--                </q-timeline-entry>-->
-
-        <!--                <q-timeline-entry-->
-        <!--                    title="Event Title"-->
-        <!--                    subtitle="February 22, 1986"-->
-        <!--                >-->
-        <!--                    <div>-->
-        <!--                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.-->
-        <!--                    </div>-->
-        <!--                </q-timeline-entry>-->
     </q-timeline>
 </template>
 
 <style scoped>
-/* При необходимости добавьте кастомные стили */
+.text-positive {
+    color: #4CAF50;
+}
+.text-negative {
+    color: #F44336;
+}
+.text-warning {
+    color: #FFC107;
+}
+.text-info {
+    color: #29B6F6;
+}
+.text-italic {
+    font-style: italic;
+}
 </style>

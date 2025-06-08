@@ -2,9 +2,7 @@ import {defineStore} from 'pinia';
 import {BattleMap} from "../game/classes/battle/BattleMap.js";
 import {QueueController} from "../game/classes/battle/QueueController.js";
 import {CombatHandler} from "../game/classes/battle/CombatHandler.js";
-import {
-    testTeam
-} from "../database/CreaturesLib.js";
+import {testTeam} from "../database/CreaturesLib.js";
 import {CreatureAPI} from "../game/classes/battle/Creature.js";
 import {useBattleLogStore} from "./battleLog.js";
 
@@ -296,11 +294,8 @@ export const useBattleStore = defineStore('battle', {
             if (this.activeCreature.health <= 0) {
                 this.activeCreature.health = 0
                 // гомосятина переделать
-                let targetIndex = this.creatures.findIndex(c => c === this.activeCreature)
-                this.creatures = this.creatures.filter(c => c.id !== creatureId);
-                this.battleMap.removeContent(...this.activeCreature.position)
-                targetIndex = this.creatures.findIndex(c => c === this.activeCreature)
-                this.round = targetIndex
+                this.creatureDefeated(this.activeCreature)
+                this.round = this.creatures.findIndex(c => c === this.activeCreature)
                 this.activeCreature = undefined
             } else {
                 CreatureAPI.roundRestorePP(this.activeCreature)
@@ -311,6 +306,14 @@ export const useBattleStore = defineStore('battle', {
                 availableActions: this.availableActions,
                 effects: effects,
             }
+        },
+        creatureDefeated(creature) {
+            this.creatures = this.creatures.filter(c => c.id !== creature.id);
+            this.battleMap.removeContent(...creature.position)
+            this.recordLog({
+                target: CreatureAPI.getSimpleObject(creature),
+                type: 'defeated'
+            });
         },
         getMoveablePositions(activeCreature) {
             let start = activeCreature.position
@@ -497,24 +500,19 @@ export const useBattleStore = defineStore('battle', {
             }
 
 
-            if (defender.health <= 0) {
-                defender.health = 0
-                // гомосятина переделать
-                let targetIndex = this.creatures.findIndex(c => c === defender)
-                this.creatures.splice(targetIndex, 1)
-                this.battleMap.removeContent(...defender.position)
-                targetIndex = this.creatures.findIndex(c => c === this.activeCreature)
-                // this.round = targetIndex
-            }
-
-            result.health = defender.health;
-
             this.recordLog({
                 ...result,
                 type: 'attack',
                 actor: CreatureAPI.getSimpleObject(attacker),
                 target: CreatureAPI.getSimpleObject(defender)
             })
+
+            if (defender.health <= 0) {
+                defender.health = 0
+                this.creatureDefeated(defender)
+            }
+
+            result.health = defender.health;
 
             if (!result.success) {
                 return result
@@ -553,10 +551,7 @@ export const useBattleStore = defineStore('battle', {
                     if (attacker.health <= 0) {
                         attacker.health = 0
                         // гомосятина переделать
-                        let targetIndex = this.creatures.findIndex(c => c === attacker)
-                        this.creatures.splice(targetIndex, 1)
-                        this.battleMap.removeContent(...attacker.position)
-                        targetIndex = this.creatures.findIndex(c => c === this.activeCreature)
+                        this.creatureDefeated(attacker)
                     }
                 }
             }
