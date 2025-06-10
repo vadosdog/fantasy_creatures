@@ -134,23 +134,27 @@ defineExpose({game});
 </script>
 
 <template>
-    <div id="game-container" :class="{ 'block-events': globalStore.dialogVisible }"></div>
+    <q-page>
+        <div id="game-container" :class="{ 'block-events': globalStore.dialogVisible }"></div>
+    </q-page>
 </template>
 
 <style scoped>
-.block-events {
-    pointer-events: none;
+#game-wrapper {
     position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    max-height: 100vh;
 }
 
-.block-events::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-    background: transparent;
+#game-container {
+    width: 100%;
+    height: 100%;
+    max-height: calc(100vh - 282px);;
+}
+
+.block-events {
+    pointer-events: none;
 }
 </style>

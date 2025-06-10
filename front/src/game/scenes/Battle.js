@@ -41,6 +41,15 @@ export class Battle extends Scene {
     }
 
     create() {
+        this.cameras.main.setBounds(0, 0, 1024, 800);
+        this.physics.world.setBounds(0, 0, 1024, 800);
+
+        // Центрируйте камеру на поле боя
+        this.cameras.main.centerOn(512, 400);
+
+        // Обработчик изменения размера
+        this.scale.on('resize', this.resize, this);
+
         this.store.load()
 
         this.createAnims()
@@ -49,8 +58,27 @@ export class Battle extends Scene {
         //
         this.handleStep()
 
+        // Вызов resize после создания
+        this.resize(this.scale.gameSize);
+
         EventBus.emit('current-scene-ready', this);
     }
+
+    resize(gameSize) {
+        if (!gameSize) return;
+
+        // Рассчитайте масштаб для вписывания
+        const scale = Math.min(
+            gameSize.width / 1024,
+            gameSize.height / 800
+        );
+
+        // Примените масштаб
+        this.cameras.main.setZoom(scale);
+        this.cameras.main.centerOn(gameSize.width / 2, gameSize.height / 2);
+    }
+
+
 
     createAnims() {
         this.anims.create({
@@ -88,40 +116,20 @@ export class Battle extends Scene {
     }
 
     createBackground() {
-        let scaleX = 1
-        let scaleY = 1
-        let scale = 1
-        // Battleground
-        let battleground = this.add.image(
-            this.cameras.main.width / 2,
-            this.cameras.main.height / 2,
-            'battle-background-1-battleground'
-        );
-        scaleX = this.cameras.main.width / battleground.width
-        scaleY = this.cameras.main.height / battleground.height
-        scale = Math.max(scaleX, scaleY)
-        battleground.setScale(scale).setScrollFactor(0)
+        let battleground = this.add.image(512, 400, 'battle-background-1-battleground');
+        battleground.setDisplaySize(1024, 800);
 
-        // Back land
-
-        // Battleground
-        let backLand = this.add.image(
-            this.cameras.main.width / 2,
-            this.cameras.main.height / 3,
-            'battle-background-1-back_land'
-        );
-        scaleX = this.cameras.main.width / backLand.width
-        scaleY = this.cameras.main.height / backLand.height / 2
-        scale = Math.max(scaleX, scaleY)
-        backLand.setScale(scale).setScrollFactor(0)
+        let backLand = this.add.image(512, 400, 'battle-background-1-back_land');
+        const scale = 1024 / backLand.width;
+        backLand.setScale(scale);
     }
 
     createBattleField() {
         // Рамки в которые вписывается поле
         let startX = 50
         let startY = 200
-        let endX = this.cameras.main.width - startX // одинаково от краев
-        let endY = this.cameras.main.height - 50 // снизу не также как сверху
+        let endX = 1024 - startX // одинаково от краев
+        let endY = 800 - 50 // снизу не также как сверху
 
         // Размер ячеек по горизонтали зависит от количества, которое необходимо вписать
         // Если количество ячеек четное, то учитывается, что последняя идет со смещением в пол радиуса
@@ -158,7 +166,7 @@ export class Battle extends Scene {
 
             let scaleX = hexagonWidth / (hexagon.width)
             let scaleY = hexagonHeight / (hexagon.height)
-            hexagon.setScale(scaleX, scaleY).setScrollFactor(0)
+            hexagon.setScale(scaleX, scaleY)
 
             if (this.showGridIndexes) {
                 let hexagonText = this.add.text(hexagonX - hexagonWidth / 4, hexagonY, posX + "," + posY);
@@ -658,12 +666,15 @@ export class Battle extends Scene {
             if (action.element) {
                 actionType += ' (' + action.element + ')'
             }
-            
+
             const reload = action.currentCooldown > 0
             const notEnoughtPP = action.pp > this.store.activeCreature.pp
 
             const buttonTexts = [
-                this.add.text(20, 20, action.name + (reload > 0 ? ' Reload' + action.currentCooldown : ''), {fontFamily: "arial", fontSize: "14px"}).setOrigin(0, 0),
+                this.add.text(20, 20, action.name + (reload > 0 ? ' Reload' + action.currentCooldown : ''), {
+                    fontFamily: "arial",
+                    fontSize: "14px"
+                }).setOrigin(0, 0),
 
                 this.add.text(20, 40, actionType, {
                     fontFamily: "arial",
@@ -779,7 +790,7 @@ export class Battle extends Scene {
             });
         }
     }
-    
+
     selectActionOutside(action) {
         if (action === 'skip') {
             return this.handleDefenseAction()

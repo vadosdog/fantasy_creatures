@@ -44,7 +44,7 @@ export class CraftGameCrucibleOfSouls extends Scene {
         scaleX = this.cameras.main.width / battleground.width
         scaleY = this.cameras.main.height / battleground.height
         scale = Math.max(scaleX, scaleY)
-        battleground.setScale(scale).setScrollFactor(0)
+        battleground.setScale(scale)
     }
 
     createGameElements() {

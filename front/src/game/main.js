@@ -10,14 +10,16 @@ import {Preloader} from './scenes/Preloader';
 // import {ExplorationLevel} from "./scenes/ExplorationLevel";
 import EasyStar from 'easystarjs';
 
+console.log(window.innerHeight)
+console.log(window.innerWidth)
 
 const StartGame = (parent) => {
     // Find out more information about the Game Config at:
     // https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig
     const config = {
         type: Phaser.AUTO,
-        width: 1024,
-        height: 800,
+        width: '100%',  // Используем 100% контейнера
+        height: '100%', // Используем 100% контейнера
         physics: {
             default: 'arcade',
             arcade: {
@@ -46,7 +48,11 @@ const StartGame = (parent) => {
                     mapping: 'easystar'
                 }
             ]
-        }
+        },
+        scale: {
+            mode: Phaser.Scale.RESIZE,
+            autoCenter: Phaser.Scale.CENTER_BOTH,
+        },
     }
     return new Phaser.Game({...config, parent});
 }

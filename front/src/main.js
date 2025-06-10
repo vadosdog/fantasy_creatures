@@ -12,7 +12,7 @@ import {
     QDrawer,
     QFooter,
     QHeader, QIcon, QImg, QKnob,
-    QLayout, QLinearProgress, QPageContainer,
+    QLayout, QLinearProgress, QPage, QPageContainer,
     QRouteTab, QScrollArea, QSeparator, QSpace, QTab,
     QTabs, QTimeline, QTimelineEntry,
     QToolbar,
@@ -75,6 +75,7 @@ app.use(Quasar, {
         QScrollArea,
         QTimeline,
         QTimelineEntry,
+        QPage,
     },
     directives: {ClosePopup},
 })

@@ -39,9 +39,9 @@ const toggleRightDrawer = () => {
 }
 </script>
 <template>
-    <q-layout view="hhh lpR lfr">
+    <q-layout view="hHh LpR fFr">
 
-        <q-header elevated class="bg-primary text-white">
+        <q-header elevated class="bg-primary text-white" :height-hint="50">
             <q-toolbar>
                 <!-- Логотип и название -->
                 <div class="row items-center no-wrap">
@@ -69,9 +69,14 @@ const toggleRightDrawer = () => {
             v-model="rightDrawerOpen"
             side="right"
             elevated
+            :width="300"
         >
             <component :is="currentRightDrawerContent"/>
         </q-drawer>
+
+        <q-footer elevated class="bg-grey-8 text-white">
+            <component :is="currentFooterComponent"/>
+        </q-footer>
 
         <q-page-container>
             <router-view v-slot="{ Component }">
@@ -83,10 +88,6 @@ const toggleRightDrawer = () => {
                 />
             </router-view>
         </q-page-container>
-
-        <q-footer elevated class="bg-grey-8 text-white">
-            <component :is="currentFooterComponent"/>
-        </q-footer>
 
     </q-layout>
 </template>

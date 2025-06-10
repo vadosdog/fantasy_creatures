@@ -56,12 +56,12 @@ export class ExplorationLevel extends Phaser.Scene {
             20, 20,
             `Глубина: ${this.currentDepth}`,
             {font: '20px Arial', fill: '#ffffff'}
-        ).setScrollFactor(0);
+        );
 
         // Отображение глубины
         this.depthText = this.add.text(20, 20, `Глубина: ${this.currentDepth}`,
             {font: '20px Arial', fill: '#ffffff'}
-        ).setScrollFactor(0);
+        );
 
         // Создаем UI
         this.createUI();
@@ -833,7 +833,7 @@ export class ExplorationLevel extends Phaser.Scene {
     createUI() {
         this.goldText = this.add.text(20, 50, 'Золото: 0',
             {font: '18px Arial', fill: '#ffd700'}
-        ).setScrollFactor(0);
+        );
     }
 
     updateUI() {
