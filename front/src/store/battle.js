@@ -21,7 +21,6 @@ export const useBattleStore = defineStore('battle', {
         // Количество ячеек вертикально (каждый ряд)
         gridSizeY: 11,
         queue: null,
-        round: 0,
         speedAnims: 1,
         creatures: [
             // ...testElementTeam('fire', 2, 'left', player1),
@@ -49,7 +48,9 @@ export const useBattleStore = defineStore('battle', {
         battleMap: undefined,
         activeCreature: undefined,
         availableActions: [],
-        selectedActionId: undefined
+        selectedActionId: undefined,
+        queueData: [], // Добавляем для хранения данных очереди
+        activeCreatureId: null // ID текущего существа
     }),
     getters: {},
     actions: {
@@ -57,12 +58,13 @@ export const useBattleStore = defineStore('battle', {
             this.resetBattle([
                 ...testTeam(2, 'left', 'player'),
                 ...testTeam(2, 'right', 'player')
-            ])
+            ]);
+
+            this.updateQueueData(); // Инициализируем данные очереди
         },
         resetBattle(creatures) {
             this.$reset();
 
-            this.round = 0
             battleLog.resetLog()
             this.creatures = creatures
 
@@ -83,9 +85,11 @@ export const useBattleStore = defineStore('battle', {
                 }
             })
             this.battleMap = BattleMap.create(this.gridSizeX, this.gridSizeY, contents)
+            this.updateQueueData(); // Обновляем данные очереди
         },
         handleRound() {
             this.activeCreature = this.queue.currentCreature
+            this.updateQueueData(); // Обновляем при смене хода
 
             this.availableActions = []
             if (this.battleState === BATTLE_STATE_BATTLE_OVER_LOSE || this.battleState === BATTLE_STATE_BATTLE_OVER_WIN) {
@@ -251,7 +255,6 @@ export const useBattleStore = defineStore('battle', {
             if (this.checkBattleOver()) {
                 return true
             }
-            this.round++
             this.queue.nextTurn()
         },
         checkBattleOver() {
@@ -295,7 +298,6 @@ export const useBattleStore = defineStore('battle', {
                 this.activeCreature.health = 0
                 // гомосятина переделать
                 this.creatureDefeated(this.activeCreature)
-                this.round = this.creatures.findIndex(c => c === this.activeCreature)
                 this.activeCreature = undefined
             } else {
                 CreatureAPI.roundRestorePP(this.activeCreature)
@@ -675,6 +677,14 @@ export const useBattleStore = defineStore('battle', {
         },
         selectAction(actionId) {
             this.selectedActionId = actionId
-        }
+        },
+        
+        // Работа с очередью 
+        updateQueueData() {
+            if (this.queue) {
+                this.queueData = this.queue.getQueueData();
+                this.activeCreatureId = this.queue.currentCreature?.id || null;
+            }
+        },
     },
 });

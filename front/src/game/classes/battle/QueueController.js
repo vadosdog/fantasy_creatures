@@ -26,8 +26,16 @@ export class QueueController {
             const bInitiative = CreatureAPI.getInitiative(b);
 
             if (aInitiative === bInitiative) {
-                // В случае ничьи - случайный выбор
-                return Math.random() > 0.5 ? -1 : 1;
+                // В случае ничьи - в пользу игрока
+                if (a.direction !== b.direction) {
+                    return a.direction === 'left' ? 1 : -1
+                }
+                
+                // Или по ИД
+                return a.id - b.id
+                
+                // Старая логика, меняет постоянно существ с равной инициативой
+                // return a.direction !== b.direction ? -1 : 1;
             }
             return bInitiative - aInitiative;
         });
@@ -108,5 +116,21 @@ export class QueueController {
 
     canDelayTurn() {
         return this.delayActions[this.currentCreature.id] === undefined
+    }// ... существующий код ...
+
+    getQueueData() {
+        return this.turnQueue.map(creature => ({
+            id: creature.id,
+            name: creature.name,
+            texture: creature.texture,
+            health: creature.health,
+            maxHealth: creature.maxHealth || 100, // Добавляем если нет
+            pp: creature.pp || 0,
+            maxPP: creature.maxPP || 100,
+            buffs: creature.buffs || [],
+            debuffs: creature.debuffs || [],
+            direction: creature.direction,
+            isActive: creature.id === this.currentCreature?.id
+        }));
     }
 }

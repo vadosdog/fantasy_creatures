@@ -200,10 +200,11 @@ const safeCreature = ref(true)
                 <q-btn flat round color="accent" :icon="formIcon"/>
                 <q-btn flat color="dark">Lvl: {{ creature.level }}</q-btn>
             </q-card-actions>
-
             <q-img
+                :src="creature.texture ? '/assets/battle/creatures/' + creature.texture + '/stand.png' : 'https://img.league17.ru/pub/mnst/norm/full/502.png'"
+                :alt="creature.name"
                 class="col"
-                src="https://img.league17.ru/pub/mnst/norm/full/502.png"
+                :class="{mirror: creature.direction === 'left'}"
             />
 
             <q-card-actions vertical class="justify-around q-pa-xs" v-if="effectIcons.length">
@@ -242,4 +243,7 @@ const safeCreature = ref(true)
 </template>
 
 <style scoped>
+.mirror {
+    transform: scaleX(-1);
+}
 </style>

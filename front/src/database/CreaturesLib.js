@@ -311,11 +311,12 @@ export function getTeam(direction, control, positions) {
     return result
 }
 
+let id = 1
 export function getTeam2(direction, control, creatures) {
     const result = []
     creatures.forEach((config, i) => {
         const creature = createCreature(config)
-        creature.id += direction === 'left' ? 100 : 0
+        creature.id = id++
         creature.actions = creature.actions.map(action => {
             if (action.effects) {
                 for (const effect of action.effects) {
