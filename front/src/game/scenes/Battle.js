@@ -24,6 +24,7 @@ import {
 } from "../../store/battle.js";
 import {CreatureAPI} from "../classes/battle/Creature.js";
 
+
 export class Battle extends Scene {
     showGridIndexes = false
     hexagonGroup;
@@ -79,7 +80,6 @@ export class Battle extends Scene {
     }
 
 
-
     createAnims() {
         this.anims.create({
             key: HEXAGON_ANIM_NORMAL,
@@ -119,7 +119,9 @@ export class Battle extends Scene {
         let battleground = this.add.image(512, 400, 'battle-background-1-battleground');
         battleground.setDisplaySize(1024, 800);
 
-        let backLand = this.add.image(512, 400, 'battle-background-1-back_land');
+        let backLand = this.add.image(0, 0, 'battle-background-1-back_land')
+            .setOrigin(0, 0)
+            .setDisplaySize(this.cameras.main.width, this.cameras.main.height);
         const scale = 1024 / backLand.width;
         backLand.setScale(scale);
     }
@@ -202,7 +204,7 @@ export class Battle extends Scene {
             hexagonSprite.setHexState(HEX_STATE_NORMAL)
         })
         this.store.handleRound()
-        let {activeCreature, availableActions, effects} = this.store.getTurn()
+        let {activeCreature, availableActions, selectedActionId, effects} = this.store.getTurn()
         // показывает произошедшие эффекты в начале раунда
         const timeline = this.add.timeline({});
         timeline.add({
@@ -272,7 +274,7 @@ export class Battle extends Scene {
 
                 activeHexagonSprite.setHexState(HEX_STATE_SELECTED)
                 if (this.store.battleState === BATTLE_STATE_PLAYER_TURN) {
-                    this.showButtons()
+                    this.selectActionOutside(selectedActionId)
 
                     this.markActionAvailableHexs(false)
                 } else {
@@ -304,6 +306,11 @@ export class Battle extends Scene {
                 })
                 return
             }
+
+            if (!this.selectedAction) {
+                return
+            }
+
             if (this.selectedAction.action.id !== actionObject.id) {
                 return
             }
@@ -316,7 +323,6 @@ export class Battle extends Scene {
     }
 
     handleHexagonClick(position, hexagonSprite, args) {
-        console.log('click')
         if (this.store.battleState !== BATTLE_STATE_PLAYER_TURN || this.delayTurnModelOpened) {
             return
         }
@@ -644,17 +650,6 @@ export class Battle extends Scene {
     }
 
     showButtons() {
-        const activeCreatureText = this.add.text(
-            0,
-            -20,
-            this.store.activeCreature.name + ' PP ' + this.store.activeCreature.pp + '/' + CreatureAPI.getMaxPP(this.store.activeCreature),
-            {
-                fontFamily: "arial",
-                fontSize: "12px",
-                color: 'red',
-            }
-        )
-
         this.store.activeCreature.actions.forEach((action, i) => {
             // Создаем элементы кнопки
             const buttonBg = this.add.rectangle(0, 0, 200, 150, 0x3e5a4d)
@@ -729,11 +724,6 @@ export class Battle extends Scene {
             buttonBg.on('pointerdown', () => {
                 this.selectActionOutside(action.id)
             });
-
-            // устанавливаем первой активность по умолчанию
-            if (i === 0) {
-                this.selectActionOutside(action.id)
-            }
         });
 
         const defenseButtonBg = this.add.rectangle(0, 0, 120, 60, 0x3e5a4d)
@@ -791,37 +781,44 @@ export class Battle extends Scene {
         }
     }
 
-    selectActionOutside(action) {
-        if (action === 'skip') {
+    selectActionOutside(actionId) {
+        if (!actionId) {
+            console.error('123')
+        }
+        if (actionId === 'skip') {
             return this.handleDefenseAction()
         }
-        // Сбрасываем предыдущую активную кнопку
-        if (this.selectedAction) {
-            this.selectedAction.buttonBg.setFillStyle(0x3e5a4d);
-            this.selectedAction.isActive = false;
+        if (actionId === 'delay') {
+            return this.showDelayTurnOptions()
         }
 
-        this.buttons.forEach(buttonContainer => {
-            if (!buttonContainer.action || buttonContainer.action.id !== action) {
-                return
-            }
+        // Ищем действие по ID
+        const foundAction = this.store.activeCreature.actions.find(a => a.id === actionId);
+        if (!foundAction) return;
 
-            // Устанавливаем новую активную кнопку
-            this.selectedAction = buttonContainer;
-            buttonContainer.isActive = true;
-            buttonContainer.buttonBg.setFillStyle(0x7a9a8d); // Цвет активной кнопки
+        // Устанавливаем выбранное действие
+        this.selectedAction = {
+            action: foundAction
+        };
 
-            this.markActionAvailableHexs()
-        })
+        // Помечаем доступные гексы
+        this.markActionAvailableHexs();
+        return
     }
 
     hideButtons() {
-        this.buttons.forEach(button => {
-            button.buttonTexts.forEach(t => t.destroy())
-            button.buttonBg.destroy()
-            button.destroy()
-        })
-        this.buttons = []
+        // Очищаем только состояние гексов
+        this.hexagonsArray.forEach(hexagonSprite => {
+            if (
+                hexagonSprite.hexState === HEX_STATE_ATTACKABLE ||
+                hexagonSprite.hexState === HEX_STATE_TREATABLE
+            ) {
+                hexagonSprite.setHexState(HEX_STATE_NORMAL);
+            }
+        });
+
+        // Сбрасываем выбранное действие
+        this.selectedAction = null;
     }
 
     showDelayTurnOptions() {

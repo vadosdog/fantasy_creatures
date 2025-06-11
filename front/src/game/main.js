@@ -10,9 +10,6 @@ import {Preloader} from './scenes/Preloader';
 // import {ExplorationLevel} from "./scenes/ExplorationLevel";
 import EasyStar from 'easystarjs';
 
-console.log(window.innerHeight)
-console.log(window.innerWidth)
-
 const StartGame = (parent) => {
     // Find out more information about the Game Config at:
     // https://docs.phaser.io/api-documentation/typedef/types-core#gameconfig

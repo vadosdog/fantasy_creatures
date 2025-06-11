@@ -306,6 +306,7 @@ export const useBattleStore = defineStore('battle', {
             return {
                 activeCreature: this.activeCreature,
                 availableActions: this.availableActions,
+                selectedActionId: this.selectedActionId,
                 effects: effects,
             }
         },
