@@ -25,7 +25,7 @@ export default class Hexagon extends Phaser.GameObjects.Sprite {
     // Взаимодействие: normal, hovered, pressed
     interactionState = INTERACTION_STATE_NORMAL
 
-    constructor(scene, x, y) {
+    constructor(scene, x, y, posX, posY) {
         super(scene, x, y, "hexagon");
 
         // без этого отображаться не будет
@@ -37,6 +37,9 @@ export default class Hexagon extends Phaser.GameObjects.Sprite {
         this.on('pointerout', () => this.onOut());
         this.on('pointerdown', () => this.onClick());
         this.on('pointerup', () => this.onHover());
+        
+        this.posX = posX
+        this.posY = posY
     }
 
     setHexState(state) {

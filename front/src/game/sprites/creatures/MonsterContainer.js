@@ -1,5 +1,8 @@
 import Monster1 from "./Monster1.js";
 import {CreatureAPI} from "../../classes/battle/Creature.js";
+import {useGameStore} from "../../../store/game.js";
+
+const gameStore = useGameStore()
 
 export default class MonsterContainer extends Phaser.GameObjects.Container {
     creatureSprite
@@ -25,6 +28,16 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
         this.creatureSprite.setScale(1.7, 1.7)
         this.add(this.creatureSprite)
         this.creatureSprite.setDefaultState()
+        this.creatureSprite.setInteractive()
+
+        // Tooltips
+        //TODO добавить КЛИКАБЕЛЬНОСТЬ
+        this.creatureSprite.on('pointerover', () => {
+            gameStore.setHoveredCreature(creature.id)
+        })
+            .on('pointerout', () => {
+                gameStore.setHoveredCreature(null);
+            })
 
         this.creatureText = scene.add.text(
             0,

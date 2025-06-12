@@ -30,10 +30,10 @@ export class QueueController {
                 if (a.direction !== b.direction) {
                     return a.direction === 'left' ? 1 : -1
                 }
-                
+
                 // Или по ИД
                 return a.id - b.id
-                
+
                 // Старая логика, меняет постоянно существ с равной инициативой
                 // return a.direction !== b.direction ? -1 : 1;
             }
@@ -118,6 +118,11 @@ export class QueueController {
         return this.delayActions[this.currentCreature.id] === undefined
     }// ... существующий код ...
 
+    isBuff(effect) {
+        console.log(effect)
+        return ['empower', 'haste', 'luck', 'regen', 'thorns', 'aegis', 'defense'].includes(effect)
+    }
+
     getQueueData() {
         return this.turnQueue.map(creature => ({
             id: creature.id,
@@ -127,10 +132,20 @@ export class QueueController {
             maxHealth: creature.maxHealth || 100, // Добавляем если нет
             pp: creature.pp || 0,
             maxPP: creature.maxPP || 100,
-            buffs: creature.buffs || [],
-            debuffs: creature.debuffs || [],
+            effects: creature.effects,
+            buffs: creature.effects.filter(e => this.isBuff(e.effect)) || [],
+            debuffs: creature.effects.filter(e => !this.isBuff(e.effect)) || [],
             direction: creature.direction,
-            isActive: creature.id === this.currentCreature?.id
+            isActive: creature.id === this.currentCreature?.id,
+            attackStat: creature.attackStat,
+            defenseStat: creature.defenseStat,
+            willStat: creature.willStat,
+            initiativeStat: creature.initiativeStat,
+            maxHealthStat: creature.maxHealthStat,
+            level: creature.level,
+            role: creature.role,
+            form: creature.form,
+            element: creature.element,
         }));
     }
 }

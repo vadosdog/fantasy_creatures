@@ -16,7 +16,7 @@ import {
     QRouteTab, QScrollArea, QSeparator, QSpace, QTab,
     QTabs, QTimeline, QTimelineEntry,
     QToolbar,
-    QToolbarTitle,
+    QToolbarTitle, QTooltip,
     Quasar
 } from 'quasar'
 
@@ -76,6 +76,7 @@ app.use(Quasar, {
         QTimeline,
         QTimelineEntry,
         QPage,
+        QTooltip,
     },
     directives: {ClosePopup},
 })

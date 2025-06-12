@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onMounted, onUnmounted, ref, watch} from 'vue';
+import {computed, onMounted, onUnmounted, ref, watch, watchEffect} from 'vue';
 import {EventBus} from '../game/EventBus.js';
 import StartGame from '../game/main.js';
 import {useGameStore} from "../store/game.js";
@@ -130,31 +130,70 @@ function handlePointerEvent(event) {
     }
 }
 
-function cameraAction(action) {    try {
-    if (!game.value) return;
+function cameraAction(action) {
+    try {
+        if (!game.value) return;
 
-    // Получаем текущую сцену безопасным способом
-    const scene = gameStore.scene || (game.value.scene && game.value.scene.getScene('Battle'));
+        // Получаем текущую сцену безопасным способом
+        const scene = gameStore.scene || (game.value.scene && game.value.scene.getScene('Battle'));
 
-    if (scene && scene.scene && scene.scene.cameras) {
-        // Основной способ отключения ввода
-        console.log(scene.scene.cameras)
-        switch (action) {
-            case 'up': scene.scene.cameras.main.scrollY -= 50; break
-            case 'down': scene.scene.cameras.main.scrollY += 50; break
-            case 'left': scene.scene.cameras.main.scrollX -= 50; break
-            case 'right': scene.scene.cameras.main.scrollX += 50; break
-            case 'zoomIn': scene.scene.cameras.main.zoom += 0.1; break
-            case 'zoomOut': scene.scene.cameras.main.zoom = Math.max(0.1, scene.scene.cameras.main.zoom - 0.1); break
+        if (scene && scene.scene && scene.scene.cameras) {
+            // Основной способ отключения ввода
+            console.log(scene.scene.cameras)
+            switch (action) {
+                case 'up':
+                    scene.scene.cameras.main.scrollY -= 50;
+                    break
+                case 'down':
+                    scene.scene.cameras.main.scrollY += 50;
+                    break
+                case 'left':
+                    scene.scene.cameras.main.scrollX -= 50;
+                    break
+                case 'right':
+                    scene.scene.cameras.main.scrollX += 50;
+                    break
+                case 'zoomIn':
+                    scene.scene.cameras.main.zoom += 0.1;
+                    break
+                case 'zoomOut':
+                    scene.scene.cameras.main.zoom = Math.max(0.1, scene.scene.cameras.main.zoom - 0.1);
+                    break
+            }
         }
+    } catch (error) {
+        console.error('Error in dialogVisible watcher:', error);
     }
-} catch (error) {
-    console.error('Error in dialogVisible watcher:', error);
-}
 
 }
 
 defineExpose({game});
+
+// В основном Vue приложении или отдельном файле
+watchEffect(() => {
+    if (gameStore.tooltip.show) {
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.style.cssText = `
+      position: absolute;
+      background: #333;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      z-index: 10000;
+      top: ${gameStore.tooltip.position.y + 20}px;
+      left: ${gameStore.tooltip.position.x + 20}px;
+    `;
+        tooltip.textContent = gameStore.tooltip.text;
+        document.body.appendChild(tooltip);
+
+        setTimeout(() => {
+            if (document.body.contains(tooltip)) {
+                document.body.removeChild(tooltip);
+            }
+        }, 3000);
+    }
+});
 </script>
 
 <template>

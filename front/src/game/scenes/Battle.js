@@ -23,6 +23,10 @@ import {
     useBattleStore
 } from "../../store/battle.js";
 import {CreatureAPI} from "../classes/battle/Creature.js";
+import {watchEffect} from "vue";
+import {useGameStore} from "../../store/game.js";
+
+const gameStore = useGameStore()
 
 
 export class Battle extends Scene {
@@ -63,6 +67,15 @@ export class Battle extends Scene {
         this.resize(this.scale.gameSize);
 
         EventBus.emit('current-scene-ready', this);
+
+        watchEffect(() => {
+            const id = gameStore.hoveredCreatureId;
+            Object.entries(this.store.creatures).forEach(([key, creature]) => {
+                if (!creature.creatureSpriteContainer) return;
+
+                creature.creatureSpriteContainer.creatureSprite.setTint(creature.id === id ? 0xffff00 : 0xffffff);
+            });
+        });
     }
 
     resize(gameSize) {
@@ -157,7 +170,7 @@ export class Battle extends Scene {
                 + (hexagonHeight + hexagonT) * posX
 
 
-            let hexagon = new Hexagon(this, hexagonX, hexagonY)
+            let hexagon = new Hexagon(this, hexagonX, hexagonY, posX, posY)
             this.hexagonGroup.add(hexagon)
             this.hexagonsArray.set(`${posX},${posY}`, hexagon)
 
@@ -191,6 +204,11 @@ export class Battle extends Scene {
                     hexagon.x,
                     hexagon.y,
                 )
+
+                creature.creatureSpriteContainer.creatureSprite.on('pointerup', (...args) => {
+                    this.handleHexagonClick([hexagon.posX, hexagon.posY], hexagon, ...args)
+                });
+                
                 // this.store.creatures.add(creature)
                 creature.creatureSpriteContainer.updateEffectsIcons()
             }

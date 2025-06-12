@@ -1,11 +1,16 @@
 <script setup>
-import { ref, computed, watch, nextTick } from 'vue'
-import { useBattleStore } from "../../store/battle.js";
-import { QScrollArea, QIcon, QLinearProgress } from 'quasar'
+import {ref, computed, watch, nextTick} from 'vue'
+import {useBattleStore} from "../../store/battle.js";
+import {QScrollArea, QIcon, QLinearProgress, useQuasar} from 'quasar'
+import {useGameStore} from "../../store/game.js";
+import CreatureCard from "./CreatureCard.vue";
 
 const battleStore = useBattleStore();
+const gameStore = useGameStore()
 const queueData = computed(() => battleStore.queueData)
 const activeCreatureId = computed(() => battleStore.activeCreatureId)
+const hoveredCreatureId = computed(() => gameStore.hoveredCreatureId)
+const hoverTimer = ref(null);
 
 // Обновляем флаг isActive для существ
 const processedQueue = computed(() => {
@@ -61,7 +66,16 @@ const scrollToActiveCreature = async () => {
 watch(activeCreatureId, scrollToActiveCreature)
 
 // Инициализация при монтировании
-watch(processedQueue, scrollToActiveCreature, { immediate: true })
+watch(processedQueue, scrollToActiveCreature, {immediate: true})
+
+
+const hoverCreature = (creature) => {
+    gameStore.setHoveredCreature(creature.id);
+};
+
+const clearHoverCreature = () => {
+    gameStore.setHoveredCreature(null);
+};
 </script>
 
 <template>
@@ -83,13 +97,28 @@ watch(processedQueue, scrollToActiveCreature, { immediate: true })
                 class="creature-item"
                 :class="{
                     'active-creature': creature.isActive,
-                    'dead-creature': creature.health <= 0
+                    'dead-creature': creature.health <= 0,
+                    'bg-yellow-2': hoveredCreatureId === creature.id,
                 }"
                 :style="{
                     borderColor: borderColor(creature),
                     transform: `scale(${creature.isActive ? 1.15 : 1})`
                 }"
+
+                @mouseenter="hoverCreature(creature)"
+                @mouseleave="clearHoverCreature"
             >
+                <q-tooltip
+                    anchor="top middle"
+                    self="bottom middle"
+                    :offset="[10, 10]"
+                    :delay="1000"
+                >
+                    <CreatureCard
+                        :creature="creature"
+                        :key="creature.id"
+                    />
+                </q-tooltip>
                 <div class="creature-image-container">
                     <q-img
                         :src="creature.texture ? '/assets/battle/creatures/' + creature.texture + '/stand.png' : 'https://img.league17.ru/pub/mnst/norm/full/502.png'"
@@ -99,7 +128,7 @@ watch(processedQueue, scrollToActiveCreature, { immediate: true })
                     />
                     <div class="status-indicators">
                         <QIcon
-                            v-for="(buff, index) in creature.buffs"
+                            v-for="(buff, index) in creature.effects"
                             :key="'buff-' + index"
                             :name="buff.icon"
                             size="10px"
@@ -107,7 +136,7 @@ watch(processedQueue, scrollToActiveCreature, { immediate: true })
                             class="status-icon"
                         />
                         <QIcon
-                            v-for="(debuff, index) in creature.debuffs"
+                            v-for="(debuff, index) in creature.effects"
                             :key="'debuff-' + index"
                             :name="debuff.icon"
                             size="10px"

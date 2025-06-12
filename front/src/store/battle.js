@@ -670,6 +670,10 @@ export const useBattleStore = defineStore('battle', {
         getCreatureByCoords(position) {
             return this.battleMap.get(position.join(','))?.content
         },
+        getCreatureById(id) {
+            console.log(this.creatures)
+            return this.creatures.find(c => c.id = id)
+        },
         recordLog(log) {
             const round = this.queue.round
             const turn = this.queue.currentTurnIndex + 1
