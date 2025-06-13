@@ -1,0 +1,201 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Dark Fantasy Design System for Rune Shards */
+
+@layer base {
+    :root {
+        --background: 210 15% 3%;
+        --foreground: 300 20% 95%;
+
+        --card: 210 15% 8%;
+        --card-foreground: 300 20% 95%;
+
+        --popover: 210 15% 8%;
+        --popover-foreground: 300 20% 95%;
+
+        --primary: 280 100% 70%;
+        --primary-foreground: 210 15% 3%;
+
+        --secondary: 210 15% 12%;
+        --secondary-foreground: 300 20% 95%;
+
+        --muted: 210 15% 12%;
+        --muted-foreground: 300 10% 65%;
+
+        --accent: 200 100% 70%;
+        --accent-foreground: 210 15% 3%;
+
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 210 15% 15%;
+        --input: 210 15% 12%;
+        --ring: 280 100% 70%;
+
+        --radius: 0.75rem;
+    }
+}
+
+@layer utilities {
+    .gradient-primary-accent {
+        background-image: linear-gradient(
+            to right,
+            hsl(var(--primary)),
+            hsl(var(--accent)),
+            hsl(var(--primary))
+        );
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+        background:
+            radial-gradient(ellipse at 20% 50%, rgba(139, 69, 193, 0.15) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+            radial-gradient(ellipse at 40% 80%, rgba(139, 69, 193, 0.1) 0%, transparent 50%),
+            linear-gradient(135deg, #0a0b14 0%, #1a1b2e  50%, #16213e 100%);
+        min-height: 100vh;
+        background-attachment: fixed;
+    }
+}
+
+@layer components {
+    .gradient-text {
+        @apply bg-clip-text text-transparent gradient-primary-accent;
+        background-size: 200% 100%;
+        animation: gradient-shift 3s ease-in-out infinite;
+    }
+
+    .mystical-glow {
+        box-shadow:
+            0 0 20px rgba(139, 69, 193, 0.4),
+            0 0 40px rgba(59, 130, 246, 0.3),
+            0 0 60px rgba(139, 69, 193, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .mystical-glow:hover {
+        box-shadow:
+            0 0 30px rgba(139, 69, 193, 0.6),
+            0 0 60px rgba(59, 130, 246, 0.4),
+            0 0 90px rgba(139, 69, 193, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .shard-shimmer {
+        background: linear-gradient(45deg,
+        rgba(139, 69, 193, 0.05) 0%,
+        rgba(59, 130, 246, 0.1) 25%,
+        rgba(219, 39, 119, 0.05) 50%,
+        rgba(59, 130, 246, 0.1) 75%,
+        rgba(139, 69, 193, 0.05) 100%);
+        background-size: 400% 400%;
+        animation: shimmer 4s ease-in-out infinite;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(139, 69, 193, 0.2);
+    }
+
+    .atmospheric-bg {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .atmospheric-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+            radial-gradient(circle at 30% 30%, rgba(139, 69, 193, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 70% 70%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .content-layer {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-title {
+        font-size: clamp(3rem, 8vw, 8rem);
+        line-height: 0.9;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+    }
+
+    .section-divider {
+        height: 2px;
+        background: linear-gradient(90deg, transparent 0%, rgba(139, 69, 193, 0.5) 50%, transparent 100%);
+        margin: 4rem 0;
+    }
+
+    .hover-text-primary {
+        @apply text-primary;
+    }
+    .hover-text-primary:hover {
+        color: hsl(var(--primary));
+    }
+}
+
+@keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+@keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    25% { transform: translateY(-10px) rotate(1deg); }
+    50% { transform: translateY(-5px) rotate(0deg); }
+    75% { transform: translateY(-15px) rotate(-1deg); }
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(139, 69, 193, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(139, 69, 193, 0.6), 0 0 60px rgba(59, 130, 246, 0.3);
+    }
+}
+
+.float-animation {
+    animation: float 6s ease-in-out infinite;
+}
+
+.pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(139, 69, 193, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(139, 69, 193, 0.5), rgba(59, 130, 246, 0.5));
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(139, 69, 193, 0.8), rgba(59, 130, 246, 0.8));
+}

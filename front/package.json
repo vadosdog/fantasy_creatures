@@ -28,10 +28,12 @@
     },
     "dependencies": {
         "@quasar/extras": "^1.17.0",
+        "@tailwindcss/forms": "^0.5.10",
         "easystarjs": "^0.4.4",
         "phaser": "^3.88.2",
         "pinia": "^3.0.2",
         "quasar": "^2.18.1",
+        "tailwindcss-animate": "^1.0.7",
         "vue": "3.5.13",
         "vue-router": "^4.5.1"
     },
@@ -40,6 +42,7 @@
         "@vitejs/plugin-vue": "^5.2.2",
         "sass-embedded": "^1.89.1",
         "terser": "^5.31.0",
+        "unplugin-tailwindcss": "^0.0.9",
         "vite": "^6.3.1"
     }
 }

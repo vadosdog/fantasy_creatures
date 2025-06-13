@@ -1,7 +1,8 @@
 <script setup>
 import {ref, toRaw, shallowRef} from "vue";
 import {useGameStore} from "../store/game.js";
-import DefaultFooter from './DefaultFooter.vue'
+import DefaultFooter from './layout/DefaultFooter.vue';
+import DefaultHeader from './layout/DefaultHeader.vue';
 
 
 //  References to the PhaserGame component (game and scene are exposed)
@@ -41,25 +42,23 @@ const toggleRightDrawer = () => {
 <template>
     <q-layout view="hHh LpR fFr">
 
-        <q-header elevated class="bg-primary text-white" :height-hint="50">
+        <q-header elevated class="bg-primary text-white border-b border-solid border-primary/20" :height-hint="50">
             <q-toolbar>
-                <!-- Логотип и название -->
-                <div class="row items-center no-wrap">
-                    <q-avatar>
-                        <img src="/favicon-32x32.png">
-                    </q-avatar>
-                    <span class="q-ml-sm">Рунные осколки</span>
-                </div>
-
-                <!-- Табы - теперь в одной строке с лого -->
-                <q-tabs inline-label align="left" class="q-ml-md">
-                    <q-route-tab to="/" label="Home"/>
-                    <q-route-tab to="/game" label="Game"/>
-                </q-tabs>
+                <DefaultHeader/>
 
                 <!-- Кнопки справа -->
                 <q-space/> <!-- Заполняет доступное пространство -->
 
+                <QBtn
+                    v-if="!currentHeaderComponent"
+                    class="rounded mystical-glow hover:scale-105 transition-all duration-300"
+                      no-caps
+                      icon="play_arrow"
+                      color="primary"
+                      text-color="primary-foreground"
+                      label="Play Now"
+                      to="/game"
+                />
                 <component :is="currentHeaderComponent"/>
             </q-toolbar>
         </q-header>
@@ -74,7 +73,7 @@ const toggleRightDrawer = () => {
             <component :is="currentRightDrawerContent"/>
         </q-drawer>
 
-        <q-footer elevated class="bg-grey-8 text-white">
+        <q-footer elevated class="bg-transparent text-white">
             <component :is="currentFooterComponent"/>
         </q-footer>
 
@@ -93,5 +92,8 @@ const toggleRightDrawer = () => {
 </template>
 
 <style scoped>
-
+/* Убираем стандартный фон Quasar для header */
+.q-header {
+    background: transparent !important;
+}
 </style>
