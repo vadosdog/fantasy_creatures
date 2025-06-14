@@ -52,12 +52,12 @@ const toggleRightDrawer = () => {
                 <QBtn
                     v-if="!currentHeaderComponent"
                     class="rounded mystical-glow hover:scale-105 transition-all duration-300"
-                      no-caps
-                      icon="play_arrow"
-                      color="primary"
-                      text-color="primary-foreground"
-                      label="Play Now"
-                      to="/game"
+                    no-caps
+                    icon="play_arrow"
+                    color="primary"
+                    text-color="primary-foreground"
+                    label="Play Now"
+                    to="/game"
                 />
                 <component :is="currentHeaderComponent"/>
             </q-toolbar>
@@ -95,5 +95,6 @@ const toggleRightDrawer = () => {
 /* Убираем стандартный фон Quasar для header */
 .q-header {
     background: transparent !important;
+    min-height: 60px;
 }
 </style>

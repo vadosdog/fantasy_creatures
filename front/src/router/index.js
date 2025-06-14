@@ -5,4 +5,10 @@ import routes from './routes'
 export default  createRouter({
     history: createMemoryHistory(),
     routes,
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition;
+        }
+        return { left: 0, top: 0 };
+    },
 })
