@@ -31,6 +31,7 @@
         "@tailwindcss/forms": "^0.5.10",
         "easystarjs": "^0.4.4",
         "phaser": "^3.88.2",
+        "phaser3-rex-plugins": "^1.80.16",
         "pinia": "^3.0.2",
         "quasar": "^2.18.1",
         "tailwindcss-animate": "^1.0.7",

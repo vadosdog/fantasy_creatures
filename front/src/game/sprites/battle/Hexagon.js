@@ -1,6 +1,6 @@
 export const HEX_STATE_NORMAL = 'normal',
     HEX_STATE_INACTIVE = 'inactive',
-    HEX_STATE_MOVABLE = 'movable',
+    HEX_STATE_MOVEABLE = 'moveable',
     HEX_STATE_ATTACKABLE = 'attackable',
     HEX_STATE_TREATABLE = 'treat',
     HEX_STATE_SELECTED = 'selected'
@@ -69,7 +69,7 @@ export default class Hexagon extends Phaser.GameObjects.Sprite {
                     this.anims.play(HEXAGON_ANIM_YELLOW)
                     this.disableInteractive();
                     break
-                case HEX_STATE_MOVABLE:
+                case HEX_STATE_MOVEABLE:
                     this.anims.play(HEXAGON_ANIM_GREY)
                     break
                 case HEX_STATE_ATTACKABLE:
@@ -91,7 +91,7 @@ export default class Hexagon extends Phaser.GameObjects.Sprite {
                     this.anims.play(HEXAGON_ANIM_YELLOW)
                     this.disableInteractive();
                     break
-                case HEX_STATE_MOVABLE:
+                case HEX_STATE_MOVEABLE:
                     this.anims.play(HEXAGON_ANIM_LIGHT_YELLOW)
                     break
                 case HEX_STATE_ATTACKABLE:
@@ -113,7 +113,7 @@ export default class Hexagon extends Phaser.GameObjects.Sprite {
                     this.anims.play(HEXAGON_ANIM_YELLOW)
                     this.disableInteractive();
                     break
-                case HEX_STATE_MOVABLE:
+                case HEX_STATE_MOVEABLE:
                     this.anims.play(HEXAGON_ANIM_YELLOW)
                     break
                 case HEX_STATE_ATTACKABLE:

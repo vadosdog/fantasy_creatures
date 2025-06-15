@@ -2,7 +2,7 @@ import {EventBus} from '../EventBus';
 import {Scene} from 'phaser';
 import Hexagon, {
     HEX_STATE_ATTACKABLE,
-    HEX_STATE_MOVABLE,
+    HEX_STATE_MOVEABLE,
     HEX_STATE_NORMAL,
     HEX_STATE_SELECTED, HEX_STATE_TREATABLE,
     HEXAGON_ANIM_GREEN,
@@ -25,12 +25,13 @@ import {
 import {CreatureAPI} from "../classes/battle/Creature.js";
 import {watchEffect} from "vue";
 import {useGameStore} from "../../store/game.js";
+import {HexTile} from "../classes/battle/HexTile.js";
 
 const gameStore = useGameStore()
 
 
 export class Battle extends Scene {
-    showGridIndexes = false
+    showGridIndexes = true
     hexagonGroup;
     store
     hexagonsArray;
@@ -140,6 +141,7 @@ export class Battle extends Scene {
     }
 
     createBattleField() {
+        const hexGap = 2; // расстояние между гексами
         // Рамки в которые вписывается поле
         let startX = 50
         let startY = 200
@@ -158,7 +160,6 @@ export class Battle extends Scene {
         let hexagonHeight = hexagonWidth * 2 / Math.sqrt(3)
 
         this.hexagonGroup = this.add.group();
-
         this.store.battleMap.forEach((cell) => {
             let posX = cell.positionX
             let posY = cell.positionY
@@ -168,9 +169,10 @@ export class Battle extends Scene {
                 + (posY % 2 === 1 ? (hexagonT + (hexagonHeight - hexagonT) / 2) : 0)
                 // Каждый ряд смещается на высоту хекса + сторону
                 + (hexagonHeight + hexagonT) * posX
-
-
-            let hexagon = new Hexagon(this, hexagonX, hexagonY, posX, posY)
+            let hexagon = new HexTile(this, hexagonX, hexagonY, {
+                width: hexagonWidth,
+                orientation: 'pointy'
+            }, posX, posY)
             this.hexagonGroup.add(hexagon)
             this.hexagonsArray.set(`${posX},${posY}`, hexagon)
 
@@ -178,10 +180,6 @@ export class Battle extends Scene {
             hexagon.on('pointerup', (...args) => {
                 this.handleHexagonClick([posX, posY], hexagon, ...args)
             });
-
-            let scaleX = hexagonWidth / (hexagon.width)
-            let scaleY = hexagonHeight / (hexagon.height)
-            hexagon.setScale(scaleX, scaleY)
 
             if (this.showGridIndexes) {
                 let hexagonText = this.add.text(hexagonX - hexagonWidth / 4, hexagonY, posX + "," + posY);
@@ -208,7 +206,7 @@ export class Battle extends Scene {
                 creature.creatureSpriteContainer.creatureSprite.on('pointerup', (...args) => {
                     this.handleHexagonClick([hexagon.posX, hexagon.posY], hexagon, ...args)
                 });
-                
+
                 // this.store.creatures.add(creature)
                 creature.creatureSpriteContainer.updateEffectsIcons()
             }
@@ -320,7 +318,7 @@ export class Battle extends Scene {
             if (action === 'move') {
                 targets.forEach(([x, y]) => {
                     let hexagonSprite = this.hexagonsArray.get(`${x},${y}`)
-                    hexagonSprite.setHexState(HEX_STATE_MOVABLE)
+                    hexagonSprite.setHexState(HEX_STATE_MOVEABLE)
                 })
                 return
             }
