@@ -187,9 +187,9 @@ const linkCategories = [
                 <div class="max-w-6xl mx-auto">
                     <!-- Logo with enhanced glow -->
                     <div class="mb-12">
-                        <img src="/favicon-32x32.png"
+                        <img src="/Logo_transperent-Photoroom.png"
                              alt="Rune Shards Logo"
-                             class="w-40 h-40 mx-auto float-animation mystical-glow"/>
+                             class="w-40 h-40 mx-auto float-animation mystical-glow-transparent"/>
                     </div>
 
                     <!-- Main title -->

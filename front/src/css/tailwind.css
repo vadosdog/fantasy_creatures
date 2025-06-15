@@ -90,6 +90,22 @@
         transform: translateY(-2px);
     }
 
+    .mystical-glow-transparent {
+        filter:
+            drop-shadow(0 0 20px rgba(139, 69, 193, 0.4))
+            drop-shadow(0 0 40px rgba(59, 130, 246, 0.3))
+            drop-shadow(0 0 60px rgba(139, 69, 193, 0.2));
+        transition: all 0.3s ease;
+    }
+
+    .mystical-glow-transparent:hover {
+        filter:
+            drop-shadow(0 0 30px rgba(139, 69, 193, 0.6))
+            drop-shadow(0 0 60px rgba(59, 130, 246, 0.4))
+            drop-shadow(0 0 90px rgba(139, 69, 193, 0.3));
+        transform: translateY(-2px);
+    }
+
     .shard-shimmer {
         background: linear-gradient(45deg,
         rgba(139, 69, 193, 0.05) 0%,
