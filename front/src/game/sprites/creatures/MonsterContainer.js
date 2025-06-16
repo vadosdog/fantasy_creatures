@@ -28,7 +28,7 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
         this.creatureSprite.setScale(1.7, 1.7)
         this.add(this.creatureSprite)
         this.creatureSprite.setDefaultState()
-        this.creatureSprite.setInteractive()
+            this.creatureSprite.setInteractive({ pixelPerfect: true })
 
         // Tooltips
         //TODO добавить КЛИКАБЕЛЬНОСТЬ

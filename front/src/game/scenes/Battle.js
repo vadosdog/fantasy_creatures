@@ -204,7 +204,7 @@ export class Battle extends Scene {
                 )
 
                 creature.creatureSpriteContainer.creatureSprite.on('pointerup', (...args) => {
-                    this.handleHexagonClick([hexagon.posX, hexagon.posY], hexagon, ...args)
+                    this.handleHexagonClick(creature.position, hexagon, ...args)
                 });
 
                 // this.store.creatures.add(creature)
