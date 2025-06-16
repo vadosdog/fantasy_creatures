@@ -1,4 +1,9 @@
 export class HexTile extends Phaser.GameObjects.Container {
+    static PULSE_DURATION = 5000; // Общая длительность пульсации для всех гексов
+    static PULSE_X_MODIFIER = 150; // Смещение пульсации по горзонтали
+    static PULSE_Y_MODIFIER = 25; // Смещение пульсации по вертикали
+    static globalPulseStart = 0; // Глобальное время старта пульсации
+    
     constructor(scene, x, y, options = {}, posX, posY) {
         const {
             width = null,
@@ -56,6 +61,18 @@ export class HexTile extends Phaser.GameObjects.Container {
 
         // Применяем начальный стиль
         this.applyBaseStyle();
+
+        // Инициализация пульсации
+        this.isPulsating = false;
+        this.pulseBaseColor = null;
+        this.pulseGlowColor = null;
+        this.currentAlpha = 1;
+        this.borderColor = 0xffffff;
+
+        // Устанавливаем глобальное время старта при создании первого гекса
+        if (HexTile.globalPulseStart === 0) {
+            HexTile.globalPulseStart = scene.time.now;
+        }
     }    
     // Исправленный метод - теперь возвращает локальные координаты
     getHexPoints() {
@@ -93,6 +110,9 @@ export class HexTile extends Phaser.GameObjects.Container {
     }
 
     applyStateStyles() {
+        // Останавливаем любую активную пульсацию перед сменой состояния
+        this.stopSyncedPulse();
+
         switch (this.state) {
             case 'blocked':
             case 'normal':
@@ -122,7 +142,6 @@ export class HexTile extends Phaser.GameObjects.Container {
                 break;
         }
     }
-
     onHover(isOver) {
         if (isOver) {
             this.applyHoverEffect();
@@ -179,40 +198,42 @@ export class HexTile extends Phaser.GameObjects.Container {
         });
     }
     stopColorAnimation() {
-        if (this.colorTween) {
-            this.colorTween.stop();
-            this.colorTween = null;
+        this.isPulsating = false;
+        // Удаляем из списка обновления
+        this.scene.events.off('update', this.updatePulse, this);
+
+        if (this.glowBase) {
+            this.glowBase.clear();
         }
     }
 
     // —————————————————————
     // 🧩 Состояния
     // —————————————————————
-
     applyBlockedState() {
+        this.stopSyncedPulse();
         this.hexBase.clear();
         this.hexBase.fillStyle(0x0C1017, 0.7);
         this.hexBase.fillPoints(this.getHexPoints(), true);
         this.hexBase.lineStyle(2, 0x8B0000, 1);
         this.hexBase.strokePoints(this.getHexPoints(), true);
     }
-
     applyMoveableState() {
         this.currentAlpha = 0.4;
         this.borderColor = 0x3baaf6;
-        this.animateColor(0x192850, 0x3a60a0, 1000, -1);
+        this.startSyncedPulse(0x192850, 0x3a60a0);
     }
 
     applyActiveState() {
+        this.stopSyncedPulse();
         this.hexBase.clear();
         this.hexBase.fillStyle(0xC34FFC, 1);
         this.hexBase.fillPoints(this.getHexPoints(), true);
         this.hexBase.lineStyle(4, 0xC34FFC, 1);
         this.hexBase.strokePoints(this.getHexPoints(), true);
         this.hexBase.lineStyle(2, 0x66C7FF, 1);
-        this.hexBase.strokePoints(this.getHexPoints(), true, 0, 4); // Внешняя линия
+        this.hexBase.strokePoints(this.getHexPoints(), true, 0, 4);
 
-        // Частицы рун (пример)
         const rune = this.scene.add.sprite(0, -this.radius + 5, 'rune_texture');
         rune.setScale(0.5);
         this.overlay.add(rune);
@@ -226,13 +247,13 @@ export class HexTile extends Phaser.GameObjects.Container {
     }
 
     applyAllyUnbuffableState() {
+        this.stopSyncedPulse();
         this.hexBase.clear();
         this.hexBase.fillStyle(0x2A1E40, 1);
         this.hexBase.fillPoints(this.getHexPoints(), true);
         this.hexBase.lineStyle(2, 0x666666, 1);
         this.hexBase.strokePoints(this.getHexPoints(), true);
 
-        // Иконка щита с трещиной
         const shield = this.scene.add.sprite(0, 0, 'shield_cracked');
         shield.setAlpha(0.5);
         this.overlay.add(shield);
@@ -241,27 +262,23 @@ export class HexTile extends Phaser.GameObjects.Container {
     applyAllyBuffableState() {
         this.currentAlpha = 0.3;
         this.borderColor = 0x8B45C1;
-        this.animateColor(0xC34FFC, 0x9933FF, 700, -1);
-
-        const shield = this.scene.add.sprite(0, 0, 'shield_icon');
-        shield.setScale(0.5);
-        this.overlay.add(shield);
+        this.startSyncedPulse(0xC34FFC, 0x9933FF);
     }
 
     applyEnemyAttackableState() {
         this.currentAlpha = 0.4;
         this.borderColor = 0xF05050;
-        this.animateColor(0xF05050, 0xFF7070, 600, -1);
+        this.startSyncedPulse(0xF05050, 0xFF7070);
     }
 
     applyEnemyBlockedState() {
+        this.stopSyncedPulse();
         this.hexBase.clear();
         this.hexBase.fillStyle(0x400000, 0.6);
         this.hexBase.fillPoints(this.getHexPoints(), true);
         this.hexBase.lineStyle(2, 0x220000, 1);
         this.hexBase.strokePoints(this.getHexPoints(), true);
 
-        // Перечеркнутый меч (иконка)
         const sword = this.scene.add.sprite(0, 0, 'crossed_sword');
         sword.setAlpha(0.5);
         this.overlay.add(sword);
@@ -272,22 +289,133 @@ export class HexTile extends Phaser.GameObjects.Container {
     // —————————————————————
 
     applyHoverEffect() {
+        // Сохраняем текущее состояние пульсации
+        this.wasPulsating = this.isPulsating;
+        this.savedBaseColor = this.pulseBaseColor;
+        this.savedGlowColor = this.pulseGlowColor;
+        this.savedAlpha = this.currentAlpha;
+        this.savedBorder = this.borderColor;
+
+        // Останавливаем основную пульсацию
+        this.stopSyncedPulse();
+
+        // Применяем эффект ховера с синхронной пульсацией
         this.currentAlpha = 0.6;
         this.borderColor = 0x3baaf6;
-        this.animateColor(0x3a60a0, 0x5080c0, 1000, -1);
+        this.startSyncedPulse(0x3a60a0, 0x5080c0);
     }
 
     removeHoverEffect() {
-        this.stopColorAnimation();
-        this.setHexState(this.state); // Восстановить состояние
+        // Восстанавливаем исходное состояние
+        this.stopSyncedPulse();
+
+        if (this.wasPulsating) {
+            this.currentAlpha = this.savedAlpha;
+            this.borderColor = this.savedBorder;
+            this.startSyncedPulse(this.savedBaseColor, this.savedGlowColor);
+        } else {
+            // Если не было пульсации, просто восстанавливаем состояние
+            this.setHexState(this.state);
+        }
     }
 
     applyClickEffect() {
+        // Сохраняем текущее состояние
+        this.wasPulsating = this.isPulsating;
+        this.savedBaseColor = this.pulseBaseColor;
+        this.savedGlowColor = this.pulseGlowColor;
+        this.savedAlpha = this.currentAlpha;
+        this.savedBorder = this.borderColor;
+
+        // Останавливаем основную пульсацию
+        this.stopSyncedPulse();
+
+        // Быстрая анимация клика
         this.currentAlpha = 0.8;
         this.borderColor = 0x66C7FF;
-        this.animateColor(0x66C7FF, 0xffffff, 150, 0);
-        this.scene.time.delayedCall(150, () => {
-            this.setHexState(this.state);
+
+        // Создаем временную графику для клика
+        this.clickEffect = this.scene.add.graphics();
+        this.add(this.clickEffect);
+
+        this.clickEffect.fillStyle(0x66C7FF, 0.8);
+        this.clickEffect.fillPoints(this.getHexPoints(), true);
+        this.clickEffect.lineStyle(2, 0x66C7FF, 1);
+        this.clickEffect.strokePoints(this.getHexPoints(), true);
+
+        // Анимация исчезновения
+        this.scene.tweens.add({
+            targets: this.clickEffect,
+            alpha: 0,
+            duration: 150,
+            onComplete: () => {
+                // Восстанавливаем исходное состояние
+                if (this.clickEffect) {
+                    this.clickEffect.destroy();
+                    this.clickEffect = null;
+                }
+
+                if (this.wasPulsating) {
+                    this.currentAlpha = this.savedAlpha;
+                    this.borderColor = this.savedBorder;
+                    this.startSyncedPulse(this.savedBaseColor, this.savedGlowColor);
+                } else {
+                    this.setHexState(this.state);
+                }
+            }
         });
+    }
+
+    // —————————————————————
+    // 🎨 Синхронизированные методы анимации
+    // —————————————————————
+    startSyncedPulse(baseColor, glowColor) {
+        this.isPulsating = true;
+        this.pulseBaseColor = baseColor;
+        this.pulseGlowColor = glowColor;
+
+        // Создаем графику для свечения, если нужно
+        if (!this.glowBase) {
+            this.glowBase = this.scene.add.graphics();
+            this.add(this.glowBase);
+        }
+
+        // Добавляем в список обновления сцены
+        this.scene.events.on('update', this.updatePulse, this);
+    }
+
+    stopSyncedPulse() {
+        this.isPulsating = false;
+        // Удаляем из списка обновления
+        this.scene.events.off('update', this.updatePulse, this);
+
+        if (this.glowBase) {
+            this.glowBase.clear();
+        }
+    }
+
+    updatePulse() {
+        if (!this.isPulsating) return;
+
+        // Рассчитываем прогресс на основе глобального времени
+        const elapsed = this.scene.time.now - HexTile.globalPulseStart;
+        const progress = (elapsed % HexTile.PULSE_DURATION) / HexTile.PULSE_DURATION;
+        const alphaValue = Math.abs(Math.sin(progress * Math.PI * 2)) * 0.6;
+
+        // Основной цвет гекса
+        const baseRGB = Phaser.Display.Color.ValueToColor(this.pulseBaseColor);
+        const baseHex = Phaser.Display.Color.RGBToString(baseRGB.red, baseRGB.green, baseRGB.blue);
+
+        // Обновляем графику
+        this.hexBase.clear();
+        this.hexBase.fillStyle(parseInt(baseHex.replace('#', '0x'), 16), this.currentAlpha || 1);
+        this.hexBase.fillPoints(this.getHexPoints(), true);
+        this.hexBase.lineStyle(2, this.borderColor, 1);
+        this.hexBase.strokePoints(this.getHexPoints(), true);
+
+        // Свечение
+        this.glowBase.clear();
+        this.glowBase.fillStyle(this.pulseGlowColor, alphaValue);
+        this.glowBase.fillPoints(this.getHexPoints(), true);
     }
 }

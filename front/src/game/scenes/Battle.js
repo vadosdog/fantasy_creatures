@@ -799,7 +799,7 @@ export class Battle extends Scene {
 
     selectActionOutside(actionId) {
         if (!actionId) {
-            console.error('123')
+            return
         }
         if (actionId === 'skip') {
             return this.handleDefenseAction()
