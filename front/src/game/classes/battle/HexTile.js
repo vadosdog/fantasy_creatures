@@ -41,6 +41,7 @@ export class HexTile extends Phaser.GameObjects.Container {
         this.radius = radius;
         this.orientation = orientation;
         this.state = null;
+        this.hexPoints = this.getHexPoints();
 
         // Основа гекса
         this.hexBase = scene.add.graphics();
@@ -51,7 +52,7 @@ export class HexTile extends Phaser.GameObjects.Container {
         this.add(this.overlay);
 
         // События
-        this.setInteractive(new Phaser.Geom.Polygon(this.getHexPoints()), Phaser.Geom.Polygon.Contains);
+        this.setInteractive(new Phaser.Geom.Polygon(this.hexPoints), Phaser.Geom.Polygon.Contains);
         this.on('pointerover', () => this.onHover(true));
         this.on('pointerout', () => this.onHover(false));
         this.on('pointerdown', () => this.onClick());
@@ -68,6 +69,7 @@ export class HexTile extends Phaser.GameObjects.Container {
         this.pulseGlowColor = null;
         this.currentAlpha = 1;
         this.borderColor = 0xffffff;
+        this.isHover = false
 
         // Устанавливаем глобальное время старта при создании первого гекса
         if (HexTile.globalPulseStart === 0) {
@@ -104,9 +106,9 @@ export class HexTile extends Phaser.GameObjects.Container {
 
     applyBaseStyle() {
         this.hexBase.fillStyle(0x000000, 0);
-        this.hexBase.fillPoints(this.getHexPoints(), true);
+        this.hexBase.fillPoints(this.hexPoints, true);
         this.hexBase.lineStyle(2, 0xffffff, 1);
-        this.hexBase.strokePoints(this.getHexPoints(), true);
+        this.hexBase.strokePoints(this.hexPoints, true);
     }
 
     applyStateStyles() {
@@ -114,8 +116,10 @@ export class HexTile extends Phaser.GameObjects.Container {
         this.stopSyncedPulse();
 
         switch (this.state) {
-            case 'blocked':
             case 'normal':
+                this.applyNormalState();
+                break
+            case 'blocked':
             case 'inactive':
                 this.applyBlockedState();
                 break;
@@ -142,8 +146,10 @@ export class HexTile extends Phaser.GameObjects.Container {
                 break;
         }
     }
-    onHover(isOver) {
-        if (isOver) {
+    onHover(isHover) {
+        this.isHover = isHover
+        return
+        if (isHover) {
             this.applyHoverEffect();
         } else {
             this.removeHoverEffect();
@@ -186,14 +192,14 @@ export class HexTile extends Phaser.GameObjects.Container {
                 // Основной гекс (не меняется)
                 this.hexBase.clear();
                 this.hexBase.fillStyle(parseInt(baseHex.replace('#', '0x'), 16), this.currentAlpha || 1);
-                this.hexBase.fillPoints(this.getHexPoints(), true);
+                this.hexBase.fillPoints(this.hexPoints, true);
                 this.hexBase.lineStyle(2, this.borderColor || 0xffffff, 1);
-                this.hexBase.strokePoints(this.getHexPoints(), true);
+                this.hexBase.strokePoints(this.hexPoints, true);
 
                 // Свечение
                 this.glowBase.clear();
                 this.glowBase.fillStyle(glowColor, currentAlpha);
-                this.glowBase.fillPoints(this.getHexPoints(), true);
+                this.glowBase.fillPoints(this.hexPoints, true);
             }
         });
     }
@@ -210,13 +216,21 @@ export class HexTile extends Phaser.GameObjects.Container {
     // —————————————————————
     // 🧩 Состояния
     // —————————————————————
+    applyNormalState() {
+        this.stopSyncedPulse();
+        this.hexBase.clear();
+        this.hexBase.fillStyle(0x0C1017, 0.3);
+        this.hexBase.fillPoints(this.hexPoints, true);
+        this.hexBase.lineStyle(2, 0x8B0000, 0.3);
+        this.hexBase.strokePoints(this.hexPoints, true);
+    }
     applyBlockedState() {
         this.stopSyncedPulse();
         this.hexBase.clear();
         this.hexBase.fillStyle(0x0C1017, 0.7);
-        this.hexBase.fillPoints(this.getHexPoints(), true);
+        this.hexBase.fillPoints(this.hexPoints, true);
         this.hexBase.lineStyle(2, 0x8B0000, 1);
-        this.hexBase.strokePoints(this.getHexPoints(), true);
+        this.hexBase.strokePoints(this.hexPoints, true);
     }
     applyMoveableState() {
         this.currentAlpha = 0.4;
@@ -228,31 +242,19 @@ export class HexTile extends Phaser.GameObjects.Container {
         this.stopSyncedPulse();
         this.hexBase.clear();
         this.hexBase.fillStyle(0xC34FFC, 1);
-        this.hexBase.fillPoints(this.getHexPoints(), true);
+        this.hexBase.fillPoints(this.hexPoints, true);
         this.hexBase.lineStyle(4, 0xC34FFC, 1);
-        this.hexBase.strokePoints(this.getHexPoints(), true);
+        this.hexBase.strokePoints(this.hexPoints, true);
         this.hexBase.lineStyle(2, 0x66C7FF, 1);
-        this.hexBase.strokePoints(this.getHexPoints(), true, 0, 4);
-
-        const rune = this.scene.add.sprite(0, -this.radius + 5, 'rune_texture');
-        rune.setScale(0.5);
-        this.overlay.add(rune);
-        this.scene.tweens.add({
-            targets: rune,
-            y: rune.y - 5,
-            duration: 1000,
-            yoyo: true,
-            repeat: -1
-        });
     }
 
     applyAllyUnbuffableState() {
         this.stopSyncedPulse();
         this.hexBase.clear();
         this.hexBase.fillStyle(0x2A1E40, 1);
-        this.hexBase.fillPoints(this.getHexPoints(), true);
+        this.hexBase.fillPoints(this.hexPoints, true);
         this.hexBase.lineStyle(2, 0x666666, 1);
-        this.hexBase.strokePoints(this.getHexPoints(), true);
+        this.hexBase.strokePoints(this.hexPoints, true);
 
         const shield = this.scene.add.sprite(0, 0, 'shield_cracked');
         shield.setAlpha(0.5);
@@ -275,9 +277,9 @@ export class HexTile extends Phaser.GameObjects.Container {
         this.stopSyncedPulse();
         this.hexBase.clear();
         this.hexBase.fillStyle(0x400000, 0.6);
-        this.hexBase.fillPoints(this.getHexPoints(), true);
+        this.hexBase.fillPoints(this.hexPoints, true);
         this.hexBase.lineStyle(2, 0x220000, 1);
-        this.hexBase.strokePoints(this.getHexPoints(), true);
+        this.hexBase.strokePoints(this.hexPoints, true);
 
         const sword = this.scene.add.sprite(0, 0, 'crossed_sword');
         sword.setAlpha(0.5);
@@ -339,9 +341,9 @@ export class HexTile extends Phaser.GameObjects.Container {
         this.add(this.clickEffect);
 
         this.clickEffect.fillStyle(0x66C7FF, 0.8);
-        this.clickEffect.fillPoints(this.getHexPoints(), true);
+        this.clickEffect.fillPoints(this.hexPoints, true);
         this.clickEffect.lineStyle(2, 0x66C7FF, 1);
-        this.clickEffect.strokePoints(this.getHexPoints(), true);
+        this.clickEffect.strokePoints(this.hexPoints, true);
 
         // Анимация исчезновения
         this.scene.tweens.add({
@@ -398,9 +400,13 @@ export class HexTile extends Phaser.GameObjects.Container {
         if (!this.isPulsating) return;
 
         // Рассчитываем прогресс на основе глобального времени
-        const elapsed = this.scene.time.now - HexTile.globalPulseStart;
+        let elapsed = this.scene.time.now - HexTile.globalPulseStart;
+        elapsed -= HexTile.PULSE_X_MODIFIER * this.posX + this.posY * HexTile.PULSE_Y_MODIFIER
         const progress = (elapsed % HexTile.PULSE_DURATION) / HexTile.PULSE_DURATION;
-        const alphaValue = Math.abs(Math.sin(progress * Math.PI * 2)) * 0.6;
+        let alphaValue = Math.abs(Math.sin(progress * Math.PI * 2)) * 0.3;
+        if (this.isHover) {
+            alphaValue += 0.6
+        }
 
         // Основной цвет гекса
         const baseRGB = Phaser.Display.Color.ValueToColor(this.pulseBaseColor);
@@ -409,13 +415,13 @@ export class HexTile extends Phaser.GameObjects.Container {
         // Обновляем графику
         this.hexBase.clear();
         this.hexBase.fillStyle(parseInt(baseHex.replace('#', '0x'), 16), this.currentAlpha || 1);
-        this.hexBase.fillPoints(this.getHexPoints(), true);
+        this.hexBase.fillPoints(this.hexPoints, true);
         this.hexBase.lineStyle(2, this.borderColor, 1);
-        this.hexBase.strokePoints(this.getHexPoints(), true);
+        this.hexBase.strokePoints(this.hexPoints, true);
 
         // Свечение
         this.glowBase.clear();
         this.glowBase.fillStyle(this.pulseGlowColor, alphaValue);
-        this.glowBase.fillPoints(this.getHexPoints(), true);
+        this.glowBase.fillPoints(this.hexPoints, true);
     }
 }
