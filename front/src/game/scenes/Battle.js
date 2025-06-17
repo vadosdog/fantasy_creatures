@@ -1,19 +1,12 @@
 import {EventBus} from '../EventBus';
 import {Scene} from 'phaser';
-import Hexagon, {
+import {
     HEX_STATE_ATTACKABLE,
     HEX_STATE_MOVEABLE,
     HEX_STATE_NORMAL,
-    HEX_STATE_SELECTED, HEX_STATE_TREATABLE,
-    HEXAGON_ANIM_GREEN,
-    HEXAGON_ANIM_GREY,
-    HEXAGON_ANIM_LIGHT_GREEN,
-    HEXAGON_ANIM_LIGHT_RED,
-    HEXAGON_ANIM_LIGHT_YELLOW,
-    HEXAGON_ANIM_NORMAL,
-    HEXAGON_ANIM_RED,
-    HEXAGON_ANIM_YELLOW
-} from "../sprites/battle/Hexagon.js";
+    HEX_STATE_SELECTED, 
+    HEX_STATE_TREATABLE,
+} from "../classes/battle/HexTile.js";
 import MonsterContainer from "../sprites/creatures/MonsterContainer.js";
 import {
     BATTLE_STATE_BATTLE_OVER_LOSE,
@@ -58,7 +51,6 @@ export class Battle extends Scene {
 
         this.store.load()
 
-        this.createAnims()
         this.createBackground()
         this.createBattleField()
         //
@@ -91,42 +83,6 @@ export class Battle extends Scene {
         // Примените масштаб
         this.cameras.main.setZoom(scale);
         this.cameras.main.centerOn(gameSize.width / 2, gameSize.height / 2);
-    }
-
-
-    createAnims() {
-        this.anims.create({
-            key: HEXAGON_ANIM_NORMAL,
-            frames: [{key: 'hexagon', frame: 0}],
-        });
-        this.anims.create({
-            key: HEXAGON_ANIM_LIGHT_YELLOW,
-            frames: [{key: 'hexagon', frame: 1}],
-        });
-        this.anims.create({
-            key: HEXAGON_ANIM_LIGHT_RED,
-            frames: [{key: 'hexagon', frame: 2}],
-        });
-        this.anims.create({
-            key: HEXAGON_ANIM_LIGHT_GREEN,
-            frames: [{key: 'hexagon', frame: 3}],
-        });
-        this.anims.create({
-            key: HEXAGON_ANIM_YELLOW,
-            frames: [{key: 'hexagon', frame: 4}],
-        });
-        this.anims.create({
-            key: HEXAGON_ANIM_RED,
-            frames: [{key: 'hexagon', frame: 5}],
-        });
-        this.anims.create({
-            key: HEXAGON_ANIM_GREEN,
-            frames: [{key: 'hexagon', frame: 6}],
-        });
-        this.anims.create({
-            key: HEXAGON_ANIM_GREY,
-            frames: [{key: 'hexagon', frame: 7}],
-        });
     }
 
     createBackground() {

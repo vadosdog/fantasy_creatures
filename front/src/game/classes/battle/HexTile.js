@@ -1,5 +1,211 @@
 import polygonClipping from 'polygon-clipping';
 
+export const HEX_STATE_NORMAL = 'normal',
+    HEX_STATE_INACTIVE = 'inactive',
+    HEX_STATE_MOVEABLE = 'moveable',
+    HEX_STATE_ATTACKABLE = 'attackable',
+    HEX_STATE_TREATABLE = 'treat',
+    HEX_STATE_SELECTED = 'selected'
+
+const palette = {
+    'normal': {
+        'normal': {
+            fillStyleColor: 0x0C1017, 
+            fillStyleAlpha: 0.3,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x8B0000,
+            lineStyleAlpha: 0.3,
+        },
+        'hover': {
+            fillStyleColor: 0x3a60a0,
+            fillStyleAlpha: 0.7,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x3baaf6,
+            lineStyleAlpha: 0.3,
+            glowColor: 0x5080c0,
+        },
+        'click': {
+            fillStyleColor: 0x66C7FF,
+            fillStyleAlpha: 0.8,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x66C7FF,
+            lineStyleAlpha: 1,
+        },
+    },
+    'inactive': {
+        'normal': {
+            fillStyleColor: 0x0C1017,
+            fillStyleAlpha: 0.7,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x8B0000,
+            lineStyleAlpha: 1,
+        },
+        'hover': {
+            fillStyleColor: 0x3a60a0,
+            fillStyleAlpha: 0.7,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x3baaf6,
+            lineStyleAlpha: 0.3,
+            glowColor: 0x5080c0,
+        },
+        'click': {
+            fillStyleColor: 0x66C7FF,
+            fillStyleAlpha: 0.8,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x66C7FF,
+            lineStyleAlpha: 1,
+        },
+    },
+    'moveable': {
+        'normal': {
+            fillStyleColor: 0x192850, 
+            fillStyleAlpha: 0.4,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x3BAAF6,
+            lineStyleAlpha: 0.3,
+            glowColor: 0x3A60A0,
+        },
+        'hover': {
+            fillStyleColor: 0x3a60a0,
+            fillStyleAlpha: 0.7,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x3baaf6,
+            lineStyleAlpha: 0.3,
+            glowColor: 0x5080c0,
+        },
+        'click': {
+            fillStyleColor: 0x66C7FF,
+            fillStyleAlpha: 0.8,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x66C7FF,
+            lineStyleAlpha: 1,
+        },
+    },
+    'attackable': {
+        'normal': {
+            fillStyleColor: 0xF05050, 
+            fillStyleAlpha: 0.4,
+            lineStyleWidth: 2,
+            lineStyleColor: 0xF05050,
+            lineStyleAlpha: 0.3,
+            glowColor: 0xFF7070,
+        },
+        'hover': {
+            fillStyleColor: 0x3a60a0,
+            fillStyleAlpha: 0.7,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x3baaf6,
+            lineStyleAlpha: 0.3,
+            glowColor: 0x5080c0,
+        },
+        'click': {
+            fillStyleColor: 0x66C7FF,
+            fillStyleAlpha: 0.8,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x66C7FF,
+            lineStyleAlpha: 1,
+        },
+    },
+    'treat': {
+        'normal': {
+            fillStyleColor: 0xC34FFC, 
+            fillStyleAlpha: 0.3,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x8B45C1,
+            lineStyleAlpha: 0.3,
+            glowColor: 0x9933FF,
+        },
+        'hover': {
+            fillStyleColor: 0x3a60a0,
+            fillStyleAlpha: 0.7,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x3baaf6,
+            lineStyleAlpha: 0.3,
+            glowColor: 0x5080c0,
+        },
+        'click': {
+            fillStyleColor: 0x66C7FF,
+            fillStyleAlpha: 0.8,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x66C7FF,
+            lineStyleAlpha: 1,
+        },
+    },
+    'ally_unbuffable': {
+        'normal': {
+            fillStyleColor: 0x2A1E40, 
+            fillStyleAlpha: 1,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x666666,
+            lineStyleAlpha: 1,
+        },
+        'hover': {
+            fillStyleColor: 0x3a60a0,
+            fillStyleAlpha: 0.7,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x3baaf6,
+            lineStyleAlpha: 0.3,
+            glowColor: 0x5080c0,
+            
+        },
+        'click': {
+            fillStyleColor: 0x66C7FF,
+            fillStyleAlpha: 0.8,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x66C7FF,
+            lineStyleAlpha: 1,
+        },
+    },
+    'enemy_blocked': {
+        'normal': {
+            fillStyleColor: 0x400000, 
+            fillStyleAlpha: 0.6,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x220000,
+            lineStyleAlpha: 1,
+        },
+        'hover': {
+            fillStyleColor: 0x3a60a0,
+            fillStyleAlpha: 0.7,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x3baaf6,
+            lineStyleAlpha: 0.3,
+            glowColor: 0x5080c0,
+        },
+        'click': {
+            fillStyleColor: 0x66C7FF,
+            fillStyleAlpha: 0.8,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x66C7FF,
+            lineStyleAlpha: 1,
+        },
+    },
+    'selected': {
+        'normal': {
+            fillStyleColor: 0xC34FFC, 
+            fillStyleAlpha: 1,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x66C7FF,
+            lineStyleAlpha: 1,
+        },
+        'hover': {
+            fillStyleColor: 0x3a60a0,
+            fillStyleAlpha: 0.7,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x3baaf6,
+            lineStyleAlpha: 0.3,
+            glowColor: 0x5080c0,
+        },
+        'click': {
+            fillStyleColor: 0x66C7FF,
+            fillStyleAlpha: 0.8,
+            lineStyleWidth: 2,
+            lineStyleColor: 0x66C7FF,
+            lineStyleAlpha: 1,
+        },
+    },
+};
+
 export class HexTile extends Phaser.GameObjects.Container {
     static PULSE_DURATION = 5000; // Общая длительность пульсации для всех гексов
     static PULSE_X_MODIFIER = 150; // Смещение пульсации по горзонтали
@@ -119,34 +325,49 @@ export class HexTile extends Phaser.GameObjects.Container {
         this.hexBase.strokePoints(this.hexPoints, true);
     }
 
-    applyStateStyles() {
+    applyStateStyles(style = 'normal') {
         // Останавливаем любую активную пульсацию перед сменой состояния
         this.stopSyncedPulse();
 
+        const statePalette = (palette[this.state] || palette[HEX_STATE_NORMAL])[style]
+        
+        this.stopSyncedPulse();
+        this.hexBase.clear();
+        this.hexBase.fillStyle(statePalette.fillStyleColor, statePalette.fillStyleAlpha);
+        this.hexBase.fillPoints(this.hexPoints, true);
+        this.hexBase.lineStyle(statePalette.lineStyleWidth, statePalette.lineStyleColor, statePalette.lineStyleAlpha);
+        this.hexBase.strokePoints(this.hexPoints, true)
+
+        if (statePalette.glowColor) {
+            this.currentAlpha = statePalette.fillStyleAlpha;
+            this.borderColor = statePalette.lineStyleColor;
+            this.startSyncedPulse(statePalette.fillStyleColor, statePalette.glowColor);
+        }
+
+        return
         switch (this.state) {
-            case 'normal':
+            case HEX_STATE_NORMAL:
                 this.applyNormalState();
                 break
-            case 'blocked':
-            case 'inactive':
+            case HEX_STATE_INACTIVE:
                 this.applyBlockedState();
                 break;
-            case 'moveable':
+            case HEX_STATE_MOVEABLE:
                 this.applyMoveableState();
                 break;
             case 'active':
-            case 'selected':
+            case HEX_STATE_SELECTED:
                 this.applyActiveState();
                 break;
             case 'ally_unbuffable':
                 this.applyAllyUnbuffableState();
                 break;
             case 'ally_buffable':
-            case 'treat':
+            case HEX_STATE_TREATABLE:
                 this.applyAllyBuffableState();
                 break;
             case 'enemy_attackable':
-            case 'attackable':
+            case HEX_STATE_ATTACKABLE:
                 this.applyEnemyAttackableState();
                 break;
             case 'enemy_blocked':
@@ -313,58 +534,23 @@ export class HexTile extends Phaser.GameObjects.Container {
     // —————————————————————
 
     applyHoverEffect() {
-        // Сохраняем текущее состояние пульсации
-        this.wasPulsating = this.isPulsating;
-        this.savedBaseColor = this.pulseBaseColor;
-        this.savedGlowColor = this.pulseGlowColor;
-        this.savedAlpha = this.currentAlpha;
-        this.savedBorder = this.borderColor;
-
-        // Останавливаем основную пульсацию
-        this.stopSyncedPulse();
-
-        // Применяем эффект ховера с синхронной пульсацией
-        this.currentAlpha = 0.6;
-        this.borderColor = 0x3baaf6;
-        this.startSyncedPulse(0x3a60a0, 0x5080c0);
+        this.applyStateStyles('hover');
     }
 
     removeHoverEffect() {
-        // Восстанавливаем исходное состояние
-        this.stopSyncedPulse();
-
-        if (this.wasPulsating) {
-            this.currentAlpha = this.savedAlpha;
-            this.borderColor = this.savedBorder;
-            this.startSyncedPulse(this.savedBaseColor, this.savedGlowColor);
-        } else {
-            // Если не было пульсации, просто восстанавливаем состояние
-            this.setHexState(this.state);
-        }
+        // Если не было пульсации, просто восстанавливаем состояние
+        this.setHexState(this.state);
     }
 
     applyClickEffect() {
-        // Сохраняем текущее состояние
-        this.wasPulsating = this.isPulsating;
-        this.savedBaseColor = this.pulseBaseColor;
-        this.savedGlowColor = this.pulseGlowColor;
-        this.savedAlpha = this.currentAlpha;
-        this.savedBorder = this.borderColor;
-
-        // Останавливаем основную пульсацию
-        this.stopSyncedPulse();
-
-        // Быстрая анимация клика
-        this.currentAlpha = 0.8;
-        this.borderColor = 0x66C7FF;
-
+        const statePalette = (palette[this.state] || palette[HEX_STATE_NORMAL])['click']
         // Создаем временную графику для клика
         this.clickEffect = this.scene.add.graphics();
         this.add(this.clickEffect);
 
-        this.clickEffect.fillStyle(0x66C7FF, 0.8);
+        this.clickEffect.fillStyle(statePalette.fillStyleColor, statePalette.fillStyleAlpha);
         this.clickEffect.fillPoints(this.hexPoints, true);
-        this.clickEffect.lineStyle(2, 0x66C7FF, 1);
+        this.clickEffect.lineStyle(statePalette.lineStyleWidth, statePalette.lineStyleColor, statePalette.lineStyleAlpha);
         this.clickEffect.strokePoints(this.hexPoints, true);
 
         // Анимация исчезновения
@@ -378,16 +564,12 @@ export class HexTile extends Phaser.GameObjects.Container {
                     this.clickEffect.destroy();
                     this.clickEffect = null;
                 }
-
-                if (this.wasPulsating) {
-                    this.currentAlpha = this.savedAlpha;
-                    this.borderColor = this.savedBorder;
-                    this.startSyncedPulse(this.savedBaseColor, this.savedGlowColor);
-                } else {
-                    this.setHexState(this.state);
-                }
+                
+                this.setHexState(this.state);
             }
         });
+        
+        return
     }
 
     // —————————————————————
