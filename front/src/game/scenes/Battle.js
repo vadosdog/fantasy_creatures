@@ -77,6 +77,13 @@ export class Battle extends Scene {
                 creature.creatureSpriteContainer.creatureSprite.setTint(creature.id === id ? 0xffff00 : 0xffffff);
             });
         });
+
+        this.input.on('pointermove', (pointer) => {
+            if (pointer.x % 10 === 0) {
+
+                console.log('Global pointer position:', pointer.x, pointer.y);
+            }
+        });
     }
 
     resize(gameSize) {
@@ -209,6 +216,11 @@ export class Battle extends Scene {
 
                 // this.store.creatures.add(creature)
                 creature.creatureSpriteContainer.updateEffectsIcons()
+
+                // Устанавливаем связь существа с гексом
+                hexagon.setCreature(creature.creatureSpriteContainer);
+                // Сохраняем ссылку на родительский гекс
+                creature.creatureSpriteContainer.parentHex = hexagon;
             }
         })
     }
@@ -258,8 +270,10 @@ export class Battle extends Scene {
             timeline.add({
                 at: 200 * (effects.length + 1) + 500, //гомосятина
                 run: () => {
-                    activeCreature.creatureSpriteContainer.destroy(true)
-                    this.hexagonsArray.get(activeCreature.position.join(',')).content = null
+                    const hex = this.hexagonsArray.get(activeCreature.position.join(','));
+                    if (hex) hex.removeCreature(); // Убираем при уничтожении
+                    activeCreature.creatureSpriteContainer.destroy(true);
+                    if (hex) hex.content = null;
                 }
             });
         } else {
@@ -603,6 +617,14 @@ export class Battle extends Scene {
 
 
         timeline.on('complete', () => {
+            // Обновляем связь после действия
+            const currentHex = this.hexagonsArray.get(
+                this.store.activeCreature.position.join(',')
+            );
+            if (currentHex && this.store.activeCreature.health > 0) {
+                currentHex.setCreature(this.store.activeCreature.creatureSpriteContainer);
+            }
+            
             this.store.endTurn();
             if (
                 this.store.battleState === BATTLE_STATE_BATTLE_OVER_WIN
@@ -621,6 +643,18 @@ export class Battle extends Scene {
 
     moveCreatureAlongPath(timeline, activeCreature, path) {
         if (path.length < 2) return;
+        
+        // Получаем старый гекс перед перемещением
+        const oldKey = activeCreature.position.join(',');
+        const oldHex = this.hexagonsArray.get(oldKey);
+
+        // Убираем существо со старого гекса в начале перемещения
+        timeline.add({
+            at: 0,
+            run: () => {
+                if (oldHex) oldHex.removeCreature();
+            }
+        });
 
         const segmentDuration = 200;
 
@@ -652,8 +686,18 @@ export class Battle extends Scene {
                 const lastPos = path[path.length - 1];
                 activeCreature.position[0] = lastPos[0];
                 activeCreature.position[1] = lastPos[1];
+
+                // Устанавливаем существо на новый гекс
+                const newKey = lastPos.join(',');
+                const newHex = this.hexagonsArray.get(newKey);
+                if (newHex) {
+                    newHex.setCreature(activeCreature.creatureSpriteContainer);
+                    // Обновляем ссылку на родительский гекс
+                    activeCreature.creatureSpriteContainer.parentHex = newHex;
+                }
             }
-        })
+        });
+
 
         return timeline
     }

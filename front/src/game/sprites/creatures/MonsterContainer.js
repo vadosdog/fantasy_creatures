@@ -28,16 +28,19 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
         this.creatureSprite.setScale(1.7, 1.7)
         this.add(this.creatureSprite)
         this.creatureSprite.setDefaultState()
-            this.creatureSprite.setInteractive({ pixelPerfect: true })
+
+
+            // this.creatureSprite.setInteractive({ pixelPerfect: true })
 
         // Tooltips
         //TODO добавить КЛИКАБЕЛЬНОСТЬ
-        this.creatureSprite.on('pointerover', () => {
-            gameStore.setHoveredCreature(creature.id)
-        })
-            .on('pointerout', () => {
-                gameStore.setHoveredCreature(null);
-            })
+        
+        // this.creatureSprite.on('pointerover', () => {
+        //     gameStore.setHoveredCreature(creature.id)
+        // })
+        //     .on('pointerout', () => {
+        //         gameStore.setHoveredCreature(null);
+        //     })
 
         this.creatureText = scene.add.text(
             0,
@@ -155,4 +158,28 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
             this.effectIcons.push(icon);
         });
     }
+
+    // Метод для визуального выделения
+    setHighlighted(isHighlighted) {
+        if (isHighlighted) {
+            this.creatureSprite.setTint(0xffff00);
+        } else {
+            this.creatureSprite.clearTint();
+        }
+    }
+
+    // Обновляем позицию относительно гекса
+    getBounds() {
+        if (!this.creatureSprite) return new Phaser.Geom.Rectangle();
+        return this.creatureSprite.getBounds();
+    }
+
+    // Обновляем позицию и уведомляем гекс
+    updatePosition(x, y) {
+        this.setPosition(x, y);
+        if (this.parentHex) {
+            this.parentHex.updateInteractive();
+        }
+    }
+
 }

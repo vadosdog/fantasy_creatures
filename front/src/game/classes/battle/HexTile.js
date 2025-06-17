@@ -3,7 +3,7 @@ export class HexTile extends Phaser.GameObjects.Container {
     static PULSE_X_MODIFIER = 150; // Смещение пульсации по горзонтали
     static PULSE_Y_MODIFIER = 25; // Смещение пульсации по вертикали
     static globalPulseStart = 0; // Глобальное время старта пульсации
-    
+
     constructor(scene, x, y, options = {}, posX, posY) {
         const {
             width = null,
@@ -52,7 +52,8 @@ export class HexTile extends Phaser.GameObjects.Container {
         this.add(this.overlay);
 
         // События
-        this.setInteractive(new Phaser.Geom.Polygon(this.hexPoints), Phaser.Geom.Polygon.Contains);
+        // this.setInteractive(new Phaser.Geom.Polygon(this.hexPoints), Phaser.Geom.Polygon.Contains);
+        this.updateInteractive();
         this.on('pointerover', () => this.onHover(true));
         this.on('pointerout', () => this.onHover(false));
         this.on('pointerdown', () => this.onClick());
@@ -75,7 +76,12 @@ export class HexTile extends Phaser.GameObjects.Container {
         if (HexTile.globalPulseStart === 0) {
             HexTile.globalPulseStart = scene.time.now;
         }
-    }    
+
+        this.creatureHitArea = null; // Добавляем поле для хранения хитовой области монстра
+        this.creature = null; // Ссылка на контейнер с монстром
+        this.creatureHighlighted = false; // Флаг, что существо подсвечено
+    }
+
     // Исправленный метод - теперь возвращает локальные координаты
     getHexPoints() {
         const points = [];
@@ -146,13 +152,24 @@ export class HexTile extends Phaser.GameObjects.Container {
                 break;
         }
     }
+
     onHover(isHover) {
-        this.isHover = isHover
-        return
+        this.isHover = isHover;
+
         if (isHover) {
             this.applyHoverEffect();
+
+            // Подсвечиваем существо при наведении
+            if (this.creature) {
+                this.creature.setHighlighted(true);
+            }
         } else {
             this.removeHoverEffect();
+
+            // Снимаем подсветку с существа
+            if (this.creature) {
+                this.creature.setHighlighted(false);
+            }
         }
     }
 
@@ -180,8 +197,8 @@ export class HexTile extends Phaser.GameObjects.Container {
 
         // Анимация прозрачности свечения
         this.colorTween = this.scene.tweens.add({
-            targets: { alphaValue: 0 },
-            alphaValue: { from: 0, to: 0.6 },
+            targets: {alphaValue: 0},
+            alphaValue: {from: 0, to: 0.6},
             ease: 'Sine.InOut',
             duration,
             repeat,
@@ -203,6 +220,7 @@ export class HexTile extends Phaser.GameObjects.Container {
             }
         });
     }
+
     stopColorAnimation() {
         this.isPulsating = false;
         // Удаляем из списка обновления
@@ -224,6 +242,7 @@ export class HexTile extends Phaser.GameObjects.Container {
         this.hexBase.lineStyle(2, 0x8B0000, 0.3);
         this.hexBase.strokePoints(this.hexPoints, true);
     }
+
     applyBlockedState() {
         this.stopSyncedPulse();
         this.hexBase.clear();
@@ -232,6 +251,7 @@ export class HexTile extends Phaser.GameObjects.Container {
         this.hexBase.lineStyle(2, 0x8B0000, 1);
         this.hexBase.strokePoints(this.hexPoints, true);
     }
+
     applyMoveableState() {
         this.currentAlpha = 0.4;
         this.borderColor = 0x3baaf6;
@@ -424,4 +444,151 @@ export class HexTile extends Phaser.GameObjects.Container {
         this.glowBase.fillStyle(this.pulseGlowColor, alphaValue);
         this.glowBase.fillPoints(this.hexPoints, true);
     }
-}
+
+    // Рассчитываем хитовую область монстра
+    calculateCreatureHitArea() {
+        if (!this.creature) return null;
+
+        // Получаем глобальные координаты монстра
+        const creatureBounds = this.creature.getBounds();
+
+        // Рассчитываем локальные координаты относительно гекса
+        return new Phaser.Geom.Rectangle(
+            creatureBounds.x - this.x,
+            creatureBounds.y - this.y,
+            creatureBounds.width,
+            creatureBounds.height
+        );
+    }
+
+    // Обновляем интерактивность
+    updateInteractive() {
+        // Создаем объединенную хитовую область
+        const combinedArea = this.createCombinedHitArea();
+
+        if (!this.input?.hitArea) {
+            this.setInteractive({
+                hitArea: combinedArea,
+                hitAreaCallback: Phaser.Geom.Polygon.Contains,
+                useHandCursor: true
+            });
+        }
+        
+        this.input.hitArea = combinedArea
+    }
+
+    createCombinedHitArea() {
+        // Базовый полигон гекса
+        const hexPolygon = new Phaser.Geom.Polygon(this.hexPoints);
+        const combinedPoints = [...hexPolygon.points];
+
+        // Добавляем область существа, если оно есть
+        if (this.creature) {
+            const creatureBounds = this.creature.getBounds();
+            const creaturePoly = new Phaser.Geom.Rectangle(
+                creatureBounds.x - this.x,
+                creatureBounds.y - this.y,
+                creatureBounds.width,
+                creatureBounds.height
+            );
+
+            // Простое объединение: добавляем углы прямоугольника существа
+            combinedPoints.push(
+                new Phaser.Geom.Point(creaturePoly.x, creaturePoly.y),
+                new Phaser.Geom.Point(creaturePoly.x + creaturePoly.width, creaturePoly.y),
+                new Phaser.Geom.Point(creaturePoly.x + creaturePoly.width, creaturePoly.y + creaturePoly.height),
+                new Phaser.Geom.Point(creaturePoly.x, creaturePoly.y + creaturePoly.height)
+            );
+        }
+
+        return new Phaser.Geom.Polygon(combinedPoints);
+    }
+
+
+    // При перемещении гекса обновляем хитовую область
+    setPosition(x, y) {
+        super.setPosition(x, y);
+        if (this.creature) {
+            this.creatureHitArea = this.calculateCreatureHitArea();
+        }
+    }
+
+    // Устанавливаем существо на гекс
+    setCreature(creatureContainer) {
+        this.creature = creatureContainer;
+        this.creatureHitArea = this.calculateCreatureHitArea();
+        this.updateInteractive();
+        this.drawDebugBounds()
+    }
+
+    // Убираем существо с гекса
+    removeCreature() {
+        this.creature = null;
+        this.creatureHitArea = null;
+        this.updateInteractive();
+        this.drawDebugBounds()
+    }
+
+    // Обновленный метод проверки попадания
+    containsPoint(x, y) {
+        // 1. Проверка попадания в сам гекс
+        const localPoint = this.getLocalPoint(x, y);
+        const hexPolygon = new Phaser.Geom.Polygon(this.hexPoints);
+
+        if (Phaser.Geom.Polygon.Contains(hexPolygon, localPoint.x, localPoint.y)) {
+            return true;
+        }
+
+        // 2. Проверка попадания в существо
+        if (this.creature) {
+            // Преобразуем глобальные координаты в локальные относительно существа
+            const creaturePoint = this.creature.getLocalPoint(x, y);
+
+            // Проверяем попадание в спрайт существа
+            if (this.creature.creatureSprite.getBounds().contains(creaturePoint.x, creaturePoint.y)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    getLocalPoint(x, y) {
+        // Используем встроенный метод Phaser для преобразования координат
+        return this.parentContainer ?
+            this.parentContainer.getLocalPoint(x, y) :
+            {x: x - this.x, y: y - this.y};
+    }
+
+    updateCreatureHitArea() {
+        if (this.creature) {
+            this.creatureHitArea = this.calculateCreatureHitArea();
+            this.updateInteractive();
+        }
+    }
+
+    drawDebugBounds() {
+        if (this.debugGraphics) {
+            this.debugGraphics.destroy();
+        }
+
+        this.debugGraphics = this.scene.add.graphics();
+        this.add(this.debugGraphics);
+
+        if (this.input?.hitArea) {
+            // Рисуем хитовую область
+            const hitArea = this.input.hitArea;
+            this.debugGraphics.lineStyle(2, 0xff0000);
+            this.debugGraphics.strokePoints(hitArea.points, true);   
+        }
+
+        return
+        // Подписываем координаты
+        hitArea.points.forEach((point, i) => {
+            const text = this.scene.add.text(point.x, point.y, `${i}:(${Math.round(point.x)},${Math.round(point.y)})`, {
+                fontSize: '10px',
+                color: '#ff0000'
+            });
+            this.debugGraphics.add(text);
+        });
+    }}
