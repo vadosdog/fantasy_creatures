@@ -436,7 +436,6 @@ export const useBattleStore = defineStore('battle', {
 
             this.battleMap.removeContent(...this.activeCreature.position)
             this.activeCreature.position = path[path.length - 1]
-            console.log(this.activeCreature)
             this.battleMap.setContent(...path[path.length - 1], this.activeCreature)
             this.recordLog({
                 type: 'move',
@@ -672,7 +671,6 @@ export const useBattleStore = defineStore('battle', {
             return this.battleMap.get(position.join(','))?.content
         },
         getCreatureById(id) {
-            console.log(this.creatures)
             return this.creatures.find(c => c.id = id)
         },
         recordLog(log) {

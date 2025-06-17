@@ -31,7 +31,7 @@ const gameStore = useGameStore()
 
 
 export class Battle extends Scene {
-    showGridIndexes = true
+    showGridIndexes = false
     hexagonGroup;
     store
     hexagonsArray;
@@ -76,13 +76,6 @@ export class Battle extends Scene {
 
                 creature.creatureSpriteContainer.creatureSprite.setTint(creature.id === id ? 0xffff00 : 0xffffff);
             });
-        });
-
-        this.input.on('pointermove', (pointer) => {
-            if (pointer.x % 10 === 0) {
-
-                console.log('Global pointer position:', pointer.x, pointer.y);
-            }
         });
     }
 

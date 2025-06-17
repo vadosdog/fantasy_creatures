@@ -24,6 +24,5 @@ export class BattleOver extends Scene
         }).setOrigin(0.5).setDepth(100);
 
         EventBus.emit('current-scene-ready', this);
-        console.log(JSON.stringify(this.battleLog))
     }
 }

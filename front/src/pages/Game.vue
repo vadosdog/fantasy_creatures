@@ -139,7 +139,6 @@ function cameraAction(action) {
 
         if (scene && scene.scene && scene.scene.cameras) {
             // Основной способ отключения ввода
-            console.log(scene.scene.cameras)
             switch (action) {
                 case 'up':
                     scene.scene.cameras.main.scrollY -= 50;

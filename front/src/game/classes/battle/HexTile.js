@@ -1,3 +1,5 @@
+import polygonClipping from 'polygon-clipping';
+
 export class HexTile extends Phaser.GameObjects.Container {
     static PULSE_DURATION = 5000; // Общая длительность пульсации для всех гексов
     static PULSE_X_MODIFIER = 150; // Смещение пульсации по горзонтали
@@ -478,33 +480,97 @@ export class HexTile extends Phaser.GameObjects.Container {
     }
 
     createCombinedHitArea() {
-        // Базовый полигон гекса
+        // Создаем базовый полигон гекса
         const hexPolygon = new Phaser.Geom.Polygon(this.hexPoints);
-        const combinedPoints = [...hexPolygon.points];
 
-        // Добавляем область существа, если оно есть
-        if (this.creature) {
-            const creatureBounds = this.creature.getBounds();
-            const creaturePoly = new Phaser.Geom.Rectangle(
-                creatureBounds.x - this.x,
-                creatureBounds.y - this.y,
-                creatureBounds.width,
-                creatureBounds.height
-            );
-
-            // Простое объединение: добавляем углы прямоугольника существа
-            combinedPoints.push(
-                new Phaser.Geom.Point(creaturePoly.x, creaturePoly.y),
-                new Phaser.Geom.Point(creaturePoly.x + creaturePoly.width, creaturePoly.y),
-                new Phaser.Geom.Point(creaturePoly.x + creaturePoly.width, creaturePoly.y + creaturePoly.height),
-                new Phaser.Geom.Point(creaturePoly.x, creaturePoly.y + creaturePoly.height)
-            );
+        // Если существо отсутствует, возвращаем полигон гекса
+        if (!this.creature) {
+            return hexPolygon;
         }
 
-        return new Phaser.Geom.Polygon(combinedPoints);
+        // Получаем глобальные границы существа
+        const creatureBounds = this.creature.getBounds();
+
+        // Конвертируем координаты в локальную систему относительно текущего объекта
+        const localX = creatureBounds.x - this.x;
+        const localY = creatureBounds.y - this.y;
+
+        // Создаем полигон существа вручную
+        const creaturePolygon = new Phaser.Geom.Polygon([
+            localX, localY,
+            localX + creatureBounds.width, localY,
+            localX + creatureBounds.width, localY + creatureBounds.height,
+            localX, localY + creatureBounds.height
+        ]);
+
+        // Функция конвертации Phaser.Polygon в формат polygon-clipping
+        const convertToClipperFormat = (polygon) => {
+            const points = [];
+
+            // Собираем все точки полигона
+            for (const point of polygon.points) {
+                points.push([point.x, point.y]);
+            }
+
+            // Замыкаем полигон, если требуется
+            if (points.length > 0) {
+                const first = points[0];
+                const last = points[points.length - 1];
+
+                if (first[0] !== last[0] || first[1] !== last[1]) {
+                    points.push([first[0], first[1]]);
+                }
+            }
+
+            return [points];
+        };
+
+        // Конвертируем оба полигона
+        const clipperHex = convertToClipperFormat(hexPolygon);
+        const clipperCreature = convertToClipperFormat(creaturePolygon);
+
+        // Выполняем объединение полигонов
+        let unionResult;
+        try {
+            unionResult = polygonClipping.union(clipperHex, clipperCreature);
+        } catch (error) {
+            console.error("Polygon union error:", error);
+            return hexPolygon;
+        }
+
+        // Обрабатываем результаты объединения
+        const processUnionResult = (result) => {
+            if (result.length === 0) return null;
+
+            // Выбираем самый большой полигон по количеству точек
+            let largestRing = null;
+            let maxPoints = -1;
+
+            for (const poly of result) {
+                if (poly.length === 0) continue;
+
+                // Берем только внешний контур (первое кольцо)
+                const outerRing = poly[0];
+                if (outerRing.length > maxPoints) {
+                    maxPoints = outerRing.length;
+                    largestRing = outerRing;
+                }
+            }
+
+            if (!largestRing) return null;
+
+            // Создаем финальный полигон (удаляем дублирующую точку)
+            const finalPoints = [];
+            for (let i = 0; i < largestRing.length - 1; i++) {
+                finalPoints.push(largestRing[i][0], largestRing[i][1]);
+            }
+
+            return new Phaser.Geom.Polygon(finalPoints);
+        };
+
+        // Возвращаем результат или исходный полигон при ошибке
+        return processUnionResult(unionResult) || hexPolygon;
     }
-
-
     // При перемещении гекса обновляем хитовую область
     setPosition(x, y) {
         super.setPosition(x, y);
@@ -568,6 +634,7 @@ export class HexTile extends Phaser.GameObjects.Container {
     }
 
     drawDebugBounds() {
+        return //отключил
         if (this.debugGraphics) {
             this.debugGraphics.destroy();
         }
