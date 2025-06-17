@@ -10,202 +10,171 @@ export const HEX_STATE_NORMAL = 'normal',
 const palette = {
     'normal': {
         'normal': {
-            fillStyleColor: 0x0C1017, 
+            fillStyleColor: 0x0C1017,
             fillStyleAlpha: 0.3,
             lineStyleWidth: 2,
-            lineStyleColor: 0x8B0000,
-            lineStyleAlpha: 0.3,
+            lineStyleColor: 0x1A222D,
+            lineStyleAlpha: 0.5,
         },
-        'hover': {
-            fillStyleColor: 0x3a60a0,
-            fillStyleAlpha: 0.7,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x3baaf6,
-            lineStyleAlpha: 0.3,
-            glowColor: 0x5080c0,
-        },
-        'click': {
-            fillStyleColor: 0x66C7FF,
-            fillStyleAlpha: 0.8,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x66C7FF,
-            lineStyleAlpha: 1,
-        },
+        'hover': {},
+        'click': {}
     },
+
+    // Недоступные для перемещения
     'inactive': {
         'normal': {
             fillStyleColor: 0x0C1017,
-            fillStyleAlpha: 0.7,
+            fillStyleAlpha: 0.3,
             lineStyleWidth: 2,
             lineStyleColor: 0x8B0000,
-            lineStyleAlpha: 1,
+            lineStyleAlpha: 0.7,
+            texture: "stone_crack" // Текстура трещин
         },
-        'hover': {
-            fillStyleColor: 0x3a60a0,
-            fillStyleAlpha: 0.7,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x3baaf6,
-            lineStyleAlpha: 0.3,
-            glowColor: 0x5080c0,
-        },
-        'click': {
-            fillStyleColor: 0x66C7FF,
-            fillStyleAlpha: 0.8,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x66C7FF,
-            lineStyleAlpha: 1,
-        },
+        'hover': {},
+        'click': {}
     },
+
+    // Доступные для перемещения
     'moveable': {
         'normal': {
-            fillStyleColor: 0x192850, 
-            fillStyleAlpha: 0.4,
+            fillStyleColor: 0x192850,
+            fillStyleAlpha: 0.3,
             lineStyleWidth: 2,
-            lineStyleColor: 0x3BAAF6,
+            lineStyleColor: 0x3B82F6,
             lineStyleAlpha: 0.3,
-            glowColor: 0x3A60A0,
+            glowColor: 0x3B82F6,
+            glowIntensity: 0.3
         },
         'hover': {
-            fillStyleColor: 0x3a60a0,
-            fillStyleAlpha: 0.7,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x3baaf6,
-            lineStyleAlpha: 0.3,
-            glowColor: 0x5080c0,
+            fillStyleColor: 0x254B8F,
+            fillStyleAlpha: 0.6,
+            lineStyleWidth: 3,
+            lineStyleColor: 0x66C7FF,
+            lineStyleAlpha: 0.8,
+            glowColor: 0x3B82F6,
+            glowIntensity: 0.6,
+            pulse: true // Анимация пульсации
         },
         'click': {
             fillStyleColor: 0x66C7FF,
             fillStyleAlpha: 0.8,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x66C7FF,
+            lineStyleWidth: 4,
+            lineStyleColor: 0xFFFFFF,
             lineStyleAlpha: 1,
-        },
+            flash: true // Эффект вспышки
+        }
     },
+
+    // Враги доступные для атаки
     'attackable': {
         'normal': {
-            fillStyleColor: 0xF05050, 
-            fillStyleAlpha: 0.4,
+            fillStyleColor: 0xF05050,
+            fillStyleAlpha: 0.3,
             lineStyleWidth: 2,
             lineStyleColor: 0xF05050,
-            lineStyleAlpha: 0.3,
+            lineStyleAlpha: 0.4,
             glowColor: 0xFF7070,
+            glowIntensity: 0.4
         },
         'hover': {
-            fillStyleColor: 0x3a60a0,
-            fillStyleAlpha: 0.7,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x3baaf6,
-            lineStyleAlpha: 0.3,
-            glowColor: 0x5080c0,
+            fillStyleColor: 0xF05050,
+            fillStyleAlpha: 0.4,
+            lineStyleWidth: 3,
+            lineStyleColor: 0xFF0000,
+            lineStyleAlpha: 0.5,
+            glowColor: 0xFF3030,
+            glowIntensity: 0.7,
+            shake: true // Анимация дрожания
         },
         'click': {
-            fillStyleColor: 0x66C7FF,
+            fillStyleColor: 0xFF3030,
             fillStyleAlpha: 0.8,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x66C7FF,
+            lineStyleWidth: 4,
+            lineStyleColor: 0xFFFFFF,
             lineStyleAlpha: 1,
-        },
+            splash: true // Эффект брызг
+        }
     },
+
+    // Союзники доступные для бафа
     'treat': {
         'normal': {
-            fillStyleColor: 0xC34FFC, 
+            fillStyleColor: 0xC34FFC,
             fillStyleAlpha: 0.3,
             lineStyleWidth: 2,
             lineStyleColor: 0x8B45C1,
-            lineStyleAlpha: 0.3,
+            lineStyleAlpha: 0.5,
             glowColor: 0x9933FF,
+            glowIntensity: 0.4
         },
         'hover': {
-            fillStyleColor: 0x3a60a0,
-            fillStyleAlpha: 0.7,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x3baaf6,
-            lineStyleAlpha: 0.3,
-            glowColor: 0x5080c0,
+            fillStyleColor: 0xD36AFF,
+            fillStyleAlpha: 0.5,
+            lineStyleWidth: 3,
+            lineStyleColor: 0xC34FFC,
+            lineStyleAlpha: 0.8,
+            glowColor: 0x8B45C1,
+            glowIntensity: 0.7,
+            float: true // Эффект левитации
         },
         'click': {
-            fillStyleColor: 0x66C7FF,
+            fillStyleColor: 0xE080FF,
             fillStyleAlpha: 0.8,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x66C7FF,
+            lineStyleWidth: 4,
+            lineStyleColor: 0xFFFFFF,
             lineStyleAlpha: 1,
-        },
+            particles: true // Фиолетовые частицы
+        }
     },
+
+    // Союзники недоступные для бафа
     'ally_unbuffable': {
         'normal': {
-            fillStyleColor: 0x2A1E40, 
+            fillStyleColor: 0x2A1E40,
             fillStyleAlpha: 1,
             lineStyleWidth: 2,
             lineStyleColor: 0x666666,
             lineStyleAlpha: 1,
+            icon: "shield_crack" // Иконка щита с трещиной
         },
         'hover': {
-            fillStyleColor: 0x3a60a0,
-            fillStyleAlpha: 0.7,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x3baaf6,
-            lineStyleAlpha: 0.3,
-            glowColor: 0x5080c0,
-            
+            icon: "locked" // Иконка замка при наведении
         },
-        'click': {
-            fillStyleColor: 0x66C7FF,
-            fillStyleAlpha: 0.8,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x66C7FF,
-            lineStyleAlpha: 1,
-        },
+        'click': {}
     },
+
+    // Враги недоступные для атаки
     'enemy_blocked': {
         'normal': {
-            fillStyleColor: 0x400000, 
+            fillStyleColor: 0x400000,
             fillStyleAlpha: 0.6,
             lineStyleWidth: 2,
             lineStyleColor: 0x220000,
             lineStyleAlpha: 1,
+            icon: "sword_crossed" // Перечеркнутый меч
         },
         'hover': {
-            fillStyleColor: 0x3a60a0,
-            fillStyleAlpha: 0.7,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x3baaf6,
-            lineStyleAlpha: 0.3,
-            glowColor: 0x5080c0,
+            filter: "grayscale" // Ч/б фильтр
         },
-        'click': {
-            fillStyleColor: 0x66C7FF,
-            fillStyleAlpha: 0.8,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x66C7FF,
-            lineStyleAlpha: 1,
-        },
+        'click': {}
     },
+
+    // Активное существо (выбранное)
     'selected': {
         'normal': {
-            fillStyleColor: 0xC34FFC, 
-            fillStyleAlpha: 1,
-            lineStyleWidth: 2,
+            fillStyleColor: 0xC34FFC,
+            fillStyleAlpha: 0.2,
+            lineStyleWidth: 4,
             lineStyleColor: 0x66C7FF,
             lineStyleAlpha: 1,
+            innerGlow: 0xC34FFC, // Внутренняя обводка
+            outerGlow: 0x66C7FF,  // Внешняя обводка
+            particles: "rune"     // Парящие руны
         },
-        'hover': {
-            fillStyleColor: 0x3a60a0,
-            fillStyleAlpha: 0.7,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x3baaf6,
-            lineStyleAlpha: 0.3,
-            glowColor: 0x5080c0,
-        },
-        'click': {
-            fillStyleColor: 0x66C7FF,
-            fillStyleAlpha: 0.8,
-            lineStyleWidth: 2,
-            lineStyleColor: 0x66C7FF,
-            lineStyleAlpha: 1,
-        },
-    },
+        'hover': {},
+        'click': {}
+    }
 };
-
 export class HexTile extends Phaser.GameObjects.Container {
     static PULSE_DURATION = 5000; // Общая длительность пульсации для всех гексов
     static PULSE_X_MODIFIER = 150; // Смещение пульсации по горзонтали
@@ -326,10 +295,10 @@ export class HexTile extends Phaser.GameObjects.Container {
     }
 
     applyStateStyles(style = 'normal') {
-        // Останавливаем любую активную пульсацию перед сменой состояния
-        this.stopSyncedPulse();
-
         const statePalette = (palette[this.state] || palette[HEX_STATE_NORMAL])[style]
+        if (Object.values(statePalette).length === 0) {
+            return;
+        }
         
         this.stopSyncedPulse();
         this.hexBase.clear();
@@ -384,14 +353,14 @@ export class HexTile extends Phaser.GameObjects.Container {
 
             // Подсвечиваем существо при наведении
             if (this.creature) {
-                this.creature.setHighlighted(true);
+                this.creature.setHovered(true);
             }
         } else {
             this.removeHoverEffect();
 
             // Снимаем подсветку с существа
             if (this.creature) {
-                this.creature.setHighlighted(false);
+                this.creature.setHovered(false);
             }
         }
     }
@@ -544,6 +513,11 @@ export class HexTile extends Phaser.GameObjects.Container {
 
     applyClickEffect() {
         const statePalette = (palette[this.state] || palette[HEX_STATE_NORMAL])['click']
+
+        if (Object.values(statePalette).length === 0) {
+            return;
+        }
+        
         // Создаем временную графику для клика
         this.clickEffect = this.scene.add.graphics();
         this.add(this.clickEffect);

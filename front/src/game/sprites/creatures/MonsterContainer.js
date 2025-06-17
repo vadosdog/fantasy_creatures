@@ -29,19 +29,6 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
         this.add(this.creatureSprite)
         this.creatureSprite.setDefaultState()
 
-
-            // this.creatureSprite.setInteractive({ pixelPerfect: true })
-
-        // Tooltips
-        //TODO добавить КЛИКАБЕЛЬНОСТЬ
-        
-        // this.creatureSprite.on('pointerover', () => {
-        //     gameStore.setHoveredCreature(creature.id)
-        // })
-        //     .on('pointerout', () => {
-        //         gameStore.setHoveredCreature(null);
-        //     })
-
         this.creatureText = scene.add.text(
             0,
             12,
@@ -160,11 +147,13 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
     }
 
     // Метод для визуального выделения
-    setHighlighted(isHighlighted) {
+    setHovered(isHighlighted) {
         if (isHighlighted) {
+            gameStore.setHoveredCreature(this.creature.id)
             this.creatureSprite.setTint(0xffff00);
         } else {
             this.creatureSprite.clearTint();
+            gameStore.setHoveredCreature(null);
         }
     }
 
