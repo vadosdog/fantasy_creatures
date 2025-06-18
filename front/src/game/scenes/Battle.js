@@ -175,13 +175,18 @@ export class Battle extends Scene {
     }
 
     handleStep() {
+        if (this.store.activeCreature) {
+            this.store.activeCreature.creatureSpriteContainer.setMonsterActive(false)
+        }
         // вообще кнопки надо скрывать в конце прошлого раунда
         this.hideButtons()
         this.hexagonsArray.forEach(hexagonSprite => {
             hexagonSprite.setHexState(HEX_STATE_NORMAL)
         })
         this.store.handleRound()
+        
         let {activeCreature, availableActions, selectedActionId, effects} = this.store.getTurn()
+        activeCreature.creatureSpriteContainer.setMonsterActive(true)
         // показывает произошедшие эффекты в начале раунда
         const timeline = this.add.timeline({});
         timeline.add({

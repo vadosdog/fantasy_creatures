@@ -140,6 +140,32 @@ export class Preloader extends Scene {
         // this.load.image('enemy', 'bomb.png');
         // this.load.image('boss', 'star.png');
         // this.load.image('trap', 'explorationLevel/3 Objects/Pointers/1.png');
+
+        // Создаем текстуру для свечения (если ещё не создана)
+        if (!this.textures.exists('glowTexture')) {
+            // 1. Создаем временный canvas
+            const size = 256;
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            // 2. Рисуем радиальный градиент
+            const gradient = ctx.createRadialGradient(
+                size / 2, size / 2, 0,
+                size / 2, size / 2, size / 2
+            );
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 3. Добавляем текстуру в менеджер текстур Phaser
+            this.textures.addCanvas('glowTexture', canvas);
+        }
     }
 
     create() {

@@ -26,6 +26,9 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
 
         this.creatureSprite = new Monster1(creature.texture, scene, 0, -20, this.defaultDirection);
         this.creatureSprite.setScale(1.7, 1.7)
+
+
+        this.createGlowSprite()
         this.add(this.creatureSprite)
         this.creatureSprite.setDefaultState()
 
@@ -43,8 +46,34 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
         this.add(this.creatureText)
     }
 
+    createGlowSprite() {
+        // Спрайт для свечения (под монстром)
+        this.glowSprite = this.scene.add.sprite(0, 0, 'glowTexture')
+            .setVisible(false) // Начальное состояние
+            .setTint(0xFFD900) // Желтый цвет (#FFD900 = rgba(255, 217, 0))
+            .setAlpha(0.8);    // Прозрачность 0.8
+
+        // Настройка размера свечения (на 15-20% больше монстра)
+        console.log(this.creatureSprite)
+        this.glowSprite.setDisplaySize(
+            this.creatureSprite.width * 2,
+            this.creatureSprite.height * 2
+        );
+
+        // Порядок добавления: свечение -> монстр (свечение под монстром)
+        this.add(this.glowSprite);
+
+        // Дополнительно: если монстр смещён в спрайте, выровняйте свечение
+        // this.glowSprite.setPosition(this.creatureSprite.x, this.creatureSprite.y);
+    }
+
     setMonsterState(newState) {
         this.creatureSprite.setMonsterState(newState)
+    }
+    
+    setMonsterActive(active) {
+        // Выставляем свечение для активного существа
+        this.glowSprite.setVisible(active);
     }
 
     setDefaultState() {
