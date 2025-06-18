@@ -54,7 +54,6 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
             .setAlpha(0.8);    // Прозрачность 0.8
 
         // Настройка размера свечения (на 15-20% больше монстра)
-        console.log(this.creatureSprite)
         this.glowSprite.setDisplaySize(
             this.creatureSprite.width * 2,
             this.creatureSprite.height * 2

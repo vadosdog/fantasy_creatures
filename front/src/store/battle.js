@@ -110,16 +110,17 @@ export const useBattleStore = defineStore('battle', {
             if (CreatureAPI.hasEffect(activeCreature, 'freeze')) {
                 return
             }
-            const moveable = this.getMoveablePositions(activeCreature)
-            if (moveable.length) {
+            const moveablePositions = this.getMoveablePositions(activeCreature)
+            if (moveablePositions.length) {
                 this.availableActions.push({
                     action: 'move',
-                    targets: moveable,
+                    targets: moveablePositions,
                 })
             }
 
             activeCreature.actions.forEach(action => {
                 const actionTargets = []
+                const actionDirections = {}
                 this.creatures.forEach(creature => {
                     if (action.actionType === 'treat'
                         ? creature.direction !== activeCreature.direction
@@ -156,6 +157,20 @@ export const useBattleStore = defineStore('battle', {
                     }
 
                     actionTargets.push(creature.position)
+
+                    if (action.actionType === 'melee') {
+                        // Для ближней атаки дополнительно высчитываем направление
+                        const neighbors = this.getNeighbors(creature.position, activeCreature.position);
+
+                        const validPositions = neighbors.filter(pos =>
+                            moveablePositions.some(mp => mp[0] === pos[0] && mp[1] === pos[1]) 
+                            || (pos[0] === activeCreature.position[0] && pos[1] === activeCreature.position[1])
+                        );
+
+                        if (validPositions.length > 0) {
+                            actionDirections[creature.position.join(',')] = validPositions
+                        }
+                    }
                 })
 
                 if (actionTargets.length > 0) {
@@ -163,8 +178,8 @@ export const useBattleStore = defineStore('battle', {
                         action: action.actionType === 'treat' ? 'treat' : 'attack', //как будто должно быть actionType
                         actionObject: action, //а тут просто action
                         targets: actionTargets,
+                        actionDirections,
                     })
-
                 }
             })
 
@@ -359,13 +374,32 @@ export const useBattleStore = defineStore('battle', {
         },
         getDirections(position) {
             return [
-                [0, -2], //влево
                 position[1] % 2 ? [0, -1] : [-1, -1], //лево вверх
                 position[1] % 2 ? [0, 1] : [-1, 1], //право вверх
                 [0, 2], //право
                 position[1] % 2 ? [1, 1] : [0, 1], //право вниз
                 position[1] % 2 ? [1, -1] : [0, -1], //лево вниз
+                [0, -2], //влево
             ]
+        },
+        getNeighbors(position, [currentX, currentY]) {
+            const neighbors = []
+            const [x, y] = position
+            for (const [dx, dy] of this.getDirections(position)) {
+                const newX = x + dx;
+                const newY = y + dy;
+                if (!(this.battleMap.hasByCoords(newX, newY) // ячейка должна существоть
+                    && ( //и
+                        this.battleMap.isMovable(newX, newY) //или быть доступна для перемещения
+                        || (newX === currentX && newY === currentY)) // или быть той, на которой уже стоит существо
+                    )
+                ) {
+                    continue;
+                }
+
+                neighbors.push([newX, newY])
+            }
+            return neighbors
         },
         findPath(start, end, useObstacles = true) {
             let obstacles = new Set()
@@ -682,7 +716,7 @@ export const useBattleStore = defineStore('battle', {
         selectAction(actionId) {
             this.selectedActionId = actionId
         },
-        
+
         // Работа с очередью 
         updateQueueData() {
             if (this.queue) {

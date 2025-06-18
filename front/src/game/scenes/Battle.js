@@ -4,7 +4,7 @@ import {
     HEX_STATE_ATTACKABLE,
     HEX_STATE_MOVEABLE,
     HEX_STATE_NORMAL,
-    HEX_STATE_SELECTED, 
+    HEX_STATE_SELECTED,
     HEX_STATE_TREATABLE,
 } from "../classes/battle/HexTile.js";
 import MonsterContainer from "../sprites/creatures/MonsterContainer.js";
@@ -24,7 +24,7 @@ const gameStore = useGameStore()
 
 
 export class Battle extends Scene {
-    showGridIndexes = false
+    showGridIndexes = true
     hexagonGroup;
     store
     hexagonsArray;
@@ -32,6 +32,13 @@ export class Battle extends Scene {
     selectedAction
     delayTurnModelOpened = false
     gameSpeed = 1
+    currentAttack = {
+        enemyId: null,
+        direction: null,
+        position: null
+    };
+    attackIndicator = null;
+    hoveredCreature = null;
 
     constructor() {
         super('Battle');
@@ -63,12 +70,21 @@ export class Battle extends Scene {
 
         watchEffect(() => {
             const id = gameStore.hoveredCreatureId;
+            if (!id) {
+                this.hoveredCreature = null
+            }
             Object.entries(this.store.creatures).forEach(([key, creature]) => {
                 if (!creature.creatureSpriteContainer) return;
 
                 creature.creatureSpriteContainer.creatureSprite.setTint(creature.id === id ? 0xffff00 : 0xffffff);
+
+                if (creature.id === id) {
+                    this.hoveredCreature = creature
+                }
             });
         });
+
+        this.input.on('pointermove', this.handleAttackDirection.bind(this));
     }
 
     resize(gameSize) {
@@ -184,7 +200,7 @@ export class Battle extends Scene {
             hexagonSprite.setHexState(HEX_STATE_NORMAL)
         })
         this.store.handleRound()
-        
+
         let {activeCreature, availableActions, selectedActionId, effects} = this.store.getTurn()
         activeCreature.creatureSpriteContainer.setMonsterActive(true)
         // показывает произошедшие эффекты в начале раунда
@@ -273,12 +289,7 @@ export class Battle extends Scene {
     markActionAvailableHexs(reset = true) {
         if (reset) {
             this.hexagonsArray.forEach(hexagonSprite => {
-                if (
-                    hexagonSprite.hexState === HEX_STATE_ATTACKABLE
-                    || hexagonSprite.hexState === HEX_STATE_TREATABLE
-                ) {
-                    hexagonSprite.setHexState(HEX_STATE_NORMAL)
-                }
+                hexagonSprite.setHexState(HEX_STATE_NORMAL)
             })
         }
 
@@ -295,7 +306,7 @@ export class Battle extends Scene {
                 return
             }
 
-            if (this.selectedAction.action.id !== actionObject.id) {
+            if (this.selectedAction.action?.id !== actionObject.id) {
                 return
             }
 
@@ -364,6 +375,7 @@ export class Battle extends Scene {
                 });
                 break
             case 'attack':
+                console.log(123)
                 let attackResult
                 if (!targetCreature) {
                     this.store.setBattleState(prevState)
@@ -379,13 +391,13 @@ export class Battle extends Scene {
                 let timelineStart = 0
                 // для ближний атак, нужно еще перемещение
                 if (action.actionObject.actionType === 'melee') {
+                    console.log(this.currentAttack.position)
                     // Получаем путь от текущей позиции персонажа до выбранной клетки
-                    path = this.findPath(this.store.activeCreature.position, position);
+                    path = this.findPath(this.store.activeCreature.position, this.currentAttack.position);
                     if (!path || path.length === 0) {
                         this.store.setBattleState(prevState)
                         return;
                     }
-                    path = path.slice(0, path.length - 1)
 
                     if (path.length > 1) {
                         attackResult = this.store.playerActionMoveAndAttack(path, position, action.actionObject)
@@ -421,6 +433,7 @@ export class Battle extends Scene {
                     }
                 });
 
+                console.log(attackResult)
                 if (attackResult.success) {
                     timeline.add({
                         at: 200 * (path.length), //гомосятина
@@ -578,7 +591,7 @@ export class Battle extends Scene {
             if (currentHex && this.store.activeCreature.health > 0) {
                 currentHex.setCreature(this.store.activeCreature.creatureSpriteContainer);
             }
-            
+
             this.store.endTurn();
             if (
                 this.store.battleState === BATTLE_STATE_BATTLE_OVER_WIN
@@ -597,7 +610,7 @@ export class Battle extends Scene {
 
     moveCreatureAlongPath(timeline, activeCreature, path) {
         if (path.length < 2) return;
-        
+
         // Получаем старый гекс перед перемещением
         const oldKey = activeCreature.position.join(',');
         const oldHex = this.hexagonsArray.get(oldKey);
@@ -807,13 +820,30 @@ export class Battle extends Scene {
         }
 
         // Ищем действие по ID
-        const foundAction = this.store.activeCreature.actions.find(a => a.id === actionId);
-        if (!foundAction) return;
+        let foundAction = this.store.availableActions.find(a => {
+            if (!a.actionObject) {
+                return false
+            }
+            return a.actionObject.id === actionId
+        });
 
-        // Устанавливаем выбранное действие
-        this.selectedAction = {
-            action: foundAction
-        };
+        if (foundAction) {
+            // Устанавливаем выбранное действие
+            this.selectedAction = {
+                action: foundAction.actionObject,
+                targets: foundAction.targets,
+                actionDirections: foundAction.actionDirections,
+            };
+        } else {
+            // Ищем действие по ID
+            foundAction = this.store.activeCreature.actions.find(a => a.id === actionId);
+
+            // Устанавливаем выбранное действие
+            this.selectedAction = {
+                action: foundAction
+            };
+        }
+
 
         // Помечаем доступные гексы
         this.markActionAvailableHexs();
@@ -932,5 +962,119 @@ export class Battle extends Scene {
             event.at /= this.gameSpeed;
             event.time /= this.gameSpeed;
         });
+    }
+
+    // New method to handle melee attack direction
+    handleAttackDirection(pointer) {
+        if (
+            !this.selectedAction 
+            || !this.selectedAction.action
+            || !this.selectedAction.actionDirections
+            || this.selectedAction.action?.actionType !== 'melee'
+        ) return;
+
+        // Clear previous state
+        this.clearAttackIndicator();
+
+        if (!gameStore.hoveredCreatureId) {
+            return
+        }
+
+        // Find hovered enemy
+        const enemy = this.hoveredCreature;
+        
+        if (!this.selectedAction.actionDirections[enemy.position.join(',')]) return;
+
+        // Calculate attack direction
+        const hex = this.hexagonsArray.get(enemy.position.join(','));
+        const angle = Phaser.Math.Angle.Between(
+            hex.x, hex.y,
+            pointer.worldX, pointer.worldY
+        );
+
+        const directions = hex.getSectorAngle();
+        let direction = 5;
+        let min = Infinity
+
+        // Если меньше минимального сектора, значит право
+        if (angle < (directions[0] - Math.PI / 6)) {
+            direction = 5
+        } else {
+            // Находим ближайший сектор
+            for (let i = 0; i < directions.length; i++) {
+                const border = directions[i] - Math.PI / 6
+                if (angle > border) {
+                    direction = i;
+                }
+            }
+        }
+
+
+        // Get attack position
+        const positions = this.selectedAction.actionDirections[enemy.position.join(',')];
+        const attackPosition = this.getPositionInDirection(
+            enemy.position,
+            direction
+        );
+
+        // Check if position is valid
+        if (!positions.some(pos =>
+            pos[0] === attackPosition[0] && pos[1] === attackPosition[1]
+        )) return;
+
+        // Store current attack
+        this.currentAttack = {
+            enemyId: enemy.id,
+            direction,
+            position: attackPosition
+        };
+
+        // Visual feedback
+        this.showAttackDirection(hex, direction, attackPosition);
+    }
+
+    getPositionInDirection(targetPosition, direction) {
+        const [x, y] = targetPosition;
+
+        // Direction vectors based on hex grid orientation
+        // For pointy-top hexagons (even-r offset coordinates)
+        const [dx, dy] = this.store.getDirections(targetPosition)[direction];
+        return [x + dx, y + dy];
+    }
+
+
+    // Helper to show attack direction
+    showAttackDirection(enemyHex, direction, attackPosition) {
+        // Highlight attack position
+        const attackHex = this.hexagonsArray.get(attackPosition.join(','));
+        attackHex.setHexState(HEX_STATE_SELECTED);
+
+        // Create sword indicator
+        const angle = enemyHex.getSectorAngle()[direction];
+        const distance = enemyHex.radius * 0.7;
+        const x = enemyHex.x + Math.cos(angle) * distance;
+        const y = enemyHex.y + Math.sin(angle) * distance;
+
+        this.attackIndicator = this.add.sprite(x, y, 'sword_icon');
+        this.attackIndicator.rotation = angle + Math.PI / 2;
+        this.attackIndicator.setDepth(100);
+        this.attackHex = attackHex
+    }
+
+// Clear previous indicators
+    clearAttackIndicator() {
+        if (this.attackIndicator) {
+            this.attackIndicator.destroy();
+            this.attackIndicator = null;
+
+            this.attackHex.setHexState(HEX_STATE_MOVEABLE)
+
+
+            this.currentAttack = {
+                enemyId: null,
+                direction: null,
+                position: null
+            };
+        }
     }
 }

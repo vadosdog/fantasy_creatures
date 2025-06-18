@@ -175,6 +175,16 @@ const palette = {
         'click': {}
     }
 };
+
+export const ATTACK_DIRECTION = {
+    NE: 0,
+    E: 1,
+    SE: 2,
+    SW: 3,
+    W: 4,
+    NW: 5
+};
+
 export class HexTile extends Phaser.GameObjects.Container {
     static PULSE_DURATION = 5000; // Общая длительность пульсации для всех гексов
     static PULSE_X_MODIFIER = 150; // Смещение пульсации по горзонтали
@@ -299,7 +309,7 @@ export class HexTile extends Phaser.GameObjects.Container {
         if (Object.values(statePalette).length === 0) {
             return;
         }
-        
+
         this.stopSyncedPulse();
         this.hexBase.clear();
         this.hexBase.fillStyle(statePalette.fillStyleColor, statePalette.fillStyleAlpha);
@@ -517,7 +527,7 @@ export class HexTile extends Phaser.GameObjects.Container {
         if (Object.values(statePalette).length === 0) {
             return;
         }
-        
+
         // Создаем временную графику для клика
         this.clickEffect = this.scene.add.graphics();
         this.add(this.clickEffect);
@@ -538,11 +548,11 @@ export class HexTile extends Phaser.GameObjects.Container {
                     this.clickEffect.destroy();
                     this.clickEffect = null;
                 }
-                
+
                 this.setHexState(this.state);
             }
         });
-        
+
         return
     }
 
@@ -631,7 +641,7 @@ export class HexTile extends Phaser.GameObjects.Container {
                 useHandCursor: true
             });
         }
-        
+
         this.input.hitArea = combinedArea
     }
 
@@ -727,6 +737,7 @@ export class HexTile extends Phaser.GameObjects.Container {
         // Возвращаем результат или исходный полигон при ошибке
         return processUnionResult(unionResult) || hexPolygon;
     }
+
     // При перемещении гекса обновляем хитовую область
     setPosition(x, y) {
         super.setPosition(x, y);
@@ -802,7 +813,7 @@ export class HexTile extends Phaser.GameObjects.Container {
             // Рисуем хитовую область
             const hitArea = this.input.hitArea;
             this.debugGraphics.lineStyle(2, 0xff0000);
-            this.debugGraphics.strokePoints(hitArea.points, true);   
+            this.debugGraphics.strokePoints(hitArea.points, true);
         }
 
         return
@@ -814,4 +825,18 @@ export class HexTile extends Phaser.GameObjects.Container {
             });
             this.debugGraphics.add(text);
         });
-    }}
+    }
+
+    getSectorAngle() {
+        // Показывает центры секторов
+        return [
+            -Math.PI / 2 - Math.PI / 6,    // Лево верх
+            -Math.PI / 2 + Math.PI / 6,   // Правый верх
+            0,     // Право
+            Math.PI / 2 - Math.PI / 6,     // Право низ
+            Math.PI / 2 + Math.PI / 6,      // Лево низ
+            Math.PI // Остаток
+        ];
+    }
+
+}
