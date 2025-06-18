@@ -101,105 +101,186 @@ function closeDialog() {
 </script>
 
 <template>
-    <q-dialog v-model="confirmSkip" persistent class="text-dark" @show="openDialog" @hide="closeDialog">
-        <q-card>
+    <q-dialog v-model="confirmSkip" persistent class="text-foreground" @show="openDialog" @hide="closeDialog">
+        <q-card class="bg-card border backdrop-blur-md">
             <q-card-section class="row items-center">
-                <q-avatar icon="shield" color="primary" text-color="white"/>
-                <span class="q-ml-sm">Вы уверены, что хотите принять защитную стойку?</span>
+                <q-avatar icon="shield" class="bg-primary text-background"/>
+                <span class="q-ml-sm text-foreground">Вы уверены, что хотите принять защитную стойку?</span>
             </q-card-section>
 
             <q-card-actions align="right">
-                <q-btn flat label="Сражаться!" color="" v-close-popup/>
-                <q-btn flat label="Защищаться!" color="primary" v-close-popup
+                <q-btn flat label="Сражаться!" class="text-muted-foreground" v-close-popup/>
+                <q-btn flat label="Защищаться!"
+                       class="bg-primary-gradient text-background mystical-glow"
+                       v-close-popup
                        @click="() => battleStore.selectAction('skip')"
-                       icon="shield"
-                />
+                       icon="shield"/>
             </q-card-actions>
         </q-card>
     </q-dialog>
-    <q-dialog v-model="confirmDelay" persistent class="text-dark" @show="openDialog" @hide="closeDialog">
-        <q-card>
+    <q-dialog v-model="confirmDelay" persistent class="text-foreground" @show="openDialog" @hide="closeDialog">
+        <q-card class="bg-card border backdrop-blur-md">
             <q-card-section class="row items-center">
-                <q-avatar icon="shield" color="primary" text-color="white"/>
-                <span class="q-ml-sm">Пока недоступно. Иди сражайся!</span>
+                <q-avatar icon="shield" class="bg-primary text-background"/>
+                <span class="q-ml-sm text-foreground">Пока недоступно. Иди сражайся!</span>
             </q-card-section>
 
             <q-card-actions align="right">
-                <q-btn flat label="Сражаться!" color="" v-close-popup/>
+                <q-btn flat label="Сражаться!" class="text-muted-foreground" v-close-popup/>
             </q-card-actions>
         </q-card>
     </q-dialog>
-    <q-card class="bg-blue-1 text-blue-9 q-mb-md">
+
+    <!-- Header Card -->
+    <q-card class="bg-card border backdrop-blur-md text-foreground q-mb-md">
         <q-card-section>
             <div class="text-h6">Ваш ход</div>
         </q-card-section>
     </q-card>
+
     <CreatureCard
         v-if="activeCreature && activeCreature.id"
         :creature="activeCreature"
         :key="activeCreature.id"
     />
-    <q-card v-if="activeCreature && activeCreature.id">
+
+    <!-- Actions Panel -->
+    <q-card
+        v-if="activeCreature && activeCreature.id"
+        class="bg-card border"
+    >
         <q-card-section class="row">
             <q-btn
                 v-for="action in activeCreature.actions"
-                class="col-12 text-teal q-mb-sm"
+                class="col-12 q-mb-sm action-button text-foreground"
                 :class="{
-                    'text-teal': selectedActionId !== action.id,
-                    'text-grey-1': selectedActionId === action.id,
-                }"
-                :color="selectedActionId === action.id ? 'teal' : undefined"
+          'action-button-unselected': selectedActionId !== action.id,
+          'action-button-selected': selectedActionId === action.id,
+        }"
                 no-caps
                 align="left"
                 :disable="action.currentCooldown > 0 || action.pp > activeCreature.pp"
                 @click="() => battleStore.selectAction(action.id)"
             >
+                <!-- Cooldown Knob -->
                 <q-knob
                     show-value
                     font-size="5px"
-                    class="text-light-blue q-ma-xs absolute-right"
+                    class="text-foreground q-ma-xs absolute-right"
                     :model-value="action.cooldown - action.currentCooldown"
                     :max="action.cooldown"
                     :thickness="0.25"
-                    color="light-blue"
-                    track-color="grey-3"
+                    :color="action.currentCooldown > 0 ? 'destructive' : 'foreground'"
+                    track-color="muted"
                     size="md"
                 >
-                    <q-icon flat round :color="getActionIcon(action).color" :name="getActionIcon(action).icon"
-                            size="sm"/>
+                    <q-icon flat round :color="getActionIcon(action).color"
+                            :name="getActionIcon(action).icon" size="sm"/>
                 </q-knob>
-                <div class="col-12 text-left">{{ getActionTypeIcon(action) }} ️{{ action.name }}</div>
-                <div class="col-12 text-left" v-if="action.range > 1">📏 {{ action.range }}</div>
+
+                <!-- Action Details -->
+                <div class="col-12 text-left text-foreground">
+                    {{ getActionTypeIcon(action) }} ️{{ action.name }}
+                </div>
+                <div class="col-12 text-left text-foreground" v-if="action.range > 1">
+                    📏 {{ action.range }}
+                </div>
                 <div class="col-12 text-left">
-                    <span
-                        :class="{'text-negative': action.pp > activeCreature.pp}"
-                    >
-                        PP: {{ action.pp }}
-                    </span>
-                    <span
-                        v-if="action.cooldown > 0"
-                        :class="{'text-negative': action.currentCooldown > 0}"
-                    >
-                        CD: {{ action.currentCooldown }} / {{ action.cooldown }}
-                    </span>
+          <span :class="{'text-destructive': action.pp > activeCreature.pp}">
+            PP: {{ action.pp }}
+          </span>
+                    <span v-if="action.cooldown > 0"
+                          :class="{'text-destructive': action.currentCooldown > 0}">
+            CD: {{ action.currentCooldown }} / {{ action.cooldown }}
+          </span>
                 </div>
-                <div class="col-12 text-left">🎯 {{ action.hitChance * 100 }}% <span
-                    v-if="action.critChance > 0">💢 {{ action.critChance * 100 }}%</span> 💥 {{ action.baseDamage }}
+                <div class="col-12 text-left text-foreground">
+                    🎯 {{ action.hitChance * 100 }}%
+                    <span v-if="action.critChance > 0">💢 {{ action.critChance * 100 }}%</span>
+                    💥 {{ action.baseDamage }}
                 </div>
-                <div class="col-12 text-left" v-if="action.effects.length">
-                    <q-separator/>
+                <div class="col-12 text-left text-foreground" v-if="action.effects.length">
+                    <q-separator class="bg-border"/>
                     <div v-for="effect in action.effects">
-                        <EffectSpan :effect="effect"/> <span
-                        v-if="effect.duration > 1">x{{ effect.duration }}</span> 🎲 {{ effect.chance * 100 }}%
+                        <EffectSpan :effect="effect"/>
+                        <span v-if="effect.duration > 1" class="q-pl-xs">x{{ effect.duration }}</span>
+                        🎲 {{ effect.chance * 100 }}%
                     </div>
                 </div>
             </q-btn>
-            <q-btn class="col-6 text-teal" icon="fast_forward" label="Отложить" @click="confirmDelay = true "/>
-            <q-btn class="col-6 text-teal" icon="shield" label="Защита" @click="confirmSkip = true "/>
+
+            <!-- Action Buttons -->
+            <q-btn class="col-6 secondary-button" icon="fast_forward" label="Отложить"
+                   @click="confirmDelay = true "/>
+            <q-btn class="secondary-button"
+                   icon="shield" label="Защита" @click="confirmSkip = true "/>
         </q-card-section>
     </q-card>
 </template>
 
 <style scoped>
+/* Card Design */
+.bg-card {
+    background: rgba(12, 16, 23, 0.8);
+    backdrop-filter: blur(12px);
+}
 
+/* Action Buttons */
+.action-button {
+    transition: all 0.3s ease;
+    text-align: left;
+    
+}
+
+.action-button-unselected {
+    background: hsl(var(--secondary));
+    color: hsl(var(--foreground));
+    border: 1px solid hsl(var(--border));
+}
+
+.action-button-unselected:hover {
+    box-shadow: 0 0 15px rgba(102, 199, 255, 0.3);
+}
+
+.action-button-selected {
+    background: linear-gradient(to right, hsl(var(--primary)), hsl(280, 60%, 50%));
+    color: hsl(var(--background));
+    border: none;
+}
+
+.secondary-button {
+    background: hsl(var(--secondary));
+    color: hsl(var(--foreground));
+    border: 1px solid hsl(var(--border));
+}
+
+/* Gradients & Effects */
+.bg-primary-gradient {
+    background: linear-gradient(to right, hsl(var(--primary)), hsl(280, 60%, 50%));
+}
+
+.mystical-glow {
+    box-shadow: 0 0 20px rgba(139, 69, 193, 0.4),
+    0 0 40px rgba(59, 130, 246, 0.3),
+    0 0 60px rgba(139, 69, 193, 0.2);
+}
+
+.mystical-glow:hover {
+    box-shadow: 0 0 30px rgba(139, 69, 193, 0.6),
+    0 0 60px rgba(59, 130, 246, 0.4),
+    0 0 90px rgba(139, 69, 193, 0.3);
+}
+
+/* Text Styles */
+.text-foreground {
+    color: hsl(var(--foreground));
+}
+
+.text-muted-foreground {
+    color: hsl(var(--muted-foreground));
+}
+
+.text-destructive {
+    color: hsl(var(--destructive));
+}
 </style>

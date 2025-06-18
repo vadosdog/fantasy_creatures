@@ -217,7 +217,7 @@ const safeCreature = ref(true)
             </q-card-actions>
         </q-card-section>
         <q-card-section>
-            <div class="text-h5 q-mt-sm q-mb-xs">{{ creature.name }}</div>
+            <div class="text-h5 q-mt-sm q-mb-xs text-primary-foreground">{{ creature.name }}</div>
 
 
             <q-linear-progress size="20px" :value="healthProgress" :color="healthColor" class="q-mt-sm">
@@ -225,7 +225,7 @@ const safeCreature = ref(true)
                     <q-badge color="white" text-color="dark" :label="'HP: ' + creature?.health + '/' + maxHealth"/>
                 </div>
             </q-linear-progress>
-            <q-linear-progress size="15px" :value="ppProgress" color="healthColor" class="q-mt-sm">
+            <q-linear-progress size="15px" :value="ppProgress" color="accent" class="q-mt-sm">
                 <div class="absolute-full flex flex-center">
                     <q-badge color="white" text-color="dark" :label="'PP: ' + creature?.pp + '/' + maxPp"/>
                 </div>
