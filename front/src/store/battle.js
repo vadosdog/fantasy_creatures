@@ -162,9 +162,9 @@ export const useBattleStore = defineStore('battle', {
                         // Для ближней атаки дополнительно высчитываем направление
                         const neighbors = this.getNeighbors(creature.position, activeCreature.position);
 
-                        const validPositions = neighbors.filter(pos =>
-                            moveablePositions.some(mp => mp[0] === pos[0] && mp[1] === pos[1]) 
-                            || (pos[0] === activeCreature.position[0] && pos[1] === activeCreature.position[1])
+                        const validPositions = neighbors.filter(({position}) =>
+                            moveablePositions.some(mp => mp[0] === position[0] && mp[1] === position[1])
+                            || (position[0] === activeCreature.position[0] && position[1] === activeCreature.position[1])
                         );
 
                         if (validPositions.length > 0) {
@@ -385,20 +385,24 @@ export const useBattleStore = defineStore('battle', {
         getNeighbors(position, [currentX, currentY]) {
             const neighbors = []
             const [x, y] = position
-            for (const [dx, dy] of this.getDirections(position)) {
+
+            this.getDirections(position).forEach(([dx, dy], i) => {
                 const newX = x + dx;
                 const newY = y + dy;
                 if (!(this.battleMap.hasByCoords(newX, newY) // ячейка должна существоть
                     && ( //и
                         this.battleMap.isMovable(newX, newY) //или быть доступна для перемещения
                         || (newX === currentX && newY === currentY)) // или быть той, на которой уже стоит существо
-                    )
+                )
                 ) {
-                    continue;
+                    return;
                 }
 
-                neighbors.push([newX, newY])
-            }
+                neighbors.push({
+                    position: [newX, newY],
+                    direction: i,
+                })
+            });
             return neighbors
         },
         findPath(start, end, useObstacles = true) {

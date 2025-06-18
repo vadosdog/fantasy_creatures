@@ -194,6 +194,7 @@ export class Battle extends Scene {
         if (this.store.activeCreature) {
             this.store.activeCreature.creatureSpriteContainer.setMonsterActive(false)
         }
+        this.clearAttackIndicator()
         // вообще кнопки надо скрывать в конце прошлого раунда
         this.hideButtons()
         this.hexagonsArray.forEach(hexagonSprite => {
@@ -375,7 +376,6 @@ export class Battle extends Scene {
                 });
                 break
             case 'attack':
-                console.log(123)
                 let attackResult
                 if (!targetCreature) {
                     this.store.setBattleState(prevState)
@@ -391,7 +391,6 @@ export class Battle extends Scene {
                 let timelineStart = 0
                 // для ближний атак, нужно еще перемещение
                 if (action.actionObject.actionType === 'melee') {
-                    console.log(this.currentAttack.position)
                     // Получаем путь от текущей позиции персонажа до выбранной клетки
                     path = this.findPath(this.store.activeCreature.position, this.currentAttack.position);
                     if (!path || path.length === 0) {
@@ -433,7 +432,6 @@ export class Battle extends Scene {
                     }
                 });
 
-                console.log(attackResult)
                 if (attackResult.success) {
                     timeline.add({
                         at: 200 * (path.length), //гомосятина
@@ -982,8 +980,13 @@ export class Battle extends Scene {
 
         // Find hovered enemy
         const enemy = this.hoveredCreature;
+       
+        if (!enemy) {
+            return
+        }
         
-        if (!this.selectedAction.actionDirections[enemy.position.join(',')]) return;
+        const availableDirections = this.selectedAction.actionDirections[enemy.position.join(',')]
+        if (!availableDirections) return;
 
         // Calculate attack direction
         const hex = this.hexagonsArray.get(enemy.position.join(','));
@@ -995,6 +998,7 @@ export class Battle extends Scene {
         const directions = hex.getSectorAngle();
         let direction = 5;
         let min = Infinity
+        let minDiff = Math.PI * 2;
 
         // Если меньше минимального сектора, значит право
         if (angle < (directions[0] - Math.PI / 6)) {
@@ -1002,8 +1006,12 @@ export class Battle extends Scene {
         } else {
             // Находим ближайший сектор
             for (let i = 0; i < directions.length; i++) {
-                const border = directions[i] - Math.PI / 6
-                if (angle > border) {
+                if (!availableDirections.some(availableDirection => availableDirection.direction === i)) {
+                    continue;
+                }
+                const diff = Math.abs(Phaser.Math.Angle.Wrap(angle - directions[i]));
+                if (diff < minDiff) {
+                    minDiff = diff;
                     direction = i;
                 }
             }
@@ -1018,8 +1026,8 @@ export class Battle extends Scene {
         );
 
         // Check if position is valid
-        if (!positions.some(pos =>
-            pos[0] === attackPosition[0] && pos[1] === attackPosition[1]
+        if (!positions.some(({position}) =>
+            position[0] === attackPosition[0] && position[1] === attackPosition[1]
         )) return;
 
         // Store current attack
@@ -1055,8 +1063,8 @@ export class Battle extends Scene {
         const x = enemyHex.x + Math.cos(angle) * distance;
         const y = enemyHex.y + Math.sin(angle) * distance;
 
-        this.attackIndicator = this.add.sprite(x, y, 'sword_icon');
-        this.attackIndicator.rotation = angle + Math.PI / 2;
+        this.attackIndicator = this.add.sprite(x, y, 'cursor_sword');
+        this.attackIndicator.rotation = angle + Math.PI + Math.PI / 4;
         this.attackIndicator.setDepth(100);
         this.attackHex = attackHex
     }

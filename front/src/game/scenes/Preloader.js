@@ -109,6 +109,7 @@ export class Preloader extends Scene {
             frameHeight: 32
         });
         this.load.image('Dude_Monster_stand', 'battle/creatures/Dude_Monster/stand.png');
+        this.load.image('cursor_sword', 'battle/cursors/sword.png');
 
         /**
          * Craft Game Crucible Of Souls
