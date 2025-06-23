@@ -1,6 +1,7 @@
 import Monster1 from "./Monster1.js";
 import {CreatureAPI} from "../../classes/battle/Creature.js";
 import {useGameStore} from "../../../store/game.js";
+import Pokemon1 from "./Pokemon1.js";
 
 const gameStore = useGameStore()
 
@@ -24,7 +25,11 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
         }
 
 
-        this.creatureSprite = new Monster1(creature.texture, scene, 0, -20, this.defaultDirection);
+        if (creature.textureType === 'pokemon') {
+            this.creatureSprite = new Pokemon1(creature.texture, scene, 0, -20, this.defaultDirection);
+        } else {
+            this.creatureSprite = new Monster1(creature.texture, scene, 0, -20, this.defaultDirection);
+        }
         this.creatureSprite.setScale(1.7, 1.7)
 
 

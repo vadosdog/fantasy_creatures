@@ -109,6 +109,59 @@ export class Preloader extends Scene {
             frameHeight: 32
         });
         this.load.image('Dude_Monster_stand', 'battle/creatures/Dude_Monster/stand.png');
+        
+        // Pokemons
+        const pokemonList = [
+            // 'Arcanine',
+            // 'Cyndaquil',
+            // // 'Cyndaquil', TODO слишком большой
+            // 'Ninetales',
+            // 'Torkoal',
+            // 'Salandit',
+            // 'Fletchling',
+            // 'Fuecoco',
+            // 'Chesnaught',
+            'Decidueye',
+            'Sandslash',
+            'Ekans',
+            'Hoppip',
+            'Mudkip',
+            'Oshawott',
+            'Piplup',
+            'Popplio',
+            'Quaxly',
+            'Rowlet',
+            'Squirtle',
+            'Totodile',
+            'Treecko',
+            'Turtwig',
+            'Wingull',
+        ];
+        for (const pokemonName of pokemonList) {
+            this.load.spritesheet(pokemonName + '_Pokemon_walk', 'battle/creatures/' + pokemonName + '_Pokemon/walk.png', {
+                frameWidth: 48,
+                frameHeight: 32
+            });
+            this.load.spritesheet(pokemonName + '_Pokemon_attack1', 'battle/creatures/' + pokemonName + '_Pokemon/attack1.png', {
+                frameWidth: 48,
+                frameHeight: 32
+            });
+            this.load.spritesheet(pokemonName + '_Pokemon_hurt', 'battle/creatures/' + pokemonName + '_Pokemon/hurt.png', {
+                frameWidth: 48,
+                frameHeight: 32
+            });
+            this.load.spritesheet(pokemonName + '_Pokemon_death', 'battle/creatures/' + pokemonName + '_Pokemon/sleep.png', {
+                frameWidth: 32,
+                frameHeight: 32
+            });
+            this.load.spritesheet(pokemonName + '_Pokemon_idle', 'battle/creatures/' + pokemonName + '_Pokemon/idle.png', {
+                frameWidth: 48,
+                frameHeight: 32
+            });
+            this.load.image(pokemonName + '_Pokemon_stand', 'battle/creatures/' + pokemonName + '_Pokemon/stand.png');
+        }
+        
+        // Cursors        
         this.load.image('cursor_sword', 'battle/cursors/sword.png');
 
         /**

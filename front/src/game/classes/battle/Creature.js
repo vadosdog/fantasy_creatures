@@ -5,6 +5,7 @@ export function createCreature(config) {
         id: config.id,
         name: config.name,
         texture: config.texture,
+        textureType: config.textureType,
         position: config.position,
         direction: config.direction,
         control: config.control,

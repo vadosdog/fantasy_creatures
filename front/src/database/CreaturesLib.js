@@ -350,17 +350,37 @@ export function getCreature(element, form, role, level) {
         ...creatureActionsLib[element + '-' + form + '-'],
     ]
 
-    switch (creature.role) {
-        case 'tank':
-            creature.texture = 'Pink_Monster'
-            break
-        case 'dd':
-            creature.texture = 'Dude_Monster'
-            break
-        case 'support':
-            creature.texture = 'Owlet_Monster'
-            break
-    }
+
+    creature.texture = [
+        'Decidueye',
+        'Sandslash',
+        'Ekans',
+        'Hoppip',
+        'Mudkip',
+        'Oshawott',
+        'Piplup',
+        'Popplio',
+        'Quaxly',
+        'Rowlet',
+        'Squirtle',
+        'Totodile',
+        'Treecko',
+        'Turtwig',
+        'Wingull',
+    ][Math.floor(Math.random() * 15)] + '_Pokemon';
+    creature.textureType = 'pokemon'
+    // switch (creature.role) {
+    //     case 'tank':
+    //         creature.texture = 'Arcanine_Pokemon'
+    //         creature.textureType = 'pokemon'
+    //         break
+    //     case 'dd':
+    //         creature.texture = 'Dude_Monster'
+    //         break
+    //     case 'support':
+    //         creature.texture = 'Owlet_Monster'
+    //         break
+    // }
 
 
     creature.actions = actions.filter(action => action.level <= level).map(action => {
