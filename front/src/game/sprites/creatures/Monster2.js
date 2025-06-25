@@ -10,7 +10,7 @@ export default class Monster2 extends Phaser.GameObjects.Sprite {
 
         // Точка вращения у основания карточки
         this.setOrigin(0.5, 0.85);
-        this.setScale(1.7); // Стандартный масштаб
+        this.setScale(0.25); // Стандартный масштаб
 
         this.setMonsterState(defaultDirection);
     }
@@ -32,7 +32,8 @@ export default class Monster2 extends Phaser.GameObjects.Sprite {
         this.direction = direction;
 
         this.stopAllTweens();
-        this.setFlipX(direction === 'left');
+        // this.setFlipX(direction === 'left');
+        this.setFlipX(direction !== 'left'); //TODO убрать
 
         switch (action) {
             case 'idle':

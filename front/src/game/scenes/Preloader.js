@@ -161,6 +161,12 @@ export class Preloader extends Scene {
             this.load.image(pokemonName + '_Pokemon_stand', 'battle/creatures/' + pokemonName + '_Pokemon/stand.png');
         }
         
+        // basic creatures
+        const basicCreatures = ['001']
+        for (const basicCreature of basicCreatures) {
+            this.load.image(basicCreature + '_stand', 'battle/creatures/basic/' + basicCreature + '.png')
+        }
+        
         // Cursors        
         this.load.image('cursor_sword', 'battle/cursors/sword.png');
 

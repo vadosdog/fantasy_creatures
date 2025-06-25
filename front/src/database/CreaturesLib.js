@@ -350,24 +350,24 @@ export function getCreature(element, form, role, level) {
         ...creatureActionsLib[element + '-' + form + '-'],
     ]
 
-
-    creature.texture = [
-        'Decidueye',
-        'Sandslash',
-        'Ekans',
-        'Hoppip',
-        'Mudkip',
-        'Oshawott',
-        'Piplup',
-        'Popplio',
-        'Quaxly',
-        'Rowlet',
-        'Squirtle',
-        'Totodile',
-        'Treecko',
-        'Turtwig',
-        'Wingull',
-    ][Math.floor(Math.random() * 15)] + '_Pokemon';
+    creature.texture = '001'
+    // creature.texture = [
+    //     'Decidueye',
+    //     'Sandslash',
+    //     'Ekans',
+    //     'Hoppip',
+    //     'Mudkip',
+    //     'Oshawott',
+    //     'Piplup',
+    //     'Popplio',
+    //     'Quaxly',
+    //     'Rowlet',
+    //     'Squirtle',
+    //     'Totodile',
+    //     'Treecko',
+    //     'Turtwig',
+    //     'Wingull',
+    // ][Math.floor(Math.random() * 15)] + '_Pokemon';
     // creature.textureType = 'pokemon'
     creature.textureType = 'wildermyth'
     // switch (creature.role) {
