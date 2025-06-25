@@ -8,10 +8,11 @@ export default class Monster2 extends Phaser.GameObjects.Sprite {
         this.direction = null;
         this.currentTweens = [];
 
+        const targetSize = 64 // размер гекса сейчас
         // Точка вращения у основания карточки
         this.setOrigin(0.5, 0.85);
-        this.setScale(0.25); // Стандартный масштаб
-
+        this.setScale(targetSize / this.width);
+                                                                                                                            
         this.setMonsterState(defaultDirection);
     }
 

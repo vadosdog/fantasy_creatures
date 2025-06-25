@@ -1,5 +1,7 @@
 [
     {
+        "name": "Светлохвост",
+        "number": "010",
         "element": "fire",
         "form": "beast",
         "role": "support",
@@ -10,14 +12,11 @@
         "initiativeStat": 73,
         "speedStat": 7,
         "maxPP": 16,
-        "ppRegen": 4,
-        "Комментарий": "Средний приоритет",
-        "winrate": "45,9",
-        "%выживаемость": "20,35",
-        "winrate__1": "48,7",
-        "%выживаемость__1": "20,35"
+        "ppRegen": 4
     },
     {
+        "name": "Пирохват",
+        "number": "001",
         "element": "fire",
         "form": "beast",
         "role": "tank",
@@ -28,14 +27,11 @@
         "initiativeStat": 58,
         "speedStat": 6,
         "maxPP": 13,
-        "ppRegen": 3,
-        "Комментарий": "Низкая инициатива танков",
-        "winrate": "53,75",
-        "%выживаемость": "48,6",
-        "winrate__1": "56,6",
-        "%выживаемость__1": "48,6"
+        "ppRegen": 3
     },
     {
+        "name": "Взрывной Ёж",
+        "number": "019",
         "element": "fire",
         "form": "beast",
         "role": "dd",
@@ -46,14 +42,11 @@
         "initiativeStat": 90,
         "speedStat": 8,
         "maxPP": 15,
-        "ppRegen": 5,
-        "Комментарий": "Высокий приоритет атакующих",
-        "winrate": "43,4",
-        "%выживаемость": "4,4",
-        "winrate__1": "51,6",
-        "%выживаемость__1": "4,4"
+        "ppRegen": 5
     },
     {
+        "name": "Испепеляющий Воробей",
+        "number": "025",
         "element": "fire",
         "form": "bird",
         "role": "dd",
@@ -64,14 +57,11 @@
         "initiativeStat": 106,
         "speedStat": 9,
         "maxPP": 16,
-        "ppRegen": 6,
-        "Комментарий": "Максимальная инициатива",
-        "winrate": "47,65",
-        "%выживаемость": "12,4",
-        "winrate__1": "47,9",
-        "%выживаемость__1": "12,4"
+        "ppRegen": 6
     },
     {
+        "name": "Искорка-Невидимка",
+        "number": "016",
         "element": "fire",
         "form": "bird",
         "role": "support",
@@ -82,14 +72,11 @@
         "initiativeStat": 85,
         "speedStat": 8,
         "maxPP": 16,
-        "ppRegen": 5,
-        "Комментарий": "Поддержка с высоким приоритетом",
-        "winrate": "50,8",
-        "%выживаемость": "13,85",
-        "winrate__1": "48,75",
-        "%выживаемость__1": "13,85"
+        "ppRegen": 5
     },
     {
+        "name": "Горючий Гриф",
+        "number": "007",
         "element": "fire",
         "form": "bird",
         "role": "tank",
@@ -100,14 +87,11 @@
         "initiativeStat": 60,
         "speedStat": 6,
         "maxPP": 12,
-        "ppRegen": 4,
-        "Комментарий": "Птицы быстрее зверей",
-        "winrate": "40,3",
-        "%выживаемость": "26,5",
-        "winrate__1": "42,2",
-        "%выживаемость__1": "26,5"
+        "ppRegen": 4
     },
     {
+        "name": "Кристально-Пламенный Страж",
+        "number": "013",
         "element": "fire",
         "form": "reptile",
         "role": "support",
@@ -118,14 +102,11 @@
         "initiativeStat": 62,
         "speedStat": 6,
         "maxPP": 18,
-        "ppRegen": 4,
-        "Комментарий": "Рептилии-хилеры",
-        "winrate": "50,3",
-        "%выживаемость": "18,05",
-        "winrate__1": "45,65",
-        "%выживаемость__1": "18,05"
+        "ppRegen": 4
     },
     {
+        "name": "Тлеющий Панцирник",
+        "number": "004",
         "element": "fire",
         "form": "reptile",
         "role": "tank",
@@ -136,14 +117,11 @@
         "initiativeStat": 50,
         "speedStat": 5,
         "maxPP": 13,
-        "ppRegen": 3,
-        "Комментарий": "Самые медленные танки",
-        "winrate": "56,55",
-        "%выживаемость": "54,85",
-        "winrate__1": "50,25",
-        "%выживаемость__1": "54,85"
+        "ppRegen": 3
     },
     {
+        "name": "Огнекусака",
+        "number": "022",
         "element": "fire",
         "form": "reptile",
         "role": "dd",
@@ -154,14 +132,11 @@
         "initiativeStat": 79,
         "speedStat": 7,
         "maxPP": 16,
-        "ppRegen": 4,
-        "Комментарий": "Гибридный урон",
-        "winrate": "49,35",
-        "%выживаемость": "4,35",
-        "winrate__1": "50,9",
-        "%выживаемость__1": "4,35"
+        "ppRegen": 4
     },
     {
+        "name": "Цветочный Голиаф",
+        "number": "028",
         "element": "grass",
         "form": "beast",
         "role": "tank",
@@ -180,6 +155,8 @@
         "%выживаемость__1": 53
     },
     {
+        "name": "Пробуждающий Ветер",
+        "number": "037",
         "element": "grass",
         "form": "beast",
         "role": "support",
@@ -190,14 +167,11 @@
         "initiativeStat": 68,
         "speedStat": 7,
         "maxPP": 16,
-        "ppRegen": 4,
-        "Комментарий": "Травяные хилы",
-        "winrate": "47,25",
-        "%выживаемость": "16,95",
-        "winrate__1": "49,2",
-        "%выживаемость__1": "16,95"
+        "ppRegen": 4
     },
     {
+        "name": "Корнедолб",
+        "number": "046",
         "element": "grass",
         "form": "beast",
         "role": "dd",
@@ -208,14 +182,11 @@
         "initiativeStat": 85,
         "speedStat": 8,
         "maxPP": 15,
-        "ppRegen": 5,
-        "Комментарий": "Ядовитые ДД",
-        "winrate": "49,2",
-        "%выживаемость": "26,35",
-        "winrate__1": "50,4",
-        "%выживаемость__1": "26,35"
+        "ppRegen": 5
     },
     {
+        "name": "Листодротик",
+        "number": "052",
         "element": "grass",
         "form": "bird",
         "role": "dd",
@@ -226,14 +197,11 @@
         "initiativeStat": 101,
         "speedStat": 11,
         "maxPP": 16,
-        "ppRegen": 6,
-        "Комментарий": "Абсолютные лидеры инициативы",
-        "winrate": "58,5",
-        "%выживаемость": "34,85",
-        "winrate__1": "47,05",
-        "%выживаемость__1": "34,85"
+        "ppRegen": 6
     },
     {
+        "name": "Пушинка Рассвета",
+        "number": "043",
         "element": "grass",
         "form": "bird",
         "role": "support",
@@ -244,14 +212,11 @@
         "initiativeStat": 85,
         "speedStat": 10,
         "maxPP": 19,
-        "ppRegen": 5,
-        "Комментарий": "Самые быстрые саппорты",
-        "winrate": "58,6",
-        "%выживаемость": "33,9",
-        "winrate__1": "55,95",
-        "%выживаемость__1": "33,9"
+        "ppRegen": 5
     },
     {
+        "name": "Скальный Филин",
+        "number": "034",
         "element": "grass",
         "form": "bird",
         "role": "tank",
@@ -262,14 +227,11 @@
         "initiativeStat": 73,
         "speedStat": 8,
         "maxPP": 12,
-        "ppRegen": 4,
-        "Комментарий": "Мобильные танки",
-        "winrate": "48,6",
-        "%выживаемость": "41,7",
-        "winrate__1": "54,3",
-        "%выживаемость__1": "41,7"
+        "ppRegen": 4
     },
     {
+        "name": "Камнекорень",
+        "number": "031",
         "element": "grass",
         "form": "reptile",
         "role": "tank",
@@ -280,14 +242,11 @@
         "initiativeStat": 48,
         "speedStat": 5,
         "maxPP": 12,
-        "ppRegen": 3,
-        "Комментарий": "Сверхмедленные броненосцы",
-        "winrate": "43,25",
-        "%выживаемость": "41,6",
-        "winrate__1": "47,7",
-        "%выживаемость__1": "41,6"
+        "ppRegen": 3
     },
     {
+        "name": "Лучезарная Змея",
+        "number": "040",
         "element": "grass",
         "form": "reptile",
         "role": "support",
@@ -298,14 +257,11 @@
         "initiativeStat": 55,
         "speedStat": 6,
         "maxPP": 20,
-        "ppRegen": 3,
-        "Комментарий": "Мощные, но медленные бафферы",
-        "winrate": "48,95",
-        "%выживаемость": "34,15",
-        "winrate__1": "51,2",
-        "%выживаемость__1": "34,15"
+        "ppRegen": 3
     },
     {
+        "name": "Семястрел",
+        "number": "049",
         "element": "grass",
         "form": "reptile",
         "role": "dd",
@@ -316,14 +272,11 @@
         "initiativeStat": 68,
         "speedStat": 7,
         "maxPP": 17,
-        "ppRegen": 4,
-        "Комментарий": "Контроллеры с ядами",
-        "winrate": "57,65",
-        "%выживаемость": "5,2",
-        "winrate__1": "54,1",
-        "%выживаемость__1": "5,2"
+        "ppRegen": 4
     },
     {
+        "name": "Водоворотный Рысак",
+        "number": "073",
         "element": "water",
         "form": "beast",
         "role": "dd",
@@ -334,14 +287,11 @@
         "initiativeStat": 95,
         "speedStat": 8,
         "maxPP": 15,
-        "ppRegen": 5,
-        "Комментарий": "Скорость водных ДД",
-        "winrate": "43,35",
-        "%выживаемость": "5,45",
-        "winrate__1": "45,55",
-        "%выживаемость__1": "5,45"
+        "ppRegen": 5
     },
     {
+        "name": "Пузырьковая Фея",
+        "number": "064",
         "element": "water",
         "form": "beast",
         "role": "support",
@@ -352,14 +302,11 @@
         "initiativeStat": 79,
         "speedStat": 7,
         "maxPP": 17,
-        "ppRegen": 4,
-        "Комментарий": "Исцеление с высоким приоритетом",
-        "winrate": "50,45",
-        "%выживаемость": "15,55",
-        "winrate__1": "49,35",
-        "%выживаемость__1": "15,55"
+        "ppRegen": 4
     },
     {
+        "name": "Ледорыт",
+        "number": "055",
         "element": "water",
         "form": "beast",
         "role": "tank",
@@ -370,14 +317,11 @@
         "initiativeStat": 65,
         "speedStat": 6,
         "maxPP": 13,
-        "ppRegen": 4,
-        "Комментарий": "Водные танки быстрее огненных",
-        "winrate": "54,25",
-        "%выживаемость": "32,75",
-        "winrate__1": "55,8",
-        "%выживаемость__1": "32,75"
+        "ppRegen": 4
     },
     {
+        "name": "Пульсарный Прыгун",
+        "number": "079",
         "element": "water",
         "form": "bird",
         "role": "dd",
@@ -388,14 +332,11 @@
         "initiativeStat": 101,
         "speedStat": 10,
         "maxPP": 17,
-        "ppRegen": 6,
-        "Комментарий": "Лидеры инициативы",
-        "winrate": "57,25",
-        "%выживаемость": "25,2",
-        "winrate__1": "48,9",
-        "%выживаемость__1": "25,2"
+        "ppRegen": 6
     },
     {
+        "name": "Росинка-Хранитель",
+        "number": "070",
         "element": "water",
         "form": "bird",
         "role": "support",
@@ -406,14 +347,11 @@
         "initiativeStat": 90,
         "speedStat": 9,
         "maxPP": 19,
-        "ppRegen": 5,
-        "Комментарий": "Быстрая поддержка",
-        "winrate": "50,25",
-        "%выживаемость": "20,9",
-        "winrate__1": "54,1",
-        "%выживаемость__1": "20,9"
+        "ppRegen": 5
     },
     {
+        "name": "Штормовой Бастион",
+        "number": "061",
         "element": "water",
         "form": "bird",
         "role": "tank",
@@ -424,14 +362,11 @@
         "initiativeStat": 66,
         "speedStat": 7,
         "maxPP": 13,
-        "ppRegen": 4,
-        "Комментарий": "Летающие танки",
-        "winrate": "46,6",
-        "%выживаемость": "35,9",
-        "winrate__1": "48,3",
-        "%выживаемость__1": "35,9"
+        "ppRegen": 4
     },
     {
+        "name": "Лазурный Утёс",
+        "number": "058",
         "element": "water",
         "form": "reptile",
         "role": "tank",
@@ -442,14 +377,11 @@
         "initiativeStat": 45,
         "speedStat": 5,
         "maxPP": 11,
-        "ppRegen": 3,
-        "Комментарий": "Минимальная инициатива",
-        "winrate": "50,65",
-        "%выживаемость": "50,45",
-        "winrate__1": "47,05",
-        "%выживаемость__1": "50,45"
+        "ppRegen": 3
     },
     {
+        "name": "Живой Каскад",
+        "number": "067",
         "element": "water",
         "form": "reptile",
         "role": "support",
@@ -460,14 +392,11 @@
         "initiativeStat": 56,
         "speedStat": 6,
         "maxPP": 19,
-        "ppRegen": 3,
-        "Комментарий": "Медленные, но мощные хилы",
-        "winrate": "47,5",
-        "%выживаемость": "28,65",
-        "winrate__1": "47,45",
-        "%выживаемость__1": "28,65"
+        "ppRegen": 3
     },
     {
+        "name": "Пенноштурм",
+        "number": "076",
         "element": "water",
         "form": "reptile",
         "role": "dd",
@@ -478,11 +407,6 @@
         "initiativeStat": 70,
         "speedStat": 7,
         "maxPP": 17,
-        "ppRegen": 4,
-        "Комментарий": "Ядовитые атакующие",
-        "winrate": "44,65",
-        "%выживаемость": "2,85",
-        "winrate__1": "53,65",
-        "%выживаемость__1": "2,85"
+        "ppRegen": 4
     }
 ]

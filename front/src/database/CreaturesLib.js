@@ -338,7 +338,8 @@ export function getTeam2(direction, control, creatures) {
 export function getCreature(element, form, role, level) {
     // нужно копирование, иначе при повторении существ, будет один объект
     const creature = Object.assign({}, creaturesLib[element + '-' + form + '-' + role]);
-    creature.name = element + '/' + form + '/' + role
+    // creature.name = element + '/' + form + '/' + role
+    creature.texture = creature.number;
     creature.level = level
     const actions = [
         ...creatureActionsLib[element + '-' + form + '-' + role],
@@ -350,7 +351,6 @@ export function getCreature(element, form, role, level) {
         ...creatureActionsLib[element + '-' + form + '-'],
     ]
 
-    creature.texture = '001'
     // creature.texture = [
     //     'Decidueye',
     //     'Sandslash',

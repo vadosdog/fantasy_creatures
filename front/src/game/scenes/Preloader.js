@@ -162,7 +162,35 @@ export class Preloader extends Scene {
         }
         
         // basic creatures
-        const basicCreatures = ['001']
+        const basicCreatures = [
+            "001",
+            "004",
+            "007",
+            "010",
+            "013",
+            "016",
+            "019",
+            "022",
+            "025",
+            "028",
+            "031",
+            "034",
+            "037",
+            "040",
+            "043",
+            "046",
+            "049",
+            "052",
+            "055",
+            "058",
+            "061",
+            "064",
+            "067",
+            "070",
+            "073",
+            "076",
+            "079",
+        ]
         for (const basicCreature of basicCreatures) {
             this.load.image(basicCreature + '_stand', 'battle/creatures/basic/' + basicCreature + '.png')
         }

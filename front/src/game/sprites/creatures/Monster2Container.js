@@ -46,7 +46,6 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
             .setTint(0xFFD900)
             .setAlpha(0.8);
 
-        console.log(this.creatureSprite.width)
         this.glowSprite.setDisplaySize(
             this.creatureSprite.width * 0.25,
             this.creatureSprite.height * 0.25
