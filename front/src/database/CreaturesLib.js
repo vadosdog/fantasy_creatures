@@ -368,7 +368,8 @@ export function getCreature(element, form, role, level) {
         'Turtwig',
         'Wingull',
     ][Math.floor(Math.random() * 15)] + '_Pokemon';
-    creature.textureType = 'pokemon'
+    // creature.textureType = 'pokemon'
+    creature.textureType = 'wildermyth'
     // switch (creature.role) {
     //     case 'tank':
     //         creature.texture = 'Arcanine_Pokemon'

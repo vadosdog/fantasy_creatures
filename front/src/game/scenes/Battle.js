@@ -19,12 +19,13 @@ import {CreatureAPI} from "../classes/battle/Creature.js";
 import {watchEffect} from "vue";
 import {useGameStore} from "../../store/game.js";
 import {HexTile} from "../classes/battle/HexTile.js";
+import Monster2Container from "../sprites/creatures/Monster2Container.js";
 
 const gameStore = useGameStore()
 
 
 export class Battle extends Scene {
-    showGridIndexes = true
+    showGridIndexes = false
     hexagonGroup;
     store
     hexagonsArray;
@@ -168,7 +169,13 @@ export class Battle extends Scene {
                 let creature = cell.content
                 let hexagon = this.hexagonsArray.get(creature.position.join(','))
 
-                creature.creatureSpriteContainer = new MonsterContainer(
+                // creature.creatureSpriteContainer = new MonsterContainer(
+                //     creature,
+                //     this,
+                //     hexagon.x,
+                //     hexagon.y,
+                // )
+                creature.creatureSpriteContainer = new Monster2Container(
                     creature,
                     this,
                     hexagon.x,
@@ -965,7 +972,7 @@ export class Battle extends Scene {
     // New method to handle melee attack direction
     handleAttackDirection(pointer) {
         if (
-            !this.selectedAction 
+            !this.selectedAction
             || !this.selectedAction.action
             || !this.selectedAction.actionDirections
             || this.selectedAction.action?.actionType !== 'melee'
@@ -980,11 +987,11 @@ export class Battle extends Scene {
 
         // Find hovered enemy
         const enemy = this.hoveredCreature;
-       
+
         if (!enemy) {
             return
         }
-        
+
         const availableDirections = this.selectedAction.actionDirections[enemy.position.join(',')]
         if (!availableDirections) return;
 
