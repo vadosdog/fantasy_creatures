@@ -200,7 +200,6 @@ export default class Monster2 extends Phaser.GameObjects.Sprite {
         const timeline = this.scene.tweens.chain({
             targets: this,
             onComplete: () => {
-                console.log('deathComplete')
                 this.emit('deathComplete');
             },
             tweens: [{

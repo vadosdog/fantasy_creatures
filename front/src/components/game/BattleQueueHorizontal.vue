@@ -53,7 +53,6 @@ const scrollToActiveCreature = async () => {
     const itemWidth = items[0].offsetWidth +
         parseInt(getComputedStyle(items[0]).marginLeft) +
         parseInt(getComputedStyle(items[0]).marginRight)
-    console.log(itemWidth)
 
     // Рассчитываем желаемую позицию скролла
     // Чтобы активное существо было вторым на экране (смещение на 1 элемент слева)

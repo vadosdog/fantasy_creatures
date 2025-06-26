@@ -38,7 +38,6 @@ const effectIcons = {
 
 // Получаем иконку для эффекта
 const icon = computed(() => {
-    console.log(props.effect)
     return effectIcons[props.effect.effect] || '';
 });
 

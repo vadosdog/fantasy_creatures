@@ -471,7 +471,7 @@ export const useBattleStore = defineStore('battle', {
         },
         playerActionMoveTo(path) {
             if (this.getCreatureByCoords(path[path.length - 1])) {
-                console.error(new Exception('Попытка перединуться в точку, где уже есть другое существо'))
+                console.error(new Error('Попытка перединуться в точку, где уже есть другое существо'))
             }
 
             this.battleMap.removeContent(...this.activeCreature.position)

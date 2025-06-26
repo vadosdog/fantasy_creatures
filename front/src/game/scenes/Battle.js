@@ -395,11 +395,15 @@ export class Battle extends Scene {
                     return
                 }
 
-                let timelineStart = 0
-                // для ближний атак, нужно еще перемещение
+                // для ближней атаки, нужно еще перемещение
                 if (action.actionObject.actionType === 'melee') {
                     // Получаем путь от текущей позиции персонажа до выбранной клетки
-                    path = this.findPath(this.store.activeCreature.position, this.currentAttack.position);
+                    path = this.findPath(this.store.activeCreature.position, this.currentAttack.position || targetCreature.position);
+                    // быстрая костылька
+                    // что движок не знает currentattack и всегда атакует по короткому пути и нужно обрезать последнюю ячейку
+                    if (!this.currentAttack.position) {
+                        path = path.slice(0, path.length - 1)
+                    }
                     if (!path || path.length === 0) {
                         this.store.setBattleState(prevState)
                         return;
