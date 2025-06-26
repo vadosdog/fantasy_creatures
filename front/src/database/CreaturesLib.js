@@ -339,7 +339,7 @@ export function getCreature(element, form, role, level) {
     // нужно копирование, иначе при повторении существ, будет один объект
     const creature = Object.assign({}, creaturesLib[element + '-' + form + '-' + role]);
     // creature.name = element + '/' + form + '/' + role
-    creature.texture = creature.number;
+    creature.texture = '001'; //creature.number;
     creature.level = level
     const actions = [
         ...creatureActionsLib[element + '-' + form + '-' + role],
