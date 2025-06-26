@@ -115,7 +115,10 @@ const clearHoverCreature = () => {
                 </q-item-section>
 
                 <q-item-section>
-                    <q-item-label>{{ creature.name }}</q-item-label>
+                    <q-item-label>
+                        <q-badge rounded :color="creature.direction === 'left' ? 'red' : 'green'" />
+                        {{ creature.name }}
+                    </q-item-label>
                     <q-item-label caption>
                         <div class="health-bar">
                             <QLinearProgress
