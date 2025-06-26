@@ -1,11 +1,12 @@
 <script setup>
 
 import CreatureCard from "./CreatureCard.vue";
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {useBattleStore} from "../../store/battle.js";
 import {useGlobalStore} from "../../store/global.js";
 import BattleLog from "./BattleLog.vue";
 import BattleQueueVertical from "./BattleQueueVertical.vue";
+import {useBattleLogStore} from "../../store/battleLog.js";
 
 const battleStore = useBattleStore()
 const globalStore = useGlobalStore()
@@ -99,25 +100,50 @@ function closeDialog() {
     globalStore.setDialogVisible(false);
 }
 
+
+const scrollAreaRef = ref(null)
+const battleLogStore = useBattleLogStore()
+const battleLogLength = computed(() => battleLogStore.battleLog.length)
+
+watch(battleLogLength, (newValue) => {
+    try {
+        if (!scrollAreaRef.value) return
+
+        const scrollElement = scrollAreaRef.value.getScrollTarget()
+        if (!scrollElement) return
+
+        // Вычисляем максимальную позицию скролла
+        const maxScroll = scrollElement.scrollHeight - scrollElement.clientHeight + 300
+
+        // Прокручиваем с анимацией
+        scrollAreaRef.value.setScrollPosition('vertical', maxScroll, 300)
+    } catch (error) {
+        console.error('Error in scroll area:', error);
+    }
+
+});
+
+
 </script>
 
 <template>
     <div style="height: 20vh">
         <QBtn label="back" to="/"/>
     </div>
-    <div class="row now-wrap-shadow-1" style="height: 60vh;">
+    <div class="row now-wrap-shadow-1" style="height: 50vh;">
 
         <q-toolbar class="col-12 bg-grey-9">
             <BattleQueueVertical/>
 
         </q-toolbar>
     </div>
-    <div class="row no-wrap shadow-1" style="height: 20vh;">
-        <QToolbar class="col-12 bg-grey-2 text-grey-9">
-            <QScrollArea style="height: 100%; width: 100%" ref="scrollAreaRef">
-                <BattleLog/>
-            </QScrollArea>
-        </QToolbar>
+    <div class="row no-wrap shadow-1" style="height: 30vh;">
+        <QScrollArea class="col-12 bg-grey-2 text-grey-9 q-pa-md"
+                     style="height: 100%; width: 100%"
+                     ref="scrollAreaRef"
+        >
+            <BattleLog/>
+        </QScrollArea>
     </div>
 </template>
 
