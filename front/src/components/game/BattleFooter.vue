@@ -2,7 +2,7 @@
 import BattleLog from "./BattleLog.vue";
 import {computed, ref, watch} from "vue";
 import {useBattleLogStore} from "../../store/battleLog.js";
-import BattleQueue from "./BattleQueue.vue";
+// import BattleQueue from "./BattleQueue.vue";
 
 
 const scrollAreaRef = ref(null)
@@ -40,7 +40,7 @@ watch(battleLog, (newValue) => {
             </QToolbar>
             <!-- Battle Log -->
             <q-toolbar class="col-8 bg-grey-9">
-                <BattleQueue/>
+<!--                <BattleQueue/>-->
 
             </q-toolbar>
         </div>

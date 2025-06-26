@@ -4,14 +4,15 @@ import {EventBus} from '../game/EventBus.js';
 import StartGame from '../game/main.js';
 import {useGameStore} from "../store/game.js";
 import BattleFooter from "../components/game/BattleFooter.vue";
-import BattleDrawer from "../components/game/BattleDrawer.vue";
 import BattleHeader from "../components/game/BattleHeader.vue";
 import {useGlobalStore} from "../store/global.js";
 import {useBattleStore} from "../store/battle.js";
+import BattleRightDrawer from "../components/game/BattleRightDrawer.vue";
+import BattleLeftDrawer from "../components/game/BattleLeftDrawer.vue";
 
 const game = ref(null);
 const phaserContainer = ref(null);
-const emit = defineEmits(['current-active-scene', 'update-footer', 'update-drawer', 'update-header']);
+const emit = defineEmits(['current-active-scene', 'update-footer', 'update-right-drawer', 'update-left-drawer', 'update-header']);
 
 const gameStore = useGameStore();
 const globalStore = useGlobalStore();
@@ -94,7 +95,8 @@ onMounted(() => {
         });
 
         emit('update-footer', BattleFooter);
-        emit('update-drawer', BattleDrawer);
+        emit('update-left-drawer', BattleLeftDrawer);
+        emit('update-right-drawer', BattleRightDrawer);
         emit('update-header', BattleHeader);
 
     } catch (error) {
@@ -290,7 +292,7 @@ watchEffect(() => {
 #game-container {
     width: 100%;
     height: 100%;
-    max-height: calc(100vh - 282px);
+    max-height: calc(100vh - 60px);
     background-color: #282C34;
 }
 

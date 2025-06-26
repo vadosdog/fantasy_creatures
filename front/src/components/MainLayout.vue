@@ -7,7 +7,9 @@ import DefaultHeader from './layout/DefaultHeader.vue';
 
 //  References to the PhaserGame component (game and scene are exposed)
 const phaserRef = ref();
-const rightDrawerOpen = ref(false)
+const leftDrawerOpen = ref(false);
+const rightDrawerOpen = ref(false);
+const currentLeftDrawerContent = shallowRef(null)
 const currentRightDrawerContent = shallowRef(null)
 const currentFooterComponent = shallowRef(DefaultFooter)
 const currentHeaderComponent = shallowRef(null)
@@ -20,9 +22,13 @@ const handleHeaderUpdate = (component) => {
     currentHeaderComponent.value = component
 }
 
-const handleDrawerUpdate = (component) => {
+const handleRightDrawerUpdate = (component) => {
     rightDrawerOpen.value = !!component
     currentRightDrawerContent.value = component
+}
+const handleLeftDrawerUpdate = (component) => {
+    leftDrawerOpen.value = !!component
+    currentLeftDrawerContent.value = component
 }
 
 const store = useGameStore()
@@ -40,29 +46,38 @@ const toggleRightDrawer = () => {
 }
 </script>
 <template>
-    <q-layout view="hHh LpR fFr">
+    <q-layout view="hHh LpR lFr">
 
-        <q-header elevated class="bg-primary text-white border-b border-solid border-primary/20" :height-hint="50">
-            <q-toolbar>
-                <DefaultHeader/>
+<!--        <q-header elevated class="bg-primary text-white border-b border-solid border-primary/20" :height-hint="50">-->
+<!--            <q-toolbar>-->
+<!--                <DefaultHeader/>-->
 
-                <!-- Кнопки справа -->
-                <q-space/> <!-- Заполняет доступное пространство -->
+<!--                &lt;!&ndash; Кнопки справа &ndash;&gt;-->
+<!--                <q-space/> &lt;!&ndash; Заполняет доступное пространство &ndash;&gt;-->
 
-                <QBtn
-                    v-if="!currentHeaderComponent"
-                    class="rounded mystical-glow hover:scale-105 transition-all duration-300"
-                    no-caps
-                    icon="play_arrow"
-                    color="primary"
-                    text-color="primary-foreground"
-                    label="Play Now"
-                    to="/game"
-                />
-                <component :is="currentHeaderComponent"/>
-            </q-toolbar>
-        </q-header>
+<!--                <QBtn-->
+<!--                    v-if="!currentHeaderComponent"-->
+<!--                    class="rounded mystical-glow hover:scale-105 transition-all duration-300"-->
+<!--                    no-caps-->
+<!--                    icon="play_arrow"-->
+<!--                    color="primary"-->
+<!--                    text-color="primary-foreground"-->
+<!--                    label="Play Now"-->
+<!--                    to="/game"-->
+<!--                />-->
+<!--                <component :is="currentHeaderComponent"/>-->
+<!--            </q-toolbar>-->
+<!--        </q-header>-->
 
+        <q-drawer
+            show-if-above
+            v-model="leftDrawerOpen"
+            side="left"
+            elevated
+            :width="300"
+        >
+            <component :is="currentLeftDrawerContent"/>
+        </q-drawer>
         <q-drawer
             show-if-above
             v-model="rightDrawerOpen"
@@ -73,16 +88,17 @@ const toggleRightDrawer = () => {
             <component :is="currentRightDrawerContent"/>
         </q-drawer>
 
-        <q-footer elevated class="bg-transparent text-white">
-            <component :is="currentFooterComponent"/>
-        </q-footer>
+<!--        <q-footer elevated class="bg-transparent text-white">-->
+<!--            <component :is="currentFooterComponent"/>-->
+<!--        </q-footer>-->
 
         <q-page-container>
             <router-view v-slot="{ Component }">
                 <component
                     :is="Component"
                     @update-footer="handleFooterUpdate"
-                    @update-drawer="handleDrawerUpdate"
+                    @update-right-drawer="handleRightDrawerUpdate"
+                    @update-left-drawer="handleLeftDrawerUpdate"
                     @update-header="handleHeaderUpdate"
                 />
             </router-view>

@@ -6,6 +6,7 @@ import {testTeam} from "../database/CreaturesLib.js";
 import {CreatureAPI} from "../game/classes/battle/Creature.js";
 import {useBattleLogStore} from "./battleLog.js";
 import {EasyAI} from "../game/classes/battle/AI/EasyAI.js";
+import {MediumAI} from "../game/classes/battle/AI/MediumAI.js";
 
 export const BATTLE_STATE_PLAYER_TURN = 'PLAYER_TURN'
 export const BATTLE_STATE_ENGINE_TURN = 'ENGINE_TURN'
@@ -58,7 +59,7 @@ export const useBattleStore = defineStore('battle', {
         load() {
             this.resetBattle([
                 ...testTeam(2, 'right', 'player'),
-                ...testTeam(2, 'left', new EasyAI()),
+                ...testTeam(2, 'left', new MediumAI()),
             ]);
 
             this.updateQueueData(); // Инициализируем данные очереди

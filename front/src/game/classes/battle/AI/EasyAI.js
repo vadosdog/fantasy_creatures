@@ -57,7 +57,7 @@ export class EasyAI {
                 }
                 const newPath = this.store.findPath(this.activeCreature.position, enemy.position, attack.actionType === 'melee')
                 if (
-                    i === 0
+                    !target
                     || newPath.length < path.length
                     || enemy.health < target.health
                 ) {

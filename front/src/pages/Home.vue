@@ -1,12 +1,13 @@
 <script setup>
 import {onMounted} from "vue";
 
-const emit = defineEmits(['current-active-scene', 'update-footer', 'update-drawer', 'update-header']);
+const emit = defineEmits(['current-active-scene', 'update-footer', 'update-left-drawer', 'update-right-drawer', 'update-header']);
 
 onMounted(() => {
     emit('update-footer', null)
     emit('update-header', null)
-    emit('update-drawer', null)
+    emit('update-left-drawer', null)
+    emit('update-right-drawer', null)
 
 });
 
@@ -217,6 +218,7 @@ const linkCategories = [
                                class="mystical-glow hover:scale-105 transition-all duration-300 text-lg px-10 py-4"
                                color="primary"
                                text-color="primary-foreground"
+                               to="/game"
                         >
                             <q-icon name="play_arrow" class="w-5 h-5 mr-3"/>
                             Begin Your Legend
