@@ -127,9 +127,12 @@ watch(battleLogLength, (newValue) => {
 </script>
 
 <template>
-    <div style="height: 20vh">
-        <QBtn label="back" to="/"/>
-    </div>
+    <!-- Header Card -->
+    <q-card class="border bg-grey-2 text-primary-foreground" style="height: 20vh">
+        <q-card-section>
+            <QBtn label="Сдаться" to="/"/>
+        </q-card-section>
+    </q-card>
     <div class="row now-wrap-shadow-1" style="height: 50vh;">
 
         <q-toolbar class="col-12 bg-grey-9">
