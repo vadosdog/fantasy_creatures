@@ -7,6 +7,7 @@ import {useGlobalStore} from "../../store/global.js";
 import BattleLog from "./BattleLog.vue";
 import BattleQueueVertical from "./BattleQueueVertical.vue";
 import {useBattleLogStore} from "../../store/battleLog.js";
+import {useGameStore} from "../../store/game.js";
 
 const battleStore = useBattleStore()
 const globalStore = useGlobalStore()
@@ -123,6 +124,45 @@ watch(battleLogLength, (newValue) => {
 
 });
 
+const gameStore = useGameStore();
+const game = gameStore.game
+
+function cameraAction(action) {
+    try {
+        if (!game) return;
+
+        // Получаем текущую сцену безопасным способом
+        const scene = gameStore.scene || (game.scene && game.scene.getScene('Battle'));
+
+        if (scene && scene.scene && scene.scene.cameras) {
+            // Основной способ отключения ввода
+            switch (action) {
+                case 'up':
+                    scene.scene.cameras.main.scrollY -= 50;
+                    break
+                case 'down':
+                    scene.scene.cameras.main.scrollY += 50;
+                    break
+                case 'left':
+                    scene.scene.cameras.main.scrollX -= 50;
+                    break
+                case 'right':
+                    scene.scene.cameras.main.scrollX += 50;
+                    break
+                case 'zoomIn':
+                    scene.scene.cameras.main.zoom += 0.1;
+                    break
+                case 'zoomOut':
+                    scene.scene.cameras.main.zoom = Math.max(0.1, scene.scene.cameras.main.zoom - 0.1);
+                    break
+            }
+        }
+    } catch (error) {
+        console.error('Error in dialogVisible watcher:', error);
+    }
+
+}
+
 
 </script>
 
@@ -131,6 +171,77 @@ watch(battleLogLength, (newValue) => {
     <q-card class="border bg-grey-2 text-primary-foreground" style="height: 20vh">
         <q-card-section>
             <QBtn label="Сдаться" to="/"/>
+            <div class="q-mt-md" style="z-index: 10">
+                <div class="column q-gutter-xs">
+                    <!-- Стрелки управления -->
+                    <div class="row q-gutter-xs">
+                        <q-btn
+                            flat
+                            round
+                            size="sm"
+                            color="#7B68EE"
+                            text-color="#C0C0C0"
+                            icon="add"
+                            @pointerup="cameraAction('zoomIn')"
+                            class="control-button"
+                        />
+
+                        <q-btn
+                            flat
+                            round
+                            size="sm"
+                            color="#7B68EE"
+                            text-color="#C0C0C0"
+                            icon="remove"
+                            @pointerup="cameraAction('zoomOut')"
+                            class="control-button"
+                        />
+                        <q-btn
+                            flat
+                            round
+                            size="sm"
+                            color="#7B68EE"
+                            text-color="#C0C0C0"
+                            icon="keyboard_arrow_left"
+                            @pointerup="cameraAction('left')"
+                            class="control-button"
+                        />
+
+                        <q-btn
+                            flat
+                            round
+                            size="sm"
+                            color="#7B68EE"
+                            text-color="#C0C0C0"
+                            icon="keyboard_arrow_right"
+                            @pointerup="cameraAction('right')"
+                            class="control-button"
+                        />
+
+                        <q-btn
+                            flat
+                            round
+                            size="sm"
+                            color="#7B68EE"
+                            text-color="#C0C0C0"
+                            icon="keyboard_arrow_up"
+                            @pointerup="cameraAction('up')"
+                            class="control-button"
+                        />
+
+                        <q-btn
+                            flat
+                            round
+                            size="sm"
+                            color="#7B68EE"
+                            text-color="#C0C0C0"
+                            icon="keyboard_arrow_down"
+                            @pointerup="cameraAction('down')"
+                            class="control-button"
+                        />
+                    </div>
+                </div>
+            </div>
         </q-card-section>
     </q-card>
     <div class="row now-wrap-shadow-1" style="height: 50vh;">
@@ -151,5 +262,21 @@ watch(battleLogLength, (newValue) => {
 </template>
 
 <style scoped>
+/* Базовые стили кнопок */
+.control-button {
+    background-color: #7B68EE;
+    transition: all 0.2s ease;
+}
 
+/* Эффекты при наведении */
+.control-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(123, 104, 238, 0.4);
+}
+
+/* Эффекты при нажатии */
+.control-button:active {
+    background-color: #D6AFAF !important;
+    transform: scale(0.95);
+}
 </style>

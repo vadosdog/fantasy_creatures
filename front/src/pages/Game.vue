@@ -77,6 +77,7 @@ watch(activeAction, (newValue) => {
 onMounted(() => {
     try {
         game.value = StartGame('game-container');
+        gameStore.setGame(game)
         phaserContainer.value = document.getElementById('game-container');
 
         // Добавляем глобальный обработчик событий
@@ -132,42 +133,6 @@ function handlePointerEvent(event) {
     }
 }
 
-function cameraAction(action) {
-    try {
-        if (!game.value) return;
-
-        // Получаем текущую сцену безопасным способом
-        const scene = gameStore.scene || (game.value.scene && game.value.scene.getScene('Battle'));
-
-        if (scene && scene.scene && scene.scene.cameras) {
-            // Основной способ отключения ввода
-            switch (action) {
-                case 'up':
-                    scene.scene.cameras.main.scrollY -= 50;
-                    break
-                case 'down':
-                    scene.scene.cameras.main.scrollY += 50;
-                    break
-                case 'left':
-                    scene.scene.cameras.main.scrollX -= 50;
-                    break
-                case 'right':
-                    scene.scene.cameras.main.scrollX += 50;
-                    break
-                case 'zoomIn':
-                    scene.scene.cameras.main.zoom += 0.1;
-                    break
-                case 'zoomOut':
-                    scene.scene.cameras.main.zoom = Math.max(0.1, scene.scene.cameras.main.zoom - 0.1);
-                    break
-            }
-        }
-    } catch (error) {
-        console.error('Error in dialogVisible watcher:', error);
-    }
-
-}
-
 defineExpose({game});
 
 // В основном Vue приложении или отдельном файле
@@ -200,83 +165,6 @@ watchEffect(() => {
 <template>
     <q-page>
         <div id="game-container" :class="{ 'block-events': globalStore.dialogVisible }"></div>
-        <!-- UI панель управления -->
-        <!-- Мини-панель управления в левом верхнем углу -->
-        <div class="absolute-top-left q-ma-md" style="z-index: 10">
-            <div class="column q-gutter-xs">
-                <!-- Стрелки управления -->
-                <div class="row q-gutter-xs">
-                    <q-btn
-                        flat
-                        round
-                        size="sm"
-                        color="#7B68EE"
-                        text-color="#C0C0C0"
-                        icon="keyboard_arrow_left"
-                        @pointerup="cameraAction('left')"
-                        class="control-button"
-                    />
-
-                    <q-btn
-                        flat
-                        round
-                        size="sm"
-                        color="#7B68EE"
-                        text-color="#C0C0C0"
-                        icon="keyboard_arrow_right"
-                        @pointerup="cameraAction('right')"
-                        class="control-button"
-                    />
-
-                    <q-btn
-                        flat
-                        round
-                        size="sm"
-                        color="#7B68EE"
-                        text-color="#C0C0C0"
-                        icon="keyboard_arrow_up"
-                        @pointerup="cameraAction('up')"
-                        class="control-button"
-                    />
-
-                    <q-btn
-                        flat
-                        round
-                        size="sm"
-                        color="#7B68EE"
-                        text-color="#C0C0C0"
-                        icon="keyboard_arrow_down"
-                        @pointerup="cameraAction('down')"
-                        class="control-button"
-                    />
-                </div>
-
-                <!-- Кнопки зума -->
-                <div class="row q-gutter-xs">
-                    <q-btn
-                        flat
-                        round
-                        size="sm"
-                        color="#7B68EE"
-                        text-color="#C0C0C0"
-                        icon="add"
-                        @pointerup="cameraAction('zoomIn')"
-                        class="control-button"
-                    />
-
-                    <q-btn
-                        flat
-                        round
-                        size="sm"
-                        color="#7B68EE"
-                        text-color="#C0C0C0"
-                        icon="remove"
-                        @pointerup="cameraAction('zoomOut')"
-                        class="control-button"
-                    />
-                </div>
-            </div>
-        </div>
     </q-page>
 </template>
 
@@ -298,23 +186,5 @@ watchEffect(() => {
 
 .block-events {
     pointer-events: none;
-}
-
-/* Базовые стили кнопок */
-.control-button {
-    background-color: #7B68EE;
-    transition: all 0.2s ease;
-}
-
-/* Эффекты при наведении */
-.control-button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(123, 104, 238, 0.4);
-}
-
-/* Эффекты при нажатии */
-.control-button:active {
-    background-color: #D6AFAF !important;
-    transform: scale(0.95);
 }
 </style>

@@ -3,6 +3,7 @@ import {BattleMap} from "../game/classes/battle/BattleMap.js";
 
 export const useGameStore = defineStore('game', {
     state: () => ({
+        game: undefined,
         scene: undefined,
         hoveredCreatureId: undefined,
         tooltip: {
@@ -14,6 +15,9 @@ export const useGameStore = defineStore('game', {
     getters: {},
     actions: {
         load() {
+        },
+        setGame(game) {
+            this.game = game
         },
         setScene(scene) {
             this.scene = scene

@@ -14,6 +14,7 @@ function getColorClass(creature) {
 
 <template>
     <q-timeline color="secondary" v-if="battleLog">
+        <q-timeline-entry title="Битва началась"/>
         <q-timeline-entry
             v-for="log in battleLog"
             :key="`${log.round}-${log.turn}`"
