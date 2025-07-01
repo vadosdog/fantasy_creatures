@@ -2,6 +2,7 @@
 import {computed, ref} from 'vue';
 import {useCraftStore} from "../../store/craft.js";
 import {useGameStore} from "../../store/game.js";
+import {creaturesLib} from "../../database/CreaturesLib.js";
 
 const craftStore = useCraftStore()
 const gameStore = useGameStore()
@@ -13,10 +14,10 @@ const isKnownCreature = computed(() => {
     if (!allShardsSelected.value) {
         return false
     }
-    console.log(craftStore.potentialCreature?.number)
     return gameStore.knownCreatures.some(number => craftStore.potentialCreature?.number === number)
 });
 
+const createdCreature = computed(() => craftStore.createdCreature)
 
 // Состояния превью
 const isEmptyState = computed(() =>
@@ -34,6 +35,10 @@ const allShardsSelected = computed(() =>
 
 // Имя существа
 const creatureName = computed(() => {
+    if (createdCreature.value) {
+        return createdCreature.value.name
+    }
+
     if (!allShardsSelected.value || !isKnownCreature.value) return '???????';
 
     return potentialCreature.value?.name || 'Неизвестное';
@@ -41,42 +46,51 @@ const creatureName = computed(() => {
 
 // Статы для отображения
 const visibleStats = computed(() => {
-    const currentStats = (!allShardsSelected.value || !isKnownCreature.value) ? {} : potentialCreature.value
+    let currentStats = {}
 
-    let maxHealthStat = '???'
-    let attackStat = '???'
-    let defenseStat = '???'
-    let willStat = '???'
-    let initiativeStat = '???'
-    let speedStat = '???'
-    let maxPP = '???'
-    let ppRegen = '???'
-    if (allShardsSelected.value && isKnownCreature.value) {
-        const diffs = craftStore.craftStatRange[potentialCreature.value?.emotion]
-
-        maxHealthStat = (currentStats.maxHealthStat - diffs.maxHealthStat) + ' - ' + (currentStats.maxHealthStat + diffs.maxHealthStat) 
-        attackStat = (currentStats.attackStat - diffs.attackStat) + ' - ' + (currentStats.attackStat + diffs.attackStat) 
-        defenseStat = (currentStats.defenseStat - diffs.defenseStat) + ' - ' + (currentStats.defenseStat + diffs.defenseStat) 
-        willStat = (currentStats.willStat - diffs.willStat) + ' - ' + (currentStats.willStat + diffs.willStat) 
-        initiativeStat = (currentStats.initiativeStat - diffs.initiativeStat) + ' - ' + (currentStats.initiativeStat + diffs.initiativeStat) 
-        speedStat = currentStats.speedStat 
-        maxPP = (currentStats.maxPP - diffs.maxPP) + ' - ' + (currentStats.maxPP + diffs.maxPP) 
-        ppRegen = (currentStats.ppRegen - diffs.ppRegen) + ' - ' + (currentStats.ppRegen + diffs.ppRegen) 
+    if (createdCreature.value) {
+        currentStats = getBaseCreature(createdCreature.value.element, createdCreature.value.shape, createdCreature.value.emotion)
+    } else if (allShardsSelected.value && isKnownCreature.value) {
+        currentStats = potentialCreature.value
     }
 
-    return [
-        {label: 'Здоровье', name: 'maxHealthStat', value: maxHealthStat},
-        {label: 'Атака', name: 'attackStat', value: attackStat},
-        {label: 'Защита', name: 'defenseStat', value: defenseStat},
-        {label: 'Воля', name: 'willStat', value: willStat},
-        {label: 'Инициатива', name: 'initiativeStat', value: initiativeStat},
-        {label: 'Скорость', name: 'speedStat', value: speedStat},
-        {label: 'PP', name: 'maxPP', value: maxPP},
-        {label: 'Регенерация PP', name: 'ppRegen', value: ppRegen},
+    const result = [
+        {label: 'Здоровье', name: 'maxHealthStat', value: '???'},
+        {label: 'Атака', name: 'attackStat', value: '???'},
+        {label: 'Защита', name: 'defenseStat', value: '???'},
+        {label: 'Воля', name: 'willStat', value: '???'},
+        {label: 'Инициатива', name: 'initiativeStat', value: '???'},
+        {label: 'Скорость', name: 'speedStat', value: '???'},
+        {label: 'PP', name: 'maxPP', value: '???'},
+        {label: 'Регенерация PP', name: 'ppRegen', value: '???'},
     ];
+
+
+    const diffs = craftStore.craftStatRange[currentStats?.emotion] || []
+    for (const resultElement of result) {
+        if (createdCreature.value) {
+            resultElement.value = createdCreature.value[resultElement.name]
+            if (resultElement.value > currentStats[resultElement.name]) {
+                resultElement.color = 'positive'
+            } else if (resultElement.value < currentStats[resultElement.name]) {
+                resultElement.color = 'negative'
+            }
+        } else if (allShardsSelected.value && isKnownCreature.value) {
+            if (diffs[resultElement.name]) {
+                resultElement.value = (currentStats[resultElement.name] - diffs[resultElement.name]) + ' - ' + (currentStats[resultElement.name] + diffs[resultElement.name])
+            } else {
+                resultElement.value = currentStats[resultElement.name]
+            }
+        }
+    }
+
+    return result;
 });
 
 const creatureImage = computed(() => {
+    if (createdCreature.value) {
+        return 'assets/creatures/basic/' + createdCreature.value.number + '.png';
+    }
     if (!allShardsSelected.value || !isKnownCreature.value) {
         return ''
     }
@@ -115,6 +129,11 @@ function shardClass(shard) {
     if (!shard) return 'shard-empty';
     return `shard-${shard.rarity}`;
 }
+
+function getBaseCreature(element, shape, emotion) {
+    return creaturesLib[element + '-' + shape + '-' + emotion]
+}
+
 </script>
 
 <template>
@@ -124,12 +143,12 @@ function shardClass(shard) {
             <div class="preview-container">
                 <!-- Состояние 1: Пустое состояние -->
                 <!-- Состояние 2: Частичное заполнение -->
-                <div v-if="isEmptyState || isPartialState" class="empty-preview">
+                <div v-if="!createdCreature && (isEmptyState || isPartialState)" class="empty-preview">
                     <q-icon name="help_outline" size="xl"/>
                 </div>
 
                 <!-- Состояние 3: Все осколки - известное существо -->
-                <div v-else-if="isKnownCreature" class="full-preview">
+                <div v-else-if="createdCreature || isKnownCreature" class="full-preview">
                     <q-img :src="creatureImage"/>
                     <q-badge class="known-badge" label="Изучено"/>
                 </div>
@@ -172,7 +191,27 @@ function shardClass(shard) {
                         <q-item-label>{{ stat.label }}</q-item-label>
                     </q-item-section>
                     <q-item-section side>
-                        <q-item-label>{{ stat.value }}</q-item-label>
+                        <q-item-label class="text-bold" :class="{
+                            'text-primary': stat.color === 'positive',
+                            'text-negative': stat.color === 'negative'
+                        }">
+                            {{ stat.value }}
+                            <q-tooltip 
+                                anchor="center left"
+                                self="center right"
+                                :offset="[10, 10]"
+                            >
+                                <span v-if="stat.color === 'positive'">
+                                    Выше среднего
+                                </span>
+                                <span v-else-if="stat.color === 'negative'">
+                                    Ниже среднего
+                                </span>
+                                <span v-else>
+                                    Среднее
+                                </span>
+                            </q-tooltip>
+                        </q-item-label>
                     </q-item-section>
                 </q-item>
             </q-list>

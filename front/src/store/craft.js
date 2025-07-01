@@ -1,5 +1,7 @@
 import {defineStore} from 'pinia';
 import {creaturesLib} from "../database/CreaturesLib.js";
+import {useGameStore} from "./game.js";
+const gameStore = useGameStore()
 
 export const useCraftStore = defineStore('craft', {
     state: () => ({
@@ -38,7 +40,8 @@ export const useCraftStore = defineStore('craft', {
                 maxPP: 2,
                 ppRegen: 1,
             }
-        }
+        },
+        createdCreature: null,
     }),
     getters: {
         selectedShards() {
@@ -54,7 +57,9 @@ export const useCraftStore = defineStore('craft', {
     },
     actions: {
         selectShard(type, shard) {
-            console.log(type, shard)
+            if (this.createdCreature) {
+                this.createdCreature = null
+            }
             switch (type) {
                 case 'shape':
                     this.selectedShape = shard
@@ -71,16 +76,14 @@ export const useCraftStore = defineStore('craft', {
             if (!this.potentialCreature) {
                 return
             }
-            
+
             const newCreature = Object.assign({}, this.potentialCreature)
-            
+
             // Присваиваем рандомный ИД
             newCreature.id = crypto.randomUUID();
-            
+
             const diffs = this.craftStatRange[newCreature.emotion]
 
-            console.log('tyt')
-            // Изменим статы, добавив случайное отклонение в указанном диапазоне
             for (let prop in diffs) {
                 if (newCreature.hasOwnProperty(prop)) {
                     const diffValue = diffs[prop];
@@ -95,7 +98,18 @@ export const useCraftStore = defineStore('craft', {
                     newCreature[prop] += randomOffset;
                 }
             }
-            
+
+            gameStore.inventoryRemove(this.selectedElement)
+            gameStore.inventoryRemove(this.selectedShape)
+            gameStore.inventoryRemove(this.selectedEmotion)
+            gameStore.addCreature(newCreature)
+
+            this.selectedElement = null
+            this.selectedShape = null
+            this.selectedEmotion = null
+
+
+            this.createdCreature = newCreature;
             return newCreature
         },
     },

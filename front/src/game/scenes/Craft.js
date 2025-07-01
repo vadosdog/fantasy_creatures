@@ -308,19 +308,14 @@ export class Craft extends Phaser.Scene {
                     yoyo: true,
                     duration: 300,
                     onComplete: () => {
-                        flash.destroy()
                         
                         // Вызываем метод из хранилища
                         const newCreature = craftStore.createNewCreature()
-                        console.log(newCreature)
 
-                        gameStore.inventoryRemove(craftStore.selectedElement)
-                        gameStore.inventoryRemove(craftStore.selectedShape)
-                        gameStore.inventoryRemove(craftStore.selectedEmotion)
-                        gameStore.addCreature(newCreature)
-
-                        // this.resetSlots();
-                        // this.updateCraftButton()
+                        this.resetSlots();
+                        this.updateCraftButton()
+                        
+                        flash.destroy()
                     }
                 });
             }
@@ -329,7 +324,6 @@ export class Craft extends Phaser.Scene {
 
     resetSlots() {
         for (const slot of this.slots) {
-            console.log(slot)
             if (slot.shard) {
                 slot.shard.destroy();
                 slot.shard = null;

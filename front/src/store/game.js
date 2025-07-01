@@ -114,32 +114,6 @@ export const useGameStore = defineStore('game', {
         ],
         knownCreatures: [
             '001',
-            '004',
-            '007',
-            '010',
-            '013',
-            '016',
-            '019',
-            '022',
-            '025',
-            '028',
-            '031',
-            '034',
-            '037',
-            '040',
-            '043',
-            '046',
-            '049',
-            '052',
-            '055',
-            '058',
-            '061',
-            '064',
-            '067',
-            '070',
-            '073',
-            '076',
-            '079',
         ],
         creatures: [],
     }),
@@ -176,6 +150,9 @@ export const useGameStore = defineStore('game', {
         
         addCreature(creatureData) {
             this.creatures.push(creatureData)
+            if (!this.knownCreatures.includes(creatureData.number)) {
+                this.knownCreatures.push(creatureData.number);
+            }
         },
         inventoryRemove(item, count = 1) {
             const index = this.inventory.findIndex(ii => ii.id === item.id)
