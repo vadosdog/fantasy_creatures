@@ -12,7 +12,7 @@ const props = defineProps({
         type: Object,
         default: {
             name: 'LOH',
-            role: 'tank',
+            emotion: 'rage',
             form: 'beast',
             element: 'fire',
             effects: [],
@@ -36,13 +36,13 @@ const healthColor = computed(() => {
     return healthColor
 })
 
-function getRoleIcon(role) {
-    switch (role) {
-        case 'tank':
+function getEmotionIcon(emotion) {
+    switch (emotion) {
+        case 'rage':
             return 'shield'
-        case 'dd':
+        case 'passion':
             return 'rocket'
-        case 'support':
+        case 'hope':
             return 'emergency'
     }
 
@@ -81,8 +81,8 @@ function getElementIcon(element) {
 
     return elementIcon
 }
-const roleIcon = computed(() => {
-    return getRoleIcon(props.creature?.role) || 'favorite'
+const emotionIcon = computed(() => {
+    return getEmotionIcon(props.creature?.emotion) || 'favorite'
 })
 const formIcon = computed(() => {
     return getFormIcon(props.creature?.form) || 'favorite'
@@ -196,12 +196,12 @@ const safeCreature = ref(true)
         <q-card-section horizontal>
             <q-card-actions vertical class="justify-around q-pa-xs">
                 <q-btn flat round :color="elementIcon.color" :icon="elementIcon.icon"/>
-                <q-btn flat round color="red" :icon="roleIcon"/>
+                <q-btn flat round color="red" :icon="emotionIcon"/>
                 <q-btn flat round color="accent" :icon="formIcon"/>
                 <q-btn flat color="dark">Lvl: {{ creature.level }}</q-btn>
             </q-card-actions>
             <q-img
-                :src="creature.texture ? '/assets/battle/creatures/basic/' + creature.texture + '.png' : 'https://img.league17.ru/pub/mnst/norm/full/502.png'"
+                :src="creature.texture ? '/assets/creatures/basic/' + creature.texture + '.png' : 'https://img.league17.ru/pub/mnst/norm/full/502.png'"
                 :alt="creature.name"
                 class="col"
                 :class="{mirror: creature.direction === 'left'}"

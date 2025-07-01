@@ -52,7 +52,7 @@ export class EasyAI {
         } else {
             enemies.forEach((enemy, i) => {
                 // для теста. позже убрать
-                if (enemy.role === 'support') {
+                if (enemy.emotion === 'hope') {
                     return
                 }
                 const newPath = this.store.findPath(this.activeCreature.position, enemy.position, attack.actionType === 'melee')
@@ -214,7 +214,7 @@ export class EasyAI {
         const actionsWithWeight = []
 
         // TODO: Уточнить веса для разных ролей и ситуаций
-        if (this.activeCreature.role === 'support') {
+        if (this.activeCreature.emotion === 'hope') {
             if (attackAction) actionsWithWeight.push({...attackAction, weight: 30});
             if (treatAction) actionsWithWeight.push({...treatAction, weight: 60});
             if (moveAction) actionsWithWeight.push({...moveAction, weight: 10});

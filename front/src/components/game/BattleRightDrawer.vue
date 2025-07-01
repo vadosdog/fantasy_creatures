@@ -45,13 +45,13 @@ function getElementIcon(element) { //TODO унести в какое нибуд�
 }
 
 
-function getRoleIcon(role) {
-    switch (role) {
-        case 'tank':
+function getEmotionIcon(emotion) {
+    switch (emotion) {
+        case 'rage':
             return 'shield'
-        case 'dd':
+        case 'passion':
             return 'rocket'
-        case 'support':
+        case 'hope':
             return 'emergency'
     }
 
@@ -75,10 +75,10 @@ function getActionIcon(action) {
     if (action.element) {
         return getElementIcon(action.element)
     }
-    if (action.role) {
+    if (action.emotion) {
         return {
             color: 'red',
-            icon: getRoleIcon(action.role)
+            icon: getEmotionIcon(action.emotion)
         }
     }
     return {

@@ -4,27 +4,24 @@ import {useGameStore} from "../../store/game.js";
 
 const store = useGameStore()
 
-const changeScene = (newScene) => {
-    if (!store.scene) {
-        return
-    }
-
-    store.scene.start(newScene);
-}
-
 </script>
 
 <template>
     <div class="row q-gutter-sm">
         <q-btn
             flat
-            label="Go to Battle"
-            @click="changeScene('Battle')"
+            label="Battle"
+            @click="store.changeScene('Battle')"
         />
         <q-btn
             flat
-            label="Go to Test"
-            @click="changeScene('BattleAutoTest')"
+            label="Test"
+            @click="store.changeScene('BattleAutoTest')"
+        />
+        <q-btn
+            flat
+            label="Craft"
+            @click="store.changeScene('Craft')"
         />
     </div>
 </template>

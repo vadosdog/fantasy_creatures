@@ -142,7 +142,7 @@ export class QueueController {
             initiativeStat: creature.initiativeStat,
             maxHealthStat: creature.maxHealthStat,
             level: creature.level,
-            role: creature.role,
+            emotion: creature.emotion,
             form: creature.form,
             element: creature.element,
         }));

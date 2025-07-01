@@ -89,7 +89,7 @@ export class Battle extends Scene {
     }
 
     resize(gameSize) {
-        if (!gameSize) return;
+        if (!gameSize || !this.cameras || !this.cameras.main) return;
 
         // Рассчитайте масштаб для вписывания
         const scale = Math.min(

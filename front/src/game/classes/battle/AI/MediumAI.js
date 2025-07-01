@@ -18,20 +18,20 @@ const EFFECT_WEIGHTS = {
 };
 
 // Веса действий по ролям
-const ROLE_WEIGHTS = {
-    tank: {
+const EMOTION_WEIGHTS = {
+    rage: {
         attack: 1.0,
         treat: 15, // тк у танков по умолчанию нет лечилок, без большого приоритета защиты не будут использованы никогда
         move: 0.8,
         skip: 0.3
     },
-    dd: {
+    passion: {
         attack: 1.5,
         treat: 5,
         move: 1.0,
         skip: 0.2
     },
-    support: {
+    hope: {
         attack: 0.8,
         treat: 1.8,
         move: 1.0,
@@ -75,7 +75,7 @@ export class MediumAI {
         // 3. Защита и пропуск хода
         availableActions.push({
             action: 'defense',
-            weight: ROLE_WEIGHTS[this.activeCreature.role].skip,
+            weight: EMOTION_WEIGHTS[this.activeCreature.emotion].skip,
             ppCost: 0
         });
 
@@ -122,7 +122,7 @@ export class MediumAI {
     }
 
     getAttackTarget(attack, enemies) {
-        const role = this.activeCreature.role;
+        const emotion = this.activeCreature.emotion;
 
         let bestTarget = null;
         let bestScore = -Infinity;
@@ -146,10 +146,10 @@ export class MediumAI {
 
             // Приоритет целей
             score *= 1.0 + (1.0 - enemy.health / CreatureAPI.getMaxHealth(enemy)); // Раненым целям
-            if (enemy.role === 'support') {
+            if (enemy.emotion === 'hope') {
                 score *= 1.4; // Приоритет саппортов
             }
-            if (enemy.role === 'dd') {
+            if (enemy.emotion === 'passion') {
                 score *= 1.2; // Приоритет ДД
             }
 
@@ -171,7 +171,7 @@ export class MediumAI {
 
         let weight = bestScore
         if (bestTarget.distance <= rangeLimit) {
-            weight *= ROLE_WEIGHTS[role].attack // докидываем за действие атаки
+            weight *= EMOTION_WEIGHTS[emotion].attack // докидываем за действие атаки
             return {
                 weight: weight,
                 action: 'attack',
@@ -182,7 +182,7 @@ export class MediumAI {
             if (attack.actionType !== 'melee') {
                 bestTarget.path = this.store.findPath(this.activeCreature.position, bestTarget.enemy.position, true)
             }
-            weight *= ROLE_WEIGHTS[role].move // докидываем за действие движения
+            weight *= EMOTION_WEIGHTS[emotion].move // докидываем за действие движения
             return {
                 weight: weight,
                 action: 'move',
@@ -196,7 +196,7 @@ export class MediumAI {
         let bestTarget = null;
         let bestScore = -Infinity;
         const limit = treat.range;
-        const role = this.activeCreature.role;
+        const emotion = this.activeCreature.emotion;
 
         allies.forEach(ally => {
             const allyMaxHealth = CreatureAPI.getMaxHealth(ally)
@@ -210,7 +210,7 @@ export class MediumAI {
 
             if (treat.baseDamage > 0) { // Лечение
                 const healNeeded = allyMaxHealth - ally.health;
-                score += healNeeded * (ally.role === 'tank' ? 1.5 : 1) * (ally.role === 'dd' ? 1.3 : 1);
+                score += healNeeded * (ally.emotion === 'rage' ? 1.5 : 1) * (ally.emotion === 'passion' ? 1.3 : 1);
             }
 
 
@@ -237,7 +237,7 @@ export class MediumAI {
         }
         if (bestTarget.distance <= limit) {
             return {
-                weight: bestScore * ROLE_WEIGHTS[role].treat,
+                weight: bestScore * EMOTION_WEIGHTS[emotion].treat,
                 action: 'treat',
                 actionObject: treat,
                 targets: bestTarget.ally.position,
@@ -246,7 +246,7 @@ export class MediumAI {
             bestTarget.path = this.store.findPath(this.activeCreature.position, bestTarget.ally.position, true)
 
             return {
-                weight: bestScore * ROLE_WEIGHTS[role].move,
+                weight: bestScore * EMOTION_WEIGHTS[emotion].move,
                 action: 'move',
                 targets: bestTarget.path[Math.min(CreatureAPI.getSpeed(this.activeCreature) - 1, bestTarget.path.length - 2)],
             };
@@ -281,7 +281,7 @@ export class MediumAI {
         let targetPos = null;
         let minDistance = Infinity;
 
-        if (this.activeCreature.role === 'support') {
+        if (this.activeCreature.emotion === 'hope') {
             // Для саппортов ищем раненых союзников
             allies.forEach(ally => {
                 if (ally.health < CreatureAPI.getMaxHealth(ally) * 0.7) {
@@ -313,7 +313,7 @@ export class MediumAI {
     }
 
     chooseAction(availableActions, enemiesCount) {
-        const role = this.activeCreature.role
+        const emotion = this.activeCreature.emotion
         let attackAction;
         let treatAction;
         let moveAction;
@@ -345,12 +345,12 @@ export class MediumAI {
 
         const actionsWithWeight = [];
 
-        if (this.activeCreature.role === 'tank') {
+        if (this.activeCreature.emotion === 'rage') {
             if (attackAction) actionsWithWeight.push({...attackAction,});
             if (treatAction) actionsWithWeight.push({...treatAction,});
             if (moveAction) actionsWithWeight.push({...moveAction});
 
-        } else if (this.activeCreature.role === 'support') {
+        } else if (this.activeCreature.emotion === 'hope') {
             if (attackAction) actionsWithWeight.push({...attackAction});
             if (treatAction) actionsWithWeight.push({...treatAction});
             if (moveAction) actionsWithWeight.push({...moveAction});

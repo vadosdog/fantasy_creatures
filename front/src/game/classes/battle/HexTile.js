@@ -586,6 +586,7 @@ export class HexTile extends Phaser.GameObjects.Container {
 
     updatePulse() {
         if (!this.isPulsating) return;
+        if (!this.scene || !this.scene) return;
 
         // Рассчитываем прогресс на основе глобального времени
         let elapsed = this.scene.time.now - HexTile.globalPulseStart;

@@ -121,7 +121,7 @@ const clearHoverCreature = () => {
                 </q-tooltip>
                 <div class="creature-image-container">
                     <q-img
-                        :src="creature.texture ? '/assets/battle/creatures/basic/' + creature.texture + '.png' : 'https://img.league17.ru/pub/mnst/norm/full/502.png'"
+                        :src="creature.texture ? '/assets/creatures/basic/' + creature.texture + '.png' : 'https://img.league17.ru/pub/mnst/norm/full/502.png'"
                         :alt="creature.name"
                         class="creature-image"
                         :class="{mirror: creature.direction === 'left'}"

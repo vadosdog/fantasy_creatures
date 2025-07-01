@@ -6,7 +6,7 @@ const lib = [
         name: 'Огонь/Танк',
         texture: 'Pink_Monster',
         element: 'fire',
-        role: 'tank',
+        emotion: 'rage',
 
 
         maxHealthStat: 320,
@@ -51,7 +51,7 @@ const lib = [
         name: 'ДД/Трава',
         texture: 'Dude_Monster',
         element: 'grass',
-        role: 'dd',
+        emotion: 'passion',
 
 
         maxHealthStat: 180, // 1=10 - 20
@@ -92,7 +92,7 @@ const lib = [
         name: 'Сап/Вода',
         texture: 'Owlet_Monster',
         element: 'water',
-        role: 'support',
+        emotion: 'hope',
 
 
         maxHealthStat: 110,
@@ -133,7 +133,7 @@ const lib = [
         name: 'Вода/Танк',
         texture: 'Pink_Monster',
         element: 'water',
-        role: 'tank',
+        emotion: 'rage',
 
         direction: 'left',
 
@@ -175,7 +175,7 @@ const lib = [
         name: 'Огонь / ДД',
         texture: 'Dude_Monster',
         element: 'fire',
-        role: 'dd',
+        emotion: 'passion',
 
         direction: 'left',
 
@@ -217,7 +217,7 @@ const lib = [
         name: 'Трава/САП',
         texture: 'Owlet_Monster',
         element: 'grass',
-        role: 'support',
+        emotion: 'hope',
 
         direction: 'left',
 
@@ -253,19 +253,18 @@ const lib = [
         ,
     }
 ]
-let idIndex = 1;
 
 import creatures from './creatures.json';
 import creaturesActions from './creature-actions.json';
 import {MediumAI} from "../game/classes/battle/AI/MediumAI.js";
 import {EasyAI} from "../game/classes/battle/AI/EasyAI.js";
 
-const creaturesLib = {}
+export const creaturesLib = {}
 const creatureActionsLib = {}
 
 creatures.forEach((creature, index) => {
     creature.id = index + 1
-    creaturesLib[creature.element + '-' + creature.form + '-' + creature.role] = creature
+    creaturesLib[creature.element + '-' + creature.form + '-' + creature.emotion] = creature
 })
 
 for (const actionIndex of creaturesActions.keys()) {
@@ -275,7 +274,7 @@ for (const actionIndex of creaturesActions.keys()) {
     if (!creaturesAction.id) {
         creaturesAction.id = actionIndex + 100
     }
-    const key = creaturesAction.element + '-' + creaturesAction.form + '-' + creaturesAction.role
+    const key = creaturesAction.element + '-' + creaturesAction.form + '-' + creaturesAction.emotion
     if (!creatureActionsLib[key]) {
         creatureActionsLib[key] = []
     }
@@ -289,7 +288,7 @@ for (const actionIndex of creaturesActions.keys()) {
 export function getTeam(direction, control, positions) {
     const result = []
     lib.forEach((config, i) => {
-        const creature = createCreature(getCreature(config.element, 'beast', config.role, 2))
+        const creature = createCreature(getCreature(config.element, 'beast', config.emotion, 2))
         creature.id += direction === 'left' ? 100 : 0
         creature.actions = creature.actions.map(action => {
             if (action.effects) {
@@ -335,19 +334,19 @@ export function getTeam2(direction, control, creatures) {
     return result
 }
 
-export function getCreature(element, form, role, level) {
+export function getCreature(element, form, emotion, level) {
     // нужно копирование, иначе при повторении существ, будет один объект
-    const creature = Object.assign({}, creaturesLib[element + '-' + form + '-' + role]);
-    // creature.name = element + '/' + form + '/' + role
+    const creature = Object.assign({}, creaturesLib[element + '-' + form + '-' + emotion]);
+    // creature.name = element + '/' + form + '/' + emotion
     creature.texture = '001'; //creature.number;
     creature.level = level
     const actions = [
-        ...creatureActionsLib[element + '-' + form + '-' + role],
-        ...creatureActionsLib['-' + '-' + role],
+        ...creatureActionsLib[element + '-' + form + '-' + emotion],
+        ...creatureActionsLib['-' + '-' + emotion],
         ...creatureActionsLib['-' + form + '-'],
         ...creatureActionsLib[element + '-' + '-'],
-        ...creatureActionsLib['-' + form + '-' + role],
-        ...creatureActionsLib[element + '-' + '-' + role],
+        ...creatureActionsLib['-' + form + '-' + emotion],
+        ...creatureActionsLib[element + '-' + '-' + emotion],
         ...creatureActionsLib[element + '-' + form + '-'],
     ]
 
@@ -370,15 +369,15 @@ export function getCreature(element, form, role, level) {
     // ][Math.floor(Math.random() * 15)] + '_Pokemon';
     // creature.textureType = 'pokemon'
     creature.textureType = 'wildermyth'
-    // switch (creature.role) {
-    //     case 'tank':
+    // switch (creature.emotion) {
+    //     case 'rage':
     //         creature.texture = 'Arcanine_Pokemon'
     //         creature.textureType = 'pokemon'
     //         break
-    //     case 'dd':
+    //     case 'passion':
     //         creature.texture = 'Dude_Monster'
     //         break
-    //     case 'support':
+    //     case 'hope':
     //         creature.texture = 'Owlet_Monster'
     //         break
     // }
@@ -390,8 +389,8 @@ export function getCreature(element, form, role, level) {
     return creature
 }
 
-function randomRole() {
-    return ['tank', 'dd', 'support'][Math.floor(Math.random() * 3)];
+function randomEmotion() {
+    return ['rage', 'passion', 'hope'][Math.floor(Math.random() * 3)];
 }
 
 function randomForm() {
@@ -440,12 +439,12 @@ function shuffleArray(array) {
 
 export function testElementTeam(element, level, direction, control) {
     const creatures = [
-        getCreature(element, randomForm(), 'tank', level),
-        getCreature(element, randomForm(), 'tank', level),
-        getCreature(element, randomForm(), 'support', level),
-        getCreature(element, randomForm(), 'support', level),
-        getCreature(element, randomForm(), 'dd', level),
-        getCreature(element, randomForm(), 'dd', level),
+        getCreature(element, randomForm(), 'rage', level),
+        getCreature(element, randomForm(), 'rage', level),
+        getCreature(element, randomForm(), 'hope', level),
+        getCreature(element, randomForm(), 'hope', level),
+        getCreature(element, randomForm(), 'passion', level),
+        getCreature(element, randomForm(), 'passion', level),
     ]
 
 
@@ -461,12 +460,12 @@ export function testElementTeam(element, level, direction, control) {
 
 export function testTeam(level, direction, control) {
     const creatures = [
-        getCreature(randomElement(), randomForm(), 'tank', level),
-        getCreature(randomElement(), randomForm(), 'tank', level),
-        getCreature(randomElement(), randomForm(), 'support', level),
-        getCreature(randomElement(), randomForm(), 'support', level),
-        getCreature(randomElement(), randomForm(), 'dd', level),
-        getCreature(randomElement(), randomForm(), 'dd', level),
+        getCreature(randomElement(), randomForm(), 'rage', level),
+        getCreature(randomElement(), randomForm(), 'rage', level),
+        getCreature(randomElement(), randomForm(), 'hope', level),
+        getCreature(randomElement(), randomForm(), 'hope', level),
+        getCreature(randomElement(), randomForm(), 'passion', level),
+        getCreature(randomElement(), randomForm(), 'passion', level),
     ]
 
 
@@ -481,19 +480,19 @@ export function testTeam(level, direction, control) {
 }
 
 // Тест 1: Базовый урон (ДД vs Танк)
-export function testBaseDamageDDvsTank() {
-    const tank = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'tank']);
-    const dd = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'dd']);
-    const dd2 = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'dd']);
-    const support = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'support']);
-    tank.actions = []
-    dd2.actions = []
-    support.actions = [
+export function testBaseDamagePassionvsRage() {
+    const rage = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'rage']);
+    const passion = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'passion']);
+    const passion2 = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'passion']);
+    const hope = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'hope']);
+    rage.actions = []
+    passion2.actions = []
+    hope.actions = [
         {
             "name": "Лечебная волна",
             "element": "",
             "form": "",
-            "role": "support",
+            "emotion": "passion",
             "level": 2,
             "Тип": "Поддерживающий",
             "actionType": "treat",
@@ -505,12 +504,12 @@ export function testBaseDamageDDvsTank() {
             "": ""
         }
     ]
-    dd.actions = [
+    passion.actions = [
         {
             "name": "Свирепый укус",
             "element": "",
             "form": "beast",
-            "role": "",
+            "emotion": "",
             "level": 1,
             "Тип": "Атакующий",
             "actionType": "melee",
@@ -531,7 +530,7 @@ export function testBaseDamageDDvsTank() {
             "name": "Ветряной удар",
             "element": "",
             "form": "bird",
-            "role": "",
+            "emotion": "",
             "level": 1,
             "Тип": "Атакующий",
             "actionType": "melee",
@@ -546,7 +545,7 @@ export function testBaseDamageDDvsTank() {
             "name": "Ядовитый плевок",
             "element": "",
             "form": "reptile",
-            "role": "",
+            "emotion": "",
             "level": 1,
             "Тип": "Гибридный",
             "actionType": "melee",
@@ -568,7 +567,7 @@ export function testBaseDamageDDvsTank() {
         //     "name": "Огненный коготь",
         //     "element": "fire",
         //     "form": "",
-        //     "role": "",
+        //     "emotion": "",
         //     "level": 1,
         //     "Тип": "Атакующий",
         //     "actionType": "melee",
@@ -589,7 +588,7 @@ export function testBaseDamageDDvsTank() {
         //     "name": "Ядовитый шип",
         //     "element": "grass",
         //     "form": "",
-        //     "role": "",
+        //     "emotion": "",
         //     "level": 1,
         //     "Тип": "Гибридный",
         //     "actionType": "melee",
@@ -611,7 +610,7 @@ export function testBaseDamageDDvsTank() {
         //     "name": "Ледяная игла",
         //     "element": "water",
         //     "form": "",
-        //     "role": "",
+        //     "emotion": "",
         //     "level": 1,
         //     "Тип": "Атакующий",
         //     "actionType": "melee",
@@ -633,7 +632,7 @@ export function testBaseDamageDDvsTank() {
         //     "name": "Смертельный удар",
         //     "element": "",
         //     "form": "",
-        //     "role": "dd",
+        //     "emotion": "passion",
         //     "level": 2,
         //     "Тип": "Атакующий",
         //     "actionType": "ranged",
@@ -650,45 +649,45 @@ export function testBaseDamageDDvsTank() {
         return a
     })
 
-    dd.actions = [dd.actions[Math.floor(Math.random() * 3)]]
+    passion.actions = [passion.actions[Math.floor(Math.random() * 3)]]
 
-    tank.name = 'tank'
-    support.name = 'support'
-    support.maxHealthStat = 1
-    dd2.name = 'dd2'
-    dd.name = 'dd'
+    rage.name = 'rage'
+    hope.name = 'hope'
+    hope.maxHealthStat = 1
+    passion2.name = 'passion2'
+    passion.name = 'passion'
 
-    tank.texture = 'Pink_Monster'
-    dd.texture = 'Dude_Monster'
-    dd2.texture = 'Dude_Monster'
-    support.texture = 'Owlet_Monster'
+    rage.texture = 'Pink_Monster'
+    passion.texture = 'Dude_Monster'
+    passion2.texture = 'Dude_Monster'
+    hope.texture = 'Owlet_Monster'
 
-    // tank.position = getPositions('left')[0]
-    dd2.position = getPositions('left')[0]
-    support.position = getPositions('left')[1]
-    dd.position = getPositions('right')[0]
+    // rage.position = getPositions('left')[0]
+    passion2.position = getPositions('left')[0]
+    hope.position = getPositions('left')[1]
+    passion.position = getPositions('right')[0]
 
-    tank.id = 1
-    dd2.id = 2
-    support.id = 3
-    dd.id = 4
+    rage.id = 1
+    passion2.id = 2
+    hope.id = 3
+    passion.id = 4
 
     return [
-        ...getTeam2('left', 'player', [dd2]),
-        ...getTeam2('right', 'player', [dd])
+        ...getTeam2('left', 'player', [passion2]),
+        ...getTeam2('right', 'player', [passion])
     ]
 }
 
 // Тест 1: Базовый урон (ДД vs Танк)
 export function testEffects(effect, chanceEffect, duration) {
-    const tank1 = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'tank']);
-    const tank2 = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'tank']);
-    tank1.actions = [
+    const rage1 = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'rage']);
+    const rage2 = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'rage']);
+    rage1.actions = [
         {
             "name": "Свирепый укус с эффектом",
             "element": "",
             "form": "beast",
-            "role": "",
+            "emotion": "",
             "level": 1,
             "Тип": "Атакующий",
             "actionType": "melee",
@@ -703,12 +702,12 @@ export function testEffects(effect, chanceEffect, duration) {
         a.hitChance /= 100
         return a
     })
-    tank2.actions = [
+    rage2.actions = [
         {
             "name": "Свирепый укус без эффекта",
             "element": "",
             "form": "beast",
-            "role": "",
+            "emotion": "",
             "level": 1,
             "Тип": "Атакующий",
             "actionType": "melee",
@@ -730,33 +729,33 @@ export function testEffects(effect, chanceEffect, duration) {
         return a
     })
 
-    tank1.name = 'tank1'
-    tank2.name = 'tank2'
+    rage1.name = 'rage1'
+    rage2.name = 'rage2'
 
-    tank1.texture = 'Pink_Monster'
-    tank2.texture = 'Pink_Monster'
+    rage1.texture = 'Pink_Monster'
+    rage2.texture = 'Pink_Monster'
 
-    tank1.position = getPositions('right')[0]
-    tank2.position = getPositions('left')[0]
+    rage1.position = getPositions('right')[0]
+    rage2.position = getPositions('left')[0]
 
-    tank1.id = 1
-    tank2.id = 4
+    rage1.id = 1
+    rage2.id = 4
 
     if (Math.random() < chanceEffect) {
-        tank1.effects = [{
+        rage1.effects = [{
             "effect": effect,
             "duration": duration
         }]
     }
     
-    // tank1.actions[0].effects = [{
+    // rage1.actions[0].effects = [{
     //     "effect": effect,
     //     "chance": chanceEffect,
     //     "duration": duration
     // }]
 
     return [
-        ...getTeam2('left', new EasyAI(), [tank2]),
-        ...getTeam2('right', new EasyAI(), [tank1])
+        ...getTeam2('left', new EasyAI(), [rage2]),
+        ...getTeam2('right', new EasyAI(), [rage1])
     ]
 }

@@ -9,6 +9,8 @@ import {useGlobalStore} from "../store/global.js";
 import {useBattleStore} from "../store/battle.js";
 import BattleRightDrawer from "../components/game/BattleRightDrawer.vue";
 import BattleLeftDrawer from "../components/game/BattleLeftDrawer.vue";
+import CraftLeftDrawer from "../components/game/CraftLeftDrawer.vue";
+import CraftRightDrawer from "../components/game/CraftRightDrawer.vue";
 
 const game = ref(null);
 const phaserContainer = ref(null);
@@ -88,18 +90,25 @@ onMounted(() => {
 
         EventBus.on('current-scene-ready', (currentScene) => {
             try {
+                switch (currentScene.scene.key) {
+                    case 'Battle':
+                        emit('update-footer', BattleFooter);
+                        emit('update-left-drawer', BattleLeftDrawer);
+                        emit('update-right-drawer', BattleRightDrawer);
+                        emit('update-header', BattleHeader);
+                        break
+                    default:
+                        emit('update-footer', undefined);
+                        emit('update-left-drawer', CraftLeftDrawer);
+                        emit('update-right-drawer', CraftRightDrawer);
+                        emit('update-header', BattleHeader);
+                }
                 gameStore.setScene(currentScene.scene);
                 emit('current-active-scene', 'Battle');
             } catch (e) {
                 console.error('Error in current-scene-ready handler:', e);
             }
         });
-
-        emit('update-footer', BattleFooter);
-        emit('update-left-drawer', BattleLeftDrawer);
-        emit('update-right-drawer', BattleRightDrawer);
-        emit('update-header', BattleHeader);
-
     } catch (error) {
         console.error('Game component mount error:', error);
     }

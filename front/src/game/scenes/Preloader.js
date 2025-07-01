@@ -44,71 +44,71 @@ export class Preloader extends Scene {
         this.load.spritesheet('hexagon', 'battle/hexagon/hexagon3.png', {frameWidth: 95, frameHeight: 110});
 
         // Pink_Monster
-        this.load.spritesheet('Pink_Monster_walk', 'battle/creatures/Pink_Monster/walk.png', {
+        this.load.spritesheet('Pink_Monster_walk', 'creatures/Pink_Monster/walk.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.spritesheet('Pink_Monster_attack1', 'battle/creatures/Pink_Monster/attack1.png', {
+        this.load.spritesheet('Pink_Monster_attack1', 'creatures/Pink_Monster/attack1.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.spritesheet('Pink_Monster_hurt', 'battle/creatures/Pink_Monster/hurt.png', {
+        this.load.spritesheet('Pink_Monster_hurt', 'creatures/Pink_Monster/hurt.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.spritesheet('Pink_Monster_death', 'battle/creatures/Pink_Monster/death.png', {
+        this.load.spritesheet('Pink_Monster_death', 'creatures/Pink_Monster/death.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.spritesheet('Pink_Monster_idle', 'battle/creatures/Pink_Monster/idle.png', {
+        this.load.spritesheet('Pink_Monster_idle', 'creatures/Pink_Monster/idle.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.image('Pink_Monster_stand', 'battle/creatures/Pink_Monster/stand.png');
+        this.load.image('Pink_Monster_stand', 'creatures/Pink_Monster/stand.png');
         // Owlet_Monster
-        this.load.spritesheet('Owlet_Monster_walk', 'battle/creatures/Owlet_Monster/walk.png', {
+        this.load.spritesheet('Owlet_Monster_walk', 'creatures/Owlet_Monster/walk.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.spritesheet('Owlet_Monster_attack1', 'battle/creatures/Owlet_Monster/attack1.png', {
+        this.load.spritesheet('Owlet_Monster_attack1', 'creatures/Owlet_Monster/attack1.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.spritesheet('Owlet_Monster_hurt', 'battle/creatures/Owlet_Monster/hurt.png', {
+        this.load.spritesheet('Owlet_Monster_hurt', 'creatures/Owlet_Monster/hurt.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.spritesheet('Owlet_Monster_death', 'battle/creatures/Owlet_Monster/death.png', {
+        this.load.spritesheet('Owlet_Monster_death', 'creatures/Owlet_Monster/death.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.spritesheet('Owlet_Monster_idle', 'battle/creatures/Owlet_Monster/idle.png', {
+        this.load.spritesheet('Owlet_Monster_idle', 'creatures/Owlet_Monster/idle.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.image('Owlet_Monster_stand', 'battle/creatures/Owlet_Monster/stand.png');
+        this.load.image('Owlet_Monster_stand', 'creatures/Owlet_Monster/stand.png');
         // Dude_Monster
-        this.load.spritesheet('Dude_Monster_walk', 'battle/creatures/Dude_Monster/walk.png', {
+        this.load.spritesheet('Dude_Monster_walk', 'creatures/Dude_Monster/walk.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.spritesheet('Dude_Monster_attack1', 'battle/creatures/Dude_Monster/attack1.png', {
+        this.load.spritesheet('Dude_Monster_attack1', 'creatures/Dude_Monster/attack1.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.spritesheet('Dude_Monster_hurt', 'battle/creatures/Dude_Monster/hurt.png', {
+        this.load.spritesheet('Dude_Monster_hurt', 'creatures/Dude_Monster/hurt.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.spritesheet('Dude_Monster_death', 'battle/creatures/Dude_Monster/death.png', {
+        this.load.spritesheet('Dude_Monster_death', 'creatures/Dude_Monster/death.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.spritesheet('Dude_Monster_idle', 'battle/creatures/Dude_Monster/idle.png', {
+        this.load.spritesheet('Dude_Monster_idle', 'creatures/Dude_Monster/idle.png', {
             frameWidth: 32,
             frameHeight: 32
         });
-        this.load.image('Dude_Monster_stand', 'battle/creatures/Dude_Monster/stand.png');
+        this.load.image('Dude_Monster_stand', 'creatures/Dude_Monster/stand.png');
         
         // Pokemons
         const pokemonList = [
@@ -138,27 +138,27 @@ export class Preloader extends Scene {
             'Wingull',
         ];
         for (const pokemonName of pokemonList) {
-            this.load.spritesheet(pokemonName + '_Pokemon_walk', 'battle/creatures/' + pokemonName + '_Pokemon/walk.png', {
+            this.load.spritesheet(pokemonName + '_Pokemon_walk', 'creatures/' + pokemonName + '_Pokemon/walk.png', {
                 frameWidth: 48,
                 frameHeight: 32
             });
-            this.load.spritesheet(pokemonName + '_Pokemon_attack1', 'battle/creatures/' + pokemonName + '_Pokemon/attack1.png', {
+            this.load.spritesheet(pokemonName + '_Pokemon_attack1', 'creatures/' + pokemonName + '_Pokemon/attack1.png', {
                 frameWidth: 48,
                 frameHeight: 32
             });
-            this.load.spritesheet(pokemonName + '_Pokemon_hurt', 'battle/creatures/' + pokemonName + '_Pokemon/hurt.png', {
+            this.load.spritesheet(pokemonName + '_Pokemon_hurt', 'creatures/' + pokemonName + '_Pokemon/hurt.png', {
                 frameWidth: 48,
                 frameHeight: 32
             });
-            this.load.spritesheet(pokemonName + '_Pokemon_death', 'battle/creatures/' + pokemonName + '_Pokemon/sleep.png', {
+            this.load.spritesheet(pokemonName + '_Pokemon_death', 'creatures/' + pokemonName + '_Pokemon/sleep.png', {
                 frameWidth: 32,
                 frameHeight: 32
             });
-            this.load.spritesheet(pokemonName + '_Pokemon_idle', 'battle/creatures/' + pokemonName + '_Pokemon/idle.png', {
+            this.load.spritesheet(pokemonName + '_Pokemon_idle', 'creatures/' + pokemonName + '_Pokemon/idle.png', {
                 frameWidth: 48,
                 frameHeight: 32
             });
-            this.load.image(pokemonName + '_Pokemon_stand', 'battle/creatures/' + pokemonName + '_Pokemon/stand.png');
+            this.load.image(pokemonName + '_Pokemon_stand', 'creatures/' + pokemonName + '_Pokemon/stand.png');
         }
         
         // basic creatures
@@ -192,7 +192,7 @@ export class Preloader extends Scene {
             // "079",
         ]
         for (const basicCreature of basicCreatures) {
-            this.load.image(basicCreature + '_stand', 'battle/creatures/basic/' + basicCreature + '.png')
+            this.load.image(basicCreature + '_stand', 'creatures/basic/' + basicCreature + '.png')
         }
         
         // Cursors        
@@ -254,6 +254,20 @@ export class Preloader extends Scene {
             // 3. Добавляем текстуру в менеджер текстур Phaser
             this.textures.addCanvas('glowTexture', canvas);
         }
+        
+        // Craft
+        this.load.image('blacksmith', 'craft/blacksmith.png');
+        this.load.image('parchment', 'craft/parchment.png');
+        this.load.image('rune_frame', 'runes/rune_frame.png');
+        this.load.image('fire_icon', 'runes/fire_icon.png');
+        this.load.image('wolf_icon', 'runes/wolf_icon.png');
+        this.load.image('heart_icon', 'runes/heart_icon.png');
+        this.load.image('fire_shard', 'runes/fire_shard.png');
+        this.load.image('beast_shard', 'runes/beast_shard.png');
+        this.load.image('hope_shard', 'runes/hope_shard.png');
+        this.load.image('passion_shard', 'runes/passion_shard.png');
+        this.load.image('rage_shard', 'runes/rage_shard.png');
+        this.load.image('lock', 'craft/lock.png');
     }
 
     create() {
@@ -261,6 +275,6 @@ export class Preloader extends Scene {
         //  For example, you can define global animations here, so we can use them in other scenes.
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-        this.scene.start('Battle');
+        this.scene.start('Craft');
     }
 }

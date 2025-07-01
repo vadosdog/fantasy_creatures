@@ -6,7 +6,7 @@ import {Battle} from './scenes/Battle';
 import {BattleAutoTest} from './scenes/BattleAutoTest';
 import Phaser from 'phaser';
 import {Preloader} from './scenes/Preloader';
-// import {CraftGameCrucibleOfSouls} from "./scenes/CraftGameCrucibleOfSouls";
+import {Craft} from "./scenes/Craft";
 // import {ExplorationLevel} from "./scenes/ExplorationLevel";
 import EasyStar from 'easystarjs';
 
@@ -30,7 +30,7 @@ const StartGame = (parent) => {
             Boot,
             Preloader,
             MainMenu,
-            // CraftGameCrucibleOfSouls,
+            Craft,
             // ExplorationLevel,
             Game,
             BattleOver,

@@ -31,16 +31,6 @@ const handleLeftDrawerUpdate = (component) => {
     currentLeftDrawerContent.value = component
 }
 
-const store = useGameStore()
-
-const changeScene = (newScene) => {
-    if (!store.scene) {
-        return
-    }
-
-    store.scene.start(newScene);
-}
-
 const toggleRightDrawer = () => {
     rightDrawerOpen.value = !rightDrawerOpen.value
 }
@@ -48,26 +38,26 @@ const toggleRightDrawer = () => {
 <template>
     <q-layout view="hHh LpR lFr">
 
-<!--        <q-header elevated class="bg-primary text-white border-b border-solid border-primary/20" :height-hint="50">-->
-<!--            <q-toolbar>-->
-<!--                <DefaultHeader/>-->
+        <q-header elevated class="bg-primary text-white border-b border-solid border-primary/20" :height-hint="50">
+            <q-toolbar>
+                <DefaultHeader/>
 
-<!--                &lt;!&ndash; Кнопки справа &ndash;&gt;-->
-<!--                <q-space/> &lt;!&ndash; Заполняет доступное пространство &ndash;&gt;-->
+                <!-- Кнопки справа -->
+                <q-space/> <!-- Заполняет доступное пространство -->
 
-<!--                <QBtn-->
-<!--                    v-if="!currentHeaderComponent"-->
-<!--                    class="rounded mystical-glow hover:scale-105 transition-all duration-300"-->
-<!--                    no-caps-->
-<!--                    icon="play_arrow"-->
-<!--                    color="primary"-->
-<!--                    text-color="primary-foreground"-->
-<!--                    label="Play Now"-->
-<!--                    to="/game"-->
-<!--                />-->
-<!--                <component :is="currentHeaderComponent"/>-->
-<!--            </q-toolbar>-->
-<!--        </q-header>-->
+                <QBtn
+                    v-if="!currentHeaderComponent"
+                    class="rounded mystical-glow hover:scale-105 transition-all duration-300"
+                    no-caps
+                    icon="play_arrow"
+                    color="primary"
+                    text-color="primary-foreground"
+                    label="Play Now"
+                    to="/game"
+                />
+                <component :is="currentHeaderComponent"/>
+            </q-toolbar>
+        </q-header>
 
         <q-drawer
             show-if-above

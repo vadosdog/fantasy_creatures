@@ -1,9 +1,9 @@
 import {EventBus} from '../EventBus';
 import {Scene} from 'phaser';
 
-export class CraftGameCrucibleOfSouls extends Scene {
+export class Craft extends Scene {
     constructor() {
-        super('CraftGameCrucibleOfSouls');
+        super('Craft');
 
 
         // Game state variables
@@ -279,7 +279,7 @@ export class CraftGameCrucibleOfSouls extends Scene {
     }
 
     resert() {
-        this.scene.start('CraftGameCrucibleOfSouls')
+        this.scene.start('Craft')
     }
 
     completeForging() {

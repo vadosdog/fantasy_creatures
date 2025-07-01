@@ -90,10 +90,6 @@ unittest:
 	cd ./docker \
 	&& $(EXEC_PHP) vendor/bin/paratest
 
-reset-roles:
-	cd ./docker \
-	&& $(ARTISAN) db:seed --class=RolesAndPermissions
-
 db-seed:
 	cd ./docker \
     && $(ARTISAN) db:seed
