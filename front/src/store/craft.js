@@ -3,7 +3,7 @@ import {creaturesLib} from "../database/CreaturesLib.js";
 
 export const useCraftStore = defineStore('craft', {
     state: () => ({
-        selectedForm: null,
+        selectedShape: null,
         selectedEmotion: null,
         selectedElement: null,
         isKnownCreature: false,
@@ -42,21 +42,22 @@ export const useCraftStore = defineStore('craft', {
     }),
     getters: {
         selectedShards() {
-            return [this.selectedForm, this.selectedEmotion, this.selectedElement]
+            return [this.selectedShape, this.selectedEmotion, this.selectedElement]
         },
         potentialCreature() {
-            if ([this.selectedForm, this.selectedEmotion, this.selectedElement].filter(s => !!s).length < 3) {
+            if ([this.selectedShape, this.selectedEmotion, this.selectedElement].filter(s => !!s).length < 3) {
                 return null
             }
 
-            return creaturesLib[this.selectedElement.code + '-' + this.selectedForm.code + '-' + this.selectedEmotion.code]
+            return creaturesLib[this.selectedElement.code + '-' + this.selectedShape.code + '-' + this.selectedEmotion.code]
         },
     },
     actions: {
         selectShard(type, shard) {
+            console.log(type, shard)
             switch (type) {
-                case 'form':
-                    this.selectedForm = shard
+                case 'shape':
+                    this.selectedShape = shard
                     break
                 case 'element':
                     this.selectedElement = shard
@@ -65,6 +66,37 @@ export const useCraftStore = defineStore('craft', {
                     this.selectedEmotion = shard
                     break
             }
+        },
+        createNewCreature() {
+            if (!this.potentialCreature) {
+                return
+            }
+            
+            const newCreature = Object.assign({}, this.potentialCreature)
+            
+            // Присваиваем рандомный ИД
+            newCreature.id = crypto.randomUUID();
+            
+            const diffs = this.craftStatRange[newCreature.emotion]
+
+            console.log('tyt')
+            // Изменим статы, добавив случайное отклонение в указанном диапазоне
+            for (let prop in diffs) {
+                if (newCreature.hasOwnProperty(prop)) {
+                    const diffValue = diffs[prop];
+                    if (diffValue === 0) {
+                        continue
+                    }
+
+                    // Генерируем случайное число в диапазоне [-diffValue; +diffValue]
+                    const randomOffset = Math.floor(Math.random() * (2 * diffValue + 1)) - diffValue;
+
+                    // Применяем смещение
+                    newCreature[prop] += randomOffset;
+                }
+            }
+            
+            return newCreature
         },
     },
 });

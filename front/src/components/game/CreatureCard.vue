@@ -13,7 +13,7 @@ const props = defineProps({
         default: {
             name: 'LOH',
             emotion: 'rage',
-            form: 'beast',
+            shape: 'beast',
             element: 'fire',
             effects: [],
             level: 1
@@ -49,8 +49,8 @@ function getEmotionIcon(emotion) {
     return undefined
 }
 
-function getFormIcon(form) {
-    switch (form) {
+function getShapeIcon(shape) {
+    switch (shape) {
         case 'beast':
             return 'pets'
         case 'bird':
@@ -84,8 +84,8 @@ function getElementIcon(element) {
 const emotionIcon = computed(() => {
     return getEmotionIcon(props.creature?.emotion) || 'favorite'
 })
-const formIcon = computed(() => {
-    return getFormIcon(props.creature?.form) || 'favorite'
+const shapeIcon = computed(() => {
+    return getShapeIcon(props.creature?.shape) || 'favorite'
 })
 const elementIcon = computed(() => {
     return getElementIcon(props.creature?.element)
@@ -197,7 +197,7 @@ const safeCreature = ref(true)
             <q-card-actions vertical class="justify-around q-pa-xs">
                 <q-btn flat round :color="elementIcon.color" :icon="elementIcon.icon"/>
                 <q-btn flat round color="red" :icon="emotionIcon"/>
-                <q-btn flat round color="accent" :icon="formIcon"/>
+                <q-btn flat round color="accent" :icon="shapeIcon"/>
                 <q-btn flat color="dark">Lvl: {{ creature.level }}</q-btn>
             </q-card-actions>
             <q-img

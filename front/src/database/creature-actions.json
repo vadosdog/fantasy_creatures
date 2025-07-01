@@ -2,7 +2,7 @@
     {
         "name": "Огненный коготь",
         "element": "fire",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 1,
         "Тип": "Атакующий",
@@ -24,7 +24,7 @@
     {
         "name": "Ядовитый шип",
         "element": "grass",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 1,
         "Тип": "Гибридный",
@@ -46,7 +46,7 @@
     {
         "name": "Ледяная игла",
         "element": "water",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 1,
         "Тип": "Атакующий",
@@ -68,7 +68,7 @@
     {
         "name": "Толчок",
         "element": "",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "",
         "level": 1,
         "Тип": "Атакующий",
@@ -84,7 +84,7 @@
     {
         "name": "Удар",
         "element": "",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "",
         "level": 1,
         "Тип": "Атакующий",
@@ -100,7 +100,7 @@
     {
         "name": "Укус",
         "element": "",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "",
         "level": 1,
         "Тип": "Гибридный",
@@ -116,7 +116,7 @@
     {
         "name": "Смертельный удар",
         "element": "",
-        "form": "",
+        "shape": "",
         "emotion": "passion",
         "level": 2,
         "Тип": [],
@@ -132,7 +132,7 @@
     {
         "name": "Лечебная волна",
         "element": "",
-        "form": "",
+        "shape": "",
         "emotion": "hope",
         "level": 2,
         "Тип": "Поддерживающий",
@@ -148,7 +148,7 @@
     {
         "name": "Железная стойка",
         "element": "",
-        "form": "",
+        "shape": "",
         "emotion": "rage",
         "level": 2,
         "Тип": "Защитный",
@@ -170,7 +170,7 @@
     {
         "name": "Огненный адреналин",
         "element": "fire",
-        "form": "",
+        "shape": "",
         "emotion": "passion",
         "level": 3,
         "Тип": "Гибридный",
@@ -197,7 +197,7 @@
     {
         "name": "Костер боевого духа",
         "element": "fire",
-        "form": "",
+        "shape": "",
         "emotion": "hope",
         "level": 3,
         "Тип": "Поддерживающий",
@@ -224,7 +224,7 @@
     {
         "name": "Раскалённый доспех",
         "element": "fire",
-        "form": "",
+        "shape": "",
         "emotion": "rage",
         "level": 3,
         "Тип": "Защитный",
@@ -251,7 +251,7 @@
     {
         "name": "Ядовитые клыки",
         "element": "grass",
-        "form": "",
+        "shape": "",
         "emotion": "passion",
         "level": 3,
         "Тип": "Атакующий",
@@ -273,7 +273,7 @@
     {
         "name": "Целительный нектар",
         "element": "grass",
-        "form": "",
+        "shape": "",
         "emotion": "hope",
         "level": 3,
         "Тип": "Поддерживающий",
@@ -295,7 +295,7 @@
     {
         "name": "Живая броня",
         "element": "grass",
-        "form": "",
+        "shape": "",
         "emotion": "rage",
         "level": 3,
         "Тип": "Защитный",
@@ -322,7 +322,7 @@
     {
         "name": "Глубокая рана",
         "element": "water",
-        "form": "",
+        "shape": "",
         "emotion": "passion",
         "level": 3,
         "Тип": "Атакующий",
@@ -344,7 +344,7 @@
     {
         "name": "Родник жизни",
         "element": "water",
-        "form": "",
+        "shape": "",
         "emotion": "hope",
         "level": 3,
         "Тип": "Поддерживающий",
@@ -360,7 +360,7 @@
     {
         "name": "Ледяная стена",
         "element": "water",
-        "form": "",
+        "shape": "",
         "emotion": "rage",
         "level": 3,
         "Тип": "Защитный",
@@ -387,7 +387,7 @@
     {
         "name": "Разрывающий клык",
         "element": "",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "passion",
         "level": 5,
         "Тип": "Атакующий",
@@ -409,7 +409,7 @@
     {
         "name": "Мотивирующий рык",
         "element": "",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "hope",
         "level": 5,
         "Тип": "Поддерживающий",
@@ -431,7 +431,7 @@
     {
         "name": "Берсеркский рык",
         "element": "",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "rage",
         "level": 5,
         "Тип": "Контрольный",
@@ -458,7 +458,7 @@
     {
         "name": "Смертельное пике",
         "element": "",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "passion",
         "level": 5,
         "Тип": "Атакующий",
@@ -480,7 +480,7 @@
     {
         "name": "Исцеляющий полет",
         "element": "",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "hope",
         "level": 5,
         "Тип": "Поддерживающий",
@@ -502,7 +502,7 @@
     {
         "name": "Ветряной барьер",
         "element": "",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "rage",
         "level": 5,
         "Тип": "Защитный",
@@ -529,7 +529,7 @@
     {
         "name": "Смертельный укус",
         "element": "",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "passion",
         "level": 5,
         "Тип": "Атакующий",
@@ -551,7 +551,7 @@
     {
         "name": "Целительный яд",
         "element": "",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "hope",
         "level": 5,
         "Тип": "Гибридный",
@@ -578,7 +578,7 @@
     {
         "name": "Ядовитый панцирь",
         "element": "",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "rage",
         "level": 5,
         "Тип": "Защитный",
@@ -605,7 +605,7 @@
     {
         "name": "Пламенный рывок",
         "element": "fire",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 7,
         "Тип": "Атакующий",
@@ -621,7 +621,7 @@
     {
         "name": "Шипастая броня",
         "element": "grass",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 7,
         "Тип": "Защитный",
@@ -643,7 +643,7 @@
     {
         "name": "Целебный поток",
         "element": "water",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 7,
         "Тип": "Поддерживающий",
@@ -659,7 +659,7 @@
     {
         "name": "Ярость охотника",
         "element": "",
-        "form": "",
+        "shape": "",
         "emotion": "passion",
         "level": 9,
         "Тип": "Гибридный",
@@ -681,7 +681,7 @@
     {
         "name": "Щит веры",
         "element": "",
-        "form": "",
+        "shape": "",
         "emotion": "hope",
         "level": 9,
         "Тип": "Защитный",
@@ -703,7 +703,7 @@
     {
         "name": "Провокация",
         "element": "",
-        "form": "",
+        "shape": "",
         "emotion": "rage",
         "level": 9,
         "Тип": "Контрольный",
@@ -725,7 +725,7 @@
     {
         "name": "Горящая ярость",
         "element": "fire",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "",
         "level": 10,
         "Тип": "Атакующий",
@@ -747,7 +747,7 @@
     {
         "name": "Огненное пике",
         "element": "fire",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "",
         "level": 10,
         "Тип": "Атакующий",
@@ -769,7 +769,7 @@
     {
         "name": "Раскаленная чешуя",
         "element": "fire",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "",
         "level": 10,
         "Тип": "Защитный",
@@ -796,7 +796,7 @@
     {
         "name": "Удушающий укус",
         "element": "grass",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "",
         "level": 10,
         "Тип": "Атакующий",
@@ -818,7 +818,7 @@
     {
         "name": "Песнь леса",
         "element": "grass",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "",
         "level": 10,
         "Тип": "Поддерживающий",
@@ -840,7 +840,7 @@
     {
         "name": "Ядовитый шип",
         "element": "grass",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "",
         "level": 10,
         "Тип": "Гибридный",
@@ -862,7 +862,7 @@
     {
         "name": "Ледяной клык",
         "element": "water",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "",
         "level": 10,
         "Тип": "Атакующий",
@@ -884,7 +884,7 @@
     {
         "name": "Ледяной вихрь",
         "element": "water",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "",
         "level": 10,
         "Тип": "Контрольный",
@@ -906,7 +906,7 @@
     {
         "name": "Ядовитый плевок",
         "element": "water",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "",
         "level": 10,
         "Тип": "Гибридный",
@@ -928,7 +928,7 @@
     {
         "name": "Берсерк",
         "element": "",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "",
         "level": 12,
         "Тип": "Гибридный",
@@ -949,7 +949,7 @@
     {
         "name": "Пикирование",
         "element": "",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "",
         "level": 12,
         "Тип": "Атакующий",
@@ -971,7 +971,7 @@
     {
         "name": "Костяная броня",
         "element": "",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "",
         "level": 12,
         "Тип": "Защитный",
@@ -993,7 +993,7 @@
     {
         "name": "Огненный щит",
         "element": "fire",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 13,
         "Тип": "Защитный",
@@ -1015,7 +1015,7 @@
     {
         "name": "Удушающие лианы",
         "element": "grass",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 13,
         "Тип": "Атакующий",
@@ -1037,7 +1037,7 @@
     {
         "name": "Водоворот",
         "element": "water",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 13,
         "Тип": "Контрольный",
@@ -1059,7 +1059,7 @@
     {
         "name": "Клинок феникса",
         "element": "fire",
-        "form": "",
+        "shape": "",
         "emotion": "passion",
         "level": 15,
         "Тип": "Атакующий",
@@ -1086,7 +1086,7 @@
     {
         "name": "Жаркая мотивация",
         "element": "fire",
-        "form": "",
+        "shape": "",
         "emotion": "hope",
         "level": 15,
         "Тип": "Поддерживающий",
@@ -1113,7 +1113,7 @@
     {
         "name": "Пламенный форт",
         "element": "fire",
-        "form": "",
+        "shape": "",
         "emotion": "rage",
         "level": 15,
         "Тип": "Защитный",
@@ -1140,7 +1140,7 @@
     {
         "name": "Проклятый шип",
         "element": "grass",
-        "form": "",
+        "shape": "",
         "emotion": "passion",
         "level": 15,
         "Тип": "Атакующий",
@@ -1162,7 +1162,7 @@
     {
         "name": "Споровое облако",
         "element": "grass",
-        "form": "",
+        "shape": "",
         "emotion": "hope",
         "level": 15,
         "Тип": "Поддерживающий",
@@ -1189,7 +1189,7 @@
     {
         "name": "Грибной щит",
         "element": "grass",
-        "form": "",
+        "shape": "",
         "emotion": "rage",
         "level": 15,
         "Тип": "Защитный",
@@ -1216,7 +1216,7 @@
     {
         "name": "Ледяной шип",
         "element": "water",
-        "form": "",
+        "shape": "",
         "emotion": "passion",
         "level": 15,
         "Тип": "Атакующий",
@@ -1238,7 +1238,7 @@
     {
         "name": "Умиротворение",
         "element": "water",
-        "form": "",
+        "shape": "",
         "emotion": "hope",
         "level": 15,
         "Тип": "Поддерживающий",
@@ -1265,7 +1265,7 @@
     {
         "name": "Приливная защита",
         "element": "water",
-        "form": "",
+        "shape": "",
         "emotion": "rage",
         "level": 15,
         "Тип": "Защитный",
@@ -1292,7 +1292,7 @@
     {
         "name": "Ярость хищника",
         "element": "",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "passion",
         "level": 16,
         "Тип": "Атакующий",
@@ -1314,7 +1314,7 @@
     {
         "name": "Шерстяной щит",
         "element": "",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "hope",
         "level": 16,
         "Тип": "Защитный",
@@ -1336,7 +1336,7 @@
     {
         "name": "Шкура буйвола",
         "element": "",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "rage",
         "level": 16,
         "Тип": "Защитный",
@@ -1363,7 +1363,7 @@
     {
         "name": "Шторм когтей",
         "element": "",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "passion",
         "level": 16,
         "Тип": "Атакующий",
@@ -1385,7 +1385,7 @@
     {
         "name": "Крылья ангела",
         "element": "",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "hope",
         "level": 16,
         "Тип": "Уникальный",
@@ -1412,7 +1412,7 @@
     {
         "name": "Щит перьев",
         "element": "",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "rage",
         "level": 16,
         "Тип": "Уникальный",
@@ -1439,7 +1439,7 @@
     {
         "name": "Хвост скорпиона",
         "element": "",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "passion",
         "level": 16,
         "Тип": "Атакующий",
@@ -1466,7 +1466,7 @@
     {
         "name": "Аура змеи",
         "element": "",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "hope",
         "level": 16,
         "Тип": "Поддерживающий",
@@ -1488,7 +1488,7 @@
     {
         "name": "Костяная крепость",
         "element": "",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "rage",
         "level": 16,
         "Тип": "Защитный",
@@ -1515,7 +1515,7 @@
     {
         "name": "Разрывающие когти",
         "element": "",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "",
         "level": 17,
         "Тип": "Атакующий",
@@ -1531,7 +1531,7 @@
     {
         "name": "Глаз бури",
         "element": "",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "",
         "level": 17,
         "Тип": "Поддерживающий",
@@ -1553,7 +1553,7 @@
     {
         "name": "Смертельный клей",
         "element": "",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "",
         "level": 17,
         "Тип": "Контрольный",
@@ -1575,7 +1575,7 @@
     {
         "name": "Вулканический взрыв",
         "element": "fire",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 18,
         "Тип": "Атакующий",
@@ -1597,7 +1597,7 @@
     {
         "name": "Грибное облако",
         "element": "grass",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 18,
         "Тип": "Контрольный",
@@ -1624,7 +1624,7 @@
     {
         "name": "Приливная волна",
         "element": "water",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 18,
         "Тип": "Атакующий",
@@ -1646,7 +1646,7 @@
     {
         "name": "Гибельный клинок",
         "element": "",
-        "form": "",
+        "shape": "",
         "emotion": "passion",
         "level": 19,
         "Тип": "Атакующий",
@@ -1668,7 +1668,7 @@
     {
         "name": "Очищающий свет",
         "element": "",
-        "form": "",
+        "shape": "",
         "emotion": "hope",
         "level": 19,
         "Тип": "Поддерживающий",
@@ -1690,7 +1690,7 @@
     {
         "name": "Несокрушимость",
         "element": "",
-        "form": "",
+        "shape": "",
         "emotion": "rage",
         "level": 19,
         "Тип": "Защитный",
@@ -1712,7 +1712,7 @@
     {
         "name": "Вулканический клык",
         "element": "fire",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "",
         "level": 20,
         "Тип": "Атакующий",
@@ -1734,7 +1734,7 @@
     {
         "name": "Фениксово перо",
         "element": "fire",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "",
         "level": 20,
         "Тип": "Гибридный",
@@ -1750,7 +1750,7 @@
     {
         "name": "Огненный хвост",
         "element": "fire",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "",
         "level": 20,
         "Тип": "Гибридный",
@@ -1772,7 +1772,7 @@
     {
         "name": "Кровавые когти",
         "element": "grass",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "",
         "level": 20,
         "Тип": "Атакующий",
@@ -1794,7 +1794,7 @@
     {
         "name": "Шторм листьев",
         "element": "grass",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "",
         "level": 20,
         "Тип": "Контрольный",
@@ -1816,7 +1816,7 @@
     {
         "name": "Корневой щит",
         "element": "grass",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "",
         "level": 20,
         "Тип": "Защитный",
@@ -1843,7 +1843,7 @@
     {
         "name": "Приливная сила",
         "element": "water",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "",
         "level": 20,
         "Тип": "Атакующий",
@@ -1865,7 +1865,7 @@
     {
         "name": "Циклон",
         "element": "water",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "",
         "level": 20,
         "Тип": "Контрольный",
@@ -1887,7 +1887,7 @@
     {
         "name": "Болотная броня",
         "element": "water",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "",
         "level": 20,
         "Тип": "Защитный",
@@ -1914,7 +1914,7 @@
     {
         "name": "Ярость дракона",
         "element": "fire",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 21,
         "Тип": "Гибридный",
@@ -1936,7 +1936,7 @@
     {
         "name": "Смертельный нектар",
         "element": "grass",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 21,
         "Тип": "Гибридный",
@@ -1958,7 +1958,7 @@
     {
         "name": "Ледяная тюрьма",
         "element": "water",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 21,
         "Тип": "Контрольный",
@@ -1980,7 +1980,7 @@
     {
         "name": "Танец дракона",
         "element": "fire",
-        "form": "",
+        "shape": "",
         "emotion": "passion",
         "level": 23,
         "Тип": "Атакующий",
@@ -2002,7 +2002,7 @@
     {
         "name": "Солнечное благословение",
         "element": "fire",
-        "form": "",
+        "shape": "",
         "emotion": "hope",
         "level": 23,
         "Тип": "Уникальный",
@@ -2029,7 +2029,7 @@
     {
         "name": "Вулканическая ярость",
         "element": "fire",
-        "form": "",
+        "shape": "",
         "emotion": "rage",
         "level": 23,
         "Тип": "Гибридный",
@@ -2056,7 +2056,7 @@
     {
         "name": "Цветок смерти",
         "element": "grass",
-        "form": "",
+        "shape": "",
         "emotion": "passion",
         "level": 23,
         "Тип": "Гибридный",
@@ -2083,7 +2083,7 @@
     {
         "name": "Древо жизни",
         "element": "grass",
-        "form": "",
+        "shape": "",
         "emotion": "hope",
         "level": 23,
         "Тип": "Уникальный",
@@ -2110,7 +2110,7 @@
     {
         "name": "Корневой капкан",
         "element": "grass",
-        "form": "",
+        "shape": "",
         "emotion": "rage",
         "level": 23,
         "Тип": "Контрольный",
@@ -2137,7 +2137,7 @@
     {
         "name": "Цунами клинков",
         "element": "water",
-        "form": "",
+        "shape": "",
         "emotion": "passion",
         "level": 23,
         "Тип": "Атакующий",
@@ -2159,7 +2159,7 @@
     {
         "name": "Океанская песня",
         "element": "water",
-        "form": "",
+        "shape": "",
         "emotion": "hope",
         "level": 23,
         "Тип": "Уникальный",
@@ -2186,7 +2186,7 @@
     {
         "name": "Айсберг",
         "element": "water",
-        "form": "",
+        "shape": "",
         "emotion": "rage",
         "level": 23,
         "Тип": "Гибридный",
@@ -2213,7 +2213,7 @@
     {
         "name": "Астральный рык",
         "element": "",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "",
         "level": 25,
         "Тип": "Контрольный",
@@ -2235,7 +2235,7 @@
     {
         "name": "Торнадо",
         "element": "",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "",
         "level": 25,
         "Тип": "Контрольный",
@@ -2257,7 +2257,7 @@
     {
         "name": "Каменный хвост",
         "element": "",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "",
         "level": 25,
         "Тип": "Атакующий",
@@ -2279,7 +2279,7 @@
     {
         "name": "Фениксово возрождение",
         "element": "fire",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 27,
         "Тип": "Уникальный",
@@ -2295,7 +2295,7 @@
     {
         "name": "Пробуждение леса",
         "element": "grass",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 27,
         "Тип": "Уникальный",
@@ -2317,7 +2317,7 @@
     {
         "name": "Цунами",
         "element": "water",
-        "form": "",
+        "shape": "",
         "emotion": "",
         "level": 27,
         "Тип": "Уникальный",
@@ -2339,7 +2339,7 @@
     {
         "name": "Танец смерти",
         "element": "",
-        "form": "",
+        "shape": "",
         "emotion": "passion",
         "level": 28,
         "Тип": "Атакующий",
@@ -2355,7 +2355,7 @@
     {
         "name": "Пламенное восстановление",
         "element": "",
-        "form": "",
+        "shape": "",
         "emotion": "hope",
         "level": 28,
         "Тип": "Уникальный",
@@ -2382,7 +2382,7 @@
     {
         "name": "Землетрясение",
         "element": "",
-        "form": "",
+        "shape": "",
         "emotion": "rage",
         "level": 28,
         "Тип": "Гибридный",
@@ -2404,7 +2404,7 @@
     {
         "name": "Ярость вулкана",
         "element": "fire",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "passion",
         "level": 30,
         "Тип": "Атакующий",
@@ -2431,7 +2431,7 @@
     {
         "name": "Сердце феникса",
         "element": "fire",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "hope",
         "level": 30,
         "Тип": "Уникальный",
@@ -2458,7 +2458,7 @@
     {
         "name": "Великий огненный страж",
         "element": "fire",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "rage",
         "level": 30,
         "Тип": "Защитный",
@@ -2490,7 +2490,7 @@
     {
         "name": "Танец солнечного ястреба",
         "element": "fire",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "passion",
         "level": 30,
         "Тип": "Атакующий",
@@ -2517,7 +2517,7 @@
     {
         "name": "Песнь пламени",
         "element": "fire",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "hope",
         "level": 30,
         "Тип": "Поддерживающий",
@@ -2544,7 +2544,7 @@
     {
         "name": "Пламенный кокон",
         "element": "fire",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "rage",
         "level": 30,
         "Тип": "Защитный",
@@ -2571,7 +2571,7 @@
     {
         "name": "Хвост дракона",
         "element": "fire",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "passion",
         "level": 30,
         "Тип": "Атакующий",
@@ -2598,7 +2598,7 @@
     {
         "name": "Жар жизни",
         "element": "fire",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "hope",
         "level": 30,
         "Тип": "Поддерживающий",
@@ -2625,7 +2625,7 @@
     {
         "name": "Раскаленный бастион",
         "element": "fire",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "rage",
         "level": 30,
         "Тип": "Защитный",
@@ -2652,7 +2652,7 @@
     {
         "name": "Клыки оборотня",
         "element": "grass",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "passion",
         "level": 30,
         "Тип": "Атакующий",
@@ -2679,7 +2679,7 @@
     {
         "name": "Рев жизни",
         "element": "grass",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "hope",
         "level": 30,
         "Тип": "Поддерживающий",
@@ -2701,7 +2701,7 @@
     {
         "name": "Корневой исполин",
         "element": "grass",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "rage",
         "level": 30,
         "Тип": "Защитный",
@@ -2728,7 +2728,7 @@
     {
         "name": "Лиственный смерч",
         "element": "grass",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "passion",
         "level": 30,
         "Тип": "Атакующий",
@@ -2755,7 +2755,7 @@
     {
         "name": "Песнь леса",
         "element": "grass",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "hope",
         "level": 30,
         "Тип": "Поддерживающий",
@@ -2782,7 +2782,7 @@
     {
         "name": "Шипастый ураган",
         "element": "grass",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "rage",
         "level": 30,
         "Тип": "Защитный",
@@ -2809,7 +2809,7 @@
     {
         "name": "Укус Василиска",
         "element": "grass",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "passion",
         "level": 30,
         "Тип": "Атакующий",
@@ -2836,7 +2836,7 @@
     {
         "name": "Дыхание жизни",
         "element": "grass",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "hope",
         "level": 30,
         "Тип": "Поддерживающий",
@@ -2863,7 +2863,7 @@
     {
         "name": "Броня Горыныча",
         "element": "grass",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "rage",
         "level": 30,
         "Тип": "Защитный",
@@ -2890,7 +2890,7 @@
     {
         "name": "Глубокая рана",
         "element": "water",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "passion",
         "level": 30,
         "Тип": "Атакующий",
@@ -2917,7 +2917,7 @@
     {
         "name": "Прилив исцеления",
         "element": "water",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "hope",
         "level": 30,
         "Тип": "Поддерживающий",
@@ -2939,7 +2939,7 @@
     {
         "name": "Ледяной страж",
         "element": "water",
-        "form": "beast",
+        "shape": "beast",
         "emotion": "rage",
         "level": 30,
         "Тип": "Защитный",
@@ -2966,7 +2966,7 @@
     {
         "name": "Штормовой клинок",
         "element": "water",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "passion",
         "level": 30,
         "Тип": "Атакующий",
@@ -2993,7 +2993,7 @@
     {
         "name": "Мелодия океана",
         "element": "water",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "hope",
         "level": 30,
         "Тип": "Поддерживающий",
@@ -3020,7 +3020,7 @@
     {
         "name": "Ледяной форт",
         "element": "water",
-        "form": "bird",
+        "shape": "bird",
         "emotion": "rage",
         "level": 30,
         "Тип": "Защитный",
@@ -3047,7 +3047,7 @@
     {
         "name": "Ядовитый смерч",
         "element": "water",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "passion",
         "level": 30,
         "Тип": "Атакующий",
@@ -3074,7 +3074,7 @@
     {
         "name": "Исцеляющий туман",
         "element": "water",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "hope",
         "level": 30,
         "Тип": "Поддерживающий",
@@ -3101,7 +3101,7 @@
     {
         "name": "Болотный страж",
         "element": "water",
-        "form": "reptile",
+        "shape": "reptile",
         "emotion": "rage",
         "level": 30,
         "Тип": "Защитный",

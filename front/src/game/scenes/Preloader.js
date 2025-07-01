@@ -259,14 +259,15 @@ export class Preloader extends Scene {
         this.load.image('blacksmith', 'craft/blacksmith.png');
         this.load.image('parchment', 'craft/parchment.png');
         this.load.image('rune_frame', 'runes/rune_frame.png');
-        this.load.image('fire_icon', 'runes/fire_icon.png');
-        this.load.image('wolf_icon', 'runes/wolf_icon.png');
-        this.load.image('heart_icon', 'runes/heart_icon.png');
         this.load.image('fire_shard', 'runes/fire_shard.png');
+        this.load.image('water_shard', 'runes/water_shard.png');
+        this.load.image('grass_shard', 'runes/grass_shard.png');
         this.load.image('beast_shard', 'runes/beast_shard.png');
+        this.load.image('bird_shard', 'runes/bird_shard.png');
+        this.load.image('reptile_shard', 'runes/reptile_shard.png');
         this.load.image('hope_shard', 'runes/hope_shard.png');
-        this.load.image('passion_shard', 'runes/passion_shard.png');
         this.load.image('rage_shard', 'runes/rage_shard.png');
+        this.load.image('passion_shard', 'runes/passion_shard.png');
         this.load.image('lock', 'craft/lock.png');
     }
 

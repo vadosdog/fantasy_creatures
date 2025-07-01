@@ -6,7 +6,7 @@ import {useCraftStore} from "../../store/craft.js";
 // Фильтры
 const selectedElement = ref({label: 'Любой', value: null});
 const selectedRarity = ref({label: 'Любой', value: null});
-const selectedForm = ref({label: 'Любой', value: null});
+const selectedShape = ref({label: 'Любой', value: null});
 const selectedEmotion = ref({label: 'Любой', value: null});
 const searchQuery = ref('');
 
@@ -25,7 +25,7 @@ const rarityOptions = [
     {label: 'Легендарный', value: 'legendary'}
 ];
 
-const formOptions = [
+const shapeOptions = [
     {label: 'Любой', value: null},
     {label: 'Зверь', value: 'beast'},
     {label: 'Птица', value: 'bird'},
@@ -44,12 +44,12 @@ const craftStore = useCraftStore()
 
 // Фильтрация осколков
 const filteredShards = computed(() => {
-    return gameStore.inventory.shards.filter(shard => {
+    return gameStore.inventoryShards.filter(shard => {
         // Фильтр по стихии
         if (
             selectedElement.value
             && selectedElement.value.value
-            && shard.type !== 'element'
+            && shard.shardType !== 'element'
             && shard.code !== selectedElement.value.value
         ) {
             return false;
@@ -62,10 +62,10 @@ const filteredShards = computed(() => {
 
         // Фильтр по форме
         if (
-            selectedForm.value
-            && selectedForm.value.value
-            && shard.type !== 'type'
-            && shard.code !== selectedForm.value.value
+            selectedShape.value
+            && selectedShape.value.value
+            && shard.shardType !== 'shape'
+            && shard.code !== selectedShape.value.value
         ) {
             return false;
         }
@@ -74,7 +74,7 @@ const filteredShards = computed(() => {
         if (
             selectedEmotion.value
             && selectedEmotion.value.value
-            && shard.type !== 'emotion'
+            && shard.shardType !== 'emotion'
             && shard.code !== selectedEmotion.value.value
         ) {
             return false;
@@ -91,19 +91,19 @@ const filteredShards = computed(() => {
 });
 
 // Статистика
-const totalShards = computed(() => gameStore.inventory.shards.length);
-const commonCount = computed(() => gameStore.inventory.shards.filter(s => s.rarity === 'common').length);
-const rareCount = computed(() => gameStore.inventory.shards.filter(s => s.rarity === 'rare').length);
-const legendaryCount = computed(() => gameStore.inventory.shards.filter(s => s.rarity === 'legendary').length);
+const totalShards = computed(() => gameStore.inventoryShards.length);
+const commonCount = computed(() => gameStore.inventoryShards.filter(s => s.rarity === 'common').length);
+const rareCount = computed(() => gameStore.inventoryShards.filter(s => s.rarity === 'rare').length);
+const legendaryCount = computed(() => gameStore.inventoryShards.filter(s => s.rarity === 'legendary').length);
 
 // Выбор осколка
 const emit = defineEmits(['select-shard']);
 
 const selectShard = (shard) => {
      if (selectedShards.value.some(s => s?.id === shard?.id)) {
-        craftStore.selectShard(shard.type, null)
+        craftStore.selectShard(shard.shardType, null)
     } else {
-        craftStore.selectShard(shard.type, Object.assign({}, shard))
+        craftStore.selectShard(shard.shardType, Object.assign({}, shard))
     }
 };
 
@@ -135,8 +135,8 @@ const selectedShards = computed(() => craftStore.selectedShards)
 
             <div class="row q-gutter-sm q-mt-sm">
                 <q-select
-                    v-model="selectedForm"
-                    :options="formOptions"
+                    v-model="selectedShape"
+                    :options="shapeOptions"
                     label="Форма"
                     dense
                     outlined

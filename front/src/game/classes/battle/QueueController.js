@@ -143,7 +143,7 @@ export class QueueController {
             maxHealthStat: creature.maxHealthStat,
             level: creature.level,
             emotion: creature.emotion,
-            form: creature.form,
+            shape: creature.shape,
             element: creature.element,
         }));
     }

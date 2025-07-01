@@ -61,8 +61,8 @@ function getEmotionIcon(emotion) {
     return undefined
 }
 
-function getFormIcon(form) {
-    switch (form) {
+function getShapeIcon(shape) {
+    switch (shape) {
         case 'beast':
             return 'pets'
         case 'bird':
@@ -86,7 +86,7 @@ function getActionIcon(action) {
     }
     return {
         color: 'accent',
-        icon: getFormIcon(action.form)
+        icon: getShapeIcon(action.shape)
     }
 }
 

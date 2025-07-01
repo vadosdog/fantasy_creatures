@@ -264,7 +264,7 @@ const creatureActionsLib = {}
 
 creatures.forEach((creature, index) => {
     creature.id = index + 1
-    creaturesLib[creature.element + '-' + creature.form + '-' + creature.emotion] = creature
+    creaturesLib[creature.element + '-' + creature.shape + '-' + creature.emotion] = creature
 })
 
 for (const actionIndex of creaturesActions.keys()) {
@@ -274,7 +274,7 @@ for (const actionIndex of creaturesActions.keys()) {
     if (!creaturesAction.id) {
         creaturesAction.id = actionIndex + 100
     }
-    const key = creaturesAction.element + '-' + creaturesAction.form + '-' + creaturesAction.emotion
+    const key = creaturesAction.element + '-' + creaturesAction.shape + '-' + creaturesAction.emotion
     if (!creatureActionsLib[key]) {
         creatureActionsLib[key] = []
     }
@@ -334,20 +334,20 @@ export function getTeam2(direction, control, creatures) {
     return result
 }
 
-export function getCreature(element, form, emotion, level) {
+export function getCreature(element, shape, emotion, level) {
     // нужно копирование, иначе при повторении существ, будет один объект
-    const creature = Object.assign({}, creaturesLib[element + '-' + form + '-' + emotion]);
-    // creature.name = element + '/' + form + '/' + emotion
+    const creature = Object.assign({}, creaturesLib[element + '-' + shape + '-' + emotion]);
+    // creature.name = element + '/' + shape + '/' + emotion
     creature.texture = '001'; //creature.number;
     creature.level = level
     const actions = [
-        ...creatureActionsLib[element + '-' + form + '-' + emotion],
+        ...creatureActionsLib[element + '-' + shape + '-' + emotion],
         ...creatureActionsLib['-' + '-' + emotion],
-        ...creatureActionsLib['-' + form + '-'],
+        ...creatureActionsLib['-' + shape + '-'],
         ...creatureActionsLib[element + '-' + '-'],
-        ...creatureActionsLib['-' + form + '-' + emotion],
+        ...creatureActionsLib['-' + shape + '-' + emotion],
         ...creatureActionsLib[element + '-' + '-' + emotion],
-        ...creatureActionsLib[element + '-' + form + '-'],
+        ...creatureActionsLib[element + '-' + shape + '-'],
     ]
 
     // creature.texture = [
@@ -393,7 +393,7 @@ function randomEmotion() {
     return ['rage', 'passion', 'hope'][Math.floor(Math.random() * 3)];
 }
 
-function randomForm() {
+function randomShape() {
     return [
         'beast',
         'bird',
@@ -439,12 +439,12 @@ function shuffleArray(array) {
 
 export function testElementTeam(element, level, direction, control) {
     const creatures = [
-        getCreature(element, randomForm(), 'rage', level),
-        getCreature(element, randomForm(), 'rage', level),
-        getCreature(element, randomForm(), 'hope', level),
-        getCreature(element, randomForm(), 'hope', level),
-        getCreature(element, randomForm(), 'passion', level),
-        getCreature(element, randomForm(), 'passion', level),
+        getCreature(element, randomShape(), 'rage', level),
+        getCreature(element, randomShape(), 'rage', level),
+        getCreature(element, randomShape(), 'hope', level),
+        getCreature(element, randomShape(), 'hope', level),
+        getCreature(element, randomShape(), 'passion', level),
+        getCreature(element, randomShape(), 'passion', level),
     ]
 
 
@@ -460,12 +460,12 @@ export function testElementTeam(element, level, direction, control) {
 
 export function testTeam(level, direction, control) {
     const creatures = [
-        getCreature(randomElement(), randomForm(), 'rage', level),
-        getCreature(randomElement(), randomForm(), 'rage', level),
-        getCreature(randomElement(), randomForm(), 'hope', level),
-        getCreature(randomElement(), randomForm(), 'hope', level),
-        getCreature(randomElement(), randomForm(), 'passion', level),
-        getCreature(randomElement(), randomForm(), 'passion', level),
+        getCreature(randomElement(), randomShape(), 'rage', level),
+        getCreature(randomElement(), randomShape(), 'rage', level),
+        getCreature(randomElement(), randomShape(), 'hope', level),
+        getCreature(randomElement(), randomShape(), 'hope', level),
+        getCreature(randomElement(), randomShape(), 'passion', level),
+        getCreature(randomElement(), randomShape(), 'passion', level),
     ]
 
 
@@ -491,7 +491,7 @@ export function testBaseDamagePassionvsRage() {
         {
             "name": "Лечебная волна",
             "element": "",
-            "form": "",
+            "shape": "",
             "emotion": "passion",
             "level": 2,
             "Тип": "Поддерживающий",
@@ -508,7 +508,7 @@ export function testBaseDamagePassionvsRage() {
         {
             "name": "Свирепый укус",
             "element": "",
-            "form": "beast",
+            "shape": "beast",
             "emotion": "",
             "level": 1,
             "Тип": "Атакующий",
@@ -529,7 +529,7 @@ export function testBaseDamagePassionvsRage() {
         {
             "name": "Ветряной удар",
             "element": "",
-            "form": "bird",
+            "shape": "bird",
             "emotion": "",
             "level": 1,
             "Тип": "Атакующий",
@@ -544,7 +544,7 @@ export function testBaseDamagePassionvsRage() {
         {
             "name": "Ядовитый плевок",
             "element": "",
-            "form": "reptile",
+            "shape": "reptile",
             "emotion": "",
             "level": 1,
             "Тип": "Гибридный",
@@ -566,7 +566,7 @@ export function testBaseDamagePassionvsRage() {
         // {
         //     "name": "Огненный коготь",
         //     "element": "fire",
-        //     "form": "",
+        //     "shape": "",
         //     "emotion": "",
         //     "level": 1,
         //     "Тип": "Атакующий",
@@ -587,7 +587,7 @@ export function testBaseDamagePassionvsRage() {
         // {
         //     "name": "Ядовитый шип",
         //     "element": "grass",
-        //     "form": "",
+        //     "shape": "",
         //     "emotion": "",
         //     "level": 1,
         //     "Тип": "Гибридный",
@@ -609,7 +609,7 @@ export function testBaseDamagePassionvsRage() {
         // {
         //     "name": "Ледяная игла",
         //     "element": "water",
-        //     "form": "",
+        //     "shape": "",
         //     "emotion": "",
         //     "level": 1,
         //     "Тип": "Атакующий",
@@ -631,7 +631,7 @@ export function testBaseDamagePassionvsRage() {
         // {
         //     "name": "Смертельный удар",
         //     "element": "",
-        //     "form": "",
+        //     "shape": "",
         //     "emotion": "passion",
         //     "level": 2,
         //     "Тип": "Атакующий",
@@ -686,7 +686,7 @@ export function testEffects(effect, chanceEffect, duration) {
         {
             "name": "Свирепый укус с эффектом",
             "element": "",
-            "form": "beast",
+            "shape": "beast",
             "emotion": "",
             "level": 1,
             "Тип": "Атакующий",
@@ -706,7 +706,7 @@ export function testEffects(effect, chanceEffect, duration) {
         {
             "name": "Свирепый укус без эффекта",
             "element": "",
-            "form": "beast",
+            "shape": "beast",
             "emotion": "",
             "level": 1,
             "Тип": "Атакующий",

@@ -1,29 +1,38 @@
 import {EventBus} from '../EventBus';
 import {Scene} from 'phaser';
+import {useCraftStore} from "../../store/craft.js";
+import {useGameStore} from "../../store/game.js";
+
+const craftStore = useCraftStore();
+const gameStore = useGameStore();
 
 export class Craft extends Phaser.Scene {
     constructor() {
-        super({ key: 'Craft' });
+        super({key: 'Craft'});
         this.slots = [];
-        this.selectedShards = {
-            element: null,
-            shape: null,
-            emotion: null
-        };
         this.uiElements = {
             instruction: null,
             slots: [],
             bottomPanel: null
         };
-        
-        this.components = []
+
+        this.components = [];
+        this.unsubscribe = null; // Для отписки от хранилища
     }
 
     create() {
-        this.cameras.main.setBackgroundColor(0x3a281f);
+        this.cameras.main.setBackgroundColor(0x070809);
         this.createUI();
         this.scale.on('resize', this.handleResize, this);
         EventBus.emit('current-scene-ready', this);
+
+        // Подписываемся на изменения хранилища
+        this.unsubscribe = craftStore.$subscribe(() => {
+            this.updateSlotsFromStore();
+        });
+
+        // Первоначальное обновление слотов
+        this.updateSlotsFromStore();
     }
 
     createUI() {
@@ -54,13 +63,13 @@ export class Craft extends Phaser.Scene {
 
     createInstructionPanel(x, y, width) {
         const panel = this.add.graphics()
-            .fillStyle(0x3A281F, 0.8)
-            .fillRoundedRect(x - width/2, y - 30, width, 60, 15)
-            .lineStyle(3, 0x8B4513)
-            .strokeRoundedRect(x - width/2, y - 30, width, 60, 15);
+            .fillStyle(0x21262C, 0.8)
+            .fillRoundedRect(x - width / 2, y - 30, width, 60, 15)
+            .lineStyle(3, 0xcc66ff)
+            .strokeRoundedRect(x - width / 2, y - 30, width, 60, 15);
         this.components.push(panel)
 
-        const blacksmith = this.add.image(x - width/2 + 40, y, 'blacksmith').setDisplaySize(50, 50);
+        const blacksmith = this.add.image(x - width / 2 + 40, y, 'blacksmith').setDisplaySize(50, 50);
         this.components.push(blacksmith)
 
         const text = this.add.text(x, y, '[КУЗНЕЦ] Соберите три осколка: Стихия + Форма + Эмоция', {
@@ -71,21 +80,21 @@ export class Craft extends Phaser.Scene {
         }).setOrigin(0.5);
         this.components.push(text)
 
-        return { panel, text };
+        return {panel, text};
     }
 
     createSlotsArea(centerX, centerY) {
         const slotTypes = [
-            { type: 'element', icon: 'fire_icon', label: 'Стихия' },
-            { type: 'shape', icon: 'wolf_icon', label: 'Форма' },
-            { type: 'emotion', icon: 'heart_icon', label: 'Эмоция' }
+            {type: 'element', label: 'Стихия'},
+            {type: 'shape', label: 'Форма'},
+            {type: 'emotion', label: 'Эмоция'}
         ];
 
         const slots = [];
         for (let i = 0; i < 3; i++) {
             const x = centerX + (i - 1) * 220;
             const slot = this.createSlot(x, centerY, slotTypes[i]);
-            slot.position = { x, y: centerY };
+            slot.position = {x, y: centerY};
             slots.push(slot);
             this.slots.push(slot);
         }
@@ -102,16 +111,11 @@ export class Craft extends Phaser.Scene {
 
     createSlot(x, y, slotType) {
         const container = this.add.graphics()
-            .fillStyle(0x3A281F)
+            .fillStyle(0x21262C)
             .fillRoundedRect(x - 90, y - 90, 180, 180, 10)
-            .lineStyle(3, 0x8B4513)
+            .lineStyle(3, 0xcc66ff)
             .strokeRoundedRect(x - 90, y - 90, 180, 180, 10);
         this.components.push(container)
-
-        const icon = this.add.image(x, y - 50, slotType.icon)
-            .setDisplaySize(40, 40)
-            .setAlpha(0.7);
-        this.components.push(icon)
 
         const typeText = this.add.text(x, y - 75, slotType.label, {
             fontFamily: 'Scada',
@@ -120,10 +124,10 @@ export class Craft extends Phaser.Scene {
         }).setOrigin(0.5);
         this.components.push(typeText)
 
-        const placeholder = this.add.text(x, y + 20, 'Перетащите сюда', {
+        const placeholder = this.add.text(x, y + 20, '???', {
             fontFamily: 'Scada',
             fontSize: '14pt',
-            color: '#8B4513',
+            color: '#AAAAAA',
             fontStyle: 'italic'
         }).setOrigin(0.5);
         this.components.push(placeholder)
@@ -132,7 +136,6 @@ export class Craft extends Phaser.Scene {
 
         const slotObj = {
             container,
-            icon,
             typeText,
             placeholder,
             type: slotType.type,
@@ -140,7 +143,7 @@ export class Craft extends Phaser.Scene {
             glow: null,
             constantGlow: null,
             nameText: null,
-            position: { x, y }
+            position: {x, y}
         };
 
         container
@@ -152,7 +155,7 @@ export class Craft extends Phaser.Scene {
 
     highlightSlot(slot) {
         if (!slot || !slot.position) return;
-        const { x, y } = slot.position;
+        const {x, y} = slot.position;
 
         if (!slot.glow) {
             slot.glow = this.add.graphics()
@@ -194,164 +197,100 @@ export class Craft extends Phaser.Scene {
     }
 
     createBottomPanel(x, y, width) {
-        this.createQualityBar(x, y - 40, width * 0.7);
-
-        this.summonButton = this.add.graphics()
+        this.craftButton = this.add.graphics()
             .fillGradientStyle(0x444444, 0x222222, 0x444444, 0x222222)
             .fillRoundedRect(x - 150, y - 30, 300, 60, 15)
-            .lineStyle(3, 0x8B4513)
+            .lineStyle(3, 0xCC66FF)
             .strokeRoundedRect(x - 150, y - 30, 300, 60, 15);
-        this.components.push((this.summonButton))
+        this.components.push((this.craftButton))
 
-        this.summonText = this.add.text(x, y, 'ВЫБЕРИТЕ ОСКОЛКИ', {
+        this.craftButtonText = this.add.text(x, y, 'ВЫБЕРИТЕ ОСКОЛКИ', {
             fontFamily: 'Neucha',
             fontSize: '24pt',
             fontWeight: 'bold',
             color: '#AAAAAA'
         }).setOrigin(0.5);
-        this.components.push(this.summonText)
+        this.components.push(this.craftButtonText)
 
         this.lockIcon = this.add.image(x + 120, y, 'lock').setVisible(true);
         this.components.push(this.lockIcon)
 
-        this.summonButton.setInteractive(new Phaser.Geom.Rectangle(x - 150, y - 30, 300, 60), Phaser.Geom.Rectangle.Contains);
+        this.craftButton.setInteractive(new Phaser.Geom.Rectangle(x - 150, y - 30, 300, 60), Phaser.Geom.Rectangle.Contains);
 
-        this.summonButton
+        this.craftButton
             .on('pointerover', () => {
-                if (this.isSummonAvailable()) {
-                    this.summonButton.setScale(1.05);
+                if (this.isCraftAvailable()) {
                     this.createParticles(x, y);
                 }
             })
             .on('pointerout', () => {
-                this.summonButton.setScale(1);
                 if (this.particles) this.particles.destroy();
             })
             .on('pointerdown', () => {
-                if (this.isSummonAvailable()) {
-                    this.summonButton.setScale(0.95);
-                    this.summonCreature();
+                if (this.isCraftAvailable()) {
+                    this.craftCreature();
                 }
             });
 
-        return { button: this.summonButton, text: this.summonText };
-    }
-
-    createQualityBar(x, y, width) {
-        this.components.push(this.add.graphics()
-            .fillStyle(0x2A1810)
-            .fillRoundedRect(x - width/2, y - 10, width, 20, 10));
-
-        this.qualityBar = this.add.graphics();
-        this.components.push(this.qualityBar)
-        this.qualityText = this.add.text(x, y - 30, 'Базовая комбинация: +0%', {
-            fontFamily: 'Scada',
-            fontSize: '14pt',
-            color: '#FFFFFF'
-        }).setOrigin(0.5);
-        this.components.push(this.qualityText)
-
-        this.qualityVisual = this.add.text(x, y, '░░░░░░░░░░░░░░░░░░░░ +0%', {
-            fontFamily: 'Courier',
-            fontSize: '16pt',
-            color: '#FFFFFF'
-        }).setOrigin(0.5);
-        this.components.push(this.qualityVisual)
-    }
-
-    updateQualityBar() {
-        const shards = Object.values(this.selectedShards).filter(Boolean);
-        const rareCount = shards.filter(s => s.data.get('rarity') === 'rare').length;
-        const legendaryCount = shards.filter(s => s.data.get('rarity') === 'legendary').length;
-
-        const quality = Math.min(100, rareCount * 10 + legendaryCount * 25);
-        const barWidth = this.qualityVisual.width * (quality / 100);
-
-        let color;
-        if (quality <= 15) color = 0x1E90FF;
-        else if (quality <= 30) color = 0x9370DB;
-        else color = 0xFFD700;
-
-        this.qualityBar.clear()
-            .fillStyle(color)
-            .fillRoundedRect(
-                this.qualityVisual.x - this.qualityVisual.width/2,
-                this.qualityVisual.y - 12,
-                barWidth,
-                24,
-                12
-            );
-
-        const filled = Math.floor(quality / 5);
-        const empty = 20 - filled;
-        this.qualityVisual.setText(`${'█'.repeat(filled)}${'░'.repeat(empty)} +${quality}%`);
-
-        let text;
-        if (quality === 0) text = 'Базовая комбинация: +0%';
-        else if (quality <= 25) text = `Мощная энергия! +${quality}%`;
-        else text = `Легендарный потенциал! +${quality}%`;
-
-        this.qualityText.setText(text);
+        return {button: this.craftButton, text: this.craftButtonText};
     }
 
     createParticles(x, y) {
-        this.particles = this.add.particles('fire_icon');
-        this.components.push(this.particles)
-        this.particles.createEmitter({
+        this.particles = this.add.particles(x, y, 'fire_icon', {
             x, y,
-            speed: { min: -50, max: 50 },
-            scale: { start: 0.2, end: 0 },
+            speed: {min: -50, max: 50},
+            scale: {start: 0.2, end: 0},
             blendMode: 'ADD',
             frequency: 50,
             lifespan: 1000
         });
+        this.components.push(this.particles)
     }
 
-    isSummonAvailable() {
-        return this.selectedShards.element &&
-            this.selectedShards.shape &&
-            this.selectedShards.emotion;
+    isCraftAvailable() {
+        return craftStore.selectedElement &&
+            craftStore.selectedShape &&
+            craftStore.selectedEmotion;
     }
 
-    updateSummonButton() {
-        if (!this.summonButton || !this.summonText) return;
+    updateCraftButton() {
+        if (!this.craftButton || !this.craftButtonText) return;
 
-        const isAvailable = this.isSummonAvailable();
-        const x = this.summonText.x;
-        const y = this.summonText.y;
+        const isAvailable = this.isCraftAvailable();
+        const x = this.craftButtonText.x;
+        const y = this.craftButtonText.y;
 
-        this.summonButton.clear();
+        this.craftButton.clear();
 
         if (isAvailable) {
-            this.summonButton
-                .fillGradientStyle(0xF9D71C, 0xFFA500, 0xF9D71C, 0xFFA500)
+            this.craftButton
+                .fillGradientStyle(0x66CCFF, 0xCC66FF, 0x66CCFF, 0xCC66FF)
                 .fillRoundedRect(x - 150, y - 30, 300, 60, 15)
                 .lineStyle(3, 0x8B4513)
                 .strokeRoundedRect(x - 150, y - 30, 300, 60, 15);
 
-            this.summonText.setText('ПРИЗВАТЬ СУЩЕСТВО!').setColor('#FFFFFF');
+            this.craftButtonText.setText('ОБЪЕДИНИТЬ ОСКОЛКИ!').setColor('#FFFFFF');
             this.lockIcon.setVisible(false);
         } else {
-            this.summonButton
+            this.craftButton
                 .fillGradientStyle(0x444444, 0x222222, 0x444444, 0x222222)
                 .fillRoundedRect(x - 150, y - 30, 300, 60, 15)
-                .lineStyle(3, 0x8B4513)
+                .lineStyle(3, 0xCC66FF)
                 .strokeRoundedRect(x - 150, y - 30, 300, 60, 15);
 
-            this.summonText.setText('ВЫБЕРИТЕ ОСКОЛКИ').setColor('#AAAAAA');
+            this.craftButtonText.setText('ВЫБЕРИТЕ ОСКОЛКИ').setColor('#AAAAAA');
             this.lockIcon.setVisible(true);
         }
 
-        this.updateQualityBar();
     }
 
-    summonCreature() {
+    craftCreature() {
         this.cameras.main.shake(500, 0.02);
         const centerX = this.scale.width / 2;
         const centerY = this.scale.height / 2;
 
         this.tweens.add({
-            targets: Object.values(this.selectedShards),
+            targets: Object.values(craftStore.selectedShards),
             x: centerX,
             y: centerY,
             scale: 0.2,
@@ -368,10 +307,22 @@ export class Craft extends Phaser.Scene {
                     alpha: 1,
                     yoyo: true,
                     duration: 300,
-                    onComplete: () => flash.destroy()
-                });
+                    onComplete: () => {
+                        flash.destroy()
+                        
+                        // Вызываем метод из хранилища
+                        const newCreature = craftStore.createNewCreature()
+                        console.log(newCreature)
 
-                this.resetSlots();
+                        gameStore.inventoryRemove(craftStore.selectedElement)
+                        gameStore.inventoryRemove(craftStore.selectedShape)
+                        gameStore.inventoryRemove(craftStore.selectedEmotion)
+                        gameStore.addCreature(newCreature)
+
+                        // this.resetSlots();
+                        // this.updateCraftButton()
+                    }
+                });
             }
         });
     }
@@ -388,8 +339,7 @@ export class Craft extends Phaser.Scene {
             slot.placeholder.visible = true;
         }
 
-        this.selectedShards = { element: null, shape: null, emotion: null };
-        this.updateSummonButton();
+        this.updateCraftButton();
     }
 
     getElementColor(shard) {
@@ -400,5 +350,98 @@ export class Craft extends Phaser.Scene {
             air: 0x87CEEB
         };
         return colors[shard.data.get('element')] || 0xFFFFFF;
+    }
+
+    updateSlotsFromStore() {
+        const store = craftStore;
+
+        this.slots.forEach(slot => {
+            let shardData = null;
+            switch (slot.type) {
+                case 'element':
+                    shardData = store.selectedElement;
+                    break;
+                case 'shape':
+                    shardData = store.selectedShape;
+                    break;
+                case 'emotion':
+                    shardData = store.selectedEmotion;
+                    break;
+            }
+
+            if (shardData) {
+                this.addShardToSlot(slot, shardData);
+            } else {
+                this.clearSlot(slot);
+            }
+        });
+
+        this.updateCraftButton();
+    }
+
+    // Новый метод: добавление осколка в слот
+    addShardToSlot(slot, shardData) {
+        // Очищаем предыдущие данные слота
+        this.clearSlot(slot);
+
+        // Скрываем плейсхолдер
+        slot.placeholder.visible = false;
+
+        // Создаем спрайт осколка
+        slot.shard = this.add.image(
+            slot.position.x,
+            slot.position.y,
+            shardData.texture
+        ).setDisplaySize(100, 100);
+        this.components.push(slot.shard);
+
+        // Добавляем текст названия
+        slot.nameText = this.add.text(
+            slot.position.x,
+            slot.position.y + 80,
+            shardData.name,
+            {
+                fontFamily: 'Scada',
+                fontSize: '12pt',
+                color: '#FFFFFF',
+                wordWrap: {width: 180}
+            }
+        ).setOrigin(0.5);
+        this.components.push(slot.nameText);
+
+        // Добавляем постоянное свечение
+        slot.constantGlow = this.add.graphics()
+            .lineStyle(4, 0x00FF00, 0.5)
+            .strokeRoundedRect(
+                slot.position.x - 90,
+                slot.position.y - 90,
+                180, 180, 10
+            );
+        this.components.push(slot.constantGlow);
+    }
+
+    // Новый метод: очистка слота
+    clearSlot(slot) {
+        if (slot.shard) {
+            slot.shard.destroy();
+            slot.shard = null;
+        }
+        if (slot.nameText) {
+            slot.nameText.destroy();
+            slot.nameText = null;
+        }
+        if (slot.constantGlow) {
+            slot.constantGlow.destroy();
+            slot.constantGlow = null;
+        }
+        slot.placeholder.visible = true;
+    }
+
+    // Добавляем обработчик уничтожения сцены
+    destroy() {
+        if (this.unsubscribe) {
+            this.unsubscribe(); // Отписываемся от хранилища
+        }
+        super.destroy();
     }
 }

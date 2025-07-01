@@ -177,15 +177,6 @@ function shardClass(shard) {
                 </q-item>
             </q-list>
         </q-card-section>
-
-        <!-- Прогноз качества -->
-        <q-card-section v-if="showQuality" class="quality-section">
-            <div class="quality-info">
-                <div class="text-caption">Шанс улучшения</div>
-                <q-linear-progress :value="qualityChance" stripe size="md"/>
-                <div class="quality-value">{{ qualityLabel }}</div>
-            </div>
-        </q-card-section>
     </q-card>
 </template>
 

@@ -55,9 +55,9 @@ export class SynergyController {
                     ]
                 }
             ],
-            "forms": [
+            "shapes": [
                 {
-                    "form": "beast",
+                    "shape": "beast",
                     "effects": [
                         {
                             "required_units": 2,
@@ -74,7 +74,7 @@ export class SynergyController {
                     ]
                 },
                 {
-                    "form": "bird",
+                    "shape": "bird",
                     "effects": [
                         {
                             "required_units": 2,
@@ -91,7 +91,7 @@ export class SynergyController {
                     ]
                 },
                 {
-                    "form": "reptile",
+                    "shape": "reptile",
                     "effects": [
                         {
                             "required_units": 2,
