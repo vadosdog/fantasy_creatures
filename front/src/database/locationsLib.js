@@ -31,10 +31,66 @@ export const locationsLib = {
         image: '/assets/locations/academy_training_room.png',
         conditions: [], // Для доступности
         npcs: [],
-        options: [{
-            id: 'academy',
-            label: 'Двор Забытых Мастеров',
-        }],
+        options: [
+            {
+                id: 'academy',
+                label: 'Двор Забытых Мастеров',
+            },
+            {
+                id: 'training_1',
+                label: 'Бой 1 на 1',
+                type: 'start_battle',
+                config: {
+                    limit: 1,
+                    type: 'random_battle',
+                }
+            },
+            {
+                id: 'training_2',
+                label: 'Бой 2 на 2',
+                type: 'start_battle',
+                config: {
+                    limit: 2,
+                    type: 'random_battle',
+                }
+            },
+            {
+                id: 'training_3',
+                label: 'Бой 3 на 3',
+                type: 'start_battle',
+                config: {
+                    limit: 3,
+                    type: 'random_battle',
+                }
+            },
+            {
+                id: 'training_4',
+                label: 'Бой 4 на 4',
+                type: 'start_battle',
+                config: {
+                    limit: 4,
+                    type: 'random_battle',
+                }
+            },
+            {
+                id: 'training_5',
+                label: 'Бой 5 на 5',
+                type: 'start_battle',
+                config: {
+                    limit: 5,
+                    type: 'random_battle',
+                }
+            },
+            {
+                id: 'training_6',
+                label: 'Бой 6 на 6',
+                type: 'start_battle',
+                config: {
+                    limit: 6,
+                    type: 'random_battle',
+                }
+            },
+        ],
     },
     academy_forge: {
         name: 'Кузня Осколков',

@@ -6,6 +6,7 @@ import npcsLib from "../database/npcsLib.js";
 export const useGameStore = defineStore('game', {
     state: () => ({
         game: undefined,
+        currentSceneName: undefined,
         scene: undefined,
         hoveredCreatureId: undefined,
         tooltip: {
@@ -123,6 +124,7 @@ export const useGameStore = defineStore('game', {
         flags: [],
 
         currentState: 'location', //battle, craft?
+        battleConfig: undefined,
 
         // Локации
         currentLocationId: 'academy',
@@ -183,9 +185,12 @@ export const useGameStore = defineStore('game', {
             this.game = game
         },
         changeScene(newScene) {
+            this.currentSceneName = newScene
             if (!this.scene) {
                 return
             }
+
+            console.log(this.scene)
 
             this.scene.start(newScene);
         },
@@ -275,6 +280,9 @@ export const useGameStore = defineStore('game', {
             this.currentDialogNpc = null
             this.currentDialogNodeId = null
             this.currentState = 'location'
+        },
+        setState(newState) {
+            this.currentState = newState;
         }
     },
 });

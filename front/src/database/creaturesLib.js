@@ -408,20 +408,20 @@ function randomElement() {
 function getPositions(direction) {
     if (direction === 'right') {
         return [
-            [0, 2],
-            [1, 2],
             [2, 2],
             [3, 2],
+            [1, 2],
             [4, 2],
+            [0, 2],
             [5, 2],
         ]
     } else {
         return [
-            [0, 28],
-            [1, 28],
             [2, 28],
             [3, 28],
+            [1, 28],
             [4, 28],
+            [0, 28],
             [5, 28],
         ]
     }
@@ -458,15 +458,12 @@ export function testElementTeam(element, level, direction, control) {
     return getTeam2(direction, control, creatures)
 }
 
-export function testTeam(level, direction, control) {
-    const creatures = [
-        getCreature(randomElement(), randomShape(), 'rage', level),
-        getCreature(randomElement(), randomShape(), 'rage', level),
-        getCreature(randomElement(), randomShape(), 'hope', level),
-        getCreature(randomElement(), randomShape(), 'hope', level),
-        getCreature(randomElement(), randomShape(), 'passion', level),
-        getCreature(randomElement(), randomShape(), 'passion', level),
-    ]
+export function testTeam(level, direction, control, limit) {
+    const roles = ['rage','rage','passion','passion','hope','hope'];
+    
+    const creatures = roles.slice(0, limit).map(emotion => {
+        return getCreature(randomElement(), randomShape(), emotion, level)
+    })
 
 
     shuffleArray(creatures)

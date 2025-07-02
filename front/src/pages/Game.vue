@@ -120,6 +120,8 @@ onUnmounted(() => {
             game.value.destroy(true);
             game.value = null;
         }
+        gameStore.setGame(null)
+        gameStore.setScene(null)
 
         if (phaserContainer.value) {
             phaserContainer.value.removeEventListener('pointerdown', handlePointerEvent, true);

@@ -1,4 +1,7 @@
 import {Scene} from 'phaser';
+import {useGameStore} from "../../store/game.js";
+
+const gameStore = useGameStore()
 
 export class Preloader extends Scene {
     constructor() {
@@ -276,6 +279,6 @@ export class Preloader extends Scene {
         //  For example, you can define global animations here, so we can use them in other scenes.
 
         //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-        this.scene.start('Craft');
+        this.scene.start(gameStore.currentSceneName);
     }
 }

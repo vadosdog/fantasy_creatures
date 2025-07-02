@@ -25,7 +25,7 @@ const gameStore = useGameStore()
 
 
 export class Battle extends Scene {
-    showGridIndexes = false
+    showGridIndexes = true
     hexagonGroup;
     store
     hexagonsArray;

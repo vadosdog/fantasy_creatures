@@ -52,14 +52,16 @@ export const useBattleStore = defineStore('battle', {
         availableActions: [],
         selectedActionId: undefined,
         queueData: [], // Добавляем для хранения данных очереди
-        activeCreatureId: null // ID текущего существа
+        activeCreatureId: null, // ID текущего существа
+        battleConfig: null
     }),
     getters: {},
     actions: {
         load() {
+            const limit = this.battleConfig.limit || 6
             this.resetBattle([
-                ...testTeam(2, 'right', 'player'),
-                ...testTeam(2, 'left', new MediumAI()),
+                ...testTeam(2, 'right', 'player', limit),
+                ...testTeam(2, 'left', new MediumAI(), limit),
             ]);
 
             this.updateQueueData(); // Инициализируем данные очереди
@@ -730,5 +732,8 @@ export const useBattleStore = defineStore('battle', {
                 this.activeCreatureId = this.queue.currentCreature?.id || null;
             }
         },
+        startBattle(config) {
+            this.battleConfig = config
+        }
     },
 });
