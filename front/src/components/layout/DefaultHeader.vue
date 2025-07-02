@@ -24,6 +24,7 @@ import {ref, onMounted, onBeforeUnmount} from 'vue';
 
 const mainNavItems = [
     {label: 'Home', path: '/'},
+    {label: 'World', path: '/world'},
     {label: 'Explore', path: '#explore'},
     {label: 'Market', path: '#market'},
     {label: 'Activity', path: '#activity'},

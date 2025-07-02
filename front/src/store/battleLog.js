@@ -4,7 +4,7 @@ import {QueueController} from "../game/classes/battle/QueueController.js";
 import {CombatHandler} from "../game/classes/battle/CombatHandler.js";
 import {
     testTeam
-} from "../database/CreaturesLib.js";
+} from "../database/creaturesLib.js";
 import {CreatureAPI} from "../game/classes/battle/Creature.js";
 
 export const useBattleLogStore = defineStore('battleLog', {

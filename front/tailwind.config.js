@@ -23,6 +23,9 @@ module.exports = {
             fontFamily: {
                 sans: ['Sora', ...defaultTheme.fontFamily.sans],
                 grotesk: ['Space Grotesk', 'sans-serif'],
+                neucha: ['Neucha', 'sans-serif'],
+                oldstandardtt: ['OldStandardTT', 'serif'],
+                scada: ['Scada', 'sans-serif'],
             },
             colors: {
                 primary: {

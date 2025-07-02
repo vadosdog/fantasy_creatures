@@ -2,7 +2,7 @@ import {defineStore} from 'pinia';
 import {BattleMap} from "../game/classes/battle/BattleMap.js";
 import {QueueController} from "../game/classes/battle/QueueController.js";
 import {CombatHandler} from "../game/classes/battle/CombatHandler.js";
-import {testTeam} from "../database/CreaturesLib.js";
+import {testTeam} from "../database/creaturesLib.js";
 import {CreatureAPI} from "../game/classes/battle/Creature.js";
 import {useBattleLogStore} from "./battleLog.js";
 import {EasyAI} from "../game/classes/battle/AI/EasyAI.js";

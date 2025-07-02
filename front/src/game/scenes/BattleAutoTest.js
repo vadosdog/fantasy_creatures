@@ -3,7 +3,7 @@ import {
     BATTLE_STATE_BATTLE_OVER_LOSE,
     BATTLE_STATE_BATTLE_OVER_WIN, useBattleStore
 } from "../../store/battle.js";
-import {testEffects, testTeam} from "../../database/CreaturesLib.js";
+import {testEffects, testTeam} from "../../database/creaturesLib.js";
 import {MediumAI} from "../classes/battle/AI/MediumAI.js";
 
 export class BattleAutoTest extends Scene {

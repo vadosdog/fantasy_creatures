@@ -1,5 +1,7 @@
 import {defineStore} from 'pinia';
-import {BattleMap} from "../game/classes/battle/BattleMap.js";
+import {locationsLib} from "../database/locationsLib.js";
+import {npcDialogs} from "../database/dialogsLib.js";
+import npcsLib from "../database/npcsLib.js";
 
 export const useGameStore = defineStore('game', {
     state: () => ({
@@ -116,10 +118,62 @@ export const useGameStore = defineStore('game', {
             '001',
         ],
         creatures: [],
+
+        // Сюжетные флаги
+        flags: [],
+
+        currentState: 'location', //battle, craft?
+
+        // Локации
+        currentLocationId: 'academy',
+        currentDialogNpc: null,
+        currentDialogNodeId: null,
+        visitedLocations: [],
+        metNpcs: [],
+
+
+        // Прогресс диалогов
+        dialogProgress: {
+            dragomir: {}
+        }
     }),
     getters: {
-        inventoryShards() {
-            return this.inventory.filter(ii => ii.type === 'shard')
+        inventoryShards(state) {
+            return state.inventory.filter(ii => ii.type === 'shard')
+        },
+        isLocationAvailable: (state) => (locationId) => {
+            const location = locationsLib[locationId];
+            if (!location) {
+                return false
+            }
+            return location.conditions.every(cond => state.flags[cond]);
+        },
+        currentLocation(state) {
+            if (!state.currentLocationId || !this.isLocationAvailable(state.currentLocationId)) {
+                state.moveToLocation('academy') // дополнительно, если не задана локация, то телепортируем в академию
+            }
+
+            return locationsLib[state.currentLocationId]
+        },
+        currentDialog(state) {
+            if (state.currentState !== 'dialog') {
+                return null
+            }
+
+            const npc = npcsLib[this.currentDialogNpc]
+            const dialogNode = npcDialogs[this.currentDialogNpc][this.currentDialogNodeId]
+            
+            let phrase = dialogNode.npcText;
+            if (Array.isArray(phrase)) {
+                phrase = phrase[Math.floor(Math.random() * phrase.length)]
+            }
+
+            return {
+                name: npc.name,
+                phrase: phrase,
+                options: dialogNode.options,
+                image: npc.image
+            }
         }
     },
     actions: {
@@ -147,7 +201,7 @@ export const useGameStore = defineStore('game', {
         hideTooltip() {
             this.tooltip.show = false;
         },
-        
+
         addCreature(creatureData) {
             this.creatures.push(creatureData)
             if (!this.knownCreatures.includes(creatureData.number)) {
@@ -160,10 +214,67 @@ export const useGameStore = defineStore('game', {
                 return
             }
 
-            this.inventory[index].count-= count
+            this.inventory[index].count -= count
             if (this.inventory[index].count <= 0) {
                 this.inventory.splice(index, 1)
             }
         },
+        setFlag(flag, value) {
+            this.flags[flag] = value;
+        },
+        addInventoryItem(item) {
+            this.inventory.push(item);
+        },
+        moveToLocation(locationId) {
+            if (this.isLocationAvailable(locationId)) {
+                this.currentLocationId = locationId;
+                if (!this.visitedLocations.includes(locationId)) {
+                    this.visitedLocations.push(locationId);
+                }
+            }
+        },
+        recordDialogProgress(npcId, nodeId) {
+            // Сохраняем прогресс диалога
+        },
+        startDialog(npcId) {
+            const npc = npcsLib[npcId]
+            const dialogNodeId = this.getDefaultDialogNodeId(npc)
+            if (!npcDialogs[npcId] || !npcDialogs[npcId][dialogNodeId]) {
+                return false
+            }
+
+
+            if (!this.metNpcs.includes(npcId)) {
+                this.metNpcs.push(npcId);
+            }
+
+            this.currentDialogNpc = npcId
+            this.currentDialogNodeId = dialogNodeId
+            this.currentState = 'dialog'
+        },
+        getDefaultDialogNodeId(npc) {
+            if (!npc.defaultDialog) {
+                return 'greeting'
+            }
+
+            for (const defaultDialog of npc.defaultDialog) {
+                if (defaultDialog.conditions.every(condition => condition(this))) {
+                    return defaultDialog.dialogNodeId
+                }
+            }
+            return 'greeting'
+        },
+        selectDialogOption(dialogNodeId) {
+            if (!npcDialogs[this.currentDialogNpc][dialogNodeId]) {
+                return false
+            }
+
+            this.currentDialogNodeId = dialogNodeId
+        },
+        endDialog() {
+            this.currentDialogNpc = null
+            this.currentDialogNodeId = null
+            this.currentState = 'location'
+        }
     },
 });

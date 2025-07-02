@@ -82,7 +82,7 @@ const toggleRightDrawer = () => {
 <!--            <component :is="currentFooterComponent"/>-->
 <!--        </q-footer>-->
 
-        <q-page-container>
+        <q-page-container class="font-scada">
             <router-view v-slot="{ Component }">
                 <component
                     :is="Component"

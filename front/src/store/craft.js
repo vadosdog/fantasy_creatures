@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {creaturesLib} from "../database/CreaturesLib.js";
+import {creaturesLib} from "../database/creaturesLib.js";
 import {useGameStore} from "./game.js";
 const gameStore = useGameStore()
 

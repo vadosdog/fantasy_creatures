@@ -3,7 +3,74 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Dark Fantasy Design System for Rune Shards */
+/* src/index.css или любой другой CSS-файл, который подключён глобально */
+
+/* Neucha */
+@font-face {
+    font-family: 'Neucha';
+    src: url('../../public/assets/fonts/Neucha-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Old Standard TT */
+@font-face {
+    font-family: 'OldStandardTT';
+    src: url('../../public/assets/fonts/OldStandardTT-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'OldStandardTT';
+    src: url('../../public/assets/fonts/OldStandardTT-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'OldStandardTT';
+    src: url('../../public/assets/fonts/OldStandardTT-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* Scada */
+@font-face {
+    font-family: 'Scada';
+    src: url('../../public/assets/fonts/Scada-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Scada';
+    src: url('../../public/assets/fonts/Scada-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Scada';
+    src: url('../../public/assets/fonts/Scada-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Scada';
+    src: url('../../public/assets/fonts/Scada-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
 
 @layer base {
     :root {

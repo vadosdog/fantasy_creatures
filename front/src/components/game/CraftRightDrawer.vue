@@ -2,7 +2,7 @@
 import {computed, ref} from 'vue';
 import {useCraftStore} from "../../store/craft.js";
 import {useGameStore} from "../../store/game.js";
-import {creaturesLib} from "../../database/CreaturesLib.js";
+import {creaturesLib} from "../../database/creaturesLib.js";
 
 const craftStore = useCraftStore()
 const gameStore = useGameStore()
