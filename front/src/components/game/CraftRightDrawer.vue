@@ -18,7 +18,6 @@ const isKnownCreature = computed(() => {
 });
 
 const createdCreature = computed(() => craftStore.createdCreature)
-console.log(createdCreature.value)
 
 // Состояния превью
 const isEmptyState = computed(() =>

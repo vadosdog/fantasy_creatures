@@ -53,7 +53,7 @@ const toggleRightDrawer = () => {
                     color="primary"
                     text-color="primary-foreground"
                     label="Play Now"
-                    to="/game"
+                    to="/world"
                 />
                 <component :is="currentHeaderComponent"/>
             </q-toolbar>

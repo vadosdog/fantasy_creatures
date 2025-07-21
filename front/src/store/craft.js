@@ -1,7 +1,8 @@
 import {defineStore} from 'pinia';
-import {creaturesLib} from "../database/creaturesLib.js";
+import {creaturesLib, getActionsByLevel} from "../database/creaturesLib.js";
 import {useGameStore} from "./game.js";
 import {calcCreatureStats} from "../game/classes/battle/Creature.js";
+
 const gameStore = useGameStore()
 
 export const useCraftStore = defineStore('craft', {
@@ -102,6 +103,12 @@ export const useCraftStore = defineStore('craft', {
             }
 
             newCreature = calcCreatureStats(newCreature)
+            newCreature.actions = getActionsByLevel(
+                this.selectedElement.code,
+                this.selectedShape.code,
+                this.selectedEmotion.code,
+                1
+            )
 
             gameStore.inventoryRemove(this.selectedElement)
             gameStore.inventoryRemove(this.selectedShape)

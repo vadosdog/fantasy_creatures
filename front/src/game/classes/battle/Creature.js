@@ -58,7 +58,6 @@ export function createCreature(config) {
 
 export function calcCreatureStats(config) {
     const level = config.level || 1;
-    console.log(config.baseMaxHealthStat, level, config.baseMaxHealthStat * (1 + 0.03 * (level - 1)))
 
 
     config.maxHealthStat = Math.floor(config.baseMaxHealthStat * (1 + 0.03 * (level - 1))) + (config.manualMaxHealthStat || 0);
@@ -69,7 +68,6 @@ export function calcCreatureStats(config) {
     config.willStat = Math.floor(config.baseWillStat * (1 + 0.03 * (level - 1))) + (config.manualWillStat || 0);
     config.maxPP = Math.floor(config.baseMaxPP * (1 + 0.03 * (level - 1))) + (config.manualMaxPP || 0);
     config.ppRegen = Math.floor(config.basePpRegen * (1 + 0.03 * (level - 1))) + (config.manualPpRegen || 0);
-    console.log(config)
 
     return config
 }

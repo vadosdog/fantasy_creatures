@@ -269,7 +269,7 @@ creatures.forEach((creature, index) => {
 
 for (const actionIndex of creaturesActions.keys()) {
     const creaturesAction = creaturesActions[actionIndex]
-    
+
     // Убрать, когда появятся нормальные ид
     if (!creaturesAction.id) {
         creaturesAction.id = actionIndex + 100
@@ -311,6 +311,7 @@ export function getTeam(direction, control, positions) {
 }
 
 let id = 1
+
 export function getTeam2(direction, control, creatures) {
     const result = []
     creatures.forEach((config, i) => {
@@ -340,15 +341,6 @@ export function getCreature(element, shape, emotion, level) {
     // creature.name = element + '/' + shape + '/' + emotion
     creature.texture = '001'; //creature.number;
     creature.level = level
-    const actions = [
-        ...creatureActionsLib[element + '-' + shape + '-' + emotion],
-        ...creatureActionsLib['-' + '-' + emotion],
-        ...creatureActionsLib['-' + shape + '-'],
-        ...creatureActionsLib[element + '-' + '-'],
-        ...creatureActionsLib['-' + shape + '-' + emotion],
-        ...creatureActionsLib[element + '-' + '-' + emotion],
-        ...creatureActionsLib[element + '-' + shape + '-'],
-    ]
 
     // creature.texture = [
     //     'Decidueye',
@@ -383,10 +375,25 @@ export function getCreature(element, shape, emotion, level) {
     // }
 
 
-    creature.actions = actions.filter(action => action.level <= level).map(action => {
+    creature.actions = getActionsByLevel(element, shape, emotion, level);
+    return creature
+}
+
+export function getActionsByLevel(element, shape, emotion, level) {
+    console.log(creatureActionsLib, element, shape, emotion, level)
+    const actions = [
+        ...creatureActionsLib[element + '-' + shape + '-' + emotion],
+        ...creatureActionsLib['-' + '-' + emotion],
+        ...creatureActionsLib['-' + shape + '-'],
+        ...creatureActionsLib[element + '-' + '-'],
+        ...creatureActionsLib['-' + shape + '-' + emotion],
+        ...creatureActionsLib[element + '-' + '-' + emotion],
+        ...creatureActionsLib[element + '-' + shape + '-'],
+    ]
+
+    return actions.filter(action => action.level <= level).map(action => {
         return Object.assign({}, action)
     })
-    return creature
 }
 
 function randomEmotion() {
@@ -459,8 +466,8 @@ export function testElementTeam(element, level, direction, control) {
 }
 
 export function testTeam(level, direction, control, limit) {
-    const roles = ['rage','rage','passion','passion','hope','hope'];
-    
+    const roles = ['rage', 'rage', 'passion', 'passion', 'hope', 'hope'];
+
     const creatures = roles.slice(0, limit).map(emotion => {
         return getCreature(randomElement(), randomShape(), emotion, level)
     })
@@ -744,7 +751,7 @@ export function testEffects(effect, chanceEffect, duration) {
             "duration": duration
         }]
     }
-    
+
     // rage1.actions[0].effects = [{
     //     "effect": effect,
     //     "chance": chanceEffect,
