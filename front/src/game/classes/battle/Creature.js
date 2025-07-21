@@ -1,6 +1,8 @@
 import {EffectAPI} from "./Effects/BaseEffect.js";
 
 export function createCreature(config) {
+    config = calcCreatureStats(config)
+    
     return {
         id: config.id,
         name: config.name,
@@ -9,26 +11,67 @@ export function createCreature(config) {
         position: config.position,
         direction: config.direction,
         control: config.control,
+        
+        //base
+        baseMaxHealthStat: config.baseMaxHealthStat,
+        baseSpeedStat: config.baseSpeedStat,
+        baseAttackStat: config.baseAttackStat,
+        baseDefenseStat: config.baseDefenseStat,
+        baseInitiativeStat: config.baseInitiativeStat,
+        baseWillStat: config.baseWillStat,
+        baseMaxPP: config.baseMaxPP || 100,
+        basePpRegen: config.basePpRegen || 3,
 
+        //manual
+        manualMaxHealthStat: config.manualMaxHealthStat,
+        manualSpeedStat: config.manualSpeedStat,
+        manualAttackStat: config.manualAttackStat,
+        manualDefenseStat: config.manualDefenseStat,
+        manualInitiativeStat: config.manualInitiativeStat,
+        manualWillStat: config.manualWillStat,
+        manualMaxPP: config.manualMaxPP || 100,
+        manualPpRegen: config.manualPpRegen || 3,
+        
+        //current
         maxHealthStat: config.maxHealthStat,
-        health: config.maxHealthStat,
         speedStat: config.speedStat,
         attackStat: config.attackStat,
         defenseStat: config.defenseStat,
         initiativeStat: config.initiativeStat,
         willStat: config.willStat,
+        maxPP: config.maxPP || 100,
+        ppRegen: config.ppRegen || 3,
+        
         element: config.element,
         emotion: config.emotion,
         shape: config.shape,
         level: config.level,
 
-        maxPP: config.maxPP || 100,
+        health: config.maxHealthStat,
         pp: config.maxPP || 10,
 
         actions: config.actions.map(action => createCreatureAction(action)),
 
         effects: config.effects || []
     }
+}
+
+export function calcCreatureStats(config) {
+    const level = config.level || 1;
+    console.log(config.baseMaxHealthStat, level, config.baseMaxHealthStat * (1 + 0.03 * (level - 1)))
+
+
+    config.maxHealthStat = Math.floor(config.baseMaxHealthStat * (1 + 0.03 * (level - 1))) + (config.manualMaxHealthStat || 0);
+    config.speedStat = Math.floor(config.baseSpeedStat + (config.manualAttackStat || 0));
+    config.attackStat = Math.floor(config.baseAttackStat * (1 + 0.03 * (level - 1))) + (config.manualAttackStat || 0);
+    config.defenseStat = Math.floor(config.baseDefenseStat * (1 + 0.03 * (level - 1))) + (config.manualDefenseStat || 0);
+    config.initiativeStat = Math.floor(config.baseInitiativeStat * (1 + 0.03 * (level - 1))) + (config.manualInitiativeStat || 0);
+    config.willStat = Math.floor(config.baseWillStat * (1 + 0.03 * (level - 1))) + (config.manualWillStat || 0);
+    config.maxPP = Math.floor(config.baseMaxPP * (1 + 0.03 * (level - 1))) + (config.manualMaxPP || 0);
+    config.ppRegen = Math.floor(config.basePpRegen * (1 + 0.03 * (level - 1))) + (config.manualPpRegen || 0);
+    console.log(config)
+
+    return config
 }
 
 export function createCreatureAction(config) {
@@ -62,6 +105,9 @@ export const CreatureAPI = {
         return Math.floor(creature.effects.reduce((maxPP, effect) => {
             return maxPP * EffectAPI.getMaxPPMultiplier(effect)
         }, creature.maxPP))
+    },
+    getPpRegen(creature) {
+        return creature.ppRegen || 3
     },
 
     getSpeed(creature) {
@@ -197,7 +243,7 @@ export const CreatureAPI = {
 
     // восстанавливает ПП каждый раунд
     roundRestorePP(creature) {
-        creature.pp += 3 // Отбалансить и сделать зависимым от навыка
+        creature.pp += this.getPpRegen(creature) // TODO должен зависеть от характеристики ppRegen!
         const maxPP = this.getMaxPP(creature)
         if (creature.pp >= maxPP) {
             creature.pp = maxPP

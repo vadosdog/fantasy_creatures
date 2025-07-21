@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia';
 import {creaturesLib} from "../database/creaturesLib.js";
 import {useGameStore} from "./game.js";
+import {calcCreatureStats} from "../game/classes/battle/Creature.js";
 const gameStore = useGameStore()
 
 export const useCraftStore = defineStore('craft', {
@@ -11,34 +12,34 @@ export const useCraftStore = defineStore('craft', {
         isKnownCreature: false,
         craftStatRange: {
             rage: {
-                maxHealthStat: 15,
-                attackStat: 10,
-                defenseStat: 20,
-                willStat: 10,
-                initiativeStat: 20,
-                speedStat: 0,
-                maxPP: 1,
-                ppRegen: 1,
+                baseMaxHealthStat: 15,
+                baseAttackStat: 10,
+                baseDefenseStat: 20,
+                baseWillStat: 10,
+                baseInitiativeStat: 20,
+                baseSpeedStat: 0,
+                baseMaxPP: 1,
+                basePpRegen: 1,
             },
             passion: {
-                maxHealthStat: 10,
-                attackStat: 5,
-                defenseStat: 5,
-                willStat: 15,
-                initiativeStat: 20,
-                speedStat: 0,
-                maxPP: 1,
-                ppRegen: 1,
+                baseMaxHealthStat: 10,
+                baseAttackStat: 5,
+                baseDefenseStat: 5,
+                baseWillStat: 15,
+                baseInitiativeStat: 20,
+                baseSpeedStat: 0,
+                baseMaxPP: 1,
+                basePpRegen: 1,
             },
             hope: {
-                maxHealthStat: 10,
-                attackStat: 10,
-                defenseStat: 15,
-                willStat: 30,
-                initiativeStat: 20,
-                speedStat: 0,
-                maxPP: 2,
-                ppRegen: 1,
+                baseMaxHealthStat: 10,
+                baseAttackStat: 10,
+                baseDefenseStat: 15,
+                baseWillStat: 30,
+                baseInitiativeStat: 20,
+                baseSpeedStat: 0,
+                baseMaxPP: 2,
+                basePpRegen: 1,
             }
         },
         createdCreature: null,
@@ -77,10 +78,11 @@ export const useCraftStore = defineStore('craft', {
                 return
             }
 
-            const newCreature = Object.assign({}, this.potentialCreature)
+            let newCreature = Object.assign({}, this.potentialCreature)
 
             // Присваиваем рандомный ИД
             newCreature.id = crypto.randomUUID();
+            newCreature.level = 1;
 
             const diffs = this.craftStatRange[newCreature.emotion]
 
@@ -98,6 +100,8 @@ export const useCraftStore = defineStore('craft', {
                     newCreature[prop] += randomOffset;
                 }
             }
+
+            newCreature = calcCreatureStats(newCreature)
 
             gameStore.inventoryRemove(this.selectedElement)
             gameStore.inventoryRemove(this.selectedShape)

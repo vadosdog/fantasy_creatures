@@ -15,15 +15,22 @@ function handleOptionClick(option) {
     if (isInDialog.value) {
         return;
     }
-    if (option.type === 'start_battle') {
-        battleStore.startBattle(option.config)
-        gameStore.setState('battle')
-        gameStore.changeScene('Battle')
-        router.push('/game')
-        return
+    
+    switch (option.type) {
+        case 'start_battle':
+            battleStore.startBattle(option.config)
+            gameStore.setState('battle')
+            gameStore.changeScene('Battle')
+            router.push('/game')
+            break;
+        case 'start_craft':
+            gameStore.setState('craft')
+            gameStore.changeScene('Craft')
+            router.push('/game')
+            break;
+        default:
+            gameStore.moveToLocation(option.id)
     }
-
-    gameStore.moveToLocation(option.id)
 }
 
 </script>

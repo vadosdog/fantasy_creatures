@@ -98,10 +98,17 @@ export const locationsLib = {
         image: '/assets/locations/academy_forge.png',
         conditions: [], // Для доступности
         npcs: [],
-        options: [{
-            id: 'academy',
-            label: 'Двор Забытых Мастеров',
-        }],
+        options: [
+            {
+                id: 'academy',
+                label: 'Двор Забытых Мастеров',
+            },
+            {
+                id: 'craft',
+                label: 'Горн Памяти',
+                type: 'start_craft',
+            },
+        ],
     },
     academy_library: {
         name: 'Библиотека Теней',
