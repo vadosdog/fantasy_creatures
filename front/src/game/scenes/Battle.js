@@ -16,7 +16,7 @@ import {
     useBattleStore
 } from "../../store/battle.js";
 import {CreatureAPI} from "../classes/battle/Creature.js";
-import {watchEffect} from "vue";
+import {markRaw, watchEffect} from "vue";
 import {useGameStore} from "../../store/game.js";
 import {HexTile} from "../classes/battle/HexTile.js";
 import Monster2Container from "../sprites/creatures/Monster2Container.js";
@@ -163,7 +163,7 @@ export class Battle extends Scene {
 
         })
 
-        this.store.battleMap.forEach((cell) => {
+        this.store.battleMap.forEach((cell, i) => {
             if (cell.content) {
                 // в перспективе могут быть другие препятствия
                 let creature = cell.content
@@ -175,12 +175,12 @@ export class Battle extends Scene {
                 //     hexagon.x,
                 //     hexagon.y,
                 // )
-                creature.creatureSpriteContainer = new Monster2Container(
+                creature.creatureSpriteContainer = markRaw(new Monster2Container(
                     creature,
                     this,
                     hexagon.x,
                     hexagon.y,
-                )
+                ))
 
                 creature.creatureSpriteContainer.creatureSprite.on('pointerup', (...args) => {
                     this.handleHexagonClick(creature.position, hexagon, ...args)

@@ -1729,6 +1729,10 @@ export const useGameStore = defineStore('game', {
         load() {
         },
         setGame(game) {
+            if (!game) {
+                this.game = null
+                return
+            }
             this.game = markRaw(game)
         },
         changeScene(newScene) {
@@ -1741,6 +1745,10 @@ export const useGameStore = defineStore('game', {
             this.scene.start(newScene);
         },
         setScene(scene) {
+            if (!scene) {
+                this.scene = null
+                return
+            }
             this.scene = markRaw(scene)
         },
         setHoveredCreature(id) {
