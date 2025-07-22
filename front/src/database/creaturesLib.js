@@ -380,7 +380,6 @@ export function getCreature(element, shape, emotion, level) {
 }
 
 export function getActionsByLevel(element, shape, emotion, level) {
-    console.log(creatureActionsLib, element, shape, emotion, level)
     const actions = [
         ...creatureActionsLib[element + '-' + shape + '-' + emotion],
         ...creatureActionsLib['-' + '-' + emotion],

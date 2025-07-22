@@ -202,6 +202,11 @@ function getActionTypeIcon(action) {
     return {"melee": '🗡️', 'ranged': '🏹', 'treat': '❤'}[action.actionType]
 }
 
+function maxLevel(creature) {
+    // в теории может быть разные для разных существ
+    return Math.min(30, 5 + Math.floor((creature.experience || 0) / 600))
+}
+
 </script>
 
 <template>
@@ -211,6 +216,19 @@ function getActionTypeIcon(action) {
         class="text-primary-foreground"
     >
         <q-card class="flex column" style=" max-width: 80vw; width: 800px">
+            <q-toolbar>
+                <!-- Кнопка "Назад" в режиме детального просмотра -->
+                <q-btn
+                    v-if="selectedCreature"
+                    icon="arrow_back"
+                    flat
+                    round
+                    dense
+                    @click="selectedCreature = null"
+                />
+                <q-space/>
+                <q-btn flat round dense icon="close" v-close-popup/>
+            </q-toolbar>
             <!-- Панель фильтров (видна только когда не выбрано существо) -->
             <q-card-section v-if="!selectedCreature" class="q-pb-none">
                 <div class="q-pa-sm">
@@ -348,6 +366,53 @@ function getActionTypeIcon(action) {
                             <div class="col-6">
                                 <q-list bordered dense>
                                     <q-item>
+                                        <q-item-section>Уровень / Максимум
+                                            <QIcon name="help" size="xs" class="text-grey">
+                                                <QTooltip>Пояснение термина</QTooltip>
+                                            </QIcon>
+                                        </q-item-section>
+                                        <q-item-section side>{{ selectedCreature.level }} /
+                                            {{ maxLevel(selectedCreature) }}
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item>
+                                        <q-item-section>Эхо Битв (ЭБ)</q-item-section>
+                                        <q-item-section side>{{ selectedCreature.experience || 0 }}
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item>
+                                        <q-item-section>Сила Пробуждения (СП)</q-item-section>
+                                        <q-item-section side>{{ selectedCreature.manual_points || 0 }}
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item>
+                                        <q-item-section>Опыт</q-item-section>
+                                        <q-item-section side>{{ selectedCreature.experience || 0 }}
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item>
+                                        <q-item-section>Стихия</q-item-section>
+                                        <q-item-section side>
+                                            <q-badge :label="selectedCreature.element" color="primary"/>
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item>
+                                        <q-item-section>Форма</q-item-section>
+                                        <q-item-section side>
+                                            <q-badge :label="selectedCreature.shape" color="secondary"/>
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item>
+                                        <q-item-section>Эмоция</q-item-section>
+                                        <q-item-section side>
+                                            <q-badge :label="selectedCreature.emotion" color="accent"/>
+                                        </q-item-section>
+                                    </q-item>
+                                </q-list>
+                            </div>
+                            <div class="col-6">
+                                <q-list bordered dense>
+                                    <q-item>
                                         <q-item-section>Здоровье</q-item-section>
                                         <q-item-section side>{{ selectedCreature.maxHealthStat }}</q-item-section>
                                     </q-item>
@@ -381,28 +446,7 @@ function getActionTypeIcon(action) {
                                     </q-item>
                                 </q-list>
                             </div>
-                            <div class="col-6">
-                                <q-list bordered dense>
-                                    <q-item>
-                                        <q-item-section>Стихия</q-item-section>
-                                        <q-item-section side>
-                                            <q-badge :label="selectedCreature.element" color="primary"/>
-                                        </q-item-section>
-                                    </q-item>
-                                    <q-item>
-                                        <q-item-section>Форма</q-item-section>
-                                        <q-item-section side>
-                                            <q-badge :label="selectedCreature.shape" color="secondary"/>
-                                        </q-item-section>
-                                    </q-item>
-                                    <q-item>
-                                        <q-item-section>Эмоция</q-item-section>
-                                        <q-item-section side>
-                                            <q-badge :label="selectedCreature.emotion" color="accent"/>
-                                        </q-item-section>
-                                    </q-item>
-                                </q-list>
-                            </div>
+
                         </div>
 
                         <div class="text-subtitle1 q-mt-md q-mb-sm">Описание:</div>
@@ -412,17 +456,6 @@ function getActionTypeIcon(action) {
                 </div>
             </q-card-section>
 
-            <!-- Кнопка "Назад" в режиме детального просмотра -->
-            <q-btn
-                v-if="selectedCreature"
-                icon="arrow_back"
-                flat
-                round
-                dense
-                @click="selectedCreature = null"
-                class="absolute-top-right q-ma-sm"
-                style="z-index: 1000;"
-            />
         </q-card>
     </q-dialog>
 </template>
