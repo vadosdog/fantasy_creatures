@@ -170,7 +170,14 @@ function cameraAction(action) {
     <!-- Header Card -->
     <q-card class="border bg-grey-2 text-primary-foreground" style="height: 20vh">
         <q-card-section>
-            <QBtn label="Сдаться" to="/"/>
+            <div class="text-accent-foreground" style="max-width: 350px">
+                <q-list bordered separator>
+                    <q-item clickable v-ripple
+                            to="world">
+                        <q-item-section>Выйти</q-item-section>
+                    </q-item>
+                </q-list>
+            </div>
             <div class="q-mt-md" style="z-index: 10">
                 <div class="column q-gutter-xs">
                     <!-- Стрелки управления -->

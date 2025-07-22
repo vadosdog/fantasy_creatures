@@ -55,7 +55,7 @@ export const useGameStore = defineStore('game', {
                 shardType: 'shape',
                 code: 'beast',
                 rarity: 'common',
-                count: 1,
+                count: 3,
                 texture: 'beast_shard',
                 img: 'assets/runes/beast_shard.png',
             },

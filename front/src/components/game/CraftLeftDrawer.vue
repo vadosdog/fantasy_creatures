@@ -111,6 +111,14 @@ const selectedShards = computed(() => craftStore.selectedShards)
 </script>
 
 <template>
+    <div class="q-pa-md text-accent-foreground" style="max-width: 350px">
+        <q-list bordered separator>
+            <q-item clickable v-ripple
+                    to="world">
+                <q-item-section>Выйти</q-item-section>
+            </q-item>
+        </q-list>
+    </div>
     <div class="column full-height select-none text-muted-foreground">
         <!-- Панель фильтров -->
         <div class="q-pa-sm">
