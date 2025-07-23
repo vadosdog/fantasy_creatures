@@ -36,6 +36,7 @@ defineProps({
             self="bottom middle"
             :offset="[10, 10]"
             :delay="1000"
+            style="width: 300px"
         >
             <CreatureCard
                 :creature="creature"

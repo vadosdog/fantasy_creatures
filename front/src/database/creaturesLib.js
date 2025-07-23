@@ -313,10 +313,12 @@ export function getTeam(direction, control, positions) {
 let id = 1
 
 export function getTeam2(direction, control, creatures) {
-    const result = []
-    creatures.forEach((config, i) => {
+    const positions = getPositions(direction)
+    return creatures.map((config, i) => {
         const creature = createCreature(config)
-        creature.id = id++
+        if (!creature.id) {
+            creature.id = crypto.randomUUID()
+        }
         creature.actions = creature.actions.map(action => {
             if (action.effects) {
                 for (const effect of action.effects) {
@@ -329,10 +331,9 @@ export function getTeam2(direction, control, creatures) {
         })
         creature.direction = direction
         creature.control = control
-        result.push(creature)
+        creature.position = positions[i]
+        return creature
     })
-
-    return result
 }
 
 export function getCreature(element, shape, emotion, level) {

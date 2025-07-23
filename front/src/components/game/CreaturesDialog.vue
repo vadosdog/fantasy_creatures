@@ -39,7 +39,7 @@ const emotionOptions = [
 
 const gameStore = useGameStore()
 
-// Фильтрация осколков
+// Фильтрация существ
 const filteredCreatures = computed(() => {
     return gameStore.creatures.filter(creature => {
         // Фильтр по стихии
@@ -72,8 +72,8 @@ const filteredCreatures = computed(() => {
         // Поиск по названию
         if (
             searchQuery.value &&
-            (!creature.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-                !creature.number.toString().includes(searchQuery.value.toLowerCase()))
+            !creature.name.toLowerCase().includes(searchQuery.value.toLowerCase()) &&
+            !creature.number.toString().includes(searchQuery.value.toLowerCase())
         ) {
             return false;
         }

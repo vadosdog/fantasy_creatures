@@ -1,10 +1,10 @@
 <script setup>
 import {useGameStore} from "../../store/game.js";
-import {useCraftStore} from "../../store/craft.js";
 import {computed, ref} from "vue";
 import {useBattleStore} from "../../store/battle.js";
 import {useRouter} from "vue-router";
 import BattleStartDialog from "./BattleStartDialog.vue";
+import {getEnemiesByConfig} from "../../game/classes/battle/CreateBattle.js";
 
 const router = useRouter()
 
@@ -20,7 +20,7 @@ function handleOptionClick(option) {
 
     switch (option.type) {
         case 'start_battle':
-            startBattle(option.config)
+            openStartBattleDialog(option.config)
             break;
         case 'start_craft':
             gameStore.setState('craft')
@@ -34,26 +34,32 @@ function handleOptionClick(option) {
 
 const battleStartDialogOpen = ref(false);
 
-function startBattle(config) {
-    // battleStartDialogOpen.value = true
-    // console.log(config)
-    // return
-    battleStore.startBattle(config)
+// Кажется этому блоку тут не место
+let enemyCreatures = []
+
+function openStartBattleDialog(config) {
+    console.log(enemyCreatures)
+    enemyCreatures = getEnemiesByConfig(config)
+    battleStartDialogOpen.value = true
+}
+
+function handleBattleStart(battleData) {
+    const playerCreatures = gameStore.creatures.filter(creature => battleData.includes(creature.id));
+    // Здесь будет логика инициализации боя
+    battleStore.startBattle({
+        leftTeam: playerCreatures,
+        rightTeam: enemyCreatures,
+    })
+    battleStartDialogOpen.value = false
     gameStore.setState('battle')
     gameStore.changeScene('Battle')
     router.push('/game')
 }
 
-function handleBattleStart(battleData) {
-    console.log('Начало боя с данными:', battleData);
-    // Здесь будет логика инициализации боя
-    // Например: router.push('/battle') или вызов API
-}
-
 </script>
 
 <template>
-    <BattleStartDialog v-model="battleStartDialogOpen" @battle-start="handleBattleStart"/>
+    <BattleStartDialog v-model="battleStartDialogOpen" :enemy-creatures="enemyCreatures" @battle-start="handleBattleStart"/>
     <div class="font-oldstandardtt q-px-md q-pt-md text-primary-foreground">Перемещения</div>
     <div class="q-pa-md text-accent-foreground" style="max-width: 350px">
         <q-list bordered separator v-if="options?.length">

@@ -2,7 +2,7 @@ import {defineStore} from 'pinia';
 import {BattleMap} from "../game/classes/battle/BattleMap.js";
 import {QueueController} from "../game/classes/battle/QueueController.js";
 import {CombatHandler} from "../game/classes/battle/CombatHandler.js";
-import {testTeam} from "../database/creaturesLib.js";
+import {getTeam2, testTeam} from "../database/creaturesLib.js";
 import {CreatureAPI} from "../game/classes/battle/Creature.js";
 import {useBattleLogStore} from "./battleLog.js";
 import {EasyAI} from "../game/classes/battle/AI/EasyAI.js";
@@ -58,10 +58,22 @@ export const useBattleStore = defineStore('battle', {
     getters: {},
     actions: {
         load() {
+            let leftTeam = null
+            let rightTeam = null
             const limit = this.battleConfig.limit || 6
+            if (this.battleConfig.leftTeam) {
+                leftTeam = getTeam2('right', 'player', this.battleConfig.leftTeam)
+            } else {
+                testTeam(2, 'right', 'player', limit)
+            }
+            if (this.battleConfig.rightTeam) {
+                rightTeam = getTeam2('left', new MediumAI(), this.battleConfig.rightTeam)
+            } else {
+                testTeam(2, 'left', new MediumAI(), limit)
+            }
             this.resetBattle([
-                ...testTeam(2, 'right', 'player', limit),
-                ...testTeam(2, 'left', new MediumAI(), limit),
+                ...leftTeam,
+                ...rightTeam,
             ]);
 
             this.updateQueueData(); // Инициализируем данные очереди

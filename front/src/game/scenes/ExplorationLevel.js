@@ -15,7 +15,7 @@ export class ExplorationLevel extends Phaser.Scene {
         this.corridorWidth = 1;
         this.currentPathIndex = 0;
         this.currentDepth = 1;
-        this.enemies = null;
+        this.enemyCreatures = null;
         this.portals = null;
         this.traps = null;
         this.resources = null;
@@ -260,7 +260,7 @@ export class ExplorationLevel extends Phaser.Scene {
 
         // Остальные комнаты
         for (let i = 0; i < this.currentLevelConfig.rooms - 2; i++) {
-            const type = Phaser.Math.RND.pick(['normal', 'treasure', 'enemies']);
+            const type = Phaser.Math.RND.pick(['normal', 'treasure', 'enemyCreatures']);
             const room = this.generateRoom(type);
             this.createRoom(room, type);
             this.rooms.push(room);
