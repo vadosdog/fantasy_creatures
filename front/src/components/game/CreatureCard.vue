@@ -20,6 +20,8 @@ const props = defineProps({
         },
         required: true
     },
+    showHealth: true,
+    statsVerbose: false,
 })
 const maxHealth = computed(() => CreatureAPI.getMaxHealth(props.creature));
 const healthProgress = computed(() => props.creature?.health / (maxHealth.value || 1));
@@ -132,6 +134,9 @@ function getEffectIcon(effect) {
 }
 
 const effectIcons = computed(() => {
+    if (!props.creature?.effects) {
+        return []
+    }
     return props.creature?.effects.map(getEffectIcon).slice(0, 6)
 })
 
@@ -188,6 +193,8 @@ const initiativeStat = computed(() => {
 
 const safeCreature = ref(true)
 
+const src = '/assets/creatures/basic/' + props.creature.number + '.png'
+
 
 </script>
 
@@ -201,7 +208,7 @@ const safeCreature = ref(true)
                 <q-btn flat color="dark">Lvl: {{ creature.level }}</q-btn>
             </q-card-actions>
             <q-img
-                :src="creature.texture ? '/assets/creatures/basic/' + creature.texture + '.png' : 'https://img.league17.ru/pub/mnst/norm/full/502.png'"
+                :src="src"
                 :alt="creature.name"
                 class="col"
                 :class="{mirror: creature.direction === 'left'}"
@@ -220,12 +227,12 @@ const safeCreature = ref(true)
             <div class="text-h5 q-mt-sm q-mb-xs text-primary-foreground">{{ creature.name }}</div>
 
 
-            <q-linear-progress size="20px" :value="healthProgress" :color="healthColor" class="q-mt-sm">
+            <q-linear-progress size="20px" :value="healthProgress" :color="healthColor" class="q-mt-sm" v-if="showHealth">
                 <div class="absolute-full flex flex-center">
                     <q-badge color="white" text-color="dark" :label="'HP: ' + creature?.health + '/' + maxHealth"/>
                 </div>
             </q-linear-progress>
-            <q-linear-progress size="15px" :value="ppProgress" color="accent" class="q-mt-sm">
+            <q-linear-progress size="15px" :value="ppProgress" color="accent" class="q-mt-sm" v-if="showHealth">
                 <div class="absolute-full flex flex-center">
                     <q-badge color="white" text-color="dark" :label="'PP: ' + creature?.pp + '/' + maxPp"/>
                 </div>
@@ -233,7 +240,41 @@ const safeCreature = ref(true)
         </q-card-section>
     </q-card>
     <q-card square class="bg-grey-9">
-        <q-card-section class="text-center">
+        <q-list bordered dense v-if="statsVerbose" class="q-mt-sm">
+            <q-item>
+                <q-item-section>Здоровье</q-item-section>
+                <q-item-section side>{{ creature.maxHealthStat }}</q-item-section>
+            </q-item>
+            <q-item>
+                <q-item-section>Атака</q-item-section>
+                <q-item-section side>{{ attackStat.value }}</q-item-section>
+            </q-item>
+            <q-item>
+                <q-item-section>Защита</q-item-section>
+                <q-item-section side>{{ defenseStat.value }}</q-item-section>
+            </q-item>
+            <q-item>
+                <q-item-section>Воля</q-item-section>
+                <q-item-section side>{{ willStat.value }}</q-item-section>
+            </q-item>
+            <q-item>
+                <q-item-section>Инициатива</q-item-section>
+                <q-item-section side>{{ initiativeStat.value }}</q-item-section>
+            </q-item>
+            <q-item>
+                <q-item-section>Скорость</q-item-section>
+                <q-item-section side>{{ creature.speedStat }}</q-item-section>
+            </q-item>
+            <q-item>
+                <q-item-section>PP</q-item-section>
+                <q-item-section side>{{ creature.maxPP }}</q-item-section>
+            </q-item>
+            <q-item>
+                <q-item-section>Регенерация PP</q-item-section>
+                <q-item-section side>{{ creature.ppRegen }}</q-item-section>
+            </q-item>
+        </q-list>
+        <q-card-section class="text-center" v-else>
             ⚔️ <span :class="attackStat.color">{{ attackStat.value }}</span>
             · 🛡️ <span :class="defenseStat.color">{{ defenseStat.value }}</span>
             · ✨ <span :class="willStat.color">{{ willStat.value }}</span>

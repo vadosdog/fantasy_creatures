@@ -1,37 +1,57 @@
 <script setup>
 
 import {computed} from "vue";
+import CreatureCard from "./CreatureCard.vue";
 
 const props = defineProps({
-    creature: Object
+    creature: Object,
+    direction: '', //TODO переделать
+    isActive: false,
 });
 
-const borderColor = computed(() => props.creature.direction === 'left'
-    ? '#1976D2'  // Синий для левых
-    : '#C10015')
+const borderColor = computed(() => {
+    return {
+        "left": '#1976D2',
+        "right": '#C10015',
+        "": '',
+    }[props.creature.direction || props.direction || '']
+})
+
+const textureImage = 'assets/creatures/basic/' + props.creature.number + '.png'
 </script>
 
 <template>
     <div
         class="creature-item"
         :class="{
-      'active-creature': creature.isActive,
+      'active-creature': creature.isActive || isActive,
       'dead-creature': creature.health <= 0
     }"
         :style="{
       borderColor: borderColor,
-      transform: `scale(${creature.isActive ? 1.15 : 1})`
+      // transform: `scale(${creature.isActive ? 1.15 : 1})`
     }"
     >
+        <q-tooltip
+            anchor="top middle"
+            self="bottom middle"
+            :offset="[10, 10]"
+            :delay="1000"
+        >
+            <CreatureCard
+                :creature="creature"
+                :key="creature.id"
+            />
+        </q-tooltip>
         <div class="creature-image-container">
             <img
-                :src="creature.texture"
+                :src="textureImage"
                 :alt="creature.name"
                 class="creature-image"
             />
             <div class="status-indicators">
                 <q-icon
-                    v-for="(buff, index) in creature.buffs"
+                    v-for="(buff, index) in creature.buffs || []"
                     :key="'buff-' + index"
                     :name="buff.icon"
                     size="10px"
@@ -39,7 +59,7 @@ const borderColor = computed(() => props.creature.direction === 'left'
                     class="status-icon"
                 />
                 <q-icon
-                    v-for="(debuff, index) in creature.debuffs"
+                    v-for="(debuff, index) in creature.debuffs || []"
                     :key="'debuff-' + index"
                     :name="debuff.icon"
                     size="10px"

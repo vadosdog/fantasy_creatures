@@ -58,6 +58,7 @@ export function createCreature(config) {
 
 export function calcCreatureStats(config) {
     const level = config.level || 1;
+    console.log(config.baseMaxHealthStat, level, config.baseMaxHealthStat * (1 + 0.03 * (level - 1)))
 
 
     config.maxHealthStat = Math.floor(config.baseMaxHealthStat * (1 + 0.03 * (level - 1))) + (config.manualMaxHealthStat || 0);
@@ -68,6 +69,7 @@ export function calcCreatureStats(config) {
     config.willStat = Math.floor(config.baseWillStat * (1 + 0.03 * (level - 1))) + (config.manualWillStat || 0);
     config.maxPP = Math.floor(config.baseMaxPP * (1 + 0.03 * (level - 1))) + (config.manualMaxPP || 0);
     config.ppRegen = Math.floor(config.basePpRegen * (1 + 0.03 * (level - 1))) + (config.manualPpRegen || 0);
+    console.log(config)
 
     return config
 }
@@ -94,13 +96,13 @@ export function createCreatureAction(config) {
 
 export const CreatureAPI = {
     getMaxHealth(creature) {
-        return Math.floor(creature.effects.reduce((maxHealth, effect) => {
+        return Math.floor((creature.effects || []).reduce((maxHealth, effect) => {
             return maxHealth * EffectAPI.getMaxHealthMultiplier(effect)
         }, creature.maxHealthStat))
     },
 
     getMaxPP(creature) {
-        return Math.floor(creature.effects.reduce((maxPP, effect) => {
+        return Math.floor((creature.effects || []).reduce((maxPP, effect) => {
             return maxPP * EffectAPI.getMaxPPMultiplier(effect)
         }, creature.maxPP))
     },
@@ -109,23 +111,23 @@ export const CreatureAPI = {
     },
 
     getSpeed(creature) {
-        return Math.floor(creature.effects.reduce((maxHealth, effect) => maxHealth + EffectAPI.getSpeedTerm(effect), creature.speedStat))
+        return Math.floor((creature.effects || []).reduce((maxHealth, effect) => maxHealth + EffectAPI.getSpeedTerm(effect), creature.speedStat))
     },
 
     getAttack(creature) {
-        return Math.floor(creature.effects.reduce((maxHealth, effect) => maxHealth * EffectAPI.getAttackMultiplier(effect), creature.attackStat))
+        return Math.floor((creature.effects || []).reduce((maxHealth, effect) => maxHealth * EffectAPI.getAttackMultiplier(effect), creature.attackStat))
     },
 
     getDefense(creature) {
-        return Math.floor(creature.effects.reduce((maxHealth, effect) => maxHealth * EffectAPI.getDefenseMultiplier(effect), creature.defenseStat))
+        return Math.floor((creature.effects || []).reduce((maxHealth, effect) => maxHealth * EffectAPI.getDefenseMultiplier(effect), creature.defenseStat))
     },
 
     getInitiative(creature) {
-        return Math.floor(creature.effects.reduce((maxHealth, effect) => maxHealth * EffectAPI.getInitiativeMultiplier(effect), creature.initiativeStat))
+        return Math.floor((creature.effects || []).reduce((maxHealth, effect) => maxHealth * EffectAPI.getInitiativeMultiplier(effect), creature.initiativeStat))
     },
 
     getHitChanceModifier(creature) {
-        return Math.floor(creature.effects.reduce((maxHealth, effect) => maxHealth * EffectAPI.getHitChanceMultiplier(effect), 1))
+        return Math.floor((creature.effects || []).reduce((maxHealth, effect) => maxHealth * EffectAPI.getHitChanceMultiplier(effect), 1))
     },
 
     getWill(creature) {
@@ -133,15 +135,15 @@ export const CreatureAPI = {
     },
 
     getCritChanceTerm(creature) {
-        return Math.floor(creature.effects.reduce((maxHealth, effect) => maxHealth * EffectAPI.getCritChanceTerm(effect), 0))
+        return Math.floor((creature.effects || []).reduce((maxHealth, effect) => maxHealth * EffectAPI.getCritChanceTerm(effect), 0))
     },
 
     getBackDamageTerm(creature) {
-        return Math.floor(creature.effects.reduce((backDamage, effect) => backDamage + EffectAPI.getBackDamage(effect), 0))
+        return Math.floor((creature.effects || []).reduce((backDamage, effect) => backDamage + EffectAPI.getBackDamage(effect), 0))
     },
 
     hasEffect(creature, effectType) {
-        const existsEffect = creature.effects.find(({effect}) => effectType === effect)
+        const existsEffect = (creature.effects || []).find(({effect}) => effectType === effect)
         if (!existsEffect) {
             return 0
         }
@@ -165,6 +167,10 @@ export const CreatureAPI = {
     },
 
     pushEffect(creature, effectConfig) {
+        if (!creature.effects) {
+            creature.effects = []
+        }
+        
         const effect = effectConfig
         // Если такой эффект уже есть, то увеличиваем его длительность
         const existsEffect = creature.effects.find(({effect}) => effectConfig.effect === effect)
@@ -182,6 +188,9 @@ export const CreatureAPI = {
 
     //Применить эффекты в начале раунда
     applyRoundEffects(creature) {
+        if (!creature.effects) {
+            return []
+        }
         const maxHealth = this.getMaxHealth(creature)
         const appliedEffects = []
         creature.effects.forEach(effect => {
@@ -212,7 +221,7 @@ export const CreatureAPI = {
     },
 
     removeRoundEffects(creature) {
-        if (!creature) {
+        if (!creature || !creature.effects) {
             return []
         }
         const removedEffects = []
@@ -231,6 +240,9 @@ export const CreatureAPI = {
     },
 
     removeEffect(creature, effectType) {
+        if (!creature || !creature.effects) {
+            return []
+        }
         let existsEffectIndex = creature.effects.findIndex(({type}) => effectType === type)
         if (existsEffectIndex === -1) {
             return
