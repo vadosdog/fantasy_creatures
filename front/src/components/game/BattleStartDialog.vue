@@ -194,6 +194,7 @@ const filteredCreatures = computed(() => {
                                         :creature="creature"
                                         :active="selectedCreatureIds.includes(creature.id)"
                                         @click="toggleCreatureSelection(creature)"
+                                        direction="right"
                                     />
                                 </q-list>
                             </QScrollArea>
@@ -216,6 +217,7 @@ const filteredCreatures = computed(() => {
                                         :creature="creature"
                                         :active="true"
                                         @click="toggleCreatureSelection(creature)"
+                                        direction="right"
                                     />
                                 </q-list>
                             </QScrollArea>
@@ -272,6 +274,7 @@ const filteredCreatures = computed(() => {
                                         :key="creature.id"
                                         :creature="creature"
                                         :active="false"
+                                        direction="left"
                                     />
                                 </q-list>
                             </QScrollArea>

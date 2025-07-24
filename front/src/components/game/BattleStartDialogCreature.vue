@@ -16,6 +16,7 @@ defineProps({
         required: true
     },
     active: false,
+    direction: 'left'
 })
 
 </script>
@@ -51,6 +52,7 @@ defineProps({
                     :src="creature.number ? '/assets/creatures/basic/' + creature.number + '.png' : 'https://img.league17.ru/pub/mnst/norm/full/502.png'"
                     :alt="creature.name"
                     class="creature-image"
+                    :class="{mirror: direction === 'right'}"
                 />
             </q-avatar>
         </q-item-section>
@@ -78,4 +80,7 @@ defineProps({
 </template>
 
 <style scoped>
+.mirror {
+    transform: scaleX(-1);
+}
 </style>
