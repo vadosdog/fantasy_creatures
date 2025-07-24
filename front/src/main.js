@@ -18,7 +18,7 @@ import {
     QTabs, QTimeline, QTimelineEntry,
     QToolbar,
     QToolbarTitle, QTooltip,
-    Quasar
+    Quasar, Notify
 } from 'quasar'
 
 // Импортируем стили Quasar
@@ -38,7 +38,7 @@ app.use(router)
 app.use(pinia);
 app.use(Quasar, {
     lang: quasarLang,
-    plugins: {}, // import Quasar plugins and add here
+    plugins: [Notify], // import Quasar plugins and add here
 
     config: {
         brand: {

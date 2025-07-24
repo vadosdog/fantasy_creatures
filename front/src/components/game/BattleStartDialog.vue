@@ -1,13 +1,17 @@
 <script setup>
 import {ref, computed, onMounted} from 'vue'
 import {useGameStore} from "../../store/game.js";
-import {QLinearProgress, QScrollArea} from "quasar";
+import {Notify, QLinearProgress, QScrollArea} from "quasar";
 import BattleStartDialogCreature from "./BattleStartDialogCreature.vue";
 
 const props = defineProps({
     enemyCreatures: {
         type: Array,
         default: [],
+    },
+    config: {
+        type: Object,
+        default: {}
     }
 })
 
@@ -43,13 +47,27 @@ const powerBalance = computed(() => {
     return playerTotalPower.value / total
 })
 
+const creaturesLimit = computed(() => props.config.limit || 6)
+
 // Переключение выбора существа
 const toggleCreatureSelection = (creature) => {
     const index = selectedCreatureIds.value.indexOf(creature.id)
     if (index > -1) {
         selectedCreatureIds.value.splice(index, 1)
     } else {
-        selectedCreatureIds.value.push(creature.id)
+        if (selectedCreatures.value.length >= creaturesLimit.value) {
+            Notify.create({
+                message: 'Ограничение активных существ: ' + creaturesLimit.value,
+                color: 'negative', // красный цвет
+                icon: 'error',
+                position: 'top-right',
+                timeout: 3000, // исчезнет через 3 секунды
+                closeBtn: true // кнопка закрытия
+            })
+            return false
+        } else {
+            selectedCreatureIds.value.push(creature.id)
+        }
     }
 }
 

@@ -33,14 +33,15 @@ function handleOptionClick(option) {
 }
 
 const battleStartDialogOpen = ref(false);
+const battleStartConfig = ref({})
 
 // Кажется этому блоку тут не место
 let enemyCreatures = []
 
 function openStartBattleDialog(config) {
-    console.log(enemyCreatures)
-    enemyCreatures = getEnemiesByConfig(config)
+    enemyCreatures = getEnemiesByConfig(config, gameStore)
     battleStartDialogOpen.value = true
+    battleStartConfig.value = config
 }
 
 function handleBattleStart(battleData) {
@@ -59,7 +60,8 @@ function handleBattleStart(battleData) {
 </script>
 
 <template>
-    <BattleStartDialog v-model="battleStartDialogOpen" :enemy-creatures="enemyCreatures" @battle-start="handleBattleStart"/>
+    <BattleStartDialog v-model="battleStartDialogOpen" :enemy-creatures="enemyCreatures" :config="battleStartConfig"
+                       @battle-start="handleBattleStart"/>
     <div class="font-oldstandardtt q-px-md q-pt-md text-primary-foreground">Перемещения</div>
     <div class="q-pa-md text-accent-foreground" style="max-width: 350px">
         <q-list bordered separator v-if="options?.length">
