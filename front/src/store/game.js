@@ -3,6 +3,8 @@ import {locationsLib} from "../database/locationsLib.js";
 import {npcDialogs} from "../database/dialogsLib.js";
 import npcsLib from "../database/npcsLib.js";
 import {markRaw} from "vue";
+import {resourcesLib} from "../database/resourcesLib.js";
+import {Notify} from "quasar";
 
 export const useGameStore = defineStore('game', {
     state: () => ({
@@ -17,103 +19,40 @@ export const useGameStore = defineStore('game', {
         },
         inventory: [
             {
-                id: 1,
-                name: 'Огненный Клык',
-                type: 'shard',
-                shardType: 'element',
-                code: 'fire',
-                rarity: 'common',
-                count: 9,
-                texture: 'fire_shard',
-                img: 'assets/runes/fire_shard.png',
+                id: 'craft_shard_fire_common',
+                amount: 9,
             },
             {
-                id: 2,
-                name: 'Морская Пена',
-                type: 'shard',
-                shardType: 'element',
-                code: 'water',
-                rarity: 'common',
-                count: 9,
-                texture: 'water_shard',
-                img: 'assets/runes/water_shard.png',
+                id: 'craft_shard_water_common',
+                amount: 9,
             },
             {
-                id: 3,
-                name: 'Лист Древних',
-                type: 'shard',
-                shardType: 'element',
-                code: 'grass',
-                rarity: 'common',
-                count: 9,
-                texture: 'grass_shard',
-                img: 'assets/runes/grass_shard.png',
+                id: 'craft_shard_grass_common',
+                amount: 9,
             },
             {
-                id: 4,
-                name: 'Сердце Волка',
-                type: 'shard',
-                shardType: 'shape',
-                code: 'beast',
-                rarity: 'common',
-                count: 9,
-                texture: 'beast_shard',
-                img: 'assets/runes/beast_shard.png',
+                id: 'craft_shard_beast_common',
+                amount: 9,
             },
             {
-                id: 5,
-                name: 'Крыло Ворона',
-                type: 'shard',
-                shardType: 'shape',
-                code: 'bird',
-                rarity: 'common',
-                count: 9,
-                texture: 'bird_shard',
-                img: 'assets/runes/bird_shard.png',
+                id: 'craft_shard_bird_common',
+                amount: 9,
             },
             {
-                id: 6,
-                name: 'Язык змеи',
-                type: 'shard',
-                shardType: 'shape',
-                code: 'reptile',
-                rarity: 'common',
-                count: 9,
-                texture: 'reptile_shard',
-                img: 'assets/runes/reptile_shard.png',
+                id: 'craft_shard_reptile_common',
+                amount: 9,
             },
             {
-                id: 7,
-                name: 'Капля Ярости',
-                type: 'shard',
-                shardType: 'emotion',
-                code: 'rage',
-                rarity: 'common',
-                count: 9,
-                texture: 'rage_shard',
-                img: 'assets/runes/rage_shard.png'
+                id: 'craft_shard_rage_common',
+                amount: 9,
             },
             {
-                id: 8,
-                name: 'Свет Надежды',
-                type: 'shard',
-                shardType: 'emotion',
-                code: 'hope',
-                rarity: 'common',
-                count: 9,
-                texture: 'hope_shard',
-                img: 'assets/runes/hope_shard.png'
+                id: 'craft_shard_hope_common',
+                amount: 9,
             },
             {
-                id: 9,
-                name: 'Тень Азарта',
-                type: 'shard',
-                shardType: 'emotion',
-                code: 'passion',
-                rarity: 'common',
-                count: 9,
-                texture: 'passion_shard',
-                img: 'assets/runes/passion_shard.png'
+                id: 'craft_shard_passion_common',
+                amount: 9,
             },
         ],
         knownCreatures: [
@@ -1684,11 +1623,16 @@ export const useGameStore = defineStore('game', {
         // Прогресс диалогов
         dialogProgress: {
             dragomir: {}
-        }
+        },
     }),
     getters: {
+        inventoryObjects(state) {
+            return state.inventory.map((item) => {
+                return Object.assign({amount: item.amount}, resourcesLib[item.id])
+            })
+        },
         inventoryShards(state) {
-            return state.inventory.filter(ii => ii.type === 'shard')
+            return state.inventoryObjects.filter(ii => ii.type === 'shard')
         },
         isLocationAvailable: (state) => (locationId) => {
             const location = locationsLib[locationId];
@@ -1767,22 +1711,58 @@ export const useGameStore = defineStore('game', {
                 this.knownCreatures.push(creatureData.number);
             }
         },
-        inventoryRemove(item, count = 1) {
+        inventoryRemove(item, amount = 1) {
             const index = this.inventory.findIndex(ii => ii.id === item.id)
             if (index === -1) {
                 return
             }
 
-            this.inventory[index].count -= count
-            if (this.inventory[index].count <= 0) {
+            this.inventory[index].amount -= amount
+            if (this.inventory[index].amount <= 0) {
                 this.inventory.splice(index, 1)
             }
         },
         setFlag(flag, value) {
             this.flags[flag] = value;
         },
-        addInventoryItem(item) {
-            this.inventory.push(item);
+        addInventoryItem({id, amount}) {
+            const index = this.inventory.findIndex(ii => ii.id === id)
+            if (index === -1) {
+                this.inventory.push({id, amount});
+            } else {
+                this.inventory[index].amount += amount
+                
+            }
+
+            const resourceItem = resourcesLib[id]
+            if (!resourceItem) {
+                return
+            }
+            Notify.create({
+                html: true, // ВАЖНО: разрешаем HTML в иконке
+                message: `<img src="${resourceItem.img}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;"> +${amount} ${resourceItem.name}`,
+                position: 'top-right',
+                timeout: 3000, // исчезнет через 3 секунды
+                closeBtn: true,
+                color: 'white',
+                textColor: 'dark',
+            });
+        },
+        addCreatureExperience(id, exp) {
+            // Находим объект по id
+            const entity = this.creatures.find(item => item.id === id);
+
+            if (!entity) {
+                console.warn(`Entity with id ${id} not found.`);
+                return
+            }
+
+            // Если объект найден, добавляем опыт
+            if (typeof entity.experience === 'number') {
+                entity.experience += exp;
+            } else {
+                entity.experience = exp; // Если experience нет — создаём
+            }
         },
         moveToLocation(locationId) {
             if (this.isLocationAvailable(locationId)) {
@@ -1837,6 +1817,6 @@ export const useGameStore = defineStore('game', {
         },
         setState(newState) {
             this.currentState = newState;
-        }
+        },
     },
 });

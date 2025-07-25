@@ -53,7 +53,11 @@ export const useBattleStore = defineStore('battle', {
         selectedActionId: undefined,
         queueData: [], // Добавляем для хранения данных очереди
         activeCreatureId: null, // ID текущего существа
-        battleConfig: null
+        battleConfig: null,
+
+        // Финал битвы
+        showBattleOverDialog: false,
+        battleOverData: {}
     }),
     getters: {},
     actions: {
@@ -80,6 +84,9 @@ export const useBattleStore = defineStore('battle', {
         },
         resetBattle(creatures) {
             this.$reset();
+
+            this.showBattleOverDialog = false // сбрасываем награды при перезапуске битвы
+            this.battleOverData = {} // сбрасываем награды при перезапуске битвы
 
             battleLog.resetLog()
             this.creatures = creatures
@@ -553,7 +560,6 @@ export const useBattleStore = defineStore('battle', {
                         defenderStateObject.health = Math.floor(defenderStateObject.health - result.damage);
                     }
                 });
-
             }
 
 
@@ -593,6 +599,7 @@ export const useBattleStore = defineStore('battle', {
                         type: 'pushEffect',
                         effect,
                         target: CreatureAPI.getSimpleObject(effectTarget),
+                        actor: CreatureAPI.getSimpleObject(attacker),
                     })
                 }
             })
@@ -692,6 +699,7 @@ export const useBattleStore = defineStore('battle', {
                         type: 'pushEffect',
                         effect,
                         target: CreatureAPI.getSimpleObject(effectTarget),
+                        actor: CreatureAPI.getSimpleObject(treater),
                     })
                 }
             })
@@ -746,6 +754,92 @@ export const useBattleStore = defineStore('battle', {
         },
         startBattle(config) {
             this.battleConfig = config
+        },
+        generateBattleOverData() {
+            const resources = []
+            const avgLevel = this.rightTeam.reduce((sum, c) => sum + c.level, 0) / this.rightTeam.length;
+            const gold = Math.round(avgLevel * this.rightTeam.length * (0.9 + Math.random() * 0.2))
+            if (gold > 0) {
+                resources.push({
+                    id: 'gold', amount: gold,
+                })
+            }
+            const memoryShards = Math.round(avgLevel * this.rightTeam.length * (0.7 + Math.random() * 0.2))
+            if (memoryShards > 0) {
+                resources.push({
+                    id: 'memory_shard', amount: memoryShards,
+                })
+            }
+            
+            // Осколки падают только за победы
+            if (this.battleState === BATTLE_STATE_BATTLE_OVER_WIN) {
+                const shards = []
+                const randomShards = [
+                    'craft_shard_fire_common',
+                    'craft_shard_water_common',
+                    'craft_shard_grass_common',
+                    'craft_shard_rage_common',
+                    'craft_shard_passion_common',
+                    'craft_shard_hope_common',
+                    'craft_shard_beast_common',
+                    'craft_shard_bird_common',
+                    'craft_shard_reptile_common',
+                ]
+                const enemyCraftShards = []
+                this.rightTeam.forEach(enemy => {
+                    enemyCraftShards.push('craft_shard_' + enemy.emotion + '_common')
+                    enemyCraftShards.push('craft_shard_' + enemy.element + '_common')
+                    enemyCraftShards.push('craft_shard_' + enemy.shape + '_common')
+                })
+                const guaranteedCount = Math.round(this.rightTeam.length * avgLevel)
+                const randomShardsCount = Math.floor(Math.random() * avgLevel / 3)
+
+                // Выбираем случайных элементов из enemyCraftShards с удалением
+                for (let i = 0; i < guaranteedCount && enemyCraftShards.length > 0; i++) {
+                    const randomIndex = Math.floor(Math.random() * enemyCraftShards.length);
+                    const [element] = enemyCraftShards.splice(randomIndex, 1); // Удаляем и получаем элемент
+                    shards.push(element);
+                }
+
+                // Выбираем N2 случайных элементов из массива2 без удаления
+                for (let i = 0; i < randomShardsCount && randomShards.length > 0; i++) {
+                    const randomIndex = Math.floor(Math.random() * randomShards.length);
+                    shards.push(randomShards[randomIndex]);
+                }
+
+                // Создаём объект для агрегации по id
+                const resourcesMap = {};
+
+                shards.forEach(id => {
+                    if (resourcesMap[id]) {
+                        resourcesMap[id] += 1; // Увеличиваем количество
+                    } else {
+                        resourcesMap[id] = 1;  // Инициализируем
+                    }
+                });
+
+                resources.push(...Object.keys(resourcesMap).map(id => ({
+                    id,
+                    amount: resourcesMap[id]
+                })));
+            }
+
+            
+            
+            const experience = battleLog.getStatistic()
+
+            this.showBattleOverDialog = true
+            this.battleOverData = {
+                outcome: 'victory',
+                playerCreatures: this.leftTeam,
+                enemyCreatures: this.rightTeam,
+                rewards: {
+                    experience: experience,
+                    resources: resources,
+                    // trophies: ['Редкий артефакт', 'Знак отличия']
+                }
+            }
         }
+
     },
 });

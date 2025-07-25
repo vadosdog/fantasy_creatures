@@ -26,6 +26,46 @@ export const useBattleLogStore = defineStore('battleLog', {
         resetLog() {
             this.battleLog = []
             this.lastTurn = undefined
+        },
+        getStatistic() {
+            // Не уверен, что тут должен считать EXP, но пусть будет пока
+            const result = {}
+            for (const {log} of this.battleLog) {
+                for (const logElement of log) {
+                    // На интересуют только атаки, лечения и эффекты не на себя
+                    if (
+                        !(logElement.type === 'attack'
+                            || logElement.type === 'treat'
+                            || (logElement.type === 'pushEffect' && logElement.actor?.id !== logElement.target?.id))
+                        || !logElement.success
+                    ) {
+                        continue;
+                    }
+
+                    if (!result.hasOwnProperty(logElement.actor.id)) {
+                        result[logElement.actor.id] = 0
+                    }
+
+                    switch (logElement.type) {
+                        case 'attack':
+                            if (logElement.damage > 0) {
+
+                                result[logElement.actor.id] += Math.round(logElement.damage / 10 * (1 + 0.01 * logElement.target.level))
+                            }
+                            break
+                        case 'treat':
+                            if (logElement.damage > 0) {
+                                result[logElement.actor.id] += Math.round(logElement.damage / 8 * (1 + 0.01 * logElement.target.level))
+                            }
+                            break
+                        case 'pushEffect':
+                            result[logElement.actor.id] += Math.round(5 * (1 + 0.01 * logElement.target.level))
+                            break
+                    }
+                }
+            }
+
+            return result
         }
     }
 });

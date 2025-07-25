@@ -276,6 +276,7 @@ export const CreatureAPI = {
             name: creature.name,
             position: creature.position,
             texture: creature.texture,
+            level: creature.level,
         }
     }
 }

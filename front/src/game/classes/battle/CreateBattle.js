@@ -13,7 +13,6 @@ export function getEnemiesByConfig(config, gameStore) {
 }
 
 function generateEnemyTeamLevels(playerCreatures, battleSize) {
-    console.log('start generate')
     // 1. Проверка крайних случаев
     if (playerCreatures.length === 0) return Array(battleSize).fill(1);
 

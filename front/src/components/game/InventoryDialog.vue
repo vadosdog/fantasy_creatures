@@ -201,7 +201,7 @@ const legendaryCount = computed(() => gameStore.inventoryShards.filter(s => s.ra
                                 <q-card class="">
                                     <q-img :src="shard.img" no-native-menu/>
                                     <q-badge class="absolute-bottom-right text-subtitle2"
-                                             :label="`${shard.count} шт`"/>
+                                             :label="`${shard.amount} шт`"/>
                                     <q-tooltip>
                                         {{ shard.name }}
                                     </q-tooltip>

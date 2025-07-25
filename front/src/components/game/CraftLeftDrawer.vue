@@ -2,6 +2,7 @@
 import {ref, computed} from 'vue';
 import {useGameStore} from "../../store/game.js";
 import {useCraftStore} from "../../store/craft.js";
+import {resourcesLib} from "../../database/resourcesLib.js";
 
 // Фильтры
 const selectedElement = ref({label: 'Любой', value: null});
@@ -100,7 +101,7 @@ const legendaryCount = computed(() => gameStore.inventoryShards.filter(s => s.ra
 const emit = defineEmits(['select-shard']);
 
 const selectShard = (shard) => {
-     if (selectedShards.value.some(s => s?.id === shard?.id)) {
+    if (selectedShards.value.some(s => s?.id === shard?.id)) {
         craftStore.selectShard(shard.shardType, null)
     } else {
         craftStore.selectShard(shard.shardType, Object.assign({}, shard))
@@ -192,7 +193,7 @@ const selectedShards = computed(() => craftStore.selectedShards)
                                 {{ shard.name }}
                             </q-tooltip>
                         </q-img>
-                        <q-badge class="absolute-bottom-right text-subtitle2" :label="`${shard.count} шт`"/>
+                        <q-badge class="absolute-bottom-right text-subtitle2" :label="`${shard.amount} шт`"/>
                     </q-card>
                 </div>
             </div>

@@ -11,6 +11,7 @@ import BattleRightDrawer from "../components/game/BattleRightDrawer.vue";
 import BattleLeftDrawer from "../components/game/BattleLeftDrawer.vue";
 import CraftLeftDrawer from "../components/game/CraftLeftDrawer.vue";
 import CraftRightDrawer from "../components/game/CraftRightDrawer.vue";
+import BattleOverDialog from "../components/game/BattleOverDialog.vue";
 
 const game = ref(null);
 const phaserContainer = ref(null);
@@ -97,14 +98,20 @@ onMounted(() => {
                         emit('update-right-drawer', BattleRightDrawer);
                         emit('update-header', BattleHeader);
                         break
-                    default:
+                    case 'Craft':
                         emit('update-footer', undefined);
                         emit('update-left-drawer', CraftLeftDrawer);
                         emit('update-right-drawer', CraftRightDrawer);
                         emit('update-header', BattleHeader);
+                        break;
+                    default:
+                        emit('update-footer', undefined);
+                        emit('update-left-drawer', undefined);
+                        emit('update-right-drawer', undefined);
+                        emit('update-header', BattleHeader);
                 }
                 gameStore.setScene(currentScene.scene);
-                emit('current-active-scene', 'Battle');
+                emit('current-active-scene', currentScene.scene.key);
             } catch (e) {
                 console.error('Error in current-scene-ready handler:', e);
             }
@@ -171,10 +178,15 @@ watchEffect(() => {
         }, 3000);
     }
 });
+
+// Конец битвы
+const battleOverData = computed(() => battleStore.battleOverData)
+const battleOverOpen = computed(() => battleStore.showBattleOverDialog)
 </script>
 
 <template>
     <q-page>
+        <BattleOverDialog :battle-data="battleOverData" v-model="battleOverOpen"/>
         <div id="game-container" :class="{ 'block-events': globalStore.dialogVisible }"></div>
     </q-page>
 </template>

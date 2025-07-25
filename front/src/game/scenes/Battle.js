@@ -210,6 +210,10 @@ export class Battle extends Scene {
         this.store.handleRound()
 
         let {activeCreature, availableActions, selectedActionId, effects} = this.store.getTurn()
+        if (!activeCreature) {
+            this.store.endTurn()
+            return this.handleStep()
+        }
         activeCreature.creatureSpriteContainer.setMonsterActive(true)
         // показывает произошедшие эффекты в начале раунда
         const timeline = this.add.timeline({});
@@ -273,8 +277,7 @@ export class Battle extends Scene {
                     this.store.battleState === BATTLE_STATE_BATTLE_OVER_WIN
                     || this.store.battleState === BATTLE_STATE_BATTLE_OVER_LOSE
                 ) {
-
-                    return this.scene.start('BattleOver');
+                    return this.store.generateBattleOverData();
                 }
                 this.handleStep()
             } else {
@@ -314,7 +317,7 @@ export class Battle extends Scene {
                 return
             }
 
-            if (this.selectedAction.action?.id !== actionObject.id) {
+            if (this.selectedAction?.action?.id !== actionObject.id) {
                 return
             }
 
@@ -332,7 +335,10 @@ export class Battle extends Scene {
 
         const targets = new Map
         this.store.availableActions.forEach((action) => {
-            if (action.action !== 'move' && this.selectedAction.action.id !== action.actionObject.id) {
+            if (!action) {
+                return
+            }
+            if (action.action !== 'move' && this.selectedAction?.action.id !== action.actionObject.id) {
                 return
             }
             action.targets.forEach(target => {
@@ -607,7 +613,8 @@ export class Battle extends Scene {
                 || this.store.battleState === BATTLE_STATE_BATTLE_OVER_LOSE
             ) {
 
-                return this.scene.start('BattleOver');
+                // return this.scene.start('BattleOver');
+                return this.store.generateBattleOverData();
             }
             this.store.activeCreature.creatureSpriteContainer.updateEffectsIcons()
             this.handleStep()
@@ -977,9 +984,9 @@ export class Battle extends Scene {
     handleAttackDirection(pointer) {
         if (
             !this.selectedAction
-            || !this.selectedAction.action
-            || !this.selectedAction.actionDirections
-            || this.selectedAction.action?.actionType !== 'melee'
+            || !this.selectedAction?.action
+            || !this.selectedAction?.actionDirections
+            || this.selectedAction?.action?.actionType !== 'melee'
         ) return;
 
         // Clear previous state
@@ -996,7 +1003,7 @@ export class Battle extends Scene {
             return
         }
 
-        const availableDirections = this.selectedAction.actionDirections[enemy.position.join(',')]
+        const availableDirections = this.selectedAction?.actionDirections[enemy.position.join(',')]
         if (!availableDirections) return;
 
         // Calculate attack direction
@@ -1030,7 +1037,7 @@ export class Battle extends Scene {
 
 
         // Get attack position
-        const positions = this.selectedAction.actionDirections[enemy.position.join(',')];
+        const positions = this.selectedAction?.actionDirections[enemy.position.join(',')];
         const attackPosition = this.getPositionInDirection(
             enemy.position,
             direction

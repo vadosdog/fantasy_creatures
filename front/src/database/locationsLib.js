@@ -11,7 +11,7 @@ export const locationsLib = {
             },
             {
                 id: 'academy_forge',
-                label: 'Кузница Осколков',
+                label: 'Кузня Осколков',
             },
             {
                 id: 'academy_library',
