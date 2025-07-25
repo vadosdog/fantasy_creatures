@@ -10,7 +10,8 @@ defineEmits(['update:modelValue']);
 
 const inventoryTabModel = ref('shards');
 const inventoryTabs = ref([
-    {label: 'Осколки', name: 'shards'}
+    {label: 'Осколки', name: 'shards'},
+    {label: 'Ресурсы', name: 'resources'},
 ]);
 
 // Фильтры
@@ -98,6 +99,7 @@ const filteredShards = computed(() => {
         return true;
     });
 });
+const resources = computed(() => gameStore.inventoryResources)
 
 // Статистика
 const totalShards = computed(() => gameStore.inventoryShards.length);
@@ -112,7 +114,7 @@ const legendaryCount = computed(() => gameStore.inventoryShards.filter(s => s.ra
         @update:model-value="val => $emit('update:modelValue', val)"
         class="text-primary-foreground"
     >
-        <q-card class="flex column">
+        <q-card class="flex column" style="width: 600px">
             <q-toolbar>
                 <q-tabs
                     v-model="inventoryTabModel"
@@ -203,7 +205,31 @@ const legendaryCount = computed(() => gameStore.inventoryShards.filter(s => s.ra
                                     <q-badge class="absolute-bottom-right text-subtitle2"
                                              :label="`${shard.amount} шт`"/>
                                     <q-tooltip>
-                                        {{ shard.name }}
+                                        <b>{{ shard.name }}</b>
+                                        <div v-if="shard.description">{{shard.description}}</div>
+                                    </q-tooltip>
+                                </q-card>
+                            </div>
+                        </div>
+                    </q-card-section>
+
+                </q-tab-panel>
+                <q-tab-panel name="resources" class="column no-padding">
+                    <q-card-section style="max-height: 50vh; min-height: 30vh" class="scroll">
+                        <!-- Сетка осколков -->
+                        <div class="row q-col-gutter-sm">
+                            <div
+                                v-for="(item, index) in resources"
+                                :key="index"
+                                class="col-xs-2"
+                            >
+                                <q-card class="">
+                                    <q-img :src="item.img" no-native-menu/>
+                                    <q-badge class="absolute-bottom-right text-subtitle2"
+                                             :label="`${item.amount} шт`"/>
+                                    <q-tooltip>
+                                        <b>{{ item.name }}</b>
+                                        <div v-if="item.description">{{item.description}}</div>
                                     </q-tooltip>
                                 </q-card>
                             </div>
@@ -214,7 +240,7 @@ const legendaryCount = computed(() => gameStore.inventoryShards.filter(s => s.ra
             </q-tab-panels>
             <q-card-section>
                 <!-- Статусная строка -->
-                <div class="row justify-between">
+                <div class="row justify-between" v-if="inventoryTabModel === 'shards'">
                     <div>Всего: {{ totalShards }}</div>
                     <div>Обычн: {{ commonCount }}</div>
                     <div>Редк: {{ rareCount }}</div>

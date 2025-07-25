@@ -19,6 +19,10 @@ export const useGameStore = defineStore('game', {
         },
         inventory: [
             {
+                id: 'gold',
+                amount: 1000,
+            },
+            {
                 id: 'craft_shard_fire_common',
                 amount: 9,
             },
@@ -1633,6 +1637,9 @@ export const useGameStore = defineStore('game', {
         },
         inventoryShards(state) {
             return state.inventoryObjects.filter(ii => ii.type === 'shard')
+        },
+        inventoryResources(state) {
+            return state.inventoryObjects.filter(ii => ii.type !== 'shard')
         },
         isLocationAvailable: (state) => (locationId) => {
             const location = locationsLib[locationId];
