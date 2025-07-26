@@ -19,50 +19,47 @@ export const useGameStore = defineStore('game', {
         },
         inventory: [
             {
-                id: 'gold',
-                amount: 1000,
-            },
-            {
                 id: 'craft_shard_fire_common',
-                amount: 9,
+                amount: 1,
             },
             {
                 id: 'craft_shard_water_common',
-                amount: 9,
+                amount: 1,
             },
             {
                 id: 'craft_shard_grass_common',
-                amount: 9,
+                amount: 1,
             },
             {
                 id: 'craft_shard_beast_common',
-                amount: 9,
+                amount: 1,
             },
             {
                 id: 'craft_shard_bird_common',
-                amount: 9,
+                amount: 1,
             },
             {
                 id: 'craft_shard_reptile_common',
-                amount: 9,
+                amount: 1,
             },
             {
                 id: 'craft_shard_rage_common',
-                amount: 9,
+                amount: 1,
             },
             {
                 id: 'craft_shard_hope_common',
-                amount: 9,
+                amount: 1,
             },
             {
                 id: 'craft_shard_passion_common',
-                amount: 9,
+                amount: 1,
             },
         ],
         knownCreatures: [
             '001',
         ],
-        creatures: [
+        creatures: [],
+        bCreatures: [
             {
                 "name": "Пирохват",
                 "number": "001",

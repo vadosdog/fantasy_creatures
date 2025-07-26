@@ -28,11 +28,16 @@ export class Craft extends Phaser.Scene {
 
         // Подписываемся на изменения хранилища
         this.unsubscribe = craftStore.$subscribe(() => {
-            this.updateSlotsFromStore();
+            if (this.scene && this.scene.isActive()) { // Проверяем активность сцены
+                this.updateSlotsFromStore();
+            }
         });
 
         // Первоначальное обновление слотов
         this.updateSlotsFromStore();
+        
+        // Добавляем обработчик для безопасного уничтожения
+        this.game.events.on('before-destroy', this.safeDestroy, this);
     }
 
     createUI() {
@@ -44,6 +49,9 @@ export class Craft extends Phaser.Scene {
         this.uiElements.instruction = this.createInstructionPanel(centerX, height * 0.05, width * 0.8);
         this.uiElements.slots = this.createSlotsArea(centerX, height * 0.4);
         this.uiElements.bottomPanel = this.createBottomPanel(centerX, height * 0.85, width * 0.8);
+
+        // Останавливаем анимации для всех компонентов
+        this.tweens.killTweensOf(this.components);
     }
 
     clearUI() {
@@ -308,13 +316,13 @@ export class Craft extends Phaser.Scene {
                     yoyo: true,
                     duration: 300,
                     onComplete: () => {
-                        
+
                         // Вызываем метод из хранилища
                         const newCreature = craftStore.createNewCreature()
 
                         this.resetSlots();
                         this.updateCraftButton()
-                        
+
                         flash.destroy()
                     }
                 });
@@ -375,6 +383,11 @@ export class Craft extends Phaser.Scene {
 
     // Новый метод: добавление осколка в слот
     addShardToSlot(slot, shardData) {
+        if (!this.scene || !this.scene.isActive()) return;
+
+        if (slot?.shard?.texture?.key === shardData?.texture) {
+            return
+        }
         // Очищаем предыдущие данные слота
         this.clearSlot(slot);
 
@@ -431,11 +444,53 @@ export class Craft extends Phaser.Scene {
         slot.placeholder.visible = true;
     }
 
+    safeDestroy() {
+        try {
+            // 1. Останавливаем все анимации
+            this.tweens.tweens.forEach(tween => {
+                try {
+                    tween.stop();
+                    tween.remove();
+                } catch (tweenError) {
+                    console.warn('Error removing tween:', tweenError);
+                }
+            });
+
+            // 2. Отписываемся от событий
+            this.scale.off('resize', this.handleResize, this);
+
+            // 3. Отписываемся от хранилища
+            if (this.unsubscribe) {
+                try {
+                    this.unsubscribe();
+                } catch (unsubscribeError) {
+                    console.warn('Error unsubscribing:', unsubscribeError);
+                }
+                this.unsubscribe = null;
+            }
+
+            // 4. Очищаем все объекты
+            this.clearUI();
+            this.slots = [];
+
+            // 5. Освобождаем ресурсы
+            if (this.energyLines) {
+                this.energyLines.destroy();
+                this.energyLines = null;
+            }
+
+            if (this.particles) {
+                this.particles.destroy();
+                this.particles = null;
+            }
+        } catch (error) {
+            console.error('Craft safeDestroy error:', error);
+        }
+    }
+    
     // Добавляем обработчик уничтожения сцены
     destroy() {
-        if (this.unsubscribe) {
-            this.unsubscribe(); // Отписываемся от хранилища
-        }
+        this.safeDestroy();
         super.destroy();
     }
 }

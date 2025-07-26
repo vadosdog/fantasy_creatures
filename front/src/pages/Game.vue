@@ -12,13 +12,76 @@ import BattleLeftDrawer from "../components/game/BattleLeftDrawer.vue";
 import CraftLeftDrawer from "../components/game/CraftLeftDrawer.vue";
 import CraftRightDrawer from "../components/game/CraftRightDrawer.vue";
 import BattleOverDialog from "../components/game/BattleOverDialog.vue";
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const game = ref(null);
 const phaserContainer = ref(null);
+const gameIsInitialized = ref(false);
 const emit = defineEmits(['current-active-scene', 'update-footer', 'update-right-drawer', 'update-left-drawer', 'update-header']);
 
 const gameStore = useGameStore();
 const globalStore = useGlobalStore();
+
+const safeDestroyGame = () => {
+    if (!game.value) return;
+
+    try {
+        // 1. Останавливаем все анимации и таймеры
+        game.value.events.emit('destroy');
+
+        // 2. Останавливаем игровой цикл
+        if (game.value.loop && game.value.loop.running) {
+            game.value.loop.stop();
+        }
+
+        // 3. Уничтожаем все сцены
+        const scenes = game.value.scene.getScenes(true);
+        scenes.forEach(scene => {
+            if (scene.scene && scene.scene.key) {
+                try {
+                    scene.scene.stop();
+                    scene.scene.destroy();
+                } catch (sceneError) {
+                    console.warn('Error destroying scene:', sceneError);
+                }
+            }
+        });
+
+        // 4. Уничтожаем рендерер
+        if (game.value.renderer) {
+            try {
+                game.value.renderer.destroy();
+            } catch (rendererError) {
+                console.warn('Error destroying renderer:', rendererError);
+            }
+        }
+
+        // 5. Уничтожаем основной экземпляр игры
+        try {
+            game.value.destroy(true);
+        } catch (destroyError) {
+            console.warn('Error destroying game:', destroyError);
+        }
+
+        // 6. Удаляем canvas вручную
+        const container = document.getElementById('game-container');
+        if (container) {
+            const canvas = container.querySelector('canvas');
+            if (canvas) {
+                canvas.remove();
+            }
+        }
+
+        game.value = null;
+    } catch (mainError) {
+        console.error('Safe destroy error:', mainError);
+    } finally {
+        gameStore.setGame(null);
+        gameStore.setScene(null);
+        gameIsInitialized.value = false;
+    }
+};
 
 // Защищённый watcher с обработкой ошибок
 watch(() => globalStore.dialogVisible, (newVal) => {
@@ -79,9 +142,25 @@ watch(activeAction, (newValue) => {
 
 onMounted(() => {
     try {
-        game.value = StartGame('game-container');
-        gameStore.setGame(game)
-        phaserContainer.value = document.getElementById('game-container');
+        safeDestroyGame();
+
+        const container = document.getElementById('game-container');
+        if (container) {
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+        }
+
+        // Создаем новый элемент для игры
+        const gameContainer = document.createElement('div');
+        gameContainer.id = 'game-canvas-container';
+        container.appendChild(gameContainer);
+
+        game.value = StartGame('game-canvas-container');
+        gameStore.setGame(game.value);
+        gameIsInitialized.value = true;
+
+        phaserContainer.value = container;
 
         // Добавляем глобальный обработчик событий
         if (phaserContainer.value) {
@@ -121,23 +200,28 @@ onMounted(() => {
     }
 });
 
-onUnmounted(() => {
-    try {
+// Добавляем обработчик для роутера
+router.beforeEach((to, from, next) => {
+    if (gameIsInitialized.value) {
+        // Отправляем событие для корректного завершения работы
         if (game.value) {
-            game.value.destroy(true);
-            game.value = null;
+            game.value.events.emit('before-destroy');
         }
-        gameStore.setGame(null)
-        gameStore.setScene(null)
+        safeDestroyGame();
+    }
+    next();
+});
 
-        if (phaserContainer.value) {
-            phaserContainer.value.removeEventListener('pointerdown', handlePointerEvent, true);
-            phaserContainer.value.removeEventListener('pointerup', handlePointerEvent, true);
-        }
+onUnmounted(() => {
+    safeDestroyGame();
 
-        EventBus.off('current-scene-ready');
-    } catch (error) {
-        console.error('Game component unmount error:', error);
+    // Очищаем EventBus
+    EventBus.off('current-scene-ready');
+
+    // Удаляем обработчики событий
+    if (phaserContainer.value) {
+        phaserContainer.value.removeEventListener('pointerdown', handlePointerEvent, true);
+        phaserContainer.value.removeEventListener('pointerup', handlePointerEvent, true);
     }
 });
 
@@ -187,7 +271,9 @@ const battleOverOpen = computed(() => battleStore.showBattleOverDialog)
 <template>
     <q-page>
         <BattleOverDialog :battle-data="battleOverData" v-model="battleOverOpen"/>
-        <div id="game-container" :class="{ 'block-events': globalStore.dialogVisible }"></div>
+        <div id="game-container" :class="{ 'block-events': globalStore.dialogVisible }">
+            <!-- Canvas будет создан здесь -->
+        </div>
     </q-page>
 </template>
 
@@ -205,6 +291,17 @@ const battleOverOpen = computed(() => battleStore.showBattleOverDialog)
     height: 100%;
     max-height: calc(100vh - 60px);
     background-color: #282C34;
+}
+
+/* Добавляем изоляцию для WebGL */
+#game-canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    contain: strict;
+    isolation: isolate;
 }
 
 .block-events {

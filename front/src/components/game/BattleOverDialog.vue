@@ -92,6 +92,7 @@ onMounted(() => {
 
 // Действия
 function exitBattle() {
+    battleStore.hideShowBattleOverDialog()
     router.push('/world')
     applyRewards()
 }
@@ -117,7 +118,7 @@ function applyRewards() {
             gameStore.addInventoryItem(resource)
         }
     }
-    
+
     if (props.battleData.rewards.experience) {
         for (const id of Object.keys(props.battleData.rewards.experience)) {
             gameStore.addCreatureExperience(id, props.battleData.rewards.experience[id])
@@ -232,29 +233,29 @@ function applyRewards() {
                         @click="exitBattle"
                     />
 
-<!--                    <q-btn-->
-<!--                        label="Повторить бой"-->
-<!--                        color="secondary"-->
-<!--                        icon="replay"-->
-<!--                        class="px-5 py-2 text-base min-w-[180px]"-->
-<!--                        @click="restartBattle"-->
-<!--                    />-->
+                    <!--                    <q-btn-->
+                    <!--                        label="Повторить бой"-->
+                    <!--                        color="secondary"-->
+                    <!--                        icon="replay"-->
+                    <!--                        class="px-5 py-2 text-base min-w-[180px]"-->
+                    <!--                        @click="restartBattle"-->
+                    <!--                    />-->
 
-<!--                    <q-btn-->
-<!--                        label="Статистика"-->
-<!--                        color="accent"-->
-<!--                        icon="analytics"-->
-<!--                        class="px-5 py-2 text-base min-w-[180px]"-->
-<!--                        @click="showStatistics"-->
-<!--                    />-->
+                    <!--                    <q-btn-->
+                    <!--                        label="Статистика"-->
+                    <!--                        color="accent"-->
+                    <!--                        icon="analytics"-->
+                    <!--                        class="px-5 py-2 text-base min-w-[180px]"-->
+                    <!--                        @click="showStatistics"-->
+                    <!--                    />-->
 
-<!--                    <q-btn-->
-<!--                        label="Поле битвы"-->
-<!--                        color="muted"-->
-<!--                        icon="map"-->
-<!--                        class="px-5 py-2 text-base min-w-[180px]"-->
-<!--                        @click="showBattlefield"-->
-<!--                    />-->
+                    <!--                    <q-btn-->
+                    <!--                        label="Поле битвы"-->
+                    <!--                        color="muted"-->
+                    <!--                        icon="map"-->
+                    <!--                        class="px-5 py-2 text-base min-w-[180px]"-->
+                    <!--                        @click="showBattlefield"-->
+                    <!--                    />-->
                 </div>
             </div>
         </div>
@@ -291,6 +292,7 @@ function applyRewards() {
 .q-dialog__inner--minimized > div {
     animation: none !important;
 }
+
 .mirror {
     transform: scaleX(-1);
 }

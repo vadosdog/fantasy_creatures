@@ -86,6 +86,9 @@ export class Battle extends Scene {
         });
 
         this.input.on('pointermove', this.handleAttackDirection.bind(this));
+        
+        // Добавляем обработчик для безопасного уничтожения
+        this.game.events.on('before-destroy', this.safeDestroy, this);
     }
 
     resize(gameSize) {
@@ -1102,5 +1105,91 @@ export class Battle extends Scene {
                 position: null
             };
         }
+    }
+
+    safeDestroy() {
+        try {
+            // 1. Отписываемся от событий
+            this.scale.off('resize', this.resize, this);
+            this.input.off('pointermove', this.handleAttackDirection, this);
+
+            // 2. Останавливаем все анимации
+            this.tweens.tweens.forEach(tween => {
+                try {
+                    tween.stop();
+                    tween.remove();
+                } catch (tweenError) {
+                    console.warn('Error removing tween:', tweenError);
+                }
+            });
+
+            // 3. Уничтожаем все графические элементы
+            if (this.hexagonGroup) {
+                this.hexagonGroup.destroy(true);
+                this.hexagonGroup = null;
+            }
+
+            // 4. Очищаем массив гексов
+            this.hexagonsArray.clear();
+
+            // 5. Уничтожаем кнопки
+            this.buttons.forEach(button => {
+                try {
+                    button.destroy(true);
+                } catch (buttonError) {
+                    console.warn('Error destroying button:', buttonError);
+                }
+            });
+            this.buttons = [];
+
+            // 6. Уничтожаем индикатор атаки
+            this.clearAttackIndicator();
+
+            // 7. Уничтожаем существа
+            Object.values(this.store.creatures).forEach(creature => {
+                if (creature.creatureSpriteContainer) {
+                    try {
+                        creature.creatureSpriteContainer.destroy(true);
+                        creature.creatureSpriteContainer = null;
+                    } catch (creatureError) {
+                        console.warn('Error destroying creature:', creatureError);
+                    }
+                }
+            });
+
+            // 8. Уничтожаем фон
+            if (this.battleground) {
+                try {
+                    this.battleground.destroy();
+                } catch (bgError) {
+                    console.warn('Error destroying background:', bgError);
+                }
+                this.battleground = null;
+            }
+
+            if (this.backLand) {
+                try {
+                    this.backLand.destroy();
+                } catch (bgError) {
+                    console.warn('Error destroying back land:', bgError);
+                }
+                this.backLand = null;
+            }
+
+            // 9. Очищаем временные данные
+            this.hoveredCreature = null;
+            this.currentAttack = {
+                enemyId: null,
+                direction: null,
+                position: null
+            };
+        } catch (mainError) {
+            console.error('Battle safeDestroy error:', mainError);
+        }
+    }
+
+    destroy() {
+        this.safeDestroy();
+        super.destroy();
     }
 }

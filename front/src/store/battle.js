@@ -839,6 +839,9 @@ export const useBattleStore = defineStore('battle', {
                     // trophies: ['Редкий артефакт', 'Знак отличия']
                 }
             }
+        },
+        hideShowBattleOverDialog(){
+            this.showBattleOverDialog = false
         }
 
     },
