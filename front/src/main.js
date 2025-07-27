@@ -3,7 +3,8 @@ import {createApp} from 'vue';
 import {createMemoryHistory, createRouter} from "vue-router";
 import routes from "./router/routes.js";
 import {createPinia} from 'pinia';
-import quasarLang from 'quasar/lang/ru'
+import quasarLang from 'quasar/lang/ru';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import {
     ClosePopup,
     QAvatar, QBadge,
@@ -32,6 +33,7 @@ const router = createRouter({
 })
 
 const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
 
 const app = createApp(App);
 app.use(router)

@@ -7,6 +7,9 @@ import {resourcesLib} from "../database/resourcesLib.js";
 import {Notify} from "quasar";
 
 export const useGameStore = defineStore('game', {
+    persist: {
+        storage: localStorage
+    },
     state: () => ({
         game: undefined,
         currentSceneName: undefined,
