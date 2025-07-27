@@ -50,16 +50,16 @@ export const useBattleLogStore = defineStore('battleLog', {
                         case 'attack':
                             if (logElement.damage > 0) {
 
-                                result[logElement.actor.id] += Math.round(logElement.damage / 10 * (1 + 0.01 * logElement.target.level))
+                                result[logElement.actor.id] += Math.round(logElement.damage * (1 + 0.01 * logElement.target.level))
                             }
                             break
                         case 'treat':
                             if (logElement.damage > 0) {
-                                result[logElement.actor.id] += Math.round(logElement.damage / 8 * (1 + 0.01 * logElement.target.level))
+                                result[logElement.actor.id] += Math.round(logElement.damage * 1.25 * (1 + 0.01 * logElement.target.level))
                             }
                             break
                         case 'pushEffect':
-                            result[logElement.actor.id] += Math.round(5 * (1 + 0.01 * logElement.target.level))
+                            result[logElement.actor.id] += Math.round(50 * (1 + 0.01 * logElement.target.level))
                             break
                     }
                 }

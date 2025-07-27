@@ -15,7 +15,7 @@ const options = computed(() => gameStore.currentLocation.options)
 const isInDialog = computed(() => !!gameStore.currentDialogNpc)
 const battleStore = useBattleStore()
 
-const selectedCreature = computed(() => gameStore.selectedLibraryCreature)
+const selectedCreatureId = computed(() => gameStore.selectedLibraryCreatureId)
 
 // Опции фильтров
 const elementOptions = [
@@ -88,8 +88,8 @@ const filteredCreatures = computed(() => {
     });
 });
 
-const selectCreature = (creature) => {
-    gameStore.selectLibraryCreature(creature)
+const selectCreature = (id) => {
+    gameStore.selectLibraryCreatureId(id)
 }
 
 </script>
@@ -161,8 +161,8 @@ const selectCreature = (creature) => {
                             v-for="(creature, index) in filteredCreatures"
                             :key="creature.id"
                             :creature="creature"
-                            :active="selectedCreature?.id === creature.id"
-                            @click="selectCreature(creature)"
+                            :active="selectedCreatureId === creature.id"
+                            @click="selectCreature(creature.id)"
                             direction="right"
                         />
                     </q-list>

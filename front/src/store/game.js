@@ -1604,7 +1604,7 @@ export const useGameStore = defineStore('game', {
         },
 
         // Просто вспомогательная переменная для выбора существа для прокачки в библиотеке
-        selectedLibraryCreature: null,
+        selectedLibraryCreatureId: null,
     }),
     getters: {
         inventoryObjects(state) {
@@ -1690,20 +1690,24 @@ export const useGameStore = defineStore('game', {
         },
 
         addCreature(creatureData) {
-            this.creatures.push(creatureData)
+            this.creatures = [...this.creatures, creatureData];
             if (!this.knownCreatures.includes(creatureData.number)) {
-                this.knownCreatures.push(creatureData.number);
+                this.knownCreatures = [...this.knownCreatures, creatureData.number];
             }
         },
         inventoryRemove(itemId, amount = 1) {
-            const index = this.inventory.findIndex(ii => ii.id === itemId)
-            if (index === -1) {
-                return
-            }
+            const index = this.inventory.findIndex(ii => ii.id === itemId);
+            if (index === -1) return;
 
-            this.inventory[index].amount -= amount
-            if (this.inventory[index].amount <= 0) {
-                this.inventory.splice(index, 1)
+            const item = this.inventory[index];
+            if (item.amount <= amount) {
+                // Удаляем элемент — создаём новый массив
+                this.inventory = this.inventory.filter(i => i.id !== itemId);
+            } else {
+                // Обновляем количество — создаём новый объект
+                this.inventory = this.inventory.map(i =>
+                    i.id === itemId ? { ...i, amount: i.amount - amount } : i
+                );
             }
         },
         setFlag(flag, value) {
@@ -1718,26 +1722,27 @@ export const useGameStore = defineStore('game', {
             }
         },
         addInventoryItem({id, amount}) {
-            const index = this.inventory.findIndex(ii => ii.id === id)
+            const index = this.inventory.findIndex(ii => ii.id === id);
             if (index === -1) {
-                this.inventory.push({id, amount});
+                this.inventory = [...this.inventory, { id, amount }];
             } else {
-                this.inventory[index].amount += amount
+                this.inventory = this.inventory.map(i =>
+                    i.id === id ? { ...i, amount: i.amount + amount } : i
+                );
             }
 
-            const resourceItem = resourcesLib[id]
-            if (!resourceItem) {
-                return
+            const resourceItem = resourcesLib[id];
+            if (resourceItem) {
+                Notify.create({
+                    html: true,
+                    message: `<img src="${resourceItem.img}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;"> +${amount} ${resourceItem.name}`,
+                    position: 'top-right',
+                    timeout: 3000,
+                    closeBtn: true,
+                    color: 'white',
+                    textColor: 'dark',
+                });
             }
-            Notify.create({
-                html: true, // ВАЖНО: разрешаем HTML в иконке
-                message: `<img src="${resourceItem.img}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;"> +${amount} ${resourceItem.name}`,
-                position: 'top-right',
-                timeout: 3000, // исчезнет через 3 секунды
-                closeBtn: true,
-                color: 'white',
-                textColor: 'dark',
-            });
         },
         addCreatureExperience(id, exp) {
             // Находим объект по id
@@ -1809,37 +1814,45 @@ export const useGameStore = defineStore('game', {
         setState(newState) {
             this.currentState = newState;
         },
-        creatureLevelUp(creature) {
-            let index = this.creatures.findIndex(({id}) => id === creature.id)
-            if (index === -1) {
-                return
-            }
+        creatureLevelUp(creatureId) {
+            const index = this.creatures.findIndex(c => c.id === creatureId);
+            console.log(index,creatureId)
+            
+            if (index === -1) return;
 
-            creature = this.creatures[index]
+            const creature = this.creatures[index];
+            const levelCost = 50 + 10 * Math.floor(creature.level / 3);
 
-            const levelCost = 50 + 10 * Math.floor(creature.level / 3)
             if (!this.hasInventoryItem('memory_shard', levelCost)) {
-                return
+                return;
             }
 
+            // Рассчитываем новые значения
+            const newLevel = creature.level + 1;
+            const levelModifier = 1 + 0.03 * (newLevel - 1);
 
-            creature.level++
-            this.inventoryRemove('memory_shard', levelCost)
+            // Создаём новый объект с новыми значениями
+            const updatedCreature = {
+                ...creature,
+                level: newLevel,
+                maxHealthStat: Math.round(creature.baseMaxHealthStat * levelModifier) + (creature.manualMaxHealthStat || 0),
+                attackStat: Math.round(creature.baseAttackStat * levelModifier) + (creature.manualAttackStat || 0),
+                defenseStat: Math.round(creature.baseDefenseStat * levelModifier) + (creature.manualDefenseStat || 0),
+                willStat: Math.round(creature.baseWillStat * levelModifier) + (creature.manualWillStat || 0),
+                initiativeStat: Math.round(creature.baseInitiativeStat * levelModifier) + (creature.manualInitiativeStat || 0),
+                maxPP: Math.round(creature.baseMaxPP * levelModifier) + (creature.manualMaxPP || 0),
+                ppRegen: Math.round(creature.basePpRegen * levelModifier) + (creature.manualPpRegen || 0),
+                manualPoints: (creature.manualPoints || 0) + 4,
+            };
 
-            const levelModifier = 1 + 0.03 * (creature.level - 1);
-            creature.maxHealthStat = Math.round(creature.baseMaxHealthStat * levelModifier) + (creature.manualMaxHealthStat || 0);
-            creature.attackStat = Math.round(creature.baseAttackStat * levelModifier) + (creature.manualAttackStat || 0);
-            creature.defenseStat = Math.round(creature.baseDefenseStat * levelModifier) + (creature.manualDefenseStat || 0);
-            creature.willStat = Math.round(creature.baseWillStat * levelModifier) + (creature.manualWillStat || 0);
-            creature.initiativeStat = Math.round(creature.baseInitiativeStat * levelModifier) + (creature.manualInitiativeStat || 0);
-            creature.maxPP = Math.round(creature.baseMaxPP * levelModifier) + (creature.manualMaxPP || 0);
-            creature.ppRegen = Math.round(creature.basePpRegen * levelModifier) + (creature.manualPpRegen || 0);
+            // Заменяем в массиве
+            this.creatures = this.creatures.map(c => c.id === creatureId ? updatedCreature : c);
 
-            if (!creature.manualPoints) {
-                creature.manualPoints = 4
-            } else {
-                creature.manualPoints += 4
-            }
+            // Тратим ресурс
+            this.inventoryRemove('memory_shard', levelCost);
+
+            // Теперь сохранение будет работать
+            this.$persist();
         },
         upgradeStat(creature, statKey) {
             const manualKey = `manual${statKey.charAt(0).toUpperCase() + statKey.slice(1)}`;
@@ -1871,28 +1884,40 @@ export const useGameStore = defineStore('game', {
             creature[statKey] = Math.round(
                 baseValue * (1 + 0.03 * (level - 1)) + manualValue
             );
+
+            // Вызываем сохранение стор ручками
+            this.$persist()
         },
-        toggleSkill(creature, skill) {
-            let index = this.creatures.findIndex(({id}) => id === creature.id)
-            if (index === -1) {
-                return
+        toggleSkill(creatureId, skill) {
+            const creatureIndex = this.creatures.findIndex(c => c.id === creatureId);
+            if (creatureIndex === -1) return;
+
+            const creature = this.creatures[creatureIndex];
+            const exists = creature.actions.some(a => a.id === skill.id);
+
+            let newActions;
+            if (exists) {
+                newActions = creature.actions.filter(a => a.id !== skill.id);
+            } else {
+                newActions = [...creature.actions, skill];
+                if (newActions.length > 4) {
+                    newActions = newActions.slice(1);
+                }
             }
 
-            creature = this.creatures[index]
+            // Создаём новый объект существа
+            const updatedCreature = {
+                ...creature,
+                actions: newActions
+            };
 
+            // Заменяем в массиве
+            this.creatures = this.creatures.map(c => c.id === creatureId ? updatedCreature : c);
 
-            const exists = creature.actions.some(action => action.id === skill.id);
-            if (exists) {
-                // Удаляем по id
-                creature.actions = creature.actions.filter(item => item.id !== skill.id);
-            } else {
-                // Если уже 4 элемента — удаляем первый, добавляем новый в конец
-                const newArray = [...creature.actions, skill];
-                creature.actions = newArray.length > 4 ? newArray.slice(1) : newArray;
-            }                      // добавляем
+            this.$persist();
         },
-        selectLibraryCreature(creature) {
-            this.selectedLibraryCreature = creature
+        selectLibraryCreatureId(id) {
+            this.selectedLibraryCreatureId = id
         }
     },
 });

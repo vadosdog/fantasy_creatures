@@ -102,7 +102,6 @@ export const useCraftStore = defineStore('craft', {
                 }
             }
 
-            console.log(newCreature, diffs)
 
             newCreature = calcCreatureStats(newCreature)
             newCreature.actions = getActionsByLevel(
@@ -116,13 +115,17 @@ export const useCraftStore = defineStore('craft', {
             gameStore.inventoryRemove(this.selectedShape.id)
             gameStore.inventoryRemove(this.selectedEmotion.id)
             gameStore.addCreature(newCreature)
-
+            
             this.selectedElement = null
             this.selectedShape = null
             this.selectedEmotion = null
 
 
             this.createdCreature = newCreature;
+
+            // Вызываем сохранение стор ручками
+            gameStore.$persist();
+            
             return newCreature
         },
     },

@@ -22,7 +22,7 @@ onMounted(() => {
 
 const gameStore = useGameStore()
 
-const selectedCreature = computed(() => gameStore.selectedLibraryCreature);
+const selectedCreature = computed(() => gameStore.creatures.find(creature => creature.id === gameStore.selectedLibraryCreatureId));
 
 const selectedSkills = computed(() => selectedCreature.value.actions.map(({id}) => id)); // Выбранные навыки
 
@@ -161,11 +161,11 @@ function levelUp() {
         })
     }
 
-    return gameStore.creatureLevelUp(selectedCreature.value)
+    return gameStore.creatureLevelUp(selectedCreature.value?.id)
 }
 
 function toggleSkill(skill) {
-    return gameStore.toggleSkill(selectedCreature.value, skill)
+    return gameStore.toggleSkill(selectedCreature.value?.id, skill)
 }
 
 // Вспомогательные функции из CreaturesDialog.vue
@@ -284,9 +284,14 @@ evolutionGroups.forEach(group => {
 });
 
 // Выбор группы
-function selectCreature(creature) {
-    gameStore.selectedLibraryCreature = creature;
+function selectCreature(id) {
+    gameStore.selectLibraryCreatureId(id);
 }
+
+const nextLevelExperience = computed(() => {
+    // в теории может быть разные для разных существ
+    return (selectedCreature.value.level - 4) * 600
+})
 
 const maxLevel = computed(() => {
     // в теории может быть разные для разных существ
@@ -311,6 +316,8 @@ function getActionTypeLabel(action) {
 
     return {"melee": 'Ближняя атака', 'ranged': 'Дистанционная атака', 'treat': 'Лечение/Бафы'}[action.actionType]
 }
+
+const levelUpButtonLabel = computed(() => selectedCreature.value.level < maxLevel.value ? 'Повысить: '+ levelCost.value + ' ОП' : (selectedCreature.value.level === 30 ? 'MAX' : `Требуется ${nextLevelExperience.value} ЭБ`))
 
 </script>
 <template>
@@ -360,7 +367,7 @@ function getActionTypeLabel(action) {
                             <q-space/>
 
                             <q-btn
-                                :label="selectedCreature.level >= maxLevel ? 'MAX' : 'Повысить: '+ levelCost + ' ОП'"
+                                :label="levelUpButtonLabel"
                                 color="primary"
                                 icon="arrow_upward"
                                 @click="levelUp"
@@ -533,7 +540,7 @@ function getActionTypeLabel(action) {
                 >
                     <q-card
                         class="evolution-group-card cursor-pointer"
-                        @click="group.maxCreature && selectCreature(group.maxCreature)"
+                        @click="group.maxCreature && selectCreature(group.maxCreature.id)"
                     >
                         <div class="relative-position" style="height: 200px">
                             <!-- Предыдущие известные эволюции -->

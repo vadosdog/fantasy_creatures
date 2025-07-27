@@ -791,8 +791,8 @@ export const useBattleStore = defineStore('battle', {
                     enemyCraftShards.push('craft_shard_' + enemy.element + '_common')
                     enemyCraftShards.push('craft_shard_' + enemy.shape + '_common')
                 })
-                const guaranteedCount = Math.round(this.rightTeam.length * avgLevel)
-                const randomShardsCount = Math.floor(Math.random() * avgLevel / 3)
+                const guaranteedCount = Math.round(this.rightTeam.length)
+                const randomShardsCount = Math.floor(Math.random() / 3)
 
                 // Выбираем случайных элементов из enemyCraftShards с удалением
                 for (let i = 0; i < guaranteedCount && enemyCraftShards.length > 0; i++) {
