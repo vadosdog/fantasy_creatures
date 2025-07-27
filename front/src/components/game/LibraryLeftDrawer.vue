@@ -96,6 +96,14 @@ const selectCreature = (creature) => {
 
 <template>
     <div class="flex flex-col h-full">
+        <div class="text-accent-foreground" style="max-width: 350px">
+            <q-list bordered separator>
+                <q-item clickable v-ripple
+                        to="world">
+                    <q-item-section>Выйти</q-item-section>
+                </q-item>
+            </q-list>
+        </div>
         <!-- Заголовок -->
         <div class="font-oldstandardtt q-px-md q-pt-md text-primary-foreground">
             Ваши существа
@@ -153,7 +161,7 @@ const selectCreature = (creature) => {
                             v-for="(creature, index) in filteredCreatures"
                             :key="creature.id"
                             :creature="creature"
-                            :active="selectedCreature.id === creature.id"
+                            :active="selectedCreature?.id === creature.id"
                             @click="selectCreature(creature)"
                             direction="right"
                         />

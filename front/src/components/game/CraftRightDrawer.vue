@@ -55,14 +55,14 @@ const visibleStats = computed(() => {
     }
 
     const result = [
-        {label: 'Здоровье', name: 'maxHealthStat', value: '???'},
-        {label: 'Атака', name: 'attackStat', value: '???'},
-        {label: 'Защита', name: 'defenseStat', value: '???'},
-        {label: 'Воля', name: 'willStat', value: '???'},
-        {label: 'Инициатива', name: 'initiativeStat', value: '???'},
-        {label: 'Скорость', name: 'speedStat', value: '???'},
-        {label: 'PP', name: 'maxPP', value: '???'},
-        {label: 'Регенерация PP', name: 'ppRegen', value: '???'},
+        {label: 'Здоровье', name: 'baseMaxHealthStat', value: '???'},
+        {label: 'Атака', name: 'baseAttackStat', value: '???'},
+        {label: 'Защита', name: 'baseDefenseStat', value: '???'},
+        {label: 'Воля', name: 'baseWillStat', value: '???'},
+        {label: 'Инициатива', name: 'baseInitiativeStat', value: '???'},
+        {label: 'Скорость', name: 'baseSpeedStat', value: '???'},
+        {label: 'PP', name: 'baseMaxPP', value: '???'},
+        {label: 'Регенерация PP', name: 'basePpRegen', value: '???'},
     ];
 
 

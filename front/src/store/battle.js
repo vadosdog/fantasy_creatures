@@ -764,7 +764,7 @@ export const useBattleStore = defineStore('battle', {
                     id: 'gold', amount: gold,
                 })
             }
-            const memoryShards = Math.round(avgLevel * this.rightTeam.length * (0.7 + Math.random() * 0.2))
+            const memoryShards = Math.round(10 * avgLevel * this.rightTeam.length * (0.7 + Math.random() * 0.2))
             if (memoryShards > 0) {
                 resources.push({
                     id: 'memory_shard', amount: memoryShards,

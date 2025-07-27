@@ -379,7 +379,7 @@ function getActionTypeLabel(action) {
                     <div class="text-h6 q-mb-md">Характеристики</div>
 
                     <q-badge color="primary absolute-top-right q-ma-md">
-                        Осколки Памяти (ОП): {{ selectedCreature.manualPoints || 0 }}
+                        Сила Пробуждения (СП): {{ selectedCreature.manualPoints || 0 }}
                     </q-badge>
 
                     <!-- Таблица характеристик -->
@@ -522,7 +522,7 @@ function getActionTypeLabel(action) {
         </div>
         <div v-else class="q-pa-md">
             <!-- Заголовок -->
-            <div class="text-h4 q-mb-md">Коллекция существ</div>
+            <div class="text-h4 q-mb-md text-foreground">Коллекция существ</div>
 
             <!-- Сетка групп существ -->
             <div class="row q-col-gutter-lg">

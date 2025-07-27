@@ -20,7 +20,7 @@ export const useGameStore = defineStore('game', {
         inventory: [
             {
                 id: 'memory_shard',
-                amount: 600,
+                amount: 0,
             },
             {
                 id: 'craft_shard_fire_common',
@@ -62,10 +62,8 @@ export const useGameStore = defineStore('game', {
         knownCreatures: [
             '001',
         ],
-        creatures: [
-
-            // ],
-            // bCreatures: [
+        creatures: [],
+        bCreatures: [
             {
                 "name": "Пирохват",
                 "number": "001",
@@ -1601,7 +1599,7 @@ export const useGameStore = defineStore('game', {
         dialogProgress: {
             dragomir: {}
         },
-        
+
         // Просто вспомогательная переменная для выбора существа для прокачки в библиотеке
         selectedLibraryCreature: null,
     }),
@@ -1809,18 +1807,18 @@ export const useGameStore = defineStore('game', {
             this.currentState = newState;
         },
         creatureLevelUp(creature) {
-            let index = this.creatures.findIndex(({id}) => id, creature.id)
+            let index = this.creatures.findIndex(({id}) => id === creature.id)
             if (index === -1) {
                 return
             }
-            
+
             creature = this.creatures[index]
 
             const levelCost = 50 + 10 * Math.floor(creature.level / 3)
             if (!this.hasInventoryItem('memory_shard', levelCost)) {
                 return
             }
-            
+
 
             creature.level++
             this.inventoryRemove('memory_shard', levelCost)
@@ -1844,18 +1842,18 @@ export const useGameStore = defineStore('game', {
             const manualKey = `manual${statKey.charAt(0).toUpperCase() + statKey.slice(1)}`;
             // Обновляем итоговое значение
             const baseKey = `base${statKey.charAt(0).toUpperCase() + statKey.slice(1)}`;
-            
-            let index = this.creatures.findIndex(({id}) => id, creature.id)
+
+            let index = this.creatures.findIndex(({id}) => id === creature.id)
             if (index === -1) {
                 return
             }
 
             creature = this.creatures[index]
-            
+
             if ((creature.manualPoints || 0) <= 0 || creature[manualKey] >= 100) {
                 return
             }
-            
+
             // Увеличиваем ручное значение характеристики
             creature[manualKey] = (creature[manualKey] || 0) + 1;
 

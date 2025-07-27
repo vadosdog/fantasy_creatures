@@ -102,6 +102,8 @@ export const useCraftStore = defineStore('craft', {
                 }
             }
 
+            console.log(newCreature, diffs)
+
             newCreature = calcCreatureStats(newCreature)
             newCreature.actions = getActionsByLevel(
                 this.selectedElement.code,
