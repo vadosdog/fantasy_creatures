@@ -61,7 +61,7 @@ export function calcCreatureStats(config) {
     const level = config.level || 1;
 
     config.maxHealthStat = Math.floor(config.baseMaxHealthStat * (1 + 0.03 * (level - 1))) + (config.manualMaxHealthStat || 0);
-    config.speedStat = Math.floor(config.baseSpeedStat + (config.manualAttackStat || 0));
+    config.speedStat = Math.floor(config.baseSpeedStat + (config.manualSpeedStat || 0));
     config.attackStat = Math.floor(config.baseAttackStat * (1 + 0.03 * (level - 1))) + (config.manualAttackStat || 0);
     config.defenseStat = Math.floor(config.baseDefenseStat * (1 + 0.03 * (level - 1))) + (config.manualDefenseStat || 0);
     config.initiativeStat = Math.floor(config.baseInitiativeStat * (1 + 0.03 * (level - 1))) + (config.manualInitiativeStat || 0);

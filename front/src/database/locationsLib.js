@@ -15,7 +15,7 @@ export const locationsLib = {
             },
             {
                 id: 'academy_library',
-                label: 'Библиотека',
+                label: 'Библиотека Легенд',
             },
             {
                 id: 'whispering_forest1',
@@ -111,15 +111,22 @@ export const locationsLib = {
         ],
     },
     academy_library: {
-        name: 'Библиотека Теней',
+        name: 'Библиотека Легенд',
         description: 'Заваленные руины с книгами, пожираемыми теневыми сущностями. Обломки знаний мерцают в темноте, но проход заблокирован - реальность здесь нестабильна.',
         image: '/assets/locations/academy_library.png',
         conditions: [], // Для доступности
         npcs: [],
-        options: [{
-            id: 'academy',
-            label: 'Двор Забытых Мастеров',
-        }],
+        options: [
+            {
+                id: 'academy',
+                label: 'Двор Забытых Мастеров',
+            },
+            {
+                id: 'library',
+                label: 'Рабочий стол',
+                type: 'start_library',
+            },
+        ],
     },
     whispering_forest1: {
         name: 'Шепчущий Лес',

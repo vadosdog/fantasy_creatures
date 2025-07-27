@@ -110,9 +110,9 @@ export const useCraftStore = defineStore('craft', {
                 1
             )
 
-            gameStore.inventoryRemove(this.selectedElement)
-            gameStore.inventoryRemove(this.selectedShape)
-            gameStore.inventoryRemove(this.selectedEmotion)
+            gameStore.inventoryRemove(this.selectedElement.id)
+            gameStore.inventoryRemove(this.selectedShape.id)
+            gameStore.inventoryRemove(this.selectedEmotion.id)
             gameStore.addCreature(newCreature)
 
             this.selectedElement = null

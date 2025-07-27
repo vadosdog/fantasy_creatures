@@ -264,6 +264,9 @@ const creatureActionsLib = {}
 
 creatures.forEach((creature, index) => {
     creature.id = index + 1
+    if (!creature.evolutionGroup) {
+        creature.evolutionGroup = creature.number
+    }
     creaturesLib[creature.element + '-' + creature.shape + '-' + creature.emotion] = creature
 })
 

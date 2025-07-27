@@ -27,6 +27,9 @@ function handleOptionClick(option) {
             gameStore.changeScene('Craft')
             router.push('/game')
             break;
+        case 'start_library':
+            router.push('/library');
+            break;
         default:
             gameStore.moveToLocation(option.id)
     }

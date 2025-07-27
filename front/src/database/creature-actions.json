@@ -1,9 +1,10 @@
 [
     {
+        "id": 1,
         "name": "Огненный коготь",
         "element": "fire",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 1,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -18,14 +19,16 @@
                 "duration": 3
             }
         ],
-        "pp": 7,
-        "cooldown": 1
+        "PP": 7,
+        "cooldown": 1,
+        "description": ""
     },
     {
+        "id": 2,
         "name": "Ядовитый шип",
         "element": "grass",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 1,
         "Тип": "Гибридный",
         "actionType": "melee",
@@ -40,14 +43,16 @@
                 "duration": 3
             }
         ],
-        "pp": 6,
-        "cooldown": 1
+        "PP": 6,
+        "cooldown": 1,
+        "description": ""
     },
     {
+        "id": 3,
         "name": "Ледяная игла",
         "element": "water",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 1,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -62,14 +67,16 @@
                 "duration": 1
             }
         ],
-        "pp": 6,
-        "cooldown": 1
+        "PP": 6,
+        "cooldown": 1,
+        "description": ""
     },
     {
+        "id": 4,
         "name": "Толчок",
         "element": "",
-        "shape": "beast",
-        "emotion": "",
+        "form": "beast",
+        "role": "",
         "level": 1,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -78,14 +85,16 @@
         "hitChance": 85,
         "critChance": 6,
         "effects": [],
-        "pp": 3,
-        "cooldown": 0
+        "PP": 3,
+        "cooldown": 1,
+        "description": ""
     },
     {
+        "id": 5,
         "name": "Удар",
         "element": "",
-        "shape": "bird",
-        "emotion": "",
+        "form": "bird",
+        "role": "",
         "level": 1,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -94,14 +103,16 @@
         "hitChance": 90,
         "critChance": 12,
         "effects": [],
-        "pp": 3,
-        "cooldown": 0
+        "PP": 3,
+        "cooldown": 1,
+        "description": ""
     },
     {
+        "id": 6,
         "name": "Укус",
         "element": "",
-        "shape": "reptile",
-        "emotion": "",
+        "form": "reptile",
+        "role": "",
         "level": 1,
         "Тип": "Гибридный",
         "actionType": "melee",
@@ -110,14 +121,16 @@
         "hitChance": 95,
         "critChance": 12,
         "effects": [],
-        "pp": 3,
-        "cooldown": 0
+        "PP": 3,
+        "cooldown": 1,
+        "description": ""
     },
     {
+        "id": 7,
         "name": "Смертельный удар",
         "element": "",
-        "shape": "",
-        "emotion": "passion",
+        "form": "",
+        "role": "dd",
         "level": 2,
         "Тип": [],
         "actionType": "ranged",
@@ -126,14 +139,16 @@
         "hitChance": 85,
         "critChance": 10,
         "effects": [],
-        "pp": 10,
-        "cooldown": 3
+        "PP": 10,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 8,
         "name": "Лечебная волна",
         "element": "",
-        "shape": "",
-        "emotion": "hope",
+        "form": "",
+        "role": "support",
         "level": 2,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -142,14 +157,16 @@
         "hitChance": 95,
         "critChance": 10,
         "effects": [],
-        "pp": 7,
-        "cooldown": 3
+        "PP": 7,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 9,
         "name": "Железная стойка",
         "element": "",
-        "shape": "",
-        "emotion": "rage",
+        "form": "",
+        "role": "tank",
         "level": 2,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -159,19 +176,21 @@
         "critChance": 0,
         "effects": [
             {
-                "effect": "aegis",
-                "chance": 1,
+                "effect": "defense",
+                "chance": 0.9,
                 "duration": 2
             }
         ],
-        "pp": 5,
-        "cooldown": 4
+        "PP": 5,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 10,
         "name": "Огненный адреналин",
         "element": "fire",
-        "shape": "",
-        "emotion": "passion",
+        "form": "",
+        "role": "dd",
         "level": 3,
         "Тип": "Гибридный",
         "actionType": "treat",
@@ -191,14 +210,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 8,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 11,
         "name": "Костер боевого духа",
         "element": "fire",
-        "shape": "",
-        "emotion": "hope",
+        "form": "",
+        "role": "support",
         "level": 3,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -218,14 +239,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 12,
         "name": "Раскалённый доспех",
         "element": "fire",
-        "shape": "",
-        "emotion": "rage",
+        "form": "",
+        "role": "tank",
         "level": 3,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -245,14 +268,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 8,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 13,
         "name": "Ядовитые клыки",
         "element": "grass",
-        "shape": "",
-        "emotion": "passion",
+        "form": "",
+        "role": "dd",
         "level": 3,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -267,14 +292,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 10,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 14,
         "name": "Целительный нектар",
         "element": "grass",
-        "shape": "",
-        "emotion": "hope",
+        "form": "",
+        "role": "support",
         "level": 3,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -289,14 +316,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 12,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 15,
         "name": "Живая броня",
         "element": "grass",
-        "shape": "",
-        "emotion": "rage",
+        "form": "",
+        "role": "tank",
         "level": 3,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -316,14 +345,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 16,
         "name": "Глубокая рана",
         "element": "water",
-        "shape": "",
-        "emotion": "passion",
+        "form": "",
+        "role": "dd",
         "level": 3,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -338,14 +369,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 11,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 17,
         "name": "Родник жизни",
         "element": "water",
-        "shape": "",
-        "emotion": "hope",
+        "form": "",
+        "role": "support",
         "level": 3,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -354,14 +387,16 @@
         "hitChance": 100,
         "critChance": 0,
         "effects": [],
-        "pp": "",
-        "cooldown": ""
+        "PP": 13,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 18,
         "name": "Ледяная стена",
         "element": "water",
-        "shape": "",
-        "emotion": "rage",
+        "form": "",
+        "role": "tank",
         "level": 3,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -381,14 +416,16 @@
                 "duration": 1
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 19,
         "name": "Разрывающий клык",
         "element": "",
-        "shape": "beast",
-        "emotion": "passion",
+        "form": "beast",
+        "role": "dd",
         "level": 5,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -403,14 +440,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 11,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 20,
         "name": "Мотивирующий рык",
         "element": "",
-        "shape": "beast",
-        "emotion": "hope",
+        "form": "beast",
+        "role": "support",
         "level": 5,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -425,14 +464,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 8,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 21,
         "name": "Берсеркский рык",
         "element": "",
-        "shape": "beast",
-        "emotion": "rage",
+        "form": "beast",
+        "role": "tank",
         "level": 5,
         "Тип": "Контрольный",
         "actionType": "treat",
@@ -452,14 +493,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 22,
         "name": "Смертельное пике",
         "element": "",
-        "shape": "bird",
-        "emotion": "passion",
+        "form": "bird",
+        "role": "dd",
         "level": 5,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -474,14 +517,16 @@
                 "duration": 0
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 12,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 23,
         "name": "Исцеляющий полет",
         "element": "",
-        "shape": "bird",
-        "emotion": "hope",
+        "form": "bird",
+        "role": "support",
         "level": 5,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -496,14 +541,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 10,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 24,
         "name": "Ветряной барьер",
         "element": "",
-        "shape": "bird",
-        "emotion": "rage",
+        "form": "bird",
+        "role": "tank",
         "level": 5,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -523,14 +570,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 25,
         "name": "Смертельный укус",
         "element": "",
-        "shape": "reptile",
-        "emotion": "passion",
+        "form": "reptile",
+        "role": "dd",
         "level": 5,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -545,14 +594,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 10,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 26,
         "name": "Целительный яд",
         "element": "",
-        "shape": "reptile",
-        "emotion": "hope",
+        "form": "reptile",
+        "role": "support",
         "level": 5,
         "Тип": "Гибридный",
         "actionType": "treat",
@@ -572,14 +623,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 7,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 27,
         "name": "Ядовитый панцирь",
         "element": "",
-        "shape": "reptile",
-        "emotion": "rage",
+        "form": "reptile",
+        "role": "tank",
         "level": 5,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -599,14 +652,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 28,
         "name": "Пламенный рывок",
         "element": "fire",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 7,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -615,14 +670,16 @@
         "hitChance": 85,
         "critChance": 15,
         "effects": [],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 29,
         "name": "Шипастая броня",
         "element": "grass",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 7,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -637,14 +694,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 8,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 30,
         "name": "Целебный поток",
         "element": "water",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 7,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -653,14 +712,16 @@
         "hitChance": 100,
         "critChance": 0,
         "effects": [],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 31,
         "name": "Ярость охотника",
         "element": "",
-        "shape": "",
-        "emotion": "passion",
+        "form": "",
+        "role": "dd",
         "level": 9,
         "Тип": "Гибридный",
         "actionType": "treat",
@@ -675,14 +736,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 8,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 32,
         "name": "Щит веры",
         "element": "",
-        "shape": "",
-        "emotion": "hope",
+        "form": "",
+        "role": "support",
         "level": 9,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -697,14 +760,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 8,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 33,
         "name": "Провокация",
         "element": "",
-        "shape": "",
-        "emotion": "rage",
+        "form": "",
+        "role": "tank",
         "level": 9,
         "Тип": "Контрольный",
         "actionType": "treat",
@@ -719,14 +784,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 7,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 34,
         "name": "Горящая ярость",
         "element": "fire",
-        "shape": "beast",
-        "emotion": "",
+        "form": "beast",
+        "role": "",
         "level": 10,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -741,14 +808,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 11,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 35,
         "name": "Огненное пике",
         "element": "fire",
-        "shape": "bird",
-        "emotion": "",
+        "form": "bird",
+        "role": "",
         "level": 10,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -763,14 +832,16 @@
                 "duration": 1
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 12,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 36,
         "name": "Раскаленная чешуя",
         "element": "fire",
-        "shape": "reptile",
-        "emotion": "",
+        "form": "reptile",
+        "role": "",
         "level": 10,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -790,14 +861,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 37,
         "name": "Удушающий укус",
         "element": "grass",
-        "shape": "beast",
-        "emotion": "",
+        "form": "beast",
+        "role": "",
         "level": 10,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -812,14 +885,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 38,
         "name": "Песнь леса",
         "element": "grass",
-        "shape": "bird",
-        "emotion": "",
+        "form": "bird",
+        "role": "",
         "level": 10,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -834,14 +909,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 39,
         "name": "Ядовитый шип",
         "element": "grass",
-        "shape": "reptile",
-        "emotion": "",
+        "form": "reptile",
+        "role": "",
         "level": 10,
         "Тип": "Гибридный",
         "actionType": "melee",
@@ -856,14 +933,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 8,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 40,
         "name": "Ледяной клык",
         "element": "water",
-        "shape": "beast",
-        "emotion": "",
+        "form": "beast",
+        "role": "",
         "level": 10,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -878,14 +957,16 @@
                 "duration": 1
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 10,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 41,
         "name": "Ледяной вихрь",
         "element": "water",
-        "shape": "bird",
-        "emotion": "",
+        "form": "bird",
+        "role": "",
         "level": 10,
         "Тип": "Контрольный",
         "actionType": "ranged",
@@ -900,14 +981,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 8,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 42,
         "name": "Ядовитый плевок",
         "element": "water",
-        "shape": "reptile",
-        "emotion": "",
+        "form": "reptile",
+        "role": "",
         "level": 10,
         "Тип": "Гибридный",
         "actionType": "ranged",
@@ -922,14 +1005,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 7,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 43,
         "name": "Берсерк",
         "element": "",
-        "shape": "beast",
-        "emotion": "",
+        "form": "beast",
+        "role": "",
         "level": 12,
         "Тип": "Гибридный",
         "actionType": "treat",
@@ -943,14 +1028,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 44,
         "name": "Пикирование",
         "element": "",
-        "shape": "bird",
-        "emotion": "",
+        "form": "bird",
+        "role": "",
         "level": 12,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -965,14 +1052,16 @@
                 "chance": 0.2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 10,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 45,
         "name": "Костяная броня",
         "element": "",
-        "shape": "reptile",
-        "emotion": "",
+        "form": "reptile",
+        "role": "",
         "level": 12,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -987,14 +1076,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 46,
         "name": "Огненный щит",
         "element": "fire",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 13,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -1009,14 +1100,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 8,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 47,
         "name": "Удушающие лианы",
         "element": "grass",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 13,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -1031,14 +1124,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 10,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 48,
         "name": "Водоворот",
         "element": "water",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 13,
         "Тип": "Контрольный",
         "actionType": "ranged",
@@ -1053,14 +1148,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 49,
         "name": "Клинок феникса",
         "element": "fire",
-        "shape": "",
-        "emotion": "passion",
+        "form": "",
+        "role": "dd",
         "level": 15,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -1080,14 +1177,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 13,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 50,
         "name": "Жаркая мотивация",
         "element": "fire",
-        "shape": "",
-        "emotion": "hope",
+        "form": "",
+        "role": "support",
         "level": 15,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -1107,14 +1206,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 10,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 51,
         "name": "Пламенный форт",
         "element": "fire",
-        "shape": "",
-        "emotion": "rage",
+        "form": "",
+        "role": "tank",
         "level": 15,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -1134,14 +1235,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 11,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 52,
         "name": "Проклятый шип",
         "element": "grass",
-        "shape": "",
-        "emotion": "passion",
+        "form": "",
+        "role": "dd",
         "level": 15,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -1156,14 +1259,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 13,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 53,
         "name": "Споровое облако",
         "element": "grass",
-        "shape": "",
-        "emotion": "hope",
+        "form": "",
+        "role": "support",
         "level": 15,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -1183,14 +1288,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 54,
         "name": "Грибной щит",
         "element": "grass",
-        "shape": "",
-        "emotion": "rage",
+        "form": "",
+        "role": "tank",
         "level": 15,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -1210,14 +1317,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 10,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 55,
         "name": "Ледяной шип",
         "element": "water",
-        "shape": "",
-        "emotion": "passion",
+        "form": "",
+        "role": "dd",
         "level": 15,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -1232,14 +1341,16 @@
                 "duration": 1
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 14,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 56,
         "name": "Умиротворение",
         "element": "water",
-        "shape": "",
-        "emotion": "hope",
+        "form": "",
+        "role": "support",
         "level": 15,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -1259,14 +1370,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 10,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 57,
         "name": "Приливная защита",
         "element": "water",
-        "shape": "",
-        "emotion": "rage",
+        "form": "",
+        "role": "tank",
         "level": 15,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -1286,14 +1399,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 10,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 58,
         "name": "Ярость хищника",
         "element": "",
-        "shape": "beast",
-        "emotion": "passion",
+        "form": "beast",
+        "role": "dd",
         "level": 16,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -1308,14 +1423,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 14,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 59,
         "name": "Шерстяной щит",
         "element": "",
-        "shape": "beast",
-        "emotion": "hope",
+        "form": "beast",
+        "role": "support",
         "level": 16,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -1330,14 +1447,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 60,
         "name": "Шкура буйвола",
         "element": "",
-        "shape": "beast",
-        "emotion": "rage",
+        "form": "beast",
+        "role": "tank",
         "level": 16,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -1357,14 +1476,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 61,
         "name": "Шторм когтей",
         "element": "",
-        "shape": "bird",
-        "emotion": "passion",
+        "form": "bird",
+        "role": "dd",
         "level": 16,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -1379,14 +1500,16 @@
                 "duration": 0
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 16,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 62,
         "name": "Крылья ангела",
         "element": "",
-        "shape": "bird",
-        "emotion": "hope",
+        "form": "bird",
+        "role": "support",
         "level": 16,
         "Тип": "Уникальный",
         "actionType": "treat",
@@ -1406,14 +1529,16 @@
                 "duration": 0
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 13,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 63,
         "name": "Щит перьев",
         "element": "",
-        "shape": "bird",
-        "emotion": "rage",
+        "form": "bird",
+        "role": "tank",
         "level": 16,
         "Тип": "Уникальный",
         "actionType": "treat",
@@ -1433,14 +1558,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 11,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 64,
         "name": "Хвост скорпиона",
         "element": "",
-        "shape": "reptile",
-        "emotion": "passion",
+        "form": "reptile",
+        "role": "dd",
         "level": 16,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -1460,14 +1587,16 @@
                 "duration": 1
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 13,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 65,
         "name": "Аура змеи",
         "element": "",
-        "shape": "reptile",
-        "emotion": "hope",
+        "form": "reptile",
+        "role": "support",
         "level": 16,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -1482,14 +1611,16 @@
                 "duration": 0
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 7,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 66,
         "name": "Костяная крепость",
         "element": "",
-        "shape": "reptile",
-        "emotion": "rage",
+        "form": "reptile",
+        "role": "tank",
         "level": 16,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -1509,14 +1640,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 10,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 67,
         "name": "Разрывающие когти",
         "element": "",
-        "shape": "beast",
-        "emotion": "",
+        "form": "beast",
+        "role": "",
         "level": 17,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -1525,14 +1658,16 @@
         "hitChance": 85,
         "critChance": 20,
         "effects": [],
-        "pp": "",
-        "cooldown": ""
+        "PP": 11,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 68,
         "name": "Глаз бури",
         "element": "",
-        "shape": "bird",
-        "emotion": "",
+        "form": "bird",
+        "role": "",
         "level": 17,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -1547,14 +1682,16 @@
                 "chance": 1
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 69,
         "name": "Смертельный клей",
         "element": "",
-        "shape": "reptile",
-        "emotion": "",
+        "form": "reptile",
+        "role": "",
         "level": 17,
         "Тип": "Контрольный",
         "actionType": "ranged",
@@ -1569,14 +1706,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 8,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 70,
         "name": "Вулканический взрыв",
         "element": "fire",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 18,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -1591,14 +1730,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 12,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 71,
         "name": "Грибное облако",
         "element": "grass",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 18,
         "Тип": "Контрольный",
         "actionType": "ranged",
@@ -1618,14 +1759,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 10,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 72,
         "name": "Приливная волна",
         "element": "water",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 18,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -1640,14 +1783,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 11,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 73,
         "name": "Гибельный клинок",
         "element": "",
-        "shape": "",
-        "emotion": "passion",
+        "form": "",
+        "role": "dd",
         "level": 19,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -1662,14 +1807,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 14,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 74,
         "name": "Очищающий свет",
         "element": "",
-        "shape": "",
-        "emotion": "hope",
+        "form": "",
+        "role": "support",
         "level": 19,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -1684,14 +1831,16 @@
                 "duration": 0
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 7,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 75,
         "name": "Несокрушимость",
         "element": "",
-        "shape": "",
-        "emotion": "rage",
+        "form": "",
+        "role": "tank",
         "level": 19,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -1706,14 +1855,16 @@
                 "duration": 1
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 8,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 76,
         "name": "Вулканический клык",
         "element": "fire",
-        "shape": "beast",
-        "emotion": "",
+        "form": "beast",
+        "role": "",
         "level": 20,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -1728,14 +1879,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 14,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 77,
         "name": "Фениксово перо",
         "element": "fire",
-        "shape": "bird",
-        "emotion": "",
+        "form": "bird",
+        "role": "",
         "level": 20,
         "Тип": "Гибридный",
         "actionType": "melee",
@@ -1744,14 +1897,16 @@
         "hitChance": 90,
         "critChance": 10,
         "effects": "[{\"effect\": \"burn\", \"chance\": 1.0, \"duration\": 4}, {\"effect\": \"regen\", \"chance\": 0.8, \"duration\": 3",
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 78,
         "name": "Огненный хвост",
         "element": "fire",
-        "shape": "reptile",
-        "emotion": "",
+        "form": "reptile",
+        "role": "",
         "level": 20,
         "Тип": "Гибридный",
         "actionType": "melee",
@@ -1766,14 +1921,16 @@
                 "duration": 0
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 79,
         "name": "Кровавые когти",
         "element": "grass",
-        "shape": "beast",
-        "emotion": "",
+        "form": "beast",
+        "role": "",
         "level": 20,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -1788,14 +1945,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 12,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 80,
         "name": "Шторм листьев",
         "element": "grass",
-        "shape": "bird",
-        "emotion": "",
+        "form": "bird",
+        "role": "",
         "level": 20,
         "Тип": "Контрольный",
         "actionType": "ranged",
@@ -1810,14 +1969,16 @@
                 "duration": 1
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 6,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 81,
         "name": "Корневой щит",
         "element": "grass",
-        "shape": "reptile",
-        "emotion": "",
+        "form": "reptile",
+        "role": "",
         "level": 20,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -1837,14 +1998,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 10,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 82,
         "name": "Приливная сила",
         "element": "water",
-        "shape": "beast",
-        "emotion": "",
+        "form": "beast",
+        "role": "",
         "level": 20,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -1859,14 +2022,16 @@
                 "duration": 0
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 13,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 83,
         "name": "Циклон",
         "element": "water",
-        "shape": "bird",
-        "emotion": "",
+        "form": "bird",
+        "role": "",
         "level": 20,
         "Тип": "Контрольный",
         "actionType": "ranged",
@@ -1881,14 +2046,16 @@
                 "duration": 1
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 8,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 84,
         "name": "Болотная броня",
         "element": "water",
-        "shape": "reptile",
-        "emotion": "",
+        "form": "reptile",
+        "role": "",
         "level": 20,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -1908,14 +2075,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 10,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 85,
         "name": "Ярость дракона",
         "element": "fire",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 21,
         "Тип": "Гибридный",
         "actionType": "treat",
@@ -1930,14 +2099,16 @@
                 "chance": 0.5
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 86,
         "name": "Смертельный нектар",
         "element": "grass",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 21,
         "Тип": "Гибридный",
         "actionType": "melee",
@@ -1952,14 +2123,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 87,
         "name": "Ледяная тюрьма",
         "element": "water",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 21,
         "Тип": "Контрольный",
         "actionType": "ranged",
@@ -1974,14 +2147,16 @@
                 "duration": 1
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 8,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 88,
         "name": "Танец дракона",
         "element": "fire",
-        "shape": "",
-        "emotion": "passion",
+        "form": "",
+        "role": "dd",
         "level": 23,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -1996,14 +2171,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 16,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 89,
         "name": "Солнечное благословение",
         "element": "fire",
-        "shape": "",
-        "emotion": "hope",
+        "form": "",
+        "role": "support",
         "level": 23,
         "Тип": "Уникальный",
         "actionType": "treat",
@@ -2023,14 +2200,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 90,
         "name": "Вулканическая ярость",
         "element": "fire",
-        "shape": "",
-        "emotion": "rage",
+        "form": "",
+        "role": "tank",
         "level": 23,
         "Тип": "Гибридный",
         "actionType": "treat",
@@ -2050,14 +2229,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 7,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 91,
         "name": "Цветок смерти",
         "element": "grass",
-        "shape": "",
-        "emotion": "passion",
+        "form": "",
+        "role": "dd",
         "level": 23,
         "Тип": "Гибридный",
         "actionType": "ranged",
@@ -2077,14 +2258,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 8,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 92,
         "name": "Древо жизни",
         "element": "grass",
-        "shape": "",
-        "emotion": "hope",
+        "form": "",
+        "role": "support",
         "level": 23,
         "Тип": "Уникальный",
         "actionType": "treat",
@@ -2104,14 +2287,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 12,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 93,
         "name": "Корневой капкан",
         "element": "grass",
-        "shape": "",
-        "emotion": "rage",
+        "form": "",
+        "role": "tank",
         "level": 23,
         "Тип": "Контрольный",
         "actionType": "ranged",
@@ -2131,14 +2316,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 6,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 94,
         "name": "Цунами клинков",
         "element": "water",
-        "shape": "",
-        "emotion": "passion",
+        "form": "",
+        "role": "dd",
         "level": 23,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -2153,14 +2340,16 @@
                 "duration": 0
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 18,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 95,
         "name": "Океанская песня",
         "element": "water",
-        "shape": "",
-        "emotion": "hope",
+        "form": "",
+        "role": "support",
         "level": 23,
         "Тип": "Уникальный",
         "actionType": "treat",
@@ -2180,14 +2369,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 10,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 96,
         "name": "Айсберг",
         "element": "water",
-        "shape": "",
-        "emotion": "rage",
+        "form": "",
+        "role": "tank",
         "level": 23,
         "Тип": "Гибридный",
         "actionType": "treat",
@@ -2207,14 +2398,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 11,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 97,
         "name": "Астральный рык",
         "element": "",
-        "shape": "beast",
-        "emotion": "",
+        "form": "beast",
+        "role": "",
         "level": 25,
         "Тип": "Контрольный",
         "actionType": "ranged",
@@ -2229,14 +2422,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 3,
+        "description": ""
     },
     {
+        "id": 98,
         "name": "Торнадо",
         "element": "",
-        "shape": "bird",
-        "emotion": "",
+        "form": "bird",
+        "role": "",
         "level": 25,
         "Тип": "Контрольный",
         "actionType": "ranged",
@@ -2251,14 +2446,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 9,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 99,
         "name": "Каменный хвост",
         "element": "",
-        "shape": "reptile",
-        "emotion": "",
+        "form": "reptile",
+        "role": "",
         "level": 25,
         "Тип": "Атакующий",
         "actionType": "melee",
@@ -2273,14 +2470,16 @@
                 "duration": 1
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 12,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 100,
         "name": "Фениксово возрождение",
         "element": "fire",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 27,
         "Тип": "Уникальный",
         "actionType": "treat",
@@ -2288,15 +2487,17 @@
         "baseDamage": 0,
         "hitChance": 100,
         "critChance": 0,
-        "effects": "",
-        "pp": "ПЕРЕДЕЛАТЬ",
-        "cooldown": ""
+        "effects": "ПЕРЕДЕЛАТЬ",
+        "PP": 15,
+        "cooldown": 5,
+        "description": ""
     },
     {
+        "id": 101,
         "name": "Пробуждение леса",
         "element": "grass",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 27,
         "Тип": "Уникальный",
         "actionType": "treat",
@@ -2311,14 +2512,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 12,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 102,
         "name": "Цунами",
         "element": "water",
-        "shape": "",
-        "emotion": "",
+        "form": "",
+        "role": "",
         "level": 27,
         "Тип": "Уникальный",
         "actionType": "ranged",
@@ -2333,14 +2536,16 @@
                 "duration": 2
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 14,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 103,
         "name": "Танец смерти",
         "element": "",
-        "shape": "",
-        "emotion": "passion",
+        "form": "",
+        "role": "dd",
         "level": 28,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -2349,14 +2554,16 @@
         "hitChance": 65,
         "critChance": 40,
         "effects": [],
-        "pp": "",
-        "cooldown": ""
+        "PP": 18,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 104,
         "name": "Пламенное восстановление",
         "element": "",
-        "shape": "",
-        "emotion": "hope",
+        "form": "",
+        "role": "support",
         "level": 28,
         "Тип": "Уникальный",
         "actionType": "treat",
@@ -2376,14 +2583,16 @@
                 "duration": 3
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 13,
+        "cooldown": 4,
+        "description": ""
     },
     {
+        "id": 105,
         "name": "Землетрясение",
         "element": "",
-        "shape": "",
-        "emotion": "rage",
+        "form": "",
+        "role": "tank",
         "level": 28,
         "Тип": "Гибридный",
         "actionType": "ranged",
@@ -2398,14 +2607,16 @@
                 "duration": 1
             }
         ],
-        "pp": "",
-        "cooldown": ""
+        "PP": 8,
+        "cooldown": 2,
+        "description": ""
     },
     {
+        "id": 106,
         "name": "Ярость вулкана",
         "element": "fire",
-        "shape": "beast",
-        "emotion": "passion",
+        "form": "beast",
+        "role": "dd",
         "level": 30,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -2425,14 +2636,16 @@
                 "duration": 3
             }
         ],
-        "pp": "Взрыв лавы, который наносит огромный урон и усиливает вашу атаку на 3 хода.",
-        "cooldown": ""
+        "PP": 20,
+        "cooldown": 2,
+        "description": "Взрыв лавы, который наносит огромный урон и усиливает вашу атаку на 3 хода."
     },
     {
+        "id": 107,
         "name": "Сердце феникса",
         "element": "fire",
-        "shape": "beast",
-        "emotion": "hope",
+        "form": "beast",
+        "role": "support",
         "level": 30,
         "Тип": "Уникальный",
         "actionType": "treat",
@@ -2452,14 +2665,16 @@
                 "duration": 0
             }
         ],
-        "pp": "Воскрешает павшего союзника с 50% HP и восстанавливает всем регенерацию",
-        "cooldown": ""
+        "PP": 15,
+        "cooldown": 5,
+        "description": "Воскрешает павшего союзника с 50% HP и восстанавливает всем регенерацию"
     },
     {
+        "id": 108,
         "name": "Великий огненный страж",
         "element": "fire",
-        "shape": "beast",
-        "emotion": "rage",
+        "form": "beast",
+        "role": "tank",
         "level": 30,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -2484,14 +2699,16 @@
                 "duration": 3
             }
         ],
-        "pp": "Призывает огненный барьер, который поглощает весь урон на 2 хода и принуждает врагов атаковать вас, нанося им поджог",
-        "cooldown": ""
+        "PP": 18,
+        "cooldown": 5,
+        "description": "Призывает огненный барьер, который поглощает весь урон на 2 хода и принуждает врагов атаковать вас, нанося им поджог"
     },
     {
+        "id": 109,
         "name": "Танец солнечного ястреба",
         "element": "fire",
-        "shape": "bird",
-        "emotion": "passion",
+        "form": "bird",
+        "role": "dd",
         "level": 30,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -2511,14 +2728,16 @@
                 "duration": 0
             }
         ],
-        "pp": "Быстрая серия ударов с высоким шансом крита и ослепления",
-        "cooldown": ""
+        "PP": 18,
+        "cooldown": 2,
+        "description": "Быстрая серия ударов с высоким шансом крита и ослепления"
     },
     {
+        "id": 110,
         "name": "Песнь пламени",
         "element": "fire",
-        "shape": "bird",
-        "emotion": "hope",
+        "form": "bird",
+        "role": "support",
         "level": 30,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -2538,14 +2757,16 @@
                 "duration": 3
             }
         ],
-        "pp": "Вдохновляет союзников, увеличивая их атаку и скорость",
-        "cooldown": ""
+        "PP": 14,
+        "cooldown": 4,
+        "description": "Вдохновляет союзников, увеличивая их атаку и скорость"
     },
     {
+        "id": 111,
         "name": "Пламенный кокон",
         "element": "fire",
-        "shape": "bird",
-        "emotion": "rage",
+        "form": "bird",
+        "role": "tank",
         "level": 30,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -2565,14 +2786,16 @@
                 "duration": 3
             }
         ],
-        "pp": "Окутывает себя огненным щитом, отражая атаки и поджигая врагов",
-        "cooldown": ""
+        "PP": 15,
+        "cooldown": 5,
+        "description": "Окутывает себя огненным щитом, отражая атаки и поджигая врагов"
     },
     {
+        "id": 112,
         "name": "Хвост дракона",
         "element": "fire",
-        "shape": "reptile",
-        "emotion": "passion",
+        "form": "reptile",
+        "role": "dd",
         "level": 30,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -2592,14 +2815,16 @@
                 "duration": 0
             }
         ],
-        "pp": "Мощный удар хвостом, который отбрасывает врагов и поджигает их",
-        "cooldown": ""
+        "PP": 22,
+        "cooldown": 2,
+        "description": "Мощный удар хвостом, который отбрасывает врагов и поджигает их"
     },
     {
+        "id": 113,
         "name": "Жар жизни",
         "element": "fire",
-        "shape": "reptile",
-        "emotion": "hope",
+        "form": "reptile",
+        "role": "support",
         "level": 30,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -2619,14 +2844,16 @@
                 "duration": 0
             }
         ],
-        "pp": "Исцеляет союзников и снимает все негативные эффекты",
-        "cooldown": ""
+        "PP": 15,
+        "cooldown": 5,
+        "description": "Исцеляет союзников и снимает все негативные эффекты"
     },
     {
+        "id": 114,
         "name": "Раскаленный бастион",
         "element": "fire",
-        "shape": "reptile",
-        "emotion": "rage",
+        "form": "reptile",
+        "role": "tank",
         "level": 30,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -2646,14 +2873,16 @@
                 "duration": 4
             }
         ],
-        "pp": "Укрепляет броню и возвращает 30% полученного урона",
-        "cooldown": ""
+        "PP": 18,
+        "cooldown": 5,
+        "description": "Укрепляет броню и возвращает 30% полученного урона"
     },
     {
+        "id": 115,
         "name": "Клыки оборотня",
         "element": "grass",
-        "shape": "beast",
-        "emotion": "passion",
+        "form": "beast",
+        "role": "dd",
         "level": 30,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -2673,14 +2902,16 @@
                 "duration": 2
             }
         ],
-        "pp": "Смертельный укус, вызывающий кровотечение и усиливающий атаку",
-        "cooldown": ""
+        "PP": 21,
+        "cooldown": 2,
+        "description": "Смертельный укус, вызывающий кровотечение и усиливающий атаку"
     },
     {
+        "id": 116,
         "name": "Рев жизни",
         "element": "grass",
-        "shape": "beast",
-        "emotion": "hope",
+        "form": "beast",
+        "role": "support",
         "level": 30,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -2695,14 +2926,16 @@
                 "duration": 5
             }
         ],
-        "pp": "Мощный рык, исцеляющий союзников и дающий регенерацию",
-        "cooldown": ""
+        "PP": 20,
+        "cooldown": 3,
+        "description": "Мощный рык, исцеляющий союзников и дающий регенерацию"
     },
     {
+        "id": 117,
         "name": "Корневой исполин",
         "element": "grass",
-        "shape": "beast",
-        "emotion": "rage",
+        "form": "beast",
+        "role": "tank",
         "level": 30,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -2722,14 +2955,16 @@
                 "duration": 3
             }
         ],
-        "pp": "Превращается в дерево-исполина, притягивая атаки врагов",
-        "cooldown": ""
+        "PP": 18,
+        "cooldown": 5,
+        "description": "Превращается в дерево-исполина, притягивая атаки врагов"
     },
     {
+        "id": 118,
         "name": "Лиственный смерч",
         "element": "grass",
-        "shape": "bird",
-        "emotion": "passion",
+        "form": "bird",
+        "role": "dd",
         "level": 30,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -2749,14 +2984,16 @@
                 "duration": 3
             }
         ],
-        "pp": "Создает вихрь листьев, ослепляющий и ранящий врагов",
-        "cooldown": ""
+        "PP": 16,
+        "cooldown": 2,
+        "description": "Создает вихрь листьев, ослепляющий и ранящий врагов"
     },
     {
+        "id": 119,
         "name": "Песнь леса",
         "element": "grass",
-        "shape": "bird",
-        "emotion": "hope",
+        "form": "bird",
+        "role": "support",
         "level": 30,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -2776,14 +3013,16 @@
                 "duration": 4
             }
         ],
-        "pp": "Мелодия, очищающая дебаффы и исцеляющая союзников",
-        "cooldown": ""
+        "PP": 13,
+        "cooldown": 4,
+        "description": "Мелодия, очищающая дебаффы и исцеляющая союзников"
     },
     {
+        "id": 120,
         "name": "Шипастый ураган",
         "element": "grass",
-        "shape": "bird",
-        "emotion": "rage",
+        "form": "bird",
+        "role": "tank",
         "level": 30,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -2803,14 +3042,16 @@
                 "duration": 0
             }
         ],
-        "pp": "Вращается, отражая урон и отбрасывая врагов",
-        "cooldown": ""
+        "PP": 16,
+        "cooldown": 5,
+        "description": "Вращается, отражая урон и отбрасывая врагов"
     },
     {
+        "id": 121,
         "name": "Укус Василиска",
         "element": "grass",
-        "shape": "reptile",
-        "emotion": "passion",
+        "form": "reptile",
+        "role": "dd",
         "level": 30,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -2830,14 +3071,16 @@
                 "duration": 4
             }
         ],
-        "pp": "Укус с шансом окаменения и гарантированным отравлением.",
-        "cooldown": ""
+        "PP": 19,
+        "cooldown": 2,
+        "description": "Укус с шансом окаменения и гарантированным отравлением."
     },
     {
+        "id": 122,
         "name": "Дыхание жизни",
         "element": "grass",
-        "shape": "reptile",
-        "emotion": "hope",
+        "form": "reptile",
+        "role": "support",
         "level": 30,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -2857,14 +3100,16 @@
                 "duration": 1
             }
         ],
-        "pp": "Воскрешает союзника с 40% HP и дает регенерацию",
-        "cooldown": ""
+        "PP": 19,
+        "cooldown": 3,
+        "description": "Воскрешает союзника с 40% HP и дает регенерацию"
     },
     {
+        "id": 123,
         "name": "Броня Горыныча",
         "element": "grass",
-        "shape": "reptile",
-        "emotion": "rage",
+        "form": "reptile",
+        "role": "tank",
         "level": 30,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -2884,14 +3129,16 @@
                 "duration": 3
             }
         ],
-        "pp": "Покрывается ядовитой броней, отравляя атакующих",
-        "cooldown": ""
+        "PP": 17,
+        "cooldown": 5,
+        "description": "Покрывается ядовитой броней, отравляя атакующих"
     },
     {
+        "id": 124,
         "name": "Глубокая рана",
         "element": "water",
-        "shape": "beast",
-        "emotion": "passion",
+        "form": "beast",
+        "role": "dd",
         "level": 30,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -2911,14 +3158,16 @@
                 "duration": 2
             }
         ],
-        "pp": "Наносит глубокую рану, вызывающую кровотечение и замедление",
-        "cooldown": ""
+        "PP": 19,
+        "cooldown": 2,
+        "description": "Наносит глубокую рану, вызывающую кровотечение и замедление"
     },
     {
+        "id": 125,
         "name": "Прилив исцеления",
         "element": "water",
-        "shape": "beast",
-        "emotion": "hope",
+        "form": "beast",
+        "role": "support",
         "level": 30,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -2933,14 +3182,16 @@
                 "duration": 3
             }
         ],
-        "pp": "Волна исцеления, которая восстанавливает здоровье и дает регенерацию",
-        "cooldown": ""
+        "PP": 12,
+        "cooldown": 4,
+        "description": "Волна исцеления, которая восстанавливает здоровье и дает регенерацию"
     },
     {
+        "id": 126,
         "name": "Ледяной страж",
         "element": "water",
-        "shape": "beast",
-        "emotion": "rage",
+        "form": "beast",
+        "role": "tank",
         "level": 30,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -2960,14 +3211,16 @@
                 "duration": 1
             }
         ],
-        "pp": "Замораживает атакующих и повышает защиту",
-        "cooldown": ""
+        "PP": 15,
+        "cooldown": 5,
+        "description": "Замораживает атакующих и повышает защиту"
     },
     {
+        "id": 127,
         "name": "Штормовой клинок",
         "element": "water",
-        "shape": "bird",
-        "emotion": "passion",
+        "form": "bird",
+        "role": "dd",
         "level": 30,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -2987,14 +3240,16 @@
                 "duration": 0
             }
         ],
-        "pp": "Быстрая атака с шансом оглушения и отбрасывания",
-        "cooldown": ""
+        "PP": 17,
+        "cooldown": 2,
+        "description": "Быстрая атака с шансом оглушения и отбрасывания"
     },
     {
+        "id": 128,
         "name": "Мелодия океана",
         "element": "water",
-        "shape": "bird",
-        "emotion": "hope",
+        "form": "bird",
+        "role": "support",
         "level": 30,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -3014,14 +3269,16 @@
                 "duration": 3
             }
         ],
-        "pp": "Очищает негативные эффекты и увеличивает скорость союзников",
-        "cooldown": ""
+        "PP": 13,
+        "cooldown": 4,
+        "description": "Очищает негативные эффекты и увеличивает скорость союзников"
     },
     {
+        "id": 129,
         "name": "Ледяной форт",
         "element": "water",
-        "shape": "bird",
-        "emotion": "rage",
+        "form": "bird",
+        "role": "tank",
         "level": 30,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -3041,14 +3298,16 @@
                 "duration": 1
             }
         ],
-        "pp": "Создает ледяную крепость, которая защищает и замораживает врагов",
-        "cooldown": ""
+        "PP": 15,
+        "cooldown": 5,
+        "description": "Создает ледяную крепость, которая защищает и замораживает врагов"
     },
     {
+        "id": 130,
         "name": "Ядовитый смерч",
         "element": "water",
-        "shape": "reptile",
-        "emotion": "passion",
+        "form": "reptile",
+        "role": "dd",
         "level": 30,
         "Тип": "Атакующий",
         "actionType": "ranged",
@@ -3068,14 +3327,16 @@
                 "duration": 2
             }
         ],
-        "pp": "Создает вихрь яда, который замедляет и отравляет врагов",
-        "cooldown": ""
+        "PP": 15,
+        "cooldown": 2,
+        "description": "Создает вихрь яда, который замедляет и отравляет врагов"
     },
     {
+        "id": 131,
         "name": "Исцеляющий туман",
         "element": "water",
-        "shape": "reptile",
-        "emotion": "hope",
+        "form": "reptile",
+        "role": "support",
         "level": 30,
         "Тип": "Поддерживающий",
         "actionType": "treat",
@@ -3095,14 +3356,16 @@
                 "duration": 0
             }
         ],
-        "pp": "Окутывает союзников целебным туманом, снимая дебаффы",
-        "cooldown": ""
+        "PP": 16,
+        "cooldown": 3,
+        "description": "Окутывает союзников целебным туманом, снимая дебаффы"
     },
     {
+        "id": 132,
         "name": "Болотный страж",
         "element": "water",
-        "shape": "reptile",
-        "emotion": "rage",
+        "form": "reptile",
+        "role": "tank",
         "level": 30,
         "Тип": "Защитный",
         "actionType": "treat",
@@ -3122,7 +3385,8 @@
                 "duration": 3
             }
         ],
-        "pp": "Покрывает себя ядовитой слизью, отравляя атакующих",
-        "cooldown": ""
+        "PP": 16,
+        "cooldown": 5,
+        "description": "Покрывает себя ядовитой слизью, отравляя атакующих"
     }
 ]

@@ -19,6 +19,10 @@ export const useGameStore = defineStore('game', {
         },
         inventory: [
             {
+                id: 'memory_shard',
+                amount: 600,
+            },
+            {
                 id: 'craft_shard_fire_common',
                 amount: 1,
             },
@@ -58,8 +62,10 @@ export const useGameStore = defineStore('game', {
         knownCreatures: [
             '001',
         ],
-        creatures: [],
-        bCreatures: [
+        creatures: [
+
+            // ],
+            // bCreatures: [
             {
                 "name": "Пирохват",
                 "number": "001",
@@ -68,6 +74,7 @@ export const useGameStore = defineStore('game', {
                 "emotion": "rage",
                 "baseMaxHealthStat": 148,
                 "baseAttackStat": 71,
+                "manualAttackStat": 71,
                 "baseDefenseStat": 70,
                 "baseWillStat": 48,
                 "baseInitiativeStat": 45,
@@ -75,7 +82,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 14,
                 "basePpRegen": 2,
                 "id": "c786e8ce-91be-4226-969e-35a7defefa6c",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 148,
                 "speedStat": 6,
                 "attackStat": 71,
@@ -84,39 +91,8 @@ export const useGameStore = defineStore('game', {
                 "willStat": 48,
                 "maxPP": 14,
                 "ppRegen": 2,
-                "actions": [{
-                    "name": "Толчок",
-                    "element": "",
-                    "shape": "beast",
-                    "emotion": "",
-                    "level": 2,
-                    "Тип": "Атакующий",
-                    "actionType": "melee",
-                    "range": 1,
-                    "baseDamage": 28,
-                    "hitChance": 0.85,
-                    "critChance": 0.06,
-                    "effects": [],
-                    "pp": 3,
-                    "cooldown": 0,
-                    "id": 103
-                }, {
-                    "name": "Огненный коготь",
-                    "element": "fire",
-                    "shape": "",
-                    "emotion": "",
-                    "level": 2,
-                    "Тип": "Атакующий",
-                    "actionType": "melee",
-                    "range": 1,
-                    "baseDamage": 35,
-                    "hitChance": 0.9,
-                    "critChance": 0.05,
-                    "effects": [{"effect": "burn", "chance": 0.4, "duration": 3}],
-                    "pp": 7,
-                    "cooldown": 1,
-                    "id": 100
-                }]
+                "manualPoints": 101,
+                "actions": []
             }, {
                 "name": "Светлохвост",
                 "number": "010",
@@ -132,7 +108,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 15,
                 "basePpRegen": 5,
                 "id": "e02d0c32-5119-4c82-a948-c24ae64db1af",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 119,
                 "speedStat": 7,
                 "attackStat": 76,
@@ -146,7 +122,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "beast",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -162,7 +138,7 @@ export const useGameStore = defineStore('game', {
                     "element": "fire",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -189,7 +165,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 15,
                 "basePpRegen": 4,
                 "id": "acfc3c66-1f7c-481b-b8c2-c4f5e1f2e1d1",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 101,
                 "speedStat": 8,
                 "attackStat": 95,
@@ -203,7 +179,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "beast",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -219,7 +195,7 @@ export const useGameStore = defineStore('game', {
                     "element": "fire",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -246,7 +222,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 11,
                 "basePpRegen": 4,
                 "id": "801d3ad4-3c3a-48fc-9746-dab69b8bbf1d",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 139,
                 "speedStat": 6,
                 "attackStat": 65,
@@ -260,7 +236,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "bird",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -276,7 +252,7 @@ export const useGameStore = defineStore('game', {
                     "element": "fire",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -303,7 +279,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 16,
                 "basePpRegen": 5,
                 "id": "e3590d6d-f7b5-4972-ad79-bcdde65bbaeb",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 118,
                 "speedStat": 8,
                 "attackStat": 66,
@@ -317,7 +293,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "bird",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -333,7 +309,7 @@ export const useGameStore = defineStore('game', {
                     "element": "fire",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -360,7 +336,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 15,
                 "basePpRegen": 6,
                 "id": "93a01310-3907-494e-adc9-bd8e8256703f",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 103,
                 "speedStat": 9,
                 "attackStat": 117,
@@ -374,7 +350,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "bird",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -390,7 +366,7 @@ export const useGameStore = defineStore('game', {
                     "element": "fire",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -417,7 +393,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 12,
                 "basePpRegen": 3,
                 "id": "7d23a52d-ab9b-4270-a155-231a6bcf7424",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 167,
                 "speedStat": 5,
                 "attackStat": 72,
@@ -431,7 +407,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "reptile",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -447,7 +423,7 @@ export const useGameStore = defineStore('game', {
                     "element": "fire",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -474,7 +450,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 18,
                 "basePpRegen": 5,
                 "id": "82937105-2fb7-4b56-979a-be7598917901",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 126,
                 "speedStat": 6,
                 "attackStat": 52,
@@ -488,7 +464,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "reptile",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -504,7 +480,7 @@ export const useGameStore = defineStore('game', {
                     "element": "fire",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -531,7 +507,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 15,
                 "basePpRegen": 4,
                 "id": "d9b8f056-ecb0-49df-bd2b-8d9b06f23a88",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 100,
                 "speedStat": 7,
                 "attackStat": 109,
@@ -545,7 +521,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "reptile",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -561,7 +537,7 @@ export const useGameStore = defineStore('game', {
                     "element": "fire",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -588,7 +564,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 12,
                 "basePpRegen": 5,
                 "id": "cbaa32a8-d415-45e1-aa0f-7f5954649a1c",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 149,
                 "speedStat": 6,
                 "attackStat": 64,
@@ -602,7 +578,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "beast",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -618,7 +594,7 @@ export const useGameStore = defineStore('game', {
                     "element": "water",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -645,7 +621,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 17,
                 "basePpRegen": 4,
                 "id": "c35ff3fb-d99a-47ae-b05f-4c60ef3c02b6",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 135,
                 "speedStat": 7,
                 "attackStat": 62,
@@ -659,7 +635,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "beast",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -675,7 +651,7 @@ export const useGameStore = defineStore('game', {
                     "element": "water",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -702,7 +678,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 15,
                 "basePpRegen": 6,
                 "id": "6470ff19-1642-474c-9e1b-d6e347f691ea",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 112,
                 "speedStat": 8,
                 "attackStat": 106,
@@ -716,7 +692,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "beast",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -732,7 +708,7 @@ export const useGameStore = defineStore('game', {
                     "element": "water",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -759,7 +735,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 12,
                 "basePpRegen": 3,
                 "id": "2b1072bb-306d-452d-a663-bae1cbcd254e",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 133,
                 "speedStat": 7,
                 "attackStat": 63,
@@ -773,7 +749,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "bird",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -789,7 +765,7 @@ export const useGameStore = defineStore('game', {
                     "element": "water",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -816,7 +792,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 20,
                 "basePpRegen": 5,
                 "id": "ceaab039-8fb3-4202-9c2a-ddcaae694c33",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 122,
                 "speedStat": 9,
                 "attackStat": 56,
@@ -830,7 +806,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "bird",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -846,7 +822,7 @@ export const useGameStore = defineStore('game', {
                     "element": "water",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -873,7 +849,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 17,
                 "basePpRegen": 7,
                 "id": "77c104fd-e0e7-4e6c-87cb-9997a60f6c28",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 94,
                 "speedStat": 10,
                 "attackStat": 97,
@@ -887,7 +863,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "bird",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -903,7 +879,7 @@ export const useGameStore = defineStore('game', {
                     "element": "water",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -930,7 +906,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 10,
                 "basePpRegen": 4,
                 "id": "8c43cb7a-0a66-4f80-89d7-3e93ebe758d6",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 170,
                 "speedStat": 5,
                 "attackStat": 62,
@@ -944,7 +920,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "reptile",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -960,7 +936,7 @@ export const useGameStore = defineStore('game', {
                     "element": "water",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -987,7 +963,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 18,
                 "basePpRegen": 4,
                 "id": "bfdf77d3-e46c-4c67-af4f-b7b00343ab7c",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 136,
                 "speedStat": 6,
                 "attackStat": 50,
@@ -1001,7 +977,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "reptile",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -1017,7 +993,7 @@ export const useGameStore = defineStore('game', {
                     "element": "water",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -1044,7 +1020,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 18,
                 "basePpRegen": 5,
                 "id": "c00807bc-fe24-46ab-986b-f21c65a417a0",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 104,
                 "speedStat": 7,
                 "attackStat": 97,
@@ -1058,7 +1034,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "reptile",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -1074,7 +1050,7 @@ export const useGameStore = defineStore('game', {
                     "element": "water",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -1106,7 +1082,7 @@ export const useGameStore = defineStore('game', {
                 "winrate__1": "49,5",
                 "%выживаемость__1": 53,
                 "id": "93c6e092-6fa8-4a32-a4d4-1a5e1faf97ba",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 165,
                 "speedStat": 6,
                 "attackStat": 70,
@@ -1120,7 +1096,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "beast",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -1136,7 +1112,7 @@ export const useGameStore = defineStore('game', {
                     "element": "grass",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -1163,7 +1139,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 14,
                 "basePpRegen": 4,
                 "id": "8229d0f0-7cff-4a52-9bc1-bde19387384c",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 126,
                 "speedStat": 7,
                 "attackStat": 59,
@@ -1177,7 +1153,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "beast",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -1193,7 +1169,7 @@ export const useGameStore = defineStore('game', {
                     "element": "grass",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -1220,7 +1196,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 16,
                 "basePpRegen": 4,
                 "id": "8bb0e47c-be70-49f6-830b-69e3d9a4b130",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 110,
                 "speedStat": 8,
                 "attackStat": 109,
@@ -1234,7 +1210,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "beast",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -1250,7 +1226,7 @@ export const useGameStore = defineStore('game', {
                     "element": "grass",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -1277,7 +1253,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 12,
                 "basePpRegen": 3,
                 "id": "7c29e43b-52b1-4718-8fc5-eaddbde2c937",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 149,
                 "speedStat": 8,
                 "attackStat": 65,
@@ -1291,7 +1267,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "bird",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -1307,7 +1283,7 @@ export const useGameStore = defineStore('game', {
                     "element": "grass",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -1334,7 +1310,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 20,
                 "basePpRegen": 4,
                 "id": "24d93569-bf95-4283-bfdc-40d83f6161ae",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 135,
                 "speedStat": 10,
                 "attackStat": 57,
@@ -1348,7 +1324,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "bird",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -1364,7 +1340,7 @@ export const useGameStore = defineStore('game', {
                     "element": "grass",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -1391,7 +1367,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 17,
                 "basePpRegen": 6,
                 "id": "4a229345-6495-4d33-b5d3-b22f9c140ef6",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 88,
                 "speedStat": 11,
                 "attackStat": 109,
@@ -1405,7 +1381,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "bird",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Атакующий",
                     "actionType": "melee",
                     "range": 1,
@@ -1421,7 +1397,7 @@ export const useGameStore = defineStore('game', {
                     "element": "grass",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -1448,7 +1424,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 12,
                 "basePpRegen": 3,
                 "id": "8430f9f5-59d6-44d4-91bf-f8c7513b8dcd",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 150,
                 "speedStat": 5,
                 "attackStat": 75,
@@ -1462,7 +1438,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "reptile",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -1478,7 +1454,7 @@ export const useGameStore = defineStore('game', {
                     "element": "grass",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -1505,7 +1481,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 21,
                 "basePpRegen": 2,
                 "id": "25790d01-eb5d-4765-a60b-b67990a2e808",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 134,
                 "speedStat": 6,
                 "attackStat": 43,
@@ -1519,7 +1495,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "reptile",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -1535,7 +1511,7 @@ export const useGameStore = defineStore('game', {
                     "element": "grass",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -1562,7 +1538,7 @@ export const useGameStore = defineStore('game', {
                 "baseMaxPP": 16,
                 "basePpRegen": 4,
                 "id": "5a9be00d-9f90-4128-b468-162e6dc4123a",
-                "level": 2,
+                "level": 1,
                 "maxHealthStat": 121,
                 "speedStat": 7,
                 "attackStat": 82,
@@ -1576,7 +1552,7 @@ export const useGameStore = defineStore('game', {
                     "element": "",
                     "shape": "reptile",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -1592,7 +1568,7 @@ export const useGameStore = defineStore('game', {
                     "element": "grass",
                     "shape": "",
                     "emotion": "",
-                    "level": 2,
+                    "level": 1,
                     "Тип": "Гибридный",
                     "actionType": "melee",
                     "range": 1,
@@ -1625,6 +1601,9 @@ export const useGameStore = defineStore('game', {
         dialogProgress: {
             dragomir: {}
         },
+        
+        // Просто вспомогательная переменная для выбора существа для прокачки в библиотеке
+        selectedLibraryCreature: null,
     }),
     getters: {
         inventoryObjects(state) {
@@ -1715,8 +1694,8 @@ export const useGameStore = defineStore('game', {
                 this.knownCreatures.push(creatureData.number);
             }
         },
-        inventoryRemove(item, amount = 1) {
-            const index = this.inventory.findIndex(ii => ii.id === item.id)
+        inventoryRemove(itemId, amount = 1) {
+            const index = this.inventory.findIndex(ii => ii.id === itemId)
             if (index === -1) {
                 return
             }
@@ -1729,13 +1708,20 @@ export const useGameStore = defineStore('game', {
         setFlag(flag, value) {
             this.flags[flag] = value;
         },
+        hasInventoryItem(id, amount) {
+            const index = this.inventory.findIndex(ii => ii.id === id)
+            if (index === -1) {
+                return false
+            } else {
+                return this.inventory[index].amount >= amount
+            }
+        },
         addInventoryItem({id, amount}) {
             const index = this.inventory.findIndex(ii => ii.id === id)
             if (index === -1) {
                 this.inventory.push({id, amount});
             } else {
                 this.inventory[index].amount += amount
-                
             }
 
             const resourceItem = resourcesLib[id]
@@ -1822,5 +1808,90 @@ export const useGameStore = defineStore('game', {
         setState(newState) {
             this.currentState = newState;
         },
+        creatureLevelUp(creature) {
+            let index = this.creatures.findIndex(({id}) => id, creature.id)
+            if (index === -1) {
+                return
+            }
+            
+            creature = this.creatures[index]
+
+            const levelCost = 50 + 10 * Math.floor(creature.level / 3)
+            if (!this.hasInventoryItem('memory_shard', levelCost)) {
+                return
+            }
+            
+
+            creature.level++
+            this.inventoryRemove('memory_shard', levelCost)
+
+            const levelModifier = 1 + 0.03 * (creature.level - 1);
+            creature.maxHealthStat = Math.round(creature.baseMaxHealthStat * levelModifier) + (creature.manualMaxHealthStat || 0);
+            creature.attackStat = Math.round(creature.baseAttackStat * levelModifier) + (creature.manualAttackStat || 0);
+            creature.defenseStat = Math.round(creature.baseDefenseStat * levelModifier) + (creature.manualDefenseStat || 0);
+            creature.willStat = Math.round(creature.baseWillStat * levelModifier) + (creature.manualWillStat || 0);
+            creature.initiativeStat = Math.round(creature.baseInitiativeStat * levelModifier) + (creature.manualInitiativeStat || 0);
+            creature.maxPP = Math.round(creature.baseMaxPP * levelModifier) + (creature.manualMaxPP || 0);
+            creature.ppRegen = Math.round(creature.basePpRegen * levelModifier) + (creature.manualPpRegen || 0);
+
+            if (!creature.manualPoints) {
+                creature.manualPoints = 4
+            } else {
+                creature.manualPoints += 4
+            }
+        },
+        upgradeStat(creature, statKey) {
+            const manualKey = `manual${statKey.charAt(0).toUpperCase() + statKey.slice(1)}`;
+            // Обновляем итоговое значение
+            const baseKey = `base${statKey.charAt(0).toUpperCase() + statKey.slice(1)}`;
+            
+            let index = this.creatures.findIndex(({id}) => id, creature.id)
+            if (index === -1) {
+                return
+            }
+
+            creature = this.creatures[index]
+            
+            if ((creature.manualPoints || 0) <= 0 || creature[manualKey] >= 100) {
+                return
+            }
+            
+            // Увеличиваем ручное значение характеристики
+            creature[manualKey] = (creature[manualKey] || 0) + 1;
+
+            // Уменьшаем доступные очки прокачки
+            creature.manualPoints -= 1;
+
+            const baseValue = creature[baseKey];
+            const level = creature.level;
+            const manualValue = creature[manualKey] || 0;
+
+            // Пересчёт: base * (1 + 0.03 * (level - 1)) + manual
+            creature[statKey] = Math.round(
+                baseValue * (1 + 0.03 * (level - 1)) + manualValue
+            );
+        },
+        toggleSkill(creature, skill) {
+            let index = this.creatures.findIndex(({id}) => id === creature.id)
+            if (index === -1) {
+                return
+            }
+
+            creature = this.creatures[index]
+
+
+            const exists = creature.actions.some(action => action.id === skill.id);
+            if (exists) {
+                // Удаляем по id
+                creature.actions = creature.actions.filter(item => item.id !== skill.id);
+            } else {
+                // Если уже 4 элемента — удаляем первый, добавляем новый в конец
+                const newArray = [...creature.actions, skill];
+                creature.actions = newArray.length > 4 ? newArray.slice(1) : newArray;
+            }                      // добавляем
+        },
+        selectLibraryCreature(creature) {
+            this.selectedLibraryCreature = creature
+        }
     },
 });
