@@ -1,5 +1,6 @@
 <script setup>
 import {onMounted} from "vue";
+import {useYandexStore} from "../store/yandexStore.js";
 
 const emit = defineEmits(['current-active-scene', 'update-footer', 'update-left-drawer', 'update-right-drawer', 'update-header']);
 
@@ -13,81 +14,81 @@ onMounted(() => {
 
 const features = [
     {
-        title: "Mystical Shards",
+        title: "Мистические Осколки",
         description:
-            "Collect fragments of divine memory across elements (fire, water, grass), forms (beast, bird, reptile), and emotions (rage, passion, hope). Each shard tells a story of the gods who once ruled these lands.",
+            "Собирайте фрагменты божественной памяти по стихиям (огонь, вода, трава), формам (зверь, птица, рептилия) и эмоциям (ярость, азарт, надежда). Каждый осколок содержит частицу божественных снов.",
         iconName: "sparkle",
-        rarity: "From common white to legendary gold"
+        rarity: "Обычные осколки белого сияния"
     },
     {
-        title: "Living Legends",
+        title: "Создание Существ",
         description:
-            "Awaken creatures from the gods' forgotten dreams. Watch as your companions evolve through 4 magnificent stages, each more powerful than the last, culminating in divine awakening.",
+            "Пробуждайте легенды из осколков божественной памяти. Комбинируйте 3 осколка, чтобы создать уникальных существ с особыми характеристиками и навыками.",
         iconName: "crown",
-        rarity: "Unlock their true potential"
+        rarity: "Создайте свою первую легенду"
     },
     {
-        title: "Elemental Mastery",
+        title: "Стихийное Мастерство",
         description:
-            "Master the ancient arts of shard combination. Fire burns with passion, water flows with wisdom, and grass grows with hope. Each element responds to different emotions and forms.",
+            "Используйте сильные и слабые стороны стихий в тактических битвах. Огненные атаки сильны против травяных существ, но слабы против водных.",
         iconName: "flash_on",
-        rarity: "Three elements, endless possibilities"
+        rarity: "Три стихии, бесконечные комбинации"
     },
     {
-        title: "Sacred Realms",
+        title: "Академия Мастеров",
         description:
-            "Journey through mystical zones from ancient forests shrouded in mist to volcanic peaks where dragons once soared. Prove your worth to enter Olympus itself.",
+            "Оттачивайте мастерство в тренировочных битвах против случайных существ. Создавайте команды до 6 существ и развивайте их до 10 уровня.",
         iconName: "terrain",
-        rarity: "Olympus awaits the worthy"
+        rarity: "Начните своё обучение сегодня"
     }
 ];
 
 const updates = [
     {
-        version: "Alpha 0.3.1",
-        date: "December 10, 2024",
-        title: "Olympus Awakening",
+        version: "MVP 0.1",
+        date: "Июль 2025",
+        title: "Запуск минимальной версии",
         description:
-            "The sacred gates to Olympus now stand open for masters who have successfully awakened 6 divine creatures. Face the ultimate trials where gods once walked among mortals.",
-        type: "Major Update",
+            "Доступны базовые механики: создание существ из осколков, тактические битвы 6x6, система Power Points (PP), стихийные взаимодействия и эффекты в бою.",
+        type: "Основное Обновление",
         iconName: "crown"
     },
     {
-        version: "Alpha 0.3.0",
-        date: "November 28, 2024",
-        title: "Evolution Mastery",
+        version: "Будущее обновление",
+        date: "Скоро",
+        title: "Редкие Осколки и Эволюции",
         description:
-            "The complete creature evolution system has been forged. Witness your companions transform through 4 breathtaking stages of divine metamorphosis.",
-        type: "Major Update",
+            "В разработке: редкие осколки с улучшенными характеристиками, система эволюции существ и новые возможности прокачки.",
+        type: "Планы",
         iconName: "sparkle"
     },
     {
-        version: "Alpha 0.2.5",
-        date: "November 15, 2024",
-        title: "Legendary Shards",
+        version: "Будущее обновление",
+        date: "Скоро",
+        title: "Уникальные Боссы и Синергии",
         description:
-            "Golden legendary shards now pulse with unique divine properties. Balance has been restored to the eternal dance between fire and water elements.",
-        type: "Content Update",
-        iconName: "flash_on"
+            "Планируем добавить: боссов с особыми механиками, пассивные эффекты существ, синергии в командах и систему артефактов.",
+        type: "Планы",
+        iconName: "shield"
     },
     {
-        version: "Alpha 0.2.0",
-        date: "October 30, 2024",
-        title: "Emotion System",
+        version: "Будущее обновление",
+        date: "Скоро",
+        title: "Сюжет и PvP",
         description:
-            "The gods' emotions now flow through the shards: rage burns bright, passion flows deep, and hope springs eternal. Each emotion unlocks hidden powers and ancient stories.",
-        type: "Feature Update",
-        iconName: "sparkle"
+            "В разработке: захватывающий сюжетный квест, ежедневные задания, PvP-арена и расширенная коллекция осколков.",
+        type: "Планы",
+        iconName: "groups"
     }
 ];
 
 const getTypeColor = (type) => {
     switch (type) {
-        case "Major Update":
+        case "Основное Обновление":
             return "bg-primary/20 text-primary border-primary/30";
-        case "Content Update":
+        case "Планы":
             return "bg-accent/20 text-accent border-accent/30";
-        case "Feature Update":
+        case "Обновление Функций":
             return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
         default:
             return "bg-muted/20 text-muted-foreground border-muted/30";
@@ -96,69 +97,85 @@ const getTypeColor = (type) => {
 
 const linkCategories = [
     {
-        title: "Join the Fellowship",
+        title: "Присоединиться к Сообществу",
         iconName: "group",
         links: [
             {
-                name: "Discord Sanctuary",
-                description: "Gather with fellow Shard Masters",
+                name: "Telegram Канал",
+                description: "Обсуждайте стратегии и делитесь находками",
                 iconName: "chat_bubble_outline"
             },
             {
-                name: "Reddit Commune",
-                description: "Share ancient strategies and discoveries",
-                iconName: "question_answer"
+                name: "Предложить Идею",
+                description: "Ваши идеи помогут сформировать будущее игры",
+                iconName: "lightbulb_outline"
             },
             {
-                name: "Sacred Forums",
-                description: "Commune with the divine developers",
-                iconName: "description"
+                name: "Стать Соавтором",
+                description: "Приглашаем художников и дизайнеров к сотрудничеству",
+                iconName: "brush"
             }
         ]
     },
     {
-        title: "Ancient Wisdom",
-        iconName: "menu_book",
+        title: "Будущие Возможности",
+        iconName: "auto_awesome",
         links: [
             {
-                name: "Master's Codex",
-                description: "Unlock the secrets of shard mastery",
-                iconName: "menu_book"
+                name: "4 Стадии Эволюции",
+                description: "Каждое существо получит уникальные трансформации",
+                iconName: "change_circle"
             },
             {
-                name: "Creature Bestiary",
-                description: "Chronicle of all divine beings",
-                iconName: "person"
+                name: "Уникальные Боссы",
+                description: "Испытайте себя против легендарных существ",
+                iconName: "shield"
             },
             {
-                name: "Mythic Lore",
-                description: "Delve into the gods' forgotten stories",
-                iconName: "description"
-            }
-        ]
-    },
-    {
-        title: "Divine Support",
-        iconName: "help_outline",
-        links: [
-            {
-                name: "Oracle's Aid",
-                description: "Report disturbances in the realm",
-                iconName: "help_outline"
+                name: "Синергии и Артефакты",
+                description: "Создавайте мощные комбинации и собирайте реликвии",
+                iconName: "auto_awesome"
             },
             {
-                name: "Visions Request",
-                description: "Share your divine inspirations",
-                iconName: "edit_document"
-            },
-            {
-                name: "Temple of Help",
-                description: "Seek guidance from the masters",
-                iconName: "group"
+                name: "PvP Арена",
+                description: "Соревнуйтесь с другими Мастерами Осколков",
+                iconName: "sports_esports"
             }
         ]
     }
 ];
+
+
+const yandexStore = useYandexStore();
+
+const saveGameProgress = async () => {
+    console.log(123)
+    const success = await yandexStore.savePlayerData({
+        level: 5,
+        coins: 1000,
+        inventory: ['sword', 'potion']
+    });
+    console.log(success)
+
+    if (success) {
+        console.log('Game saved successfully!');
+        yandexStore.sendAnalyticsEvent('game_save');
+    }
+};
+
+const showAd = async () => {
+    if (!yandexStore.sdk) return;
+
+    try {
+        await yandexStore.sdk.adv.showRewardedVideo();
+        console.log('Reward granted!');
+        yandexStore.sendAnalyticsEvent('ad_watched');
+    } catch (error) {
+        console.error('Ad error:', error);
+    }
+};
+
+
 </script>
 <template>
     <q-page class="flex flex-center">
@@ -189,27 +206,27 @@ const linkCategories = [
                     <!-- Logo with enhanced glow -->
                     <div class="mb-12">
                         <img src="/Logo_transperent-Photoroom.png"
-                             alt="Rune Shards Logo"
+                             alt="Лого Рунные осколки"
                              class="w-40 h-40 mx-auto float-animation mystical-glow-transparent"/>
                     </div>
 
                     <!-- Main title -->
                     <h1 class="hero-title mb-8 gradient-text">
-                        Rune Shards
+                        Рунные Осколки
                     </h1>
 
                     <!-- Subtitle -->
                     <div class="text-xl md:text-2xl mb-6 text-accent font-semibold tracking-wide">
-                        Forge Legends from Divine Dreams
+                        Пробуди божественные легенды
                     </div>
 
                     <!-- Description -->
                     <p class="text-lg md:text-xl mb-12 text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                        In a world where gods have fallen silent, their dreams crystallize into mystical
-                        <span class="text-primary font-semibold mx-2">Rune Shards</span> -
-                        fragments of divine memory waiting to be awakened. Step into the role of a
-                        <span class="text-accent font-semibold mx-2">Shard Master</span>
-                        and breathe life into forgotten legends.
+                        В мире, где боги погрузились в вечный сон, их мечты кристаллизовались в мистические
+                        <span class="text-primary font-semibold mx-2">Рунные Осколки</span> -
+                        фрагменты божественной памяти, ждущие своего пробуждения. Станьте
+                        <span class="text-accent font-semibold mx-2">Мастером Осколков</span>
+                        и вдохните жизнь в забытые легенды.
                     </p>
 
                     <!-- Action buttons -->
@@ -221,14 +238,18 @@ const linkCategories = [
                                to="/game"
                         >
                             <q-icon name="play_arrow" class="w-5 h-5 mr-3"/>
-                            Begin Your Legend
+                            Начать Игру
                         </q-btn>
 
                         <q-btn size="lg" outline no-caps
                                class="text-lg px-10 py-4 border-primary/50 hover:border-primary hover:bg-primary/10 transition-all duration-300">
-                            <q-icon name="remove_red_eye" class="w-5 h-5 mr-3"/>
-                            Watch Trailer
+                            <q-icon name="auto_stories" class="w-5 h-5 mr-3"/>
+                            Узнать Историю Мира
                         </q-btn>
+
+                        <!-- ...ваш существующий код... -->
+                        <q-btn label="Save Game" @click="saveGameProgress" />
+                        <q-btn label="Show Ad" @click="showAd" />
                     </div>
 
                     <!-- Mystical quote -->
@@ -239,11 +260,10 @@ const linkCategories = [
                             </div>
                             <blockquote
                                 class="text-lg md:text-xl italic text-muted-foreground leading-relaxed px-8 py-4">
-                                Do you hear their whispers? The Shards are calling you... but be careful.
-                                Some dreams are best left undisturbed.
+                                Слышишь их шёпот? Осколки зовут тебя... но будь осторожен. Некоторые сны лучше не тревожить.
                             </blockquote>
                         </div>
-                        <cite class="text-sm text-primary/80 mt-4 block">— Ancient Shard Master</cite>
+                        <cite class="text-sm text-primary/80 mt-4 block">— Древний Мастер Осколков</cite>
                     </div>
                 </div>
             </div>
@@ -257,18 +277,17 @@ const linkCategories = [
             <div class="container mx-auto px-4 content-layer">
                 <div class="text-center mb-20">
                     <h2 class="text-5xl md:text-6xl font-bold mb-8 gradient-text">
-                        Master the Divine Arts
+                        Освойте Искусство Осколков
                     </h2>
                     <p class="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                        Discover the secrets of a world where mythology meets adventure,
-                        where every shard holds the memory of gods
+                        Откройте тайны мира, где мифы переплетаются с приключениями, а каждый осколок хранит память богов
                     </p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
                     <q-card v-for="(feature, index) in features"
                             :key="index"
-                            class="shard-shimmer hover:border-primary/50 transition-all duration-500 group overflow-hidden"
+                            class="shard-shimmer hover:border-primary/50 transition-all duration-2000 group overflow-hidden"
                             bordered
                     >
                         <q-card-section class="pb-4">
@@ -304,17 +323,17 @@ const linkCategories = [
             <div class="container mx-auto px-4 content-layer">
                 <div class="text-center mb-20">
                     <h2 class="text-5xl md:text-6xl font-bold mb-8 gradient-text">
-                        Chronicle of Divine Changes
+                        Хроника Изменений
                     </h2>
                     <p class="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                        Follow the evolution of our mystical realm through sacred updates and divine revelations
+                        Следите за развитием нашего мистического мира через важные обновления и будущие возможности
                     </p>
                 </div>
 
                 <div class="max-w-5xl mx-auto space-y-8">
                     <q-card v-for="(update, index) in updates"
                             :key="index"
-                            class="shard-shimmer hover:border-primary/30 transition-all duration-500 group"
+                            class="shard-shimmer hover:border-primary/30 transition-all duration-2000 group"
                             bordered
                     >
                         <q-card-section>
@@ -357,17 +376,17 @@ const linkCategories = [
             <div class="container mx-auto px-4 content-layer">
                 <div class="text-center mb-20">
                     <h2 class="text-5xl md:text-6xl font-bold mb-8 gradient-text">
-                        Enter the Sacred Realm
+                        Присоединяйтесь к Созиданию
                     </h2>
                     <p class="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-                        Unite with the brotherhood of Shard Masters and access the ancient archives of wisdom
+                        Ваши идеи и таланты помогут создать уникальный мир. Станьте частью нашей истории!
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
                     <q-card v-for="(category, categoryIndex) in linkCategories"
                             :key="categoryIndex"
-                            class="shard-shimmer hover:border-primary/50 transition-all duration-500 group"
+                            class="shard-shimmer hover:border-primary/50 transition-all duration-2000 group"
                             bordered
                     >
                         <q-card-section class="text-center pb-6">

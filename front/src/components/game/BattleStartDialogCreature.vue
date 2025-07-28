@@ -49,7 +49,7 @@ defineProps({
         <q-item-section avatar>
             <q-avatar size="40px">
                 <q-img
-                    :src="creature.number ? '/assets/creatures/basic/' + creature.number + '.png' : 'https://img.league17.ru/pub/mnst/norm/full/502.png'"
+                    :src="'/assets/creatures/basic/' + creature.number + '.png'"
                     :alt="creature.name"
                     class="creature-image"
                     :class="{mirror: direction === 'right'}"

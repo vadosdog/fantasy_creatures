@@ -38,7 +38,7 @@ onBeforeUnmount(() => {
         <q-avatar class="float-animation pulse-glow">
             <img src="/favicon-32x32.png">
         </q-avatar>
-        <span class="q-ml-sm text-2xl font-bold gradient-text">Rune Shards</span>
+        <span class="q-ml-sm text-2xl font-bold gradient-text">Рунные осколки</span>
     </router-link>
     <q-space/> <!-- Заполняет доступное пространство -->
 

@@ -106,7 +106,7 @@ const clearHoverCreature = () => {
                 <q-item-section avatar>
                     <q-avatar size="40px">
                         <q-img
-                            :src="creature.texture ? '/assets/creatures/basic/' + creature.texture + '.png' : 'https://img.league17.ru/pub/mnst/norm/full/502.png'"
+                            :src="'./assets/creatures/basic/' + creature.texture + '.png'"
                             :alt="creature.name"
                             class="creature-image"
                             :class="{mirror: creature.direction === 'right'}"

@@ -25,7 +25,7 @@ import {
 // Импортируем стили Quasar
 import '@quasar/extras/material-icons/material-icons.css'
 import 'quasar/src/css/index.sass'
-import '../src/css/tailwind.css'
+import '../public/tailwind.css'
 
 const router = createRouter({
     history: createMemoryHistory(),
@@ -92,6 +92,23 @@ app.use(Quasar, {
         QTooltip,
     },
     directives: {ClosePopup},
+    security: {
+        csp: {
+            policies: {
+                'script-src': [
+                    "'self'",
+                    "https://yandex.ru",
+                    "*.yandex.ru",
+                    "*.yandex.net",
+                    "yastatic.net",
+                    "'unsafe-inline'", // Разрешаем inline-скрипты
+                    "'unsafe-eval'"
+                ],
+                'frame-src': ["https://yandex.ru"],
+                'connect-src': ["https://yandex.ru"]
+            }
+        }
+    },
 })
 
 

@@ -5,7 +5,7 @@ export default {
         id: 'dragomir',
         name: 'Драгомир',
         location: 'academy',
-        image: '/assets/npcs/dragomir_transperent.png',
+        image: './assets/npcs/dragomir_transperent.png',
         defaultDialog: [ // Массив стандартных диалогов с условиями. С конца, если условие не подходит, то следующее
             {
                 conditions: [

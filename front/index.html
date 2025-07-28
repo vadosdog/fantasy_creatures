@@ -4,8 +4,24 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/style.css">
-    <title>Phaser Vue Template</title>
+    <link rel="stylesheet" href="./style.css">
+    <title>Рунные осколки</title>
+
+    <!-- Yandex Games SDK -->
+    <script src="/sdk.js"></script>
+    <script>
+        // Проверяем, находимся ли мы в среде Яндекс Игр
+        const isYandexGames = window.self !== window.top &&
+            /yandex\.(ru|com|by|kz|ua)/.test(window.location.href);
+
+        // Загружаем SDK только в среде Яндекс Игр
+        if (isYandexGames || location.search.includes('yandex-sdk-test')) {
+            const script = document.createElement('script');
+            script.src = 'https://yandex.ru/games/sdk/v2?yandex-games-sdk';
+            document.head.appendChild(script);
+            console.log('Yandex SDK loaded');
+        }
+    </script>
 </head>
 
 <body>

@@ -1,6 +1,8 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue'
+import Unocss from "unplugin-tailwindcss/vite";
+import {quasar} from "@quasar/vite-plugin";
 
 const phasermsg = () => {
     return {
@@ -22,7 +24,11 @@ export default defineConfig({
     base: './',
     plugins: [
         vue(),
-        phasermsg()
+        phasermsg(),
+        Unocss(),
+        quasar({
+            // sassVariables: 'src/quasar-variables.sass'
+        }),
     ],
     resolve: {
         alias: {

@@ -123,9 +123,6 @@ export const useCraftStore = defineStore('craft', {
 
             this.createdCreature = newCreature;
 
-            // Вызываем сохранение стор ручками
-            gameStore.$persist();
-            
             return newCreature
         },
     },

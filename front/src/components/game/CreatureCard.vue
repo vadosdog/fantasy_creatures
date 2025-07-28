@@ -193,7 +193,7 @@ const initiativeStat = computed(() => {
 
 const safeCreature = ref(true)
 
-const src = '/assets/creatures/basic/' + props.creature.number + '.png'
+const src = './assets/creatures/basic/' + props.creature.number + '.png'
 
 
 </script>

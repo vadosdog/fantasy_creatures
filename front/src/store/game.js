@@ -7,9 +7,9 @@ import {resourcesLib} from "../database/resourcesLib.js";
 import {Notify} from "quasar";
 
 export const useGameStore = defineStore('game', {
-    persist: {
-        storage: localStorage
-    },
+    // persist: {
+    //     storage: localStorage
+    // },
     state: () => ({
         game: undefined,
         currentSceneName: undefined,
@@ -1850,9 +1850,6 @@ export const useGameStore = defineStore('game', {
 
             // Тратим ресурс
             this.inventoryRemove('memory_shard', levelCost);
-
-            // Теперь сохранение будет работать
-            this.$persist();
         },
         upgradeStat(creature, statKey) {
             const manualKey = `manual${statKey.charAt(0).toUpperCase() + statKey.slice(1)}`;
@@ -1884,9 +1881,6 @@ export const useGameStore = defineStore('game', {
             creature[statKey] = Math.round(
                 baseValue * (1 + 0.03 * (level - 1)) + manualValue
             );
-
-            // Вызываем сохранение стор ручками
-            this.$persist()
         },
         toggleSkill(creatureId, skill) {
             const creatureIndex = this.creatures.findIndex(c => c.id === creatureId);
@@ -1913,8 +1907,6 @@ export const useGameStore = defineStore('game', {
 
             // Заменяем в массиве
             this.creatures = this.creatures.map(c => c.id === creatureId ? updatedCreature : c);
-
-            this.$persist();
         },
         selectLibraryCreatureId(id) {
             this.selectedLibraryCreatureId = id
