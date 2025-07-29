@@ -5,7 +5,7 @@ import npcsLib from "../database/npcsLib.js";
 import {markRaw} from "vue";
 import {resourcesLib} from "../database/resourcesLib.js";
 import {Notify} from "quasar";
-import {useYandexStore} from "./yandexStore.js";
+import {ALLOWED_KEYS, useYandexStore} from "./yandexStore.js";
 
 export const useGameStore = defineStore('game', {
     // persist: {
@@ -138,7 +138,16 @@ export const useGameStore = defineStore('game', {
     actions: {
         // Инициализация состояния
         async initialize() {
-            this.$state = await useYandexStore().loadGame()
+            const yandexStore = useYandexStore();
+
+            let savedData = await yandexStore.loadGame();
+
+            // Проверяем, есть ли сохранённые данные (не пустой объект)
+            const hasSavedData = savedData && typeof savedData === 'object' && Object.keys(savedData).length > 0;
+
+            if (hasSavedData) {
+                this.$patch(savedData);
+            }
         },
         load() {
         },
@@ -200,13 +209,9 @@ export const useGameStore = defineStore('game', {
             this.flags[flag] = value;
             this.saveGame()
         },
-        hasInventoryItem(id, amount) {
-            const index = this.inventory.findIndex(ii => ii.id === id)
-            if (index === -1) {
-                return false
-            } else {
-                return this.inventory[index].amount >= amount
-            }
+        hasInventoryItem(id, amount = 1) {
+            const item = this.inventory.find(ii => ii.id === id);
+            return item ? item.amount >= amount : false;
         },
         addInventoryItem({id, amount}) {
             const index = this.inventory.findIndex(ii => ii.id === id);
@@ -419,8 +424,11 @@ export const useGameStore = defineStore('game', {
             this.selectedLibraryCreatureId = id
         },
         saveGame() {
-            const gameData = {...this.$state, ['scene']: undefined, ['game']: undefined};
-            useYandexStore().throttledSave(gameData)
+            const gameData = {};
+            for (const key of ALLOWED_KEYS) {
+                gameData[key] = this.$state[key];
+            }
+            useYandexStore().throttledSave(gameData);
         }
     },
 });

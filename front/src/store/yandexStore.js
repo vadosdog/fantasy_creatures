@@ -1,6 +1,9 @@
 import {defineStore} from 'pinia';
 import {getYaGames, initYandexSdk} from "../lib/yandexSdk.js";
 
+// Список разрешённых ключей, которые мы доверяем
+export const ALLOWED_KEYS = ['inventory', 'knownCreatures', 'creatures', 'flags', 'currentState', 'currentLocationId', 'visitedLocations', 'metNpcs', 'dialogProgress'];
+
 export const useYandexStore = defineStore('yandex', {
     state: () => ({
         sdk: null,
@@ -51,26 +54,29 @@ export const useYandexStore = defineStore('yandex', {
                 },
                 getPlayer: () => {
                     return Promise.resolve({
+                        // setData принимает объект
                         setData: (data) => {
                             console.log('[Emulator] Saving data:', data);
                             try {
-                                localStorage.setItem('gameState', data); // data уже строка
+                                // Сохраняем как строку в localStorage
+                                localStorage.setItem('gameState', JSON.stringify(data));
                                 return Promise.resolve();
                             } catch (error) {
                                 return Promise.reject(error);
                             }
                         },
+                        // getData возвращает объект (как в Yandex SDK)
                         getData: () => {
                             console.log('[Emulator] Loading data');
                             const saved = localStorage.getItem('gameState');
-                            return Promise.resolve(saved || '{}'); // возвращаем строку, как в реальном SDK
+                            return Promise.resolve(saved ? JSON.parse(saved) : {});
                         }
                     });
                 },
                 adv: {
                     showRewardedVideo: () => {
                         console.log('[Emulator] Showing rewarded video');
-                        return Promise.resolve({ rewarded: true });
+                        return Promise.resolve({rewarded: true});
                     }
                 }
             };
@@ -79,8 +85,21 @@ export const useYandexStore = defineStore('yandex', {
         async loadGame() {
             try {
                 const player = await this.getPlayer();
-                const data = await player.getData(); // строка
-                return JSON.parse(data || '{}');
+                const rawData = await player.getData(); // объект
+
+                if (!rawData || typeof rawData !== 'object') {
+                    return {};
+                }
+
+                // Фильтруем только нужные поля
+                const filteredData = {};
+                for (const key of ALLOWED_KEYS) {
+                    if (rawData.hasOwnProperty(key)) {
+                        filteredData[key] = rawData[key];
+                    }
+                }
+
+                return filteredData;
             } catch (error) {
                 console.error("Failed to load data", error);
                 return {};
@@ -97,7 +116,6 @@ export const useYandexStore = defineStore('yandex', {
             if (this.isSaving) return;
             this.isSaving = true;
 
-            // Сброс троттлинга
             if (this.throttleTimer) {
                 clearTimeout(this.throttleTimer);
                 this.throttleTimer = null;
@@ -106,14 +124,13 @@ export const useYandexStore = defineStore('yandex', {
 
             try {
                 const player = await this.getPlayer();
-                const data = JSON.stringify(state);
-                await player.setData(data);
+                await player.setData(state); // ← передаём объект, не строку!
                 console.log('Game saved successfully');
             } catch (error) {
                 console.error('Yandex save error:', error);
             } finally {
                 this.isSaving = false;
-                this.lastSaveCall = Date.now(); // ✅ Добавь это!
+                this.lastSaveCall = Date.now();
             }
         },
 
