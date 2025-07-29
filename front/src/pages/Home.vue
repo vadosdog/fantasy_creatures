@@ -235,7 +235,7 @@ const showAd = async () => {
                                class="mystical-glow hover:scale-105 transition-all duration-300 text-lg px-10 py-4"
                                color="primary"
                                text-color="primary-foreground"
-                               to="/game"
+                               to="/world"
                         >
                             <q-icon name="play_arrow" class="w-5 h-5 mr-3"/>
                             Начать Игру
