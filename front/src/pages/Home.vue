@@ -1,6 +1,7 @@
 <script setup>
 import {onMounted} from "vue";
 import {useYandexStore} from "../store/yandexStore.js";
+import {useGameStore} from "../store/game.js";
 
 const emit = defineEmits(['current-active-scene', 'update-footer', 'update-left-drawer', 'update-right-drawer', 'update-header']);
 
@@ -149,18 +150,7 @@ const linkCategories = [
 const yandexStore = useYandexStore();
 
 const saveGameProgress = async () => {
-    console.log(123)
-    const success = await yandexStore.savePlayerData({
-        level: 5,
-        coins: 1000,
-        inventory: ['sword', 'potion']
-    });
-    console.log(success)
-
-    if (success) {
-        console.log('Game saved successfully!');
-        yandexStore.sendAnalyticsEvent('game_save');
-    }
+    useGameStore().saveGame()
 };
 
 const showAd = async () => {
@@ -242,14 +232,18 @@ const showAd = async () => {
                         </q-btn>
 
                         <q-btn size="lg" outline no-caps
-                               class="text-lg px-10 py-4 border-primary/50 hover:border-primary hover:bg-primary/10 transition-all duration-300">
-                            <q-icon name="auto_stories" class="w-5 h-5 mr-3"/>
-                            Узнать Историю Мира
+                               class="text-lg px-10 py-4 border-primary/50 hover:border-primary hover:bg-primary/10 transition-all duration-300"
+                               href="https://t.me/rune_shards"
+                               target="_blank"
+                               rel="noopener"
+                        >
+                            <q-icon name="send" class="w-5 h-5 mr-3"/>
+                            Присоединяйтесь к сообществу
                         </q-btn>
 
                         <!-- ...ваш существующий код... -->
-                        <q-btn label="Save Game" @click="saveGameProgress" />
-                        <q-btn label="Show Ad" @click="showAd" />
+<!--                        <q-btn label="Save Game" @click="saveGameProgress" />-->
+<!--                        <q-btn label="Show Ad" @click="showAd" />-->
                     </div>
 
                     <!-- Mystical quote -->

@@ -123,6 +123,8 @@ export const useCraftStore = defineStore('craft', {
 
             this.createdCreature = newCreature;
 
+            gameStore.saveGame()
+
             return newCreature
         },
     },

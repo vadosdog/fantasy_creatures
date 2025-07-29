@@ -1,11 +1,17 @@
-import { defineStore } from 'pinia';
+import {defineStore} from 'pinia';
 import {getYaGames, initYandexSdk} from "../lib/yandexSdk.js";
 
 export const useYandexStore = defineStore('yandex', {
     state: () => ({
         sdk: null,
         playerData: null,
-        isInitialized: false
+        isSaving: false,
+
+        // Троттлинг-система
+        throttleTimer: null,
+        lastSaveCall: 0,
+        pendingSave: false,
+        throttleDelay: 500
     }),
     actions: {
         async initialize() {
@@ -24,11 +30,6 @@ export const useYandexStore = defineStore('yandex', {
                     this.sdk = this.createEmulator();
                 }
 
-                // 4. Загружаем данные игрока
-                if (this.sdk) {
-                    await this.loadPlayerData();
-                }
-
                 this.isInitialized = true;
             } catch (error) {
                 console.error('Yandex store initialization failed:', error);
@@ -37,18 +38,20 @@ export const useYandexStore = defineStore('yandex', {
 
         createEmulator() {
             return {
-                getData: async () => {
-                    const data = localStorage.getItem('yandex_save') || '{}';
-                    console.log('[Emulator] Loading data:', data);
-                    return data;
-                },
-                setData: async (data) => {
-                    localStorage.setItem('yandex_save', data);
-                    console.log('[Emulator] Saving data:', data);
-                    return true;
-                },
                 reachGoal: (event, params) => {
                     console.log(`[Emulator] Analytics event: ${event}`, params);
+                },
+                features: {
+                    getData: async () => {
+                        const data = localStorage.getItem('gameState') || '{}';
+                        console.log('[Emulator] Loading data:', data);
+                        return data;
+                    },
+                    setData: async (data) => {
+                        localStorage.setItem('gameState', data);
+                        console.log('[Emulator] Saving data:', data);
+                        return true;
+                    },
                 },
                 adv: {
                     showRewardedVideo: () => {
@@ -59,25 +62,67 @@ export const useYandexStore = defineStore('yandex', {
             };
         },
 
-        async loadPlayerData() {
+        async loadGame() {
             try {
                 // Новый путь к методам
                 const data = await this.sdk?.features?.getData();
-                this.playerData = JSON.parse(data || '{}');
+                return JSON.parse(data || '{}');
             } catch (error) {
                 console.error("Failed to load data", error);
-                this.playerData = {};
+                return {};
             }
-        },
-
-        async savePlayerData(data) {
-            // Новый путь к методам
-            await this.sdk.features.setData(JSON.stringify(data), true);
         },
 
         sendAnalyticsEvent(eventName, params = {}) {
             // Прямой вызов метода
             this.sdk.reachGoal(eventName, params);
-        }
+        },
+
+        // Основная функция сохранения
+        async saveGame(state) {
+            // Отменяем ожидающий троттлинг-вызов
+            if (this.throttleTimer) {
+                clearTimeout(this.throttleTimer)
+                this.throttleTimer = null
+            }
+            this.pendingSave = false
+            if (this.isSaving) return
+            this.isSaving = true
+            
+            try {
+
+
+                console.log(state)
+                const data = JSON.stringify(state)
+                this.sdk.features.setData(data, false)
+            } catch (error) {
+                console.error('Yandex save error:', error)
+            } finally {
+                this.isSaving = false
+            }
+
+        },
+
+        // Троттлинг-версия для частых событий (500ms)
+        throttledSave(data) {
+            const now = Date.now()
+            this.pendingSave = true
+
+            // Если таймер уже установлен - сбросить его
+            if (this.throttleTimer) {
+                clearTimeout(this.throttleTimer)
+            }
+
+            // Рассчитать время до следующего возможного сохранения
+            const timeSinceLastSave = now - this.lastSaveCall
+            const delay = Math.max(this.throttleDelay - timeSinceLastSave, 0)
+
+            // Установить новый таймер
+            this.throttleTimer = setTimeout(() => {
+                if (this.pendingSave) {
+                    this.saveGame(data)
+                }
+            }, delay)
+        },
     }
 });

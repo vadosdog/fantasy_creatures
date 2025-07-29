@@ -113,17 +113,7 @@ function showBattlefield() {
 }
 
 function applyRewards() {
-    if (props.battleData.rewards.resources) {
-        for (const resource of props.battleData.rewards.resources) {
-            gameStore.addInventoryItem(resource)
-        }
-    }
-
-    if (props.battleData.rewards.experience) {
-        for (const id of Object.keys(props.battleData.rewards.experience)) {
-            gameStore.addCreatureExperience(id, props.battleData.rewards.experience[id])
-        }
-    }
+    gameStore.applyRewards(props.battleData.rewards)
 }
 
 </script>
