@@ -124,6 +124,7 @@ export const useYandexStore = defineStore('yandex', {
 
             try {
                 const player = await this.getPlayer();
+                console.log(state)
                 await player.setData(state); // ← передаём объект, не строку!
                 console.log('Game saved successfully');
             } catch (error) {

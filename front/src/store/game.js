@@ -426,8 +426,11 @@ export const useGameStore = defineStore('game', {
         saveGame() {
             const gameData = {};
             for (const key of ALLOWED_KEYS) {
-                gameData[key] = this.$state[key];
+                const value = this.$state[key];
+                // Полностью клонируем, убивая реактивность
+                gameData[key] = JSON.parse(JSON.stringify(value));
             }
+
             useYandexStore().throttledSave(gameData);
         }
     },
