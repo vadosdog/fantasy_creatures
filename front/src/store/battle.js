@@ -830,13 +830,12 @@ export const useBattleStore = defineStore('battle', {
 
             this.showBattleOverDialog = true
             this.battleOverData = {
-                outcome: 'victory',
+                outcome: this.battleState === BATTLE_STATE_BATTLE_OVER_WIN ? 'victory' : 'defeat',
                 playerCreatures: this.leftTeam,
                 enemyCreatures: this.rightTeam,
                 rewards: {
                     experience: experience,
                     resources: resources,
-                    // trophies: ['Редкий артефакт', 'Знак отличия']
                 }
             }
         },
