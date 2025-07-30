@@ -56,7 +56,7 @@ const dialog = computed(() => gameStore.currentDialog)
                             'font-neucha': option.type === 'phrase',
                             'font-scada': option.type !== 'phrase',
                         }"
-                        @click="gameStore.selectDialogOption(option.nextNode)"
+                        @click="gameStore.selectDialogOption(option)"
                     >
                         <q-icon v-if="option.icon" :name="option.icon" class="mr-2"/>
                         {{ option.label }}

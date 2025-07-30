@@ -7,6 +7,81 @@ import {resourcesLib} from "../database/resourcesLib.js";
 import {Notify} from "quasar";
 import {ALLOWED_KEYS, useYandexStore} from "./yandexStore.js";
 
+const defaultState = {
+    game: undefined,
+    currentSceneName: undefined,
+    scene: undefined, //TODO не нужно тут
+    tooltip: { //TODO не нужно тут
+        show: false,
+        text: '',
+        position: {x: 0, y: 0}
+    },
+    inventory: [
+        {
+            id: 'memory_shard',
+            amount: 0,
+        },
+        {
+            id: 'craft_shard_fire_common',
+            amount: 1,
+        },
+        {
+            id: 'craft_shard_water_common',
+            amount: 1,
+        },
+        {
+            id: 'craft_shard_grass_common',
+            amount: 1,
+        },
+        {
+            id: 'craft_shard_beast_common',
+            amount: 1,
+        },
+        {
+            id: 'craft_shard_bird_common',
+            amount: 1,
+        },
+        {
+            id: 'craft_shard_reptile_common',
+            amount: 1,
+        },
+        {
+            id: 'craft_shard_rage_common',
+            amount: 1,
+        },
+        {
+            id: 'craft_shard_hope_common',
+            amount: 1,
+        },
+        {
+            id: 'craft_shard_passion_common',
+            amount: 1,
+        },
+    ],
+    knownCreatures: [],
+    creatures: [],
+
+    // Сюжетные флаги
+    flags: [],
+
+    currentState: 'location', //battle, craft?
+    battleConfig: undefined,
+
+    // Локации
+    currentLocationId: 'academy',
+    currentDialogNpc: null,
+    currentDialogNodeId: null,
+    visitedLocations: [],
+    metNpcs: [],
+
+
+    // Прогресс диалогов
+    dialogProgress: {},
+
+    // Просто вспомогательная переменная для выбора существа для прокачки в библиотеке
+    selectedLibraryCreatureId: null,
+}
+
 export const useGameStore = defineStore('game', {
     // persist: {
     //     storage: localStorage
@@ -287,12 +362,17 @@ export const useGameStore = defineStore('game', {
             }
             return 'greeting'
         },
-        selectDialogOption(dialogNodeId) {
-            if (!npcDialogs[this.currentDialogNpc][dialogNodeId]) {
-                return false
-            }
+        selectDialogOption(option) {
+            switch (option.type) {
+                case "phrase":
+                    if (!npcDialogs[this.currentDialogNpc][option.nextNode]) {
+                        return false
+                    }
 
-            this.currentDialogNodeId = dialogNodeId
+                    return this.currentDialogNodeId = option.nextNode
+                case 'reset_game_end':
+                    return this.resetGame()
+            }
         },
         endDialog() {
             this.currentDialogNpc = null
@@ -428,6 +508,10 @@ export const useGameStore = defineStore('game', {
             }
 
             useYandexStore().throttledSave(gameData);
+        },
+        resetGame() {
+            this.$patch(defaultState);
+            this.saveGame()
         }
     },
 });

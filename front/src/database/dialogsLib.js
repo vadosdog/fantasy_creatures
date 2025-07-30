@@ -30,6 +30,11 @@ export const npcDialogs = {
                     "type": "phrase"
                 },
                 {
+                    "label": "Я хочу все забыть",
+                    "nextNode": "reset_game_confirm1",
+                    "type": "phrase"
+                },
+                {
                     "label": "Пока",
                     "nextNode": "end",
                     "type": "phrase"
@@ -75,6 +80,11 @@ export const npcDialogs = {
                 {
                     "label": "О странностях...",
                     "nextNode": "meta_block",
+                    "type": "phrase"
+                },
+                {
+                    "label": "Я хочу все забыть",
+                    "nextNode": "reset_game_confirm1",
                     "type": "phrase"
                 },
                 {
@@ -898,6 +908,49 @@ export const npcDialogs = {
                     "label": "Назад",
                     "nextNode": "meta_block",
                     "type": "phrase"
+                }
+            ]
+        },
+
+        "reset_game_confirm1": {
+            "id": "reset_game_confirm1",
+            "npcText": "Уверен? Я могу стукнуть тебя по голове — и твоё желание сбудется.",
+            "options": [
+                {
+                    "label": "Да, я уверен!",
+                    "nextNode": "reset_game_confirm2",
+                    "type": "phrase"
+                },
+                {
+                    "label": "Нет, что-то я погорячился",
+                    "nextNode": "greeting",
+                    "type": "phrase"
+                }
+            ]
+        },
+        "reset_game_confirm2": {
+            "id": "reset_game_confirm2",
+            "npcText": "Точно? Ты забудешь всё, что знаешь и умеешь. А пока ты в отключке, гномы украдут всё твоё барахло. И, как побочный эффект… все, кто тебя знал, тоже забудут о твоём существовании. Расчехляю «Боньк»?",
+            "options": [
+                {
+                    "label": "Да, давай уже",
+                    "nextNode": "reset_game_execute",
+                    "type": "phrase"
+                },
+                {
+                    "label": "Нет, что-то я погорячился",
+                    "nextNode": "greeting",
+                    "type": "phrase"
+                }
+            ]
+        },
+        "reset_game_execute": {
+            "id": "reset_game_execute",
+            "npcText": "*поднимает посох* Ну, держись… БОНЬК! *оглушающий всплеск света* …Гм. Память стёрта. Инвентарь ушёл к гномам. Слава забыта. Возвращайся, когда вспомнишь, зачем ты тут…",
+            "options": [
+                {
+                    "label": "Проснуться в пустоте",
+                    "type": "reset_game_end"
                 }
             ]
         },
