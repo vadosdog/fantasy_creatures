@@ -282,13 +282,15 @@ export const useBattleStore = defineStore('battle', {
             this.battleState = battleState
         },
         endTurn(isDelayTurn = false) {
-            const removedRoundEffects = CreatureAPI.removeRoundEffects(this.activeCreature)
-            for (const effect of removedRoundEffects) {
-                this.recordLog({
-                    type: 'endOfEffect',
-                    effect,
-                    target: CreatureAPI.getSimpleObject(this.activeCreature),
-                })
+            if (this.activeCreature.health > 0) {
+                const removedRoundEffects = CreatureAPI.removeRoundEffects(this.activeCreature)
+                for (const effect of removedRoundEffects) {
+                    this.recordLog({
+                        type: 'endOfEffect',
+                        effect,
+                        target: CreatureAPI.getSimpleObject(this.activeCreature),
+                    })
+                }
             }
             this.queue.endTurn(isDelayTurn)
             if (this.checkBattleOver()) {
@@ -337,7 +339,7 @@ export const useBattleStore = defineStore('battle', {
                 this.activeCreature.health = 0
                 // гомосятина переделать
                 this.creatureDefeated(this.activeCreature)
-                this.activeCreature = undefined
+                // this.activeCreature = undefined
             } else {
                 CreatureAPI.roundRestorePP(this.activeCreature)
             }
