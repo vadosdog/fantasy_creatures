@@ -146,7 +146,7 @@ const filteredCreatures = computed(() => {
 </script>
 
 <template>
-    <q-dialog persistent maximized full-width full-height>
+    <q-dialog persistent maximized full-width full-height class="text-dark">
         <q-card class="">
             <q-card-section class="bg-primary text-white">
                 <div class="text-h6">Подготовка к бою</div>
