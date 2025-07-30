@@ -295,7 +295,7 @@ const nextLevelExperience = computed(() => {
 
 const maxLevel = computed(() => {
     // в теории может быть разные для разных существ
-    return Math.min(30, 5 + Math.floor((selectedCreature.value?.experience || 0) / 600))
+    return Math.min(9, 5 + Math.floor((selectedCreature.value?.experience || 0) / 600)) //TODO пока ограничивает на 9, тк нет эволюции
 })
 
 const memoryShards = computed(() => gameStore.inventory.find((i) => i.id === 'memory_shard')?.amount || 0)
@@ -317,7 +317,7 @@ function getActionTypeLabel(action) {
     return {"melee": 'Ближняя атака', 'ranged': 'Дистанционная атака', 'treat': 'Лечение/Бафы'}[action.actionType]
 }
 
-const levelUpButtonLabel = computed(() => selectedCreature.value.level < maxLevel.value ? 'Повысить: '+ levelCost.value + ' ОП' : (selectedCreature.value.level === 30 ? 'MAX' : `Требуется ${nextLevelExperience.value} ЭБ`))
+const levelUpButtonLabel = computed(() => selectedCreature.value.level < maxLevel.value ? 'Повысить: '+ levelCost.value + ' ОП' : (selectedCreature.value.level === 9 ? 'MAX' : `Требуется ${nextLevelExperience.value} ЭБ`))
 
 </script>
 <template>
