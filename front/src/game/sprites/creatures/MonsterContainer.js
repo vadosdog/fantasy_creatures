@@ -1,9 +1,9 @@
 import Monster1 from "./Monster1.js";
 import {CreatureAPI} from "../../classes/battle/Creature.js";
-import {useGameStore} from "../../../store/game.js";
 import Pokemon1 from "./Pokemon1.js";
+import {useBattleStore} from "../../../store/battle.js";
 
-const gameStore = useGameStore()
+const battleStore = useBattleStore()
 
 export default class MonsterContainer extends Phaser.GameObjects.Container {
     creatureSprite
@@ -182,11 +182,11 @@ export default class MonsterContainer extends Phaser.GameObjects.Container {
     // Метод для визуального выделения
     setHovered(isHighlighted) {
         if (isHighlighted) {
-            gameStore.setHoveredCreature(this.creature.id)
+            battleStore.setHoveredCreature(this.creature.id)
             this.creatureSprite.setTint(0xffff00);
         } else {
             this.creatureSprite.clearTint();
-            gameStore.setHoveredCreature(null);
+            battleStore.setHoveredCreature(null);
         }
     }
 

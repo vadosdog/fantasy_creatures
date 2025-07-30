@@ -1,10 +1,8 @@
-import Monster1 from "./Monster1.js";
 import {CreatureAPI} from "../../classes/battle/Creature.js";
-import {useGameStore} from "../../../store/game.js";
-import Pokemon1 from "./Pokemon1.js";
 import Monster2 from "./Monster2.js";
+import {useBattleStore} from "../../../store/battle.js";
 
-const gameStore = useGameStore()
+const battleStore = useBattleStore()
 
 export default class Monster2Container extends Phaser.GameObjects.Container {
     creatureSprite
@@ -182,26 +180,11 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
     // Метод для визуального выделения
     setHovered(isHighlighted) {
         if (isHighlighted) {
-            gameStore.setHoveredCreature(this.creature.id)
+            battleStore.setHoveredCreature(this.creature.id)
             this.creatureSprite.setTint(0xffff00);
         } else {
             this.creatureSprite.clearTint();
-            gameStore.setHoveredCreature(null);
+            battleStore.setHoveredCreature(null);
         }
     }
-
-    // Обновляем позицию относительно гекса
-    getBounds() {
-        if (!this.creatureSprite) return new Phaser.Geom.Rectangle();
-        return this.creatureSprite.getBounds();
-    }
-
-    // Обновляем позицию и уведомляем гекс
-    updatePosition(x, y) {
-        this.setPosition(x, y);
-        if (this.parentHex) {
-            this.parentHex.updateInteractive();
-        }
-    }
-
 }

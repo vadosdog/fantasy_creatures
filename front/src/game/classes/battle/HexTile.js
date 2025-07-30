@@ -239,8 +239,11 @@ export class HexTile extends Phaser.GameObjects.Container {
         this.add(this.overlay);
 
         // События
-        // this.setInteractive(new Phaser.Geom.Polygon(this.hexPoints), Phaser.Geom.Polygon.Contains);
-        this.updateInteractive();
+        this.setInteractive({
+            hitArea: new Phaser.Geom.Polygon(this.hexPoints),
+            hitAreaCallback: Phaser.Geom.Polygon.Contains,
+            useHandCursor: true
+        });
         this.on('pointerover', () => this.onHover(true));
         this.on('pointerout', () => this.onHover(false));
         this.on('pointerdown', () => this.onClick());
@@ -264,7 +267,6 @@ export class HexTile extends Phaser.GameObjects.Container {
             HexTile.globalPulseStart = scene.time.now;
         }
 
-        this.creatureHitArea = null; // Добавляем поле для хранения хитовой области монстра
         this.creature = null; // Ссылка на контейнер с монстром
         this.creatureHighlighted = false; // Флаг, что существо подсвечено
     }
@@ -614,218 +616,14 @@ export class HexTile extends Phaser.GameObjects.Container {
         this.glowBase.fillPoints(this.hexPoints, true);
     }
 
-    // Рассчитываем хитовую область монстра
-    calculateCreatureHitArea() {
-        if (!this.creature) return null;
-
-        // Получаем глобальные координаты монстра
-        const creatureBounds = this.creature.getBounds();
-
-        // Рассчитываем локальные координаты относительно гекса
-        return new Phaser.Geom.Rectangle(
-            creatureBounds.x - this.x,
-            creatureBounds.y - this.y,
-            creatureBounds.width,
-            creatureBounds.height
-        );
-    }
-
-    // Обновляем интерактивность
-    updateInteractive() {
-        // Создаем объединенную хитовую область
-        const combinedArea = this.createCombinedHitArea();
-
-        if (!this.input?.hitArea) {
-            this.setInteractive({
-                hitArea: combinedArea,
-                hitAreaCallback: Phaser.Geom.Polygon.Contains,
-                useHandCursor: true
-            });
-        }
-
-        this.input.hitArea = combinedArea
-    }
-
-    createCombinedHitArea() {
-        // Создаем базовый полигон гекса
-        const hexPolygon = new Phaser.Geom.Polygon(this.hexPoints);
-
-        // Если существо отсутствует, возвращаем полигон гекса
-        if (!this.creature) {
-            return hexPolygon;
-        }
-
-        // Получаем глобальные границы существа
-        const creatureBounds = this.creature.getBounds();
-
-        // Конвертируем координаты в локальную систему относительно текущего объекта
-        const localX = creatureBounds.x - this.x;
-        const localY = creatureBounds.y - this.y;
-
-        // Создаем полигон существа вручную
-        const creaturePolygon = new Phaser.Geom.Polygon([
-            localX, localY,
-            localX + creatureBounds.width, localY,
-            localX + creatureBounds.width, localY + creatureBounds.height,
-            localX, localY + creatureBounds.height
-        ]);
-
-        // Функция конвертации Phaser.Polygon в формат polygon-clipping
-        const convertToClipperFormat = (polygon) => {
-            const points = [];
-
-            // Собираем все точки полигона
-            for (const point of polygon.points) {
-                points.push([point.x, point.y]);
-            }
-
-            // Замыкаем полигон, если требуется
-            if (points.length > 0) {
-                const first = points[0];
-                const last = points[points.length - 1];
-
-                if (first[0] !== last[0] || first[1] !== last[1]) {
-                    points.push([first[0], first[1]]);
-                }
-            }
-
-            return [points];
-        };
-
-        // Конвертируем оба полигона
-        const clipperHex = convertToClipperFormat(hexPolygon);
-        const clipperCreature = convertToClipperFormat(creaturePolygon);
-
-        // Выполняем объединение полигонов
-        let unionResult;
-        try {
-            unionResult = polygonClipping.union(clipperHex, clipperCreature);
-        } catch (error) {
-            console.error("Polygon union error:", error);
-            return hexPolygon;
-        }
-
-        // Обрабатываем результаты объединения
-        const processUnionResult = (result) => {
-            if (result.length === 0) return null;
-
-            // Выбираем самый большой полигон по количеству точек
-            let largestRing = null;
-            let maxPoints = -1;
-
-            for (const poly of result) {
-                if (poly.length === 0) continue;
-
-                // Берем только внешний контур (первое кольцо)
-                const outerRing = poly[0];
-                if (outerRing.length > maxPoints) {
-                    maxPoints = outerRing.length;
-                    largestRing = outerRing;
-                }
-            }
-
-            if (!largestRing) return null;
-
-            // Создаем финальный полигон (удаляем дублирующую точку)
-            const finalPoints = [];
-            for (let i = 0; i < largestRing.length - 1; i++) {
-                finalPoints.push(largestRing[i][0], largestRing[i][1]);
-            }
-
-            return new Phaser.Geom.Polygon(finalPoints);
-        };
-
-        // Возвращаем результат или исходный полигон при ошибке
-        return processUnionResult(unionResult) || hexPolygon;
-    }
-
-    // При перемещении гекса обновляем хитовую область
-    setPosition(x, y) {
-        super.setPosition(x, y);
-        if (this.creature) {
-            this.creatureHitArea = this.calculateCreatureHitArea();
-        }
-    }
-
     // Устанавливаем существо на гекс
     setCreature(creatureContainer) {
         this.creature = creatureContainer;
-        this.creatureHitArea = this.calculateCreatureHitArea();
-        this.updateInteractive();
-        this.drawDebugBounds()
     }
 
     // Убираем существо с гекса
     removeCreature() {
         this.creature = null;
-        this.creatureHitArea = null;
-        this.updateInteractive();
-        this.drawDebugBounds()
-    }
-
-    // Обновленный метод проверки попадания
-    containsPoint(x, y) {
-        // 1. Проверка попадания в сам гекс
-        const localPoint = this.getLocalPoint(x, y);
-        const hexPolygon = new Phaser.Geom.Polygon(this.hexPoints);
-
-        if (Phaser.Geom.Polygon.Contains(hexPolygon, localPoint.x, localPoint.y)) {
-            return true;
-        }
-
-        // 2. Проверка попадания в существо
-        if (this.creature) {
-            // Преобразуем глобальные координаты в локальные относительно существа
-            const creaturePoint = this.creature.getLocalPoint(x, y);
-
-            // Проверяем попадание в спрайт существа
-            if (this.creature.creatureSprite.getBounds().contains(creaturePoint.x, creaturePoint.y)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    getLocalPoint(x, y) {
-        // Используем встроенный метод Phaser для преобразования координат
-        return this.parentContainer ?
-            this.parentContainer.getLocalPoint(x, y) :
-            {x: x - this.x, y: y - this.y};
-    }
-
-    updateCreatureHitArea() {
-        if (this.creature) {
-            this.creatureHitArea = this.calculateCreatureHitArea();
-            this.updateInteractive();
-        }
-    }
-
-    drawDebugBounds() {
-        return //отключил
-        if (this.debugGraphics) {
-            this.debugGraphics.destroy();
-        }
-
-        this.debugGraphics = this.scene.add.graphics();
-        this.add(this.debugGraphics);
-
-        if (this.input?.hitArea) {
-            // Рисуем хитовую область
-            const hitArea = this.input.hitArea;
-            this.debugGraphics.lineStyle(2, 0xff0000);
-            this.debugGraphics.strokePoints(hitArea.points, true);
-        }
-
-        return
-        // Подписываем координаты
-        hitArea.points.forEach((point, i) => {
-            const text = this.scene.add.text(point.x, point.y, `${i}:(${Math.round(point.x)},${Math.round(point.y)})`, {
-                fontSize: '10px',
-                color: '#ff0000'
-            });
-            this.debugGraphics.add(text);
-        });
     }
 
     getSectorAngle() {

@@ -2,14 +2,12 @@
 import {ref, computed, watch, nextTick} from 'vue'
 import {useBattleStore} from "../../store/battle.js";
 import {QScrollArea, QIcon, QLinearProgress, useQuasar} from 'quasar'
-import {useGameStore} from "../../store/game.js";
 import CreatureCard from "./CreatureCard.vue";
 
 const battleStore = useBattleStore();
-const gameStore = useGameStore()
 const queueData = computed(() => battleStore.queueData)
 const activeCreatureId = computed(() => battleStore.activeCreatureId)
-const hoveredCreatureId = computed(() => gameStore.hoveredCreatureId)
+const hoveredCreatureId = computed(() => battleStore.hoveredCreatureId)
 const hoverTimer = ref(null);
 
 // Обновляем флаг isActive для существ
@@ -70,11 +68,11 @@ watch(processedQueue, scrollToActiveCreature, {immediate: true})
 
 
 const hoverCreature = (creature) => {
-    gameStore.setHoveredCreature(creature.id);
+    battleStore.setHoveredCreature(creature.id);
 };
 
 const clearHoverCreature = () => {
-    gameStore.setHoveredCreature(null);
+    battleStore.setHoveredCreature(null);
 };
 </script>
 

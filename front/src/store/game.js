@@ -15,7 +15,6 @@ export const useGameStore = defineStore('game', {
         game: undefined,
         currentSceneName: undefined,
         scene: undefined, //TODO не нужно тут
-        hoveredCreatureId: undefined, //ToDO не нужно тут
         tooltip: { //TODO не нужно тут
             show: false,
             text: '',
@@ -173,9 +172,6 @@ export const useGameStore = defineStore('game', {
                 return
             }
             this.scene = markRaw(scene) //TODO не надо этот тут вообще
-        },
-        setHoveredCreature(id) {
-            this.hoveredCreatureId = id;
         },
         showTooltip(text, position = {x: 0, y: 0}) {
             this.tooltip = {show: true, text, position};

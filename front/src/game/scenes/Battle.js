@@ -17,11 +17,8 @@ import {
 } from "../../store/battle.js";
 import {CreatureAPI} from "../classes/battle/Creature.js";
 import {markRaw, watchEffect} from "vue";
-import {useGameStore} from "../../store/game.js";
 import {HexTile} from "../classes/battle/HexTile.js";
 import Monster2Container from "../sprites/creatures/Monster2Container.js";
-
-const gameStore = useGameStore()
 
 
 export class Battle extends Scene {
@@ -70,7 +67,7 @@ export class Battle extends Scene {
         EventBus.emit('current-scene-ready', this);
 
         watchEffect(() => {
-            const id = gameStore.hoveredCreatureId;
+            const id = this.store.hoveredCreatureId;
             if (!id) {
                 this.hoveredCreature = null
             }
@@ -184,10 +181,6 @@ export class Battle extends Scene {
                     hexagon.x,
                     hexagon.y,
                 ))
-
-                creature.creatureSpriteContainer.creatureSprite.on('pointerup', (...args) => {
-                    this.handleHexagonClick(creature.position, hexagon, ...args)
-                });
 
                 // this.store.creatures.add(creature)
                 creature.creatureSpriteContainer.updateEffectsIcons()
@@ -631,7 +624,7 @@ export class Battle extends Scene {
         if (path.length < 2) return;
 
         // Получаем старый гекс перед перемещением
-        const oldKey = activeCreature.position.join(',');
+        const oldKey = path[0].join(',');
         const oldHex = this.hexagonsArray.get(oldKey);
 
         // Убираем существо со старого гекса в начале перемещения
@@ -670,8 +663,7 @@ export class Battle extends Scene {
             at: (path.length) * segmentDuration,
             run: () => {
                 const lastPos = path[path.length - 1];
-                activeCreature.position[0] = lastPos[0];
-                activeCreature.position[1] = lastPos[1];
+                activeCreature.position = [...lastPos]; // Создаем новый массив
 
                 // Устанавливаем существо на новый гекс
                 const newKey = lastPos.join(',');
@@ -680,11 +672,16 @@ export class Battle extends Scene {
                     newHex.setCreature(activeCreature.creatureSpriteContainer);
                     // Обновляем ссылку на родительский гекс
                     activeCreature.creatureSpriteContainer.parentHex = newHex;
+
+                    // Принудительно обновляем ссылку в хранилище
+                    this.store.updateCreaturePosition(
+                        activeCreature.id,
+                        [...lastPos]
+                    );
                 }
             }
         });
-
-
+        
         return timeline
     }
 
@@ -995,7 +992,7 @@ export class Battle extends Scene {
         // Clear previous state
         this.clearAttackIndicator();
 
-        if (!gameStore.hoveredCreatureId) {
+        if (!this.store.hoveredCreatureId) {
             return
         }
 
@@ -1130,6 +1127,9 @@ export class Battle extends Scene {
             }
 
             // 4. Очищаем массив гексов
+            this.hexagonsArray.forEach(hex => {
+                hex.destroy(true);
+            });
             this.hexagonsArray.clear();
 
             // 5. Уничтожаем кнопки

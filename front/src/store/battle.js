@@ -57,7 +57,8 @@ export const useBattleStore = defineStore('battle', {
 
         // Финал битвы
         showBattleOverDialog: false,
-        battleOverData: {}
+        battleOverData: {},
+        hoveredCreatureId: undefined,
     }),
     getters: {},
     actions: {
@@ -841,6 +842,27 @@ export const useBattleStore = defineStore('battle', {
         },
         hideShowBattleOverDialog(){
             this.showBattleOverDialog = false
+        },
+        setHoveredCreature(id) {
+            this.hoveredCreatureId = id;
+        },
+        updateCreaturePosition(creatureId, newPosition) {
+            const creature = this.creatures[creatureId];
+            if (creature) {
+                creature.position = newPosition;
+
+                // Обновляем позицию в battleMap
+                const oldKey = creature.position.join(',');
+                const newKey = newPosition.join(',');
+
+                if (this.battleMap[oldKey]) {
+                    this.battleMap[oldKey].content = null;
+                }
+
+                if (this.battleMap[newKey]) {
+                    this.battleMap[newKey].content = creature;
+                }
+            }
         }
 
     },
