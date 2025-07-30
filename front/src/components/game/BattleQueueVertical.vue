@@ -103,10 +103,23 @@ const clearHoverCreature = () => {
                 clickable
                 v-ripple
             >
+                <q-tooltip
+                    anchor="top middle"
+                    self="bottom middle"
+                    :offset="[10, 10]"
+                    :delay="1000"
+                    style="width: 300px"
+                >
+                    <CreatureCard
+                        :creature="creature"
+                        :key="creature.id"
+                        :stats-verbose="creature.direction !== 'left'"
+                    />
+                </q-tooltip>
                 <q-item-section avatar>
                     <q-avatar size="40px">
                         <q-img
-                            :src="'./assets/creatures/basic/' + creature.texture + '.png'"
+                            :src="'./assets/creatures/basic/' + (creature.number || creature.texture) + '.png'"
                             :alt="creature.name"
                             class="creature-image"
                             :class="{mirror: creature.direction === 'right'}"
@@ -119,6 +132,12 @@ const clearHoverCreature = () => {
                         <q-badge rounded :color="creature.direction === 'left' ? 'red' : 'green'" />
                         {{ creature.name }}
                     </q-item-label>
+                    <q-item-section>
+                        <div>
+                            <q-badge class="q-mr-sm" color="grey">Ур. {{ creature.level }}</q-badge>
+                            <q-badge class="q-mr-sm" color="primary">{{ creature.element }}</q-badge>
+                        </div>
+                    </q-item-section>
                     <q-item-label caption>
                         <div class="health-bar">
                             <QLinearProgress

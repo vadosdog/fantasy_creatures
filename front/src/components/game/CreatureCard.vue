@@ -193,7 +193,7 @@ const initiativeStat = computed(() => {
 
 const safeCreature = ref(true)
 
-const src = './assets/creatures/basic/' + props.creature.number + '.png'
+const src = './assets/creatures/basic/' + (props.creature.number || props.creature.texture) + '.png'
 
 
 </script>
@@ -205,7 +205,7 @@ const src = './assets/creatures/basic/' + props.creature.number + '.png'
                 <q-btn flat round :color="elementIcon.color" :icon="elementIcon.icon"/>
                 <q-btn flat round color="red" :icon="emotionIcon"/>
                 <q-btn flat round color="accent" :icon="shapeIcon"/>
-                <q-btn flat color="dark">Lvl: {{ creature.level }}</q-btn>
+                <q-btn flat color="dark">Ур: {{ creature.level }}</q-btn>
             </q-card-actions>
             <q-img
                 :src="src"

@@ -29,7 +29,7 @@ function creatureImage(creature) {
                 <div class="flex justify-between items-center">
                     <div class="font-semibold truncate">{{ creature.name }}</div>
                     <div class="text-sm bg-[var(--muted)] px-2 py-1 rounded">
-                        Lvl.{{ creature.level }}
+                        Ур.{{ creature.level }}
                     </div>
                 </div>
 
