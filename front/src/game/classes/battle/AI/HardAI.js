@@ -17,14 +17,13 @@ const EFFECT_WEIGHTS = {
     madness: {base: 3.5, perTurn: 0.45, max: 4.85},
 };
 
-// Веса действий по ролям
 const EMOTION_WEIGHTS = {
     rage: {      // Танки
         attack: 1.8,    // Высокий приоритет атаки
         treat: 1.2,     // Умеренный приоритет бафов
         move: 1.5,      // Высокий приоритет позиционирования
         skip: 0.1,
-        defense: 1.8    // Приоритет защиты
+        defense: 0.8    // Приоритет защиты
     },
     passion: {   // ДД
         attack: 2.5,    // Максимальный приоритет атаки
@@ -38,7 +37,7 @@ const EMOTION_WEIGHTS = {
         treat: 2.2,     // Высокий приоритет лечения/бафов
         move: 1.4,      // Высокий приоритет позиционирования
         skip: 0.3,
-        defense: 1.2    // Умеренный приоритет защиты
+        defense: 0.8    // Умеренный приоритет защиты
     }
 };
 
@@ -50,8 +49,8 @@ export class HardAI {
     getAction(store) {
         this.store = store;
         this.activeCreature = store.activeCreature;
-        this.movablePositions = store.getMoveablePositions(this.activeCreature)
-        this.adjacentEnemies = store.getAdjacentEnemies(this.activeCreature.position, this.activeCreature.direction)
+        this.movablePositions = store.getMoveablePositions(this.activeCreature);
+        this.adjacentEnemies = store.getAdjacentEnemies(this.activeCreature.position, this.activeCreature.direction);
 
         const enemies = store.creatures.filter(c => c.health > 0 && c.direction !== this.activeCreature.direction);
         const allies = store.creatures.filter(c => c.health > 0 && c.direction === this.activeCreature.direction && c.id !== this.activeCreature.id);
@@ -81,12 +80,39 @@ export class HardAI {
         // 3. Защита и пропуск хода
         availableActions.push({
             action: 'defense',
-            weight: EMOTION_WEIGHTS[this.activeCreature.emotion].skip,
+            weight: EMOTION_WEIGHTS[this.activeCreature.emotion].skip, // Увеличиваем вес защиты
             ppCost: 0
         });
 
+        // 4. Учет PP
+        // availableActions = availableActions.map(action => {
+        //     const ppModifier = this.getPpModifier(action.ppCost || 0);
+        //     return {
+        //         ...action,
+        //         weight: action.weight * ppModifier
+        //     };
+        // });
+
         // Выбор лучшего действия
-        return this.chooseAction(availableActions);
+        return this.chooseAction(availableActions, enemies.length);
+    }
+
+    getPpModifier(ppCost) {
+        const ppRatio = this.activeCreature.pp / CreatureAPI.getMaxPP(this.activeCreature);
+        const emotion = this.activeCreature.emotion;
+
+        if (emotion === 'rage') {
+            // Танки экономят PP для экстренной защиты
+            return ppRatio > 0.6 ? 1.0 : 0.5 + ppRatio;
+        }
+
+        if (emotion === 'passion') {
+            // ДД агрессивно используют PP
+            return ppRatio > 0.2 ? 1.3 : 0.8;
+        }
+
+        // Стандартная логика
+        return Math.min(1.2, 0.7 + ppRatio * 0.8);
     }
 
     getEffectWeight(effect, target) {
@@ -112,10 +138,8 @@ export class HardAI {
         let bestScore = -Infinity;
 
         // Проверка блокировки дальних атак
-        if (attack.actionType === 'ranged') {
-            if (this.adjacentEnemies.length > 0) {
-                return null; // Дальняя атака заблокирована
-            }
+        if (attack.actionType === 'ranged' && this.adjacentEnemies.length > 0) {
+            return null; // Дальняя атака заблокирована
         }
 
         // 1. Поиск лучшей цели (главная цель)
@@ -174,7 +198,7 @@ export class HardAI {
         // 5. Если ничего не найдено, двигаемся к главной цели
         if (mainTarget) {
             const path = this.store.findPath(this.activeCreature.position, mainTarget.position);
-            const movePosition = path[Math.min(speed, path.length - 1)];
+            const movePosition = path[Math.min(speed - 1, path.length - 2)];
 
             return {
                 weight: 70 * EMOTION_WEIGHTS[emotion].move,
@@ -214,7 +238,7 @@ export class HardAI {
         // Приоритет целей
         score *= 1.0 + (1.0 - enemy.health / CreatureAPI.getMaxHealth(enemy));
 
-        // Приоритет по ролям
+        // Приоритет по ролям (эмоциям)
         if (enemy.emotion === 'hope') score *= 1.8;
         if (enemy.emotion === 'passion') score *= 1.5;
 
@@ -231,7 +255,8 @@ export class HardAI {
             weight: 100 * EMOTION_WEIGHTS[emotion].attack,
             action: 'attack',
             actionObject: attack,
-            targets: target.position
+            targets: target.position,
+            ppCost: attack.pp
         };
     }
 
@@ -250,20 +275,23 @@ export class HardAI {
             const path = this.store.findPath(this.activeCreature.position, ally.position);
             const distance = path.length - 1;
 
-            let score = 0; //не знаю надо побалансить
+            let score = 0;
 
             if (treat.baseDamage > 0) { // Лечение
                 const healNeeded = allyMaxHealth - ally.health;
                 score += healNeeded * (ally.emotion === 'rage' ? 1.5 : 1) * (ally.emotion === 'passion' ? 1.3 : 1);
             }
 
-
-            treat.effects.forEach(effect => score += this.getEffectWeight(effect, ally)) // докидываем веса за эффекты
-
+            treat.effects.forEach(effect => score += this.getEffectWeight(effect, ally))
 
             // Увеличение при низком здоровье
             if (ally.health < allyMaxHealth * 0.7) {
                 score *= 1.4;
+            }
+
+            // Уменьшение приоритета для себя при высоком здоровье
+            if (ally.id === this.activeCreature.id && ally.health > allyMaxHealth * 0.8) {
+                score *= 0.6;
             }
 
             if (score > bestScore) {
@@ -285,45 +313,25 @@ export class HardAI {
                 action: 'treat',
                 actionObject: treat,
                 targets: bestTarget.ally.position,
+                ppCost: treat.pp
             };
         } else {
-            bestTarget.path = this.store.findPath(this.activeCreature.position, bestTarget.ally.position, true)
-
             return {
                 weight: bestScore * EMOTION_WEIGHTS[emotion].move,
                 action: 'move',
                 targets: bestTarget.path[Math.min(CreatureAPI.getSpeed(this.activeCreature) - 1, bestTarget.path.length - 2)],
+                ppCost: 0
             };
-
         }
     }
 
     getMoveTarget(enemies, allies) {
         const speed = CreatureAPI.getSpeed(this.activeCreature);
         const currentPos = this.activeCreature.position;
-
-        // Для ДД: отступление при угрозе
-        if (this.activeCreature.emotion === 'passion') {
-            if (this.adjacentEnemies.length > 0) {
-                const safePositions = this.movablePositions
-                    .filter(pos => this.store.getAdjacentEnemies(pos, this.activeCreature.position).length === 0)
-                    .sort((a, b) =>
-                        this.store.getDistance(a, enemies[0].position) -
-                        this.store.getDistance(b, enemies[0].position)
-                    );
-
-                if (safePositions.length > 0) {
-                    return {
-                        weight: 90 * EMOTION_WEIGHTS[this.activeCreature.emotion].move,
-                        action: 'move',
-                        targets: safePositions[0]
-                    };
-                }
-            }
-        }
+        const emotion = this.activeCreature.emotion;
 
         // Для танков: поиск позиции для блокировки нескольких врагов
-        if (this.activeCreature.emotion === 'rage') {
+        if (emotion === 'rage') {
             let bestPosition = null;
             let maxBlockScore = -Infinity;
 
@@ -331,7 +339,7 @@ export class HardAI {
                 // Оценка позиции по количеству блокируемых врагов
                 const blockScore = enemies.reduce((score, enemy) => {
                     const dist = this.store.getDistance(position, enemy.position);
-                    return score + (dist === 1 ? 1.5 : 0); // Бонус за смежную позицию
+                    return score + (dist === 1 ? 1.5 : 0);
                 }, 0);
 
                 // Дополнительный бонус за защиту союзников
@@ -339,21 +347,94 @@ export class HardAI {
                     this.store.getDistance(position, a.position) === 1
                 ).length * 1.2;
 
-                const totalScore = blockScore + protectionScore;
+                // Штраф за опасные позиции
+                const threatLevel = this.calculateThreatLevel(position, enemies);
+
+                const totalScore = (blockScore + protectionScore) * EMOTION_WEIGHTS.rage.defense - threatLevel;
                 if (totalScore > maxBlockScore) {
                     maxBlockScore = totalScore;
                     bestPosition = position;
                 }
             });
 
-            if (bestPosition) {
+            if (bestPosition && maxBlockScore > 1.5) {
                 return {
-                    weight: 40 + maxBlockScore * 20, // Динамический вес
+                    weight: 50 + maxBlockScore * 20,
                     action: 'move',
                     targets: bestPosition
                 };
             }
         }
+
+        // Для ДД: отступление при угрозе
+        if (emotion === 'passion' && this.adjacentEnemies.length > 0) {
+            const safePositions = this.movablePositions
+                .filter(pos => {
+                    const adjEnemies = this.store.getAdjacentEnemies(pos, this.activeCreature.direction);
+                    return adjEnemies.length === 0;
+                })
+                .sort((a, b) => {
+                    // Сортировка по расстоянию до ближайшего врага
+                    const minDistA = Math.min(...enemies.map(e => this.store.getDistance(a, e.position)));
+                    const minDistB = Math.min(...enemies.map(e => this.store.getDistance(b, e.position)));
+                    return minDistA - minDistB;
+                });
+
+            if (safePositions.length > 0) {
+                return {
+                    weight: 90 * EMOTION_WEIGHTS.passion.move,
+                    action: 'move',
+                    targets: safePositions[0]
+                };
+            }
+        }
+
+        // Для саппортов: движение к раненым союзникам
+        if (emotion === 'hope') {
+            let bestAlly = null;
+            let minDistance = Infinity;
+
+            allies.filter(ally => ally.health < CreatureAPI.getMaxHealth(ally) * 0.7)
+                .forEach(ally => {
+                    const path = this.store.findPath(currentPos, ally.position);
+                    if (path.length < minDistance) {
+                        minDistance = path.length;
+                        bestAlly = ally;
+                    }
+                });
+
+            if (bestAlly) {
+                const path = this.store.findPath(currentPos, bestAlly.position);
+                return {
+                    weight: 80 * EMOTION_WEIGHTS.hope.move,
+                    action: 'move',
+                    targets: path[Math.min(speed - 1, path.length - 2)]
+                };
+            }
+        }
+
+        // Общая логика: движение к ближайшему врагу
+        let closestEnemy = null;
+        let minDist = Infinity;
+
+        enemies.forEach(enemy => {
+            const dist = this.store.getDistance(currentPos, enemy.position);
+            if (dist < minDist) {
+                minDist = dist;
+                closestEnemy = enemy;
+            }
+        });
+
+        if (closestEnemy) {
+            const path = this.store.findPath(currentPos, closestEnemy.position);
+            return {
+                weight: 40 * EMOTION_WEIGHTS[emotion].move,
+                action: 'move',
+                targets: path[Math.min(speed - 1, path.length - 2)]
+            };
+        }
+
+        return null;
     }
 
     calculateThreatLevel(position, enemies) {

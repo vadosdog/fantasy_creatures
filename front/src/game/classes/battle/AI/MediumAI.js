@@ -140,9 +140,10 @@ export class MediumAI {
                 this.activeCreature,
                 enemy,
                 attack,
+                distance,
                 false,
                 true
-            ) * CombatHandler.getHitChance(this.activeCreature, enemy, attack);
+            ) * CombatHandler.getHitChance(this.activeCreature, enemy, attack, distance);
 
             // Приоритет целей
             score *= 1.0 + (1.0 - enemy.health / CreatureAPI.getMaxHealth(enemy)); // Раненым целям

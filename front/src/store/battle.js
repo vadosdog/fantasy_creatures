@@ -7,6 +7,7 @@ import {CreatureAPI} from "../game/classes/battle/Creature.js";
 import {useBattleLogStore} from "./battleLog.js";
 import {EasyAI} from "../game/classes/battle/AI/EasyAI.js";
 import {MediumAI} from "../game/classes/battle/AI/MediumAI.js";
+import {HardAI} from "../game/classes/battle/AI/HardAI.js";
 
 export const BATTLE_STATE_PLAYER_TURN = 'PLAYER_TURN'
 export const BATTLE_STATE_ENGINE_TURN = 'ENGINE_TURN'
@@ -72,9 +73,9 @@ export const useBattleStore = defineStore('battle', {
                 testTeam(2, 'right', 'player', limit)
             }
             if (this.battleConfig.rightTeam) {
-                rightTeam = getTeam2('left', new MediumAI(), this.battleConfig.rightTeam)
+                rightTeam = getTeam2('left', new HardAI(), this.battleConfig.rightTeam)
             } else {
-                testTeam(2, 'left', new MediumAI(), limit)
+                testTeam(2, 'left', new HardAI(), limit)
             }
             this.resetBattle([
                 ...leftTeam,
@@ -131,6 +132,7 @@ export const useBattleStore = defineStore('battle', {
         },
         handlePlayerTurn() {
             const activeCreature = this.activeCreature
+            const adjacentEnemies = this.getAdjacentEnemies(activeCreature.position, activeCreature.direction)
             if (CreatureAPI.hasEffect(activeCreature, 'freeze')) {
                 return
             }
@@ -143,6 +145,10 @@ export const useBattleStore = defineStore('battle', {
             }
 
             activeCreature.actions.forEach(action => {
+                // Если рядом есть противники, то ближняя атака недоступна
+                if (adjacentEnemies.length > 0 && action.actionType === 'ranged') {
+                    return
+                }
                 const actionTargets = []
                 const actionDirections = {}
                 this.creatures.forEach(creature => {
@@ -359,6 +365,28 @@ export const useBattleStore = defineStore('battle', {
                 type: 'defeated'
             });
         },
+        getAdjacentEnemies(pos, direction) {
+            const result = [];
+
+            const directions = this.getDirections(pos);
+
+            for (const [dx, dy] of directions) {
+                const newX = pos[0] + dx;
+                const newY = pos[1] + dy;
+                const content = this.battleMap.getContent(newX, newY)
+                if (
+                    newX >= 0 &&
+                    newY >= 0 &&
+                    this.battleMap.hasByCoords(newX, newY) &&
+                    content !== undefined &&
+                    content.direction !== direction
+                ) {
+                    result.push([newX, newY]);
+                }
+            }
+
+            return result
+        },
         getMoveablePositions(activeCreature) {
             let start = activeCreature.position
             let speed = CreatureAPI.getSpeed(activeCreature)
@@ -430,6 +458,9 @@ export const useBattleStore = defineStore('battle', {
                 })
             });
             return neighbors
+        },
+        getDistance(start, end, useObstacles = true) {
+            return this.findPath(start, end, useObstacles).length - 1;
         },
         findPath(start, end, useObstacles = true) {
             let obstacles = new Set()
@@ -543,19 +574,24 @@ export const useBattleStore = defineStore('battle', {
             attack.currentCooldown = attack.cooldown
             attacker.pp -= attack.pp
 
+            let distance = 1
+            if (attack.actionType === 'ranged') {
+                const path = this.findPath(attacker.position, defender.position, false);
+                distance = path.length - 1;
+            }
 
             // Расчёт шанса попадания
-            const hitChance = CombatHandler.getHitChance(attacker, defender, attack);
+            const hitChance = CombatHandler.getHitChance(attacker, defender, attack, distance);
             result.hitChance = hitChance
             const isCrit = Math.random() < CombatHandler.getCritAttackChance(attacker, defender, attack);
-            result.potentialDamage = CombatHandler.getAttackDamage(attacker, defender, attack, false, true)
+            result.potentialDamage = CombatHandler.getAttackDamage(attacker, defender, attack, distance, false, true)
 
             const dice = Math.random()
             if (dice < hitChance) {
                 result.success = true
 
                 // считаем урон
-                result.damage = CombatHandler.getAttackDamage(attacker, defender, attack, isCrit)
+                result.damage = CombatHandler.getAttackDamage(attacker, defender, attack, distance, isCrit)
                 this.$patch(state => {
                     // Используйте иммутабельные обновления
                     const defenderStateObject = state.creatures.find(c => c.id === defenderId);
@@ -773,7 +809,7 @@ export const useBattleStore = defineStore('battle', {
                     id: 'memory_shard', amount: memoryShards,
                 })
             }
-            
+
             // Осколки падают только за победы
             if (this.battleState === BATTLE_STATE_BATTLE_OVER_WIN) {
                 const shards = []
@@ -827,8 +863,7 @@ export const useBattleStore = defineStore('battle', {
                 })));
             }
 
-            
-            
+
             const experience = battleLog.getStatistic()
 
             this.showBattleOverDialog = true
@@ -842,7 +877,7 @@ export const useBattleStore = defineStore('battle', {
                 }
             }
         },
-        hideShowBattleOverDialog(){
+        hideShowBattleOverDialog() {
             this.showBattleOverDialog = false
         },
         setHoveredCreature(id) {

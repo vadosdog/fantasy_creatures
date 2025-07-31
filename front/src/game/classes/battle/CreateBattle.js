@@ -3,6 +3,7 @@ import {creaturesLib, getActionsByLevel, getCreature, getTeam2} from "../../../d
 import {MediumAI} from "./AI/MediumAI.js";
 import {calcCreatureStats} from "./Creature.js";
 import {useGameStore} from "../../../store/game.js";
+import {HardAI} from "./AI/HardAI.js";
 
 const gameStore = useGameStore();
 
@@ -99,7 +100,7 @@ function getRandomEnemies(config) {
 
     shuffleArray(creatures)
 
-    return getTeam2('left', new MediumAI(), creatures)
+    return getTeam2('left', new HardAI(), creatures)
 }
 
 function createNewCreature(element, shape, emotion, level) {

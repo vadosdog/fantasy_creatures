@@ -21,10 +21,23 @@ export class CombatHandler {
         }[attackElement + '->' + defenseElement] || 1.0
     }
 
-    static getHitChance(attacker, defender, attack) {
+    static getHitChance(attacker, defender, attack, distance) {
+        let distanceMultiplayer = 1
+        if (attack.actionType === 'ranged') {
+            if (distance < attack.range * 0.3) {
+                // На ближних дистанциях увеличиваем точность
+                distanceMultiplayer = 1.1
+            } else if (distance > attack.range * 0.7) {
+                // На дальних дистанциях снижаем точность до 60% от базовой
+                distanceMultiplayer = 1 - 0.4 * (distance - 0.7 * attack.range) / (0.3 * attack.range)
+            }
+        }
+        
         return Phaser.Math.Clamp(
             attack.hitChance
-            * CreatureAPI.getHitChanceModifier(attacker),
+            * CreatureAPI.getHitChanceModifier(attacker)
+            * distanceMultiplayer
+            ,
             0.05, // всегда есть шанс на поподание
             0.99 // всегда есть шанс на промах
         )
@@ -35,13 +48,21 @@ export class CombatHandler {
             + (CreatureAPI.getWill(attacker) - CreatureAPI.getWill(defender)) / 100 + CreatureAPI.getCritChanceTerm(attacker)))
     }
 
-    static getAttackDamage(attacker, defender, attack, isCrit = false, potential = false) {
+    static getAttackDamage(attacker, defender, attack, distance, isCrit = false, potential = false) {
         // урон рандомный +- 15%
         let random = potential ? 1 : Math.random() * 0.3 + 0.85
         if (CreatureAPI.hasEffect(attacker, 'luck')) {
             // Если навык удача, то урон раздоится 1 - 1.15 (0 - +15%)
             // При этом потенциальный урон вырастает на 7.5%
             random = potential ? 1.075 : Math.random() * 0.15 + 1
+        }
+
+        let distanceMultiplayer = 1
+        if (attack.actionType === 'ranged') {
+            if (distance > attack.range * 0.7) {
+                // На дальних дистанциях снижаем урон до 50% от базовой
+                distanceMultiplayer = 1 - 0.5 * (distance - 0.7 * attack.range) / (0.3 * attack.range)
+            }
         }
 
         return Math.floor(Math.max(
@@ -51,6 +72,7 @@ export class CombatHandler {
             * this.getElementMultiplier(attack.element, defender.element)
             * (isCrit ? 1.5 : 1)
             * random
+            * distanceMultiplayer
         ))
     }
 

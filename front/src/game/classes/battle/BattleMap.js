@@ -38,6 +38,10 @@ export class BattleMap extends Map {
     setContent(x, y, content) {
         return this.get(`${x},${y}`).content = content
     }
+    
+    getContent(x, y) {
+        return this.get(`${x},${y}`)?.content
+    }
 
     // Добавляем в класс Battle новые методы:
 
