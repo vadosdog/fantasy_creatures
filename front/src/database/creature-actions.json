@@ -1896,7 +1896,7 @@
         "baseDamage": 40,
         "hitChance": 90,
         "critChance": 10,
-        "effects": "[{\"effect\": \"burn\", \"chance\": 1.0, \"duration\": 4}, {\"effect\": \"regen\", \"chance\": 0.8, \"duration\": 3",
+        "effects": [{"effect": "burn", "chance": 1.0, "duration": 4}, {"effect": "regen", "chance": 0.8, "duration": 3}],
         "pp": 9,
         "cooldown": 3,
         "description": ""
@@ -2487,10 +2487,10 @@
         "baseDamage": 0,
         "hitChance": 100,
         "critChance": 0,
-        "effects": "ПЕРЕДЕЛАТЬ",
+        "effects": [],
         "pp": 15,
         "cooldown": 5,
-        "description": ""
+        "description": "ПЕРЕДЕЛАТЬ"
     },
     {
         "id": 101,

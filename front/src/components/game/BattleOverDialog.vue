@@ -113,6 +113,7 @@ function showBattlefield() {
 }
 
 function applyRewards() {
+    gameStore.addBattleResult(props.battleData.outcome === 'victory')
     gameStore.applyRewards(props.battleData.rewards)
 }
 

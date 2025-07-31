@@ -80,6 +80,8 @@ const defaultState = {
 
     // Просто вспомогательная переменная для выбора существа для прокачки в библиотеке
     selectedLibraryCreatureId: null,
+
+    last5BattleResults: [false, false, false, false, false],
 }
 
 export const useGameStore = defineStore('game', {
@@ -161,6 +163,8 @@ export const useGameStore = defineStore('game', {
 
         // Просто вспомогательная переменная для выбора существа для прокачки в библиотеке
         selectedLibraryCreatureId: null,
+
+        last5BattleResults: [false, false, false, false, false],
     }),
     getters: {
         inventoryObjects(state) {
@@ -512,6 +516,9 @@ export const useGameStore = defineStore('game', {
         resetGame() {
             this.$patch(defaultState);
             this.saveGame()
+        },
+        addBattleResult(result) {
+            this.last5BattleResults = [...this.last5BattleResults, result].slice(-5);
         }
     },
 });

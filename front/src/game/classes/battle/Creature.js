@@ -51,7 +51,9 @@ export function createCreature(config) {
         health: config.maxHealthStat,
         pp: config.maxPP || 10,
 
-        actions: config.actions.map(action => createCreatureAction(action)),
+        actions: config.actions.map(action => createCreatureAction(action))
+            .sort((a, b) => b.level - a.level)
+            .slice(0, 4),
 
         effects: config.effects || []
     }

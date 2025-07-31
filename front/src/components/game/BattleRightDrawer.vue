@@ -142,6 +142,7 @@ function closeDialog() {
         v-if="activeCreature && activeCreature.id"
         :creature="activeCreature"
         :key="activeCreature.id"
+        :show-health="true"
     />
 
     <!-- Actions Panel -->

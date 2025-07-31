@@ -2,11 +2,14 @@
 import {creaturesLib, getActionsByLevel, getCreature, getTeam2} from "../../../database/creaturesLib.js";
 import {MediumAI} from "./AI/MediumAI.js";
 import {calcCreatureStats} from "./Creature.js";
+import {useGameStore} from "../../../store/game.js";
 
-export function getEnemiesByConfig(config, gameStore) {
+const gameStore = useGameStore();
+
+export function getEnemiesByConfig(config) {
     switch (config.type) {
         case 'random_battle':
-            return getRandomEnemies(config, gameStore)
+            return getRandomEnemies(config)
     }
 
     return []
@@ -68,8 +71,8 @@ function generateTeamLevels(baseLevel, size) {
 
     // Распределение уровней
     for (let i = 0; i < size; i++) {
-        const maxPossible = Math.min(20, remainingPower - (size - i - 1));
-        const minPossible = Math.max(1, remainingPower - 20 * (size - i - 1));
+        const maxPossible = Math.min(9, remainingPower - (size - i - 1));
+        const minPossible = Math.max(1, remainingPower - 9 * (size - i - 1));
 
         // Весовое распределение: первые существа сильнее
         const weight = (size - i) / (size * (size + 1) / 2);
@@ -88,7 +91,7 @@ function generateTeamLevels(baseLevel, size) {
 }
 
 
-function getRandomEnemies(config, gameStore) {
+function getRandomEnemies(config) {
     const levels = generateEnemyTeamLevels(gameStore.creatures, config.limit)
     const creatures = generateEmotions(config.limit).map((emotion, i) => {
         return createNewCreature(randomElement(), randomShape(), emotion, levels[i])
@@ -140,6 +143,18 @@ function createNewCreature(element, shape, emotion, level) {
         }
     }[newCreature.emotion]
 
+    let winrate = 0
+    let enemyWinrateMultiplier = 1
+    if (gameStore.last5BattleResults.length !== 0) {
+        const wins = gameStore.last5BattleResults.filter(result => result).length;
+        winrate = wins / gameStore.last5BattleResults.length;
+    }
+    if (winrate > 0.7) {
+        enemyWinrateMultiplier = 1.15
+    } else if (winrate < 0.4) {
+        enemyWinrateMultiplier = 0.85 //1972
+    }
+    
     for (let prop in diffs) {
         if (newCreature.hasOwnProperty(prop)) {
             const diffValue = diffs[prop];
@@ -152,6 +167,10 @@ function createNewCreature(element, shape, emotion, level) {
 
             // Применяем смещение
             newCreature[prop] += randomOffset;
+            
+            // Тк у соперника нет возможности ручной прокачки, мы ему вкинем это в базовые статы.
+            // А бонус зависит от процента побед игрока.
+            newCreature[prop] = Math.round(newCreature[prop] * enemyWinrateMultiplier)
         }
     }
 

@@ -2,7 +2,7 @@ import {defineStore} from 'pinia';
 import {getYaGames, initYandexSdk} from "../lib/yandexSdk.js";
 
 // Список разрешённых ключей, которые мы доверяем
-export const ALLOWED_KEYS = ['inventory', 'knownCreatures', 'creatures', 'flags', 'currentState', 'currentLocationId', 'visitedLocations', 'metNpcs', 'dialogProgress'];
+export const ALLOWED_KEYS = ['inventory', 'knownCreatures', 'creatures', 'flags', 'currentState', 'currentLocationId', 'visitedLocations', 'metNpcs', 'dialogProgress', 'last5BattleResults'];
 
 export const useYandexStore = defineStore('yandex', {
     state: () => ({
