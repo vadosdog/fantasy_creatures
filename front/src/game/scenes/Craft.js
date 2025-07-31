@@ -17,7 +17,7 @@ export class Craft extends Phaser.Scene {
         };
 
         this.components = [];
-        this.unsubscribe = null; // Для отписки от хранилища
+        this.unsubscribe = null;
     }
 
     create() {
@@ -26,20 +26,20 @@ export class Craft extends Phaser.Scene {
         this.scale.on('resize', this.handleResize, this);
         EventBus.emit('current-scene-ready', this);
 
-        // Подписываемся на изменения хранилища
+        // Подписка на изменения хранилища
         this.unsubscribe = craftStore.$subscribe(() => {
-            if (this.scene && this.scene.isActive()) { // Проверяем активность сцены
+            if (this.scene && this.scene.isActive()) {
                 this.updateSlotsFromStore();
             }
         });
 
         // Первоначальное обновление слотов
         this.updateSlotsFromStore();
-        
-        // Добавляем обработчик для безопасного уничтожения
+
+        // Обработчик для безопасного уничтожения
         this.game.events.on('before-destroy', this.safeDestroy, this);
     }
-
+    
     createUI() {
         this.clearUI();
         const width = this.scale.width;
@@ -50,7 +50,6 @@ export class Craft extends Phaser.Scene {
         this.uiElements.slots = this.createSlotsArea(centerX, height * 0.4);
         this.uiElements.bottomPanel = this.createBottomPanel(centerX, height * 0.85, width * 0.8);
 
-        // Останавливаем анимации для всех компонентов
         this.tweens.killTweensOf(this.components);
     }
 
@@ -77,10 +76,7 @@ export class Craft extends Phaser.Scene {
             .strokeRoundedRect(x - width / 2, y - 30, width, 60, 15);
         this.components.push(panel)
 
-        const blacksmith = this.add.image(x - width / 2 + 40, y, 'blacksmith').setDisplaySize(50, 50);
-        this.components.push(blacksmith)
-
-        const text = this.add.text(x, y, '[КУЗНЕЦ] Соберите три осколка: Стихия + Форма + Эмоция', {
+        const text = this.add.text(x, y, 'Соберите три осколка: Стихия + Форма + Эмоция', {
             fontFamily: 'Scada',
             fontSize: '16pt',
             color: '#FFFFFF',
@@ -156,10 +152,19 @@ export class Craft extends Phaser.Scene {
 
         container
             .on('pointerover', () => this.highlightSlot(slotObj))
-            .on('pointerout', () => this.unhighlightSlot(slotObj));
+            .on('pointerout', () => this.unhighlightSlot(slotObj))
+            .on('pointerdown', () => this.handleSlotClick(slotObj));
 
         return slotObj;
     }
+
+    handleSlotClick(slot) {
+        // Если слот пустой - эмитируем событие для подсветки секции
+        if (!slot.shard) {
+            // EventBus.emit('highlight-shard-type', slot.type);
+        }
+    }
+
 
     highlightSlot(slot) {
         if (!slot || !slot.position) return;
@@ -212,16 +217,13 @@ export class Craft extends Phaser.Scene {
             .strokeRoundedRect(x - 150, y - 30, 300, 60, 15);
         this.components.push((this.craftButton))
 
-        this.craftButtonText = this.add.text(x, y, 'ВЫБЕРИТЕ ОСКОЛКИ', {
+        this.craftButtonText = this.add.text(x, y, 'ВЫБЕРИ ОСКОЛКИ', {
             fontFamily: 'Neucha',
             fontSize: '24pt',
             fontWeight: 'bold',
             color: '#AAAAAA'
         }).setOrigin(0.5);
         this.components.push(this.craftButtonText)
-
-        this.lockIcon = this.add.image(x + 120, y, 'lock').setVisible(true);
-        this.components.push(this.lockIcon)
 
         this.craftButton.setInteractive(new Phaser.Geom.Rectangle(x - 150, y - 30, 300, 60), Phaser.Geom.Rectangle.Contains);
 
@@ -278,7 +280,6 @@ export class Craft extends Phaser.Scene {
                 .strokeRoundedRect(x - 150, y - 30, 300, 60, 15);
 
             this.craftButtonText.setText('ОБЪЕДИНИТЬ ОСКОЛКИ!').setColor('#FFFFFF');
-            this.lockIcon.setVisible(false);
         } else {
             this.craftButton
                 .fillGradientStyle(0x444444, 0x222222, 0x444444, 0x222222)
@@ -287,15 +288,33 @@ export class Craft extends Phaser.Scene {
                 .strokeRoundedRect(x - 150, y - 30, 300, 60, 15);
 
             this.craftButtonText.setText('ВЫБЕРИТЕ ОСКОЛКИ').setColor('#AAAAAA');
-            this.lockIcon.setVisible(true);
         }
 
     }
 
     craftCreature() {
-        this.cameras.main.shake(500, 0.02);
-        const centerX = this.scale.width / 2;
-        const centerY = this.scale.height / 2;
+        const camera = this.cameras.main;
+        const width = this.scale.width;
+        const height = this.scale.height;
+
+        // Увеличиваем размеры flash, чтобы покрыть возможные смещения при дрожании
+        const margin = 100;
+        const flashWidth = width + margin * 2;
+        const flashHeight = height + margin * 2;
+
+        // Запускаем дрожание
+        camera.shake(500, 0.02);
+
+        // Создаём flash больше экрана и центрируем
+        const flash = this.add.graphics()
+            .setDepth(1000) // Поверх всего
+            .fillStyle(0xFFFFFF)
+            .fillRect(-margin, -margin, flashWidth, flashHeight) // Рисуем с отрицательных координат
+            .setAlpha(0);
+
+        // Анимация осколков
+        const centerX = width / 2;
+        const centerY = height / 2;
 
         this.tweens.add({
             targets: Object.values(craftStore.selectedShards),
@@ -303,33 +322,26 @@ export class Craft extends Phaser.Scene {
             y: centerY,
             scale: 0.2,
             alpha: 0,
-            duration: 1000,
+            duration: 1000
+            // Без onComplete — всё параллельно
+        });
+
+        // Анимация вспышки — одновременно с дрожанием и анимацией
+        this.tweens.add({
+            targets: flash,
+            alpha: 1,
+            duration: 300,
+            yoyo: true,
+            hold: 100,
             onComplete: () => {
-                const flash = this.add.graphics()
-                    .fillStyle(0xFFFFFF)
-                    .fillRect(0, 0, this.scale.width, this.scale.height)
-                    .setAlpha(0);
-
-                this.tweens.add({
-                    targets: flash,
-                    alpha: 1,
-                    yoyo: true,
-                    duration: 300,
-                    onComplete: () => {
-
-                        // Вызываем метод из хранилища
-                        const newCreature = craftStore.createNewCreature()
-
-                        this.resetSlots();
-                        this.updateCraftButton()
-
-                        flash.destroy()
-                    }
-                });
+                const newCreature = craftStore.createNewCreature();
+                this.resetSlots();
+                this.updateCraftButton();
+                flash.destroy(); // Удаляем после
             }
         });
     }
-
+    
     resetSlots() {
         for (const slot of this.slots) {
             if (slot.shard) {
@@ -388,7 +400,8 @@ export class Craft extends Phaser.Scene {
         if (slot?.shard?.texture?.key === shardData?.texture) {
             return
         }
-        // Очищаем предыдущие данные слота
+
+        // Очищаем слот
         this.clearSlot(slot);
 
         // Скрываем плейсхолдер
@@ -425,6 +438,23 @@ export class Craft extends Phaser.Scene {
                 180, 180, 10
             );
         this.components.push(slot.constantGlow);
+
+        // Добавляем кнопку удаления (крестик)
+        slot.closeButton = this.add.image(
+            slot.position.x + 70,
+            slot.position.y - 70,
+            'close_icon'
+        ).setDisplaySize(20, 20)
+            .setInteractive({
+                useHandCursor: true
+            })
+            .setDepth(1);
+
+        slot.closeButton.on('pointerdown', () => {
+            craftStore.selectShard(slot.type, null);
+        });
+
+        this.components.push(slot.closeButton);
     }
 
     // Новый метод: очистка слота
@@ -441,12 +471,17 @@ export class Craft extends Phaser.Scene {
             slot.constantGlow.destroy();
             slot.constantGlow = null;
         }
+        if (slot.closeButton) {
+            slot.closeButton.destroy();
+            slot.closeButton = null;
+        }
         slot.placeholder.visible = true;
     }
 
+
     safeDestroy() {
         try {
-            // 1. Останавливаем все анимации
+            // Останавливаем анимации
             this.tweens.tweens.forEach(tween => {
                 try {
                     tween.stop();
@@ -456,10 +491,10 @@ export class Craft extends Phaser.Scene {
                 }
             });
 
-            // 2. Отписываемся от событий
+            // Отписываемся от событий
             this.scale.off('resize', this.handleResize, this);
 
-            // 3. Отписываемся от хранилища
+            // Отписываемся от хранилища
             if (this.unsubscribe) {
                 try {
                     this.unsubscribe();
@@ -469,11 +504,11 @@ export class Craft extends Phaser.Scene {
                 this.unsubscribe = null;
             }
 
-            // 4. Очищаем все объекты
+            // Очищаем объекты
             this.clearUI();
             this.slots = [];
 
-            // 5. Освобождаем ресурсы
+            // Освобождаем ресурсы
             if (this.energyLines) {
                 this.energyLines.destroy();
                 this.energyLines = null;
@@ -487,7 +522,7 @@ export class Craft extends Phaser.Scene {
             console.error('Craft safeDestroy error:', error);
         }
     }
-    
+
     // Добавляем обработчик уничтожения сцены
     destroy() {
         this.safeDestroy();

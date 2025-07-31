@@ -105,8 +105,6 @@ export class Preloader extends Scene {
         }
         
         // Craft
-        this.load.image('blacksmith', 'craft/blacksmith.png');
-        this.load.image('parchment', 'craft/parchment.png');
         this.load.image('rune_frame', 'runes/rune_frame.png');
         this.load.image('fire_shard', 'runes/fire_shard.png');
         this.load.image('water_shard', 'runes/water_shard.png');
@@ -117,7 +115,7 @@ export class Preloader extends Scene {
         this.load.image('hope_shard', 'runes/hope_shard.png');
         this.load.image('rage_shard', 'runes/rage_shard.png');
         this.load.image('passion_shard', 'runes/passion_shard.png');
-        this.load.image('lock', 'craft/lock.png');
+        this.load.image('close_icon', 'common/cross-icon.png');
     }
 
     create() {
