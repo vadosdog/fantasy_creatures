@@ -139,7 +139,7 @@ const filteredCreatures = computed(() => {
         }
 
         return true;
-    });
+    }).sort((a,b) => b.level - a.level);
 });
 
 
@@ -148,8 +148,9 @@ const filteredCreatures = computed(() => {
 <template>
     <q-dialog persistent maximized full-width full-height class="text-dark">
         <q-card class="">
-            <q-card-section class="bg-primary text-white">
-                <div class="text-h6">Подготовка к бою</div>
+            <q-card-section class="bg-primary text-white q-py-sm q-px-md row items-center">
+                <q-btn flat round icon="arrow_back" v-close-popup dense />
+                <div class="text-h6 q-ml-sm">Подготовка к бою</div>
             </q-card-section>
 
             <q-card-section class="q-pa-none " style="height: calc(100% - 64px)">
@@ -204,6 +205,7 @@ const filteredCreatures = computed(() => {
                                 ref="scrollArea"
                                 style="width: 100%; height: 100%"
                                 horizontal
+                                v-if="playerCreatures.length > 0"
                             >
                                 <q-list bordered>
                                     <BattleStartDialogCreature
@@ -216,6 +218,10 @@ const filteredCreatures = computed(() => {
                                     />
                                 </q-list>
                             </QScrollArea>
+                            <div v-else class="flex column text-center q-pa-md text-grey">
+                                <span>У вас нет ни одного существа.</span>
+                                <span class="q-mt-sm">Создайте их в <strong>Кузне Осколков</strong></span>
+                            </div>
                         </div>
                     </div>
 
@@ -227,6 +233,7 @@ const filteredCreatures = computed(() => {
                                 ref="scrollArea"
                                 style="width: 100%; height: 100%"
                                 horizontal
+                                v-if="selectedCreatures.length"
                             >
                                 <q-list bordered>
                                     <BattleStartDialogCreature
@@ -239,6 +246,10 @@ const filteredCreatures = computed(() => {
                                     />
                                 </q-list>
                             </QScrollArea>
+                            <div v-else class="flex column text-center q-pa-md text-grey">
+                                <span>Оцените команду противника</span>
+                                <span class="q-mt-sm">и выберите своих существ</span>
+                            </div>
                         </div>
                     </div>
 
