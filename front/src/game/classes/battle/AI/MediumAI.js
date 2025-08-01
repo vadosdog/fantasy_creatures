@@ -42,6 +42,7 @@ const EMOTION_WEIGHTS = {
 export class MediumAI {
     store;
     activeCreature;
+    adjacentEnemies;
 
     getAction(store) {
         this.store = store;
@@ -49,6 +50,7 @@ export class MediumAI {
 
         const enemies = store.creatures.filter(c => c.health > 0 && c.direction !== this.activeCreature.direction);
         const allies = store.creatures.filter(c => c.health > 0 && c.direction === this.activeCreature.direction && c.id !== this.activeCreature.id);
+        this.adjacentEnemies = store.getAdjacentEnemies(this.activeCreature.position, this.activeCreature.direction);
 
         let availableActions = [];
 
@@ -123,6 +125,11 @@ export class MediumAI {
 
     getAttackTarget(attack, enemies) {
         const emotion = this.activeCreature.emotion;
+        
+        // Проверка блокировки дальних атак
+        if (attack.actionType === 'ranged' && this.adjacentEnemies.length > 0) {
+            return null; // Дальняя атака заблокирована
+        }
 
         let bestTarget = null;
         let bestScore = -Infinity;

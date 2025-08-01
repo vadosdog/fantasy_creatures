@@ -317,6 +317,7 @@ export class HardAI {
     }
 
     getMoveTarget(enemies, allies) {
+        return;
         const speed = this.activeCreatureSpeed;
         const currentPos = this.activeCreature.position;
         const emotion = this.activeCreature.emotion;
