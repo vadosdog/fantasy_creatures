@@ -316,7 +316,6 @@ export const useGameStore = defineStore('game', {
             const entity = this.creatures.find(item => item.id === id);
 
             if (!entity) {
-                console.warn(`Entity with id ${id} not found.`);
                 return
             }
 
@@ -334,6 +333,7 @@ export const useGameStore = defineStore('game', {
                     this.visitedLocations.push(locationId);
                 }
             }
+            this.saveGame()
         },
         recordDialogProgress(npcId, nodeId) {
             // Сохраняем прогресс диалога
@@ -388,7 +388,6 @@ export const useGameStore = defineStore('game', {
         },
         creatureLevelUp(creatureId) {
             const index = this.creatures.findIndex(c => c.id === creatureId);
-            console.log(index, creatureId)
 
             if (index === -1) return;
 

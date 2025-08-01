@@ -145,8 +145,10 @@ export class HardAI {
         if (mainTarget) {
             const pathToMain = this.store.findPath(this.activeCreature.position, mainTarget.position);
             const distanceToMain = pathToMain.length - 1;
+            
+            const range = attack.actionType === 'ranged' ? attack.range : speed
 
-            if (distanceToMain <= attack.range) {
+            if (distanceToMain <= range) {
                 // Можем атаковать главную цель сразу
                 return this.createAttackAction(mainTarget, attack, emotion);
             }

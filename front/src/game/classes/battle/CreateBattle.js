@@ -61,7 +61,7 @@ function calculatePlayerPower(creatures, battleSize) {
     // Учет сложности режима
     const sizeFactor = 1 + (battleSize - 1) * 0.05;
 
-    return avgLevel * progressFactor * countFactor * sizeFactor;
+    return Math.min(avgLevel * progressFactor * countFactor * sizeFactor, 9); //TODO исправить после добавления эволюций
 }
 
 // Генерация уровней команды
@@ -72,8 +72,8 @@ function generateTeamLevels(baseLevel, size) {
 
     // Распределение уровней
     for (let i = 0; i < size; i++) {
-        const maxPossible = Math.min(9, remainingPower - (size - i - 1));
-        const minPossible = Math.max(1, remainingPower - 9 * (size - i - 1));
+        const maxPossible = Math.min(9, remainingPower - (size - i - 1));//TODO исправить после добавления эволюций
+        const minPossible = Math.max(1, remainingPower - 9 * (size - i - 1));//TODO исправить после добавления эволюций
 
         // Весовое распределение: первые существа сильнее
         const weight = (size - i) / (size * (size + 1) / 2);
@@ -94,9 +94,7 @@ function generateTeamLevels(baseLevel, size) {
 
 function getRandomEnemies(config) {
     const levels = generateEnemyTeamLevels(gameStore.creatures, config.limit)
-    const creatures = generateEmotions(config.limit).map((emotion, i) => {
-        return createNewCreature(randomElement(), randomShape(), emotion, levels[i])
-    })
+    const creatures = levels.map(level => createNewCreature(randomElement(), randomShape(), randomEmotion(), level))
 
     shuffleArray(creatures)
 
@@ -155,7 +153,7 @@ function createNewCreature(element, shape, emotion, level) {
     } else if (winrate < 0.4) {
         enemyWinrateMultiplier = 0.85 //1972
     }
-    
+
     for (let prop in diffs) {
         if (newCreature.hasOwnProperty(prop)) {
             const diffValue = diffs[prop];
@@ -168,7 +166,7 @@ function createNewCreature(element, shape, emotion, level) {
 
             // Применяем смещение
             newCreature[prop] += randomOffset;
-            
+
             // Тк у соперника нет возможности ручной прокачки, мы ему вкинем это в базовые статы.
             // А бонус зависит от процента побед игрока.
             newCreature[prop] = Math.round(newCreature[prop] * enemyWinrateMultiplier)
@@ -202,32 +200,25 @@ function randomEmotion() {
 }
 
 function generateEmotions(limit) {
-    // Начальные веса: rage самый высокий, hope самый низкий
+    // Сбалансированные начальные веса
     const weights = {
-        rage: 10,
-        passion: 5,
-        hope: 3
+        rage: 6,
+        passion: 6,
+        hope: 4
     };
 
-    // Минимальный вес для предотвращения нулевых значений
     const minWeight = 0.5;
-
-    // Коэффициент уменьшения веса после выбора
-    const decayFactor = 0.7;
+    const decayFactor = 0.65; // умеренное затухание
 
     const result = [];
 
     for (let i = 0; i < limit; i++) {
-        // Рассчитываем общий вес
         const totalWeight = Object.values(weights).reduce((sum, w) => sum + w, 0);
-
-        // Случайный выбор с учетом весов
         const random = Math.random() * totalWeight;
 
         let current = 0;
-        let selected;
+        let selected = null;
 
-        // Выбираем эмоцию на основе весов
         for (const [emotion, weight] of Object.entries(weights)) {
             current += weight;
             if (random <= current) {
@@ -235,6 +226,8 @@ function generateEmotions(limit) {
                 break;
             }
         }
+
+        if (!selected) selected = Object.keys(weights)[0]; // fallback
 
         result.push(selected);
 

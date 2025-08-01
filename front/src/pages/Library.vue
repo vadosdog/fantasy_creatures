@@ -246,7 +246,7 @@ const evolutionGroups = Object.values(creaturesLib).sort((a, b) => a.number - b.
         if (aC.level > bC.level) {
             return aC
         } else {
-            bC.level
+            return bC
         }
     }, null)
 
@@ -607,7 +607,7 @@ const levelUpButtonLabel = computed(() => selectedCreature.value.level < maxLeve
                                 <div v-if="group.count > 0" class="text-subtitle1">
                                     <q-icon name="person"/>
                                     {{ group.count }}
-                                    <span class="q-ml-sm">Lv. {{ group.maxCreature.level }}</span>
+                                    <span class="q-ml-sm">Lv. {{ group.maxCreature?.level }}</span>
                                 </div>
                                 <div v-else class="text-caption">Нету</div>
 
