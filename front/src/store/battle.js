@@ -462,6 +462,21 @@ export const useBattleStore = defineStore('battle', {
         getDistance(start, end, useObstacles = true) {
             return this.findPath(start, end, useObstacles).length - 1;
         },
+        getDistancesFrom(creature) {
+            const result = {}
+            this.creatures.forEach(item => {
+                if (item.id === creature.id) {
+                    return
+                }
+                
+                result[item.id] = {
+                    withObstacles: this.getDistance(creature.position, item.position, true),
+                    withoutObstacles: this.getDistance(creature.position, item.position, false)
+                }
+            })
+
+            return result
+        },
         findPath(start, end, useObstacles = true) {
             let obstacles = new Set()
 

@@ -45,15 +45,29 @@ export class HardAI {
     store;
     activeCreature;
     movablePositions;
+    distancesFromActive;
+    actionsData;
+    activeCreatureSpeed;
 
     getAction(store) {
         this.store = store;
         this.activeCreature = store.activeCreature;
         this.movablePositions = store.getMoveablePositions(this.activeCreature);
         this.adjacentEnemies = store.getAdjacentEnemies(this.activeCreature.position, this.activeCreature.direction);
+        this.activeCreatureSpeed = CreatureAPI.getSpeed(this.activeCreature)
+        this.maxHealths = {}
+        for (const creature of store.creatures) {
+            this.maxHealths[creature.id] = CreatureAPI.getMaxHealth(creature)
+        }
+
 
         const enemies = store.creatures.filter(c => c.health > 0 && c.direction !== this.activeCreature.direction);
         const allies = store.creatures.filter(c => c.health > 0 && c.direction === this.activeCreature.direction && c.id !== this.activeCreature.id);
+        
+        
+        // Предварительно вычисляем карту расстояний
+        this.distancesFromActive = store.getDistancesFrom(this.activeCreature);
+        this.actionsData = CombatHandler.getActionData(this.activeCreature, store.creatures, this.activeCreature.actions, this.distancesFromActive)
 
         let availableActions = [];
 
@@ -97,25 +111,7 @@ export class HardAI {
         return this.chooseAction(availableActions, enemies.length);
     }
 
-    getPpModifier(ppCost) {
-        const ppRatio = this.activeCreature.pp / CreatureAPI.getMaxPP(this.activeCreature);
-        const emotion = this.activeCreature.emotion;
-
-        if (emotion === 'rage') {
-            // Танки экономят PP для экстренной защиты
-            return ppRatio > 0.6 ? 1.0 : 0.5 + ppRatio;
-        }
-
-        if (emotion === 'passion') {
-            // ДД агрессивно используют PP
-            return ppRatio > 0.2 ? 1.3 : 0.8;
-        }
-
-        // Стандартная логика
-        return Math.min(1.2, 0.7 + ppRatio * 0.8);
-    }
-
-    getEffectWeight(effect, target) {
+    getEffectWeight(effect, target, action) {
         const effectWeight = EFFECT_WEIGHTS[effect.effect] || {};
         let weight = effectWeight.base || 1.0;
 
@@ -127,13 +123,13 @@ export class HardAI {
             weight *= 0.6; // Уменьшаем вес если эффект уже есть
         }
 
-        weight *= CombatHandler.getPushEffectChance(this.activeCreature, target, effect);
+        weight *= effect.chance + (this.actionsData?.[target.id]?.[action.id]?.pushEffectChanceMod ?? 0);
         return weight;
     }
 
     getAttackTarget(attack, enemies) {
         const emotion = this.activeCreature.emotion;
-        const speed = CreatureAPI.getSpeed(this.activeCreature);
+        const speed = this.activeCreatureSpeed;
         let bestTarget = null;
         let bestScore = -Infinity;
 
@@ -227,16 +223,11 @@ export class HardAI {
     }
 
     calculateAttackScore(enemy, attack) {
-        let score = CombatHandler.getAttackDamage(
-            this.activeCreature,
-            enemy,
-            attack,
-            false,
-            true
-        ) * CombatHandler.getHitChance(this.activeCreature, enemy, attack);
+        let score = this.actionsData[enemy.id][attack.id].hitChance
+            * this.actionsData[enemy.id][attack.id].attackDamage;
 
         // Приоритет целей
-        score *= 1.0 + (1.0 - enemy.health / CreatureAPI.getMaxHealth(enemy));
+        score *= 1.0 + (1.0 - enemy.health / (this.maxHealths[enemy.id] || 1));
 
         // Приоритет по ролям (эмоциям)
         if (enemy.emotion === 'hope') score *= 1.8;
@@ -244,7 +235,7 @@ export class HardAI {
 
         // Бонус за эффекты
         attack.effects.forEach(effect => {
-            score += this.getEffectWeight(effect, enemy);
+            score += this.getEffectWeight(effect, enemy, attack);
         });
 
         return score;
@@ -268,7 +259,7 @@ export class HardAI {
         const emotion = this.activeCreature.emotion;
 
         allies.forEach(ally => {
-            const allyMaxHealth = CreatureAPI.getMaxHealth(ally)
+            const allyMaxHealth = this.maxHealths[ally.id] || 1
             if (limit === 0 && ally.id !== this.activeCreature.id) {
                 return
             }
@@ -282,7 +273,7 @@ export class HardAI {
                 score += healNeeded * (ally.emotion === 'rage' ? 1.5 : 1) * (ally.emotion === 'passion' ? 1.3 : 1);
             }
 
-            treat.effects.forEach(effect => score += this.getEffectWeight(effect, ally))
+            treat.effects.forEach(effect => score += this.getEffectWeight(effect, ally, treat))
 
             // Увеличение при низком здоровье
             if (ally.health < allyMaxHealth * 0.7) {
@@ -319,14 +310,14 @@ export class HardAI {
             return {
                 weight: bestScore * EMOTION_WEIGHTS[emotion].move,
                 action: 'move',
-                targets: bestTarget.path[Math.min(CreatureAPI.getSpeed(this.activeCreature) - 1, bestTarget.path.length - 2)],
+                targets: bestTarget.path[Math.min(this.activeCreatureSpeed - 1, bestTarget.path.length - 2)],
                 ppCost: 0
             };
         }
     }
 
     getMoveTarget(enemies, allies) {
-        const speed = CreatureAPI.getSpeed(this.activeCreature);
+        const speed = this.activeCreatureSpeed;
         const currentPos = this.activeCreature.position;
         const emotion = this.activeCreature.emotion;
 
@@ -394,7 +385,7 @@ export class HardAI {
             let bestAlly = null;
             let minDistance = Infinity;
 
-            allies.filter(ally => ally.health < CreatureAPI.getMaxHealth(ally) * 0.7)
+            allies.filter(ally => ally.health < (this.maxHealths[ally.id] || 1) * 0.7)
                 .forEach(ally => {
                     const path = this.store.findPath(currentPos, ally.position);
                     if (path.length < minDistance) {
@@ -440,7 +431,7 @@ export class HardAI {
     calculateThreatLevel(position, enemies) {
         return enemies.reduce((threat, enemy) => {
             const dist = this.store.getDistance(position, enemy.position);
-            const damagePotential = enemy.attackPower * (1 - enemy.health / CreatureAPI.getMaxHealth(enemy));
+            const damagePotential = enemy.attackPower * (1 - enemy.health / (this.maxHealths[enemy.id] || 1));
             return threat + damagePotential / (dist + 1);
         }, 0);
     }
@@ -455,7 +446,7 @@ export class HardAI {
         }
 
         // Критическое здоровье - усилить защиту
-        const healthRatio = this.activeCreature.health / CreatureAPI.getMaxHealth(this.activeCreature);
+        const healthRatio = this.activeCreature.health / (this.maxHealths[this.activeCreature.id] || 1);
         if (healthRatio < 0.3) {
             availableActions.forEach(action => {
                 if (action.action === 'defense') action.weight *= 2.0;

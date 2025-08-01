@@ -2,7 +2,7 @@ import {EffectAPI} from "./Effects/BaseEffect.js";
 
 export function createCreature(config) {
     config = calcCreatureStats(config)
-    
+
     return {
         id: config.id,
         name: config.name,
@@ -12,7 +12,7 @@ export function createCreature(config) {
         position: config.position,
         direction: config.direction,
         control: config.control,
-        
+
         //base
         baseMaxHealthStat: config.baseMaxHealthStat,
         baseSpeedStat: config.baseSpeedStat,
@@ -32,7 +32,7 @@ export function createCreature(config) {
         manualWillStat: config.manualWillStat,
         manualMaxPP: config.manualMaxPP || 100,
         manualPpRegen: config.manualPpRegen || 3,
-        
+
         //current
         maxHealthStat: config.maxHealthStat,
         speedStat: config.speedStat,
@@ -42,7 +42,7 @@ export function createCreature(config) {
         willStat: config.willStat,
         maxPP: config.maxPP || 100,
         ppRegen: config.ppRegen || 3,
-        
+
         element: config.element,
         emotion: config.emotion,
         shape: config.shape,
@@ -95,6 +95,16 @@ export function createCreatureAction(config) {
 }
 
 export const CreatureAPI = {
+    allStats(creature) {
+        return {
+            maxHealthStat: this.getMaxHealth(creature),
+            speedStat: this.getSpeed(creature),
+            attackStat: this.getAttack(creature),
+            defenseStat: this.getDefense(creature),
+            initiativeStat: this.getInitiative(creature),
+            willStat: this.getWill(creature),
+        }
+    },
     getMaxHealth(creature) {
         return Math.floor((creature.effects || []).reduce((maxHealth, effect) => {
             return maxHealth * EffectAPI.getMaxHealthMultiplier(effect)
@@ -170,7 +180,7 @@ export const CreatureAPI = {
         if (!creature.effects) {
             creature.effects = []
         }
-        
+
         const effect = effectConfig
         // Если такой эффект уже есть, то увеличиваем его длительность
         const existsEffect = creature.effects.find(({effect}) => effectConfig.effect === effect)
