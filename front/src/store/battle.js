@@ -61,7 +61,75 @@ export const useBattleStore = defineStore('battle', {
         battleOverData: {},
         hoveredCreatureId: undefined,
     }),
-    getters: {},
+    getters: {
+        hoverAttackData() {
+            const activeCreature = this.activeCreature;
+            const targetId = this.hoveredCreatureId;
+            const selectedActionId = this.selectedActionId;
+            console.log(activeCreature,targetId,selectedActionId)
+
+            if (
+                !activeCreature ||
+                !targetId ||
+                !selectedActionId
+            ) {
+                return null;
+            }
+
+            const target = this.creatures.find(c => c.id === targetId);
+            const action = activeCreature.actions.find(a => a.id === selectedActionId);
+            const speed = CreatureAPI.getSpeed(this.activeCreature)
+
+            // Проверяем, что цель — противник
+            if (!target || target.direction === activeCreature.direction) {
+                return;
+            }
+
+            // Получаем расстояние
+            const path = this.findPath(activeCreature.position, target.position, false);
+            const distance = path.length - 1;
+            
+            const actionLimit = action.actionType === 'ranged' ? action.range : speed
+
+            // Проверяем, в зоне ли атаки
+            if (distance > actionLimit) {
+                return; // Не в радиусе — не показываем
+            }
+
+            // Используем CombatHandler для расчётов
+            const hitChance = CombatHandler.getHitChance(activeCreature, target, action, distance);
+            const critChance = CombatHandler.getCritAttackChance(activeCreature, target, action);
+
+            // Потенциальный урон (min и max с рандомом)
+            const baseDamage = action.baseDamage;
+            const elementMult = CombatHandler.getElementMultiplier(action.element, target.element);
+            const atkDefRatio = CreatureAPI.getAttack(activeCreature) / CreatureAPI.getDefense(target);
+
+            // Урон с мин/макс диапазоном (±15%)
+            const minRandom = 0.85;
+            const maxRandom = 1.15;
+            const luckBonus = CreatureAPI.hasEffect(activeCreature, 'luck') ? 1.075 : 1;
+
+            // Дистанционный множитель
+            let distanceMult = 1;
+            if (action.actionType === 'ranged' && distance > action.range * 0.7) {
+                distanceMult = 1 - 0.5 * (distance - 0.7 * action.range) / (0.3 * action.range);
+            }
+
+            const baseValue = baseDamage * atkDefRatio * elementMult * distanceMult * luckBonus;
+
+            const damageFrom = Math.floor(Math.max(baseDamage * 0.3, baseValue * minRandom));
+            const damageTo = Math.floor(Math.max(baseDamage * 0.3, baseValue * maxRandom));
+
+            // Сохраняем данные
+            return {
+                hitChance: Math.round(hitChance * 100) / 100, // 2 знака
+                critChance: Math.round(critChance * 100) / 100,
+                damageFrom,
+                damageTo,
+            };
+        },
+    },
     actions: {
         load() {
             let leftTeam = null
@@ -915,7 +983,6 @@ export const useBattleStore = defineStore('battle', {
                     this.battleMap[newKey].content = creature;
                 }
             }
-        }
-
+        },
     },
 });

@@ -12,7 +12,7 @@ import BattleLeftDrawer from "../components/game/BattleLeftDrawer.vue";
 import CraftLeftDrawer from "../components/game/CraftLeftDrawer.vue";
 import CraftRightDrawer from "../components/game/CraftRightDrawer.vue";
 import BattleOverDialog from "../components/game/BattleOverDialog.vue";
-import { useRouter } from 'vue-router';
+import {useRouter} from 'vue-router';
 
 const router = useRouter();
 const game = ref(null);
@@ -271,6 +271,35 @@ const battleOverOpen = computed(() => battleStore.showBattleOverDialog)
 <template>
     <q-page>
         <BattleOverDialog :battle-data="battleOverData" v-model="battleOverOpen"/>
+        <!-- Правый верхний угол -->
+        <!-- Подсказка при наведении на противника -->
+        <div
+            v-if="battleStore.hoverAttackData"
+            class="absolute top-4 right-4 pointer-events-none hover-attack-data"
+        >
+            <div class="p-3 space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="hit-chance">🎯 {{ Math.round(battleStore.hoverAttackData.hitChance * 100) }}%</span>
+                    <span
+                        v-if="battleStore.hoverAttackData.critChance > 0"
+                        class="crit-chance"
+                    >
+                💢 {{ Math.round(battleStore.hoverAttackData.critChance * 100) }}%
+            </span>
+                </div>
+
+                <div class="damage">
+                    💥 {{ battleStore.hoverAttackData.damageFrom }} – {{ battleStore.hoverAttackData.damageTo }}
+                </div>
+            </div>
+
+            <!-- Лёгкая тень-градиент снизу -->
+            <div style="
+        height: 8px;
+        background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.4));
+        pointer-events: none;
+    "></div>
+        </div>
         <div id="game-container" :class="{ 'block-events': globalStore.dialogVisible }">
             <!-- Canvas будет создан здесь -->
         </div>
@@ -306,5 +335,29 @@ const battleOverOpen = computed(() => battleStore.showBattleOverDialog)
 
 .block-events {
     pointer-events: none;
+}
+
+.hover-attack-data {
+    width: 180px;
+    @apply bg-background text-foreground;
+    background:
+        radial-gradient(ellipse at 20% 50%, rgba(139, 69, 193, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 40% 80%, rgba(139, 69, 193, 0.1) 0%, transparent 50%),
+        linear-gradient(135deg, #0a0b14 0%, #1a1b2e  50%, #16213e 100%);
+    background-attachment: fixed;
+}
+
+.hover-attack-data .hit-chance {
+    color: #f0c860;
+}
+
+.hover-attack-data .crit-chance {
+    color: #d05050;
+}
+
+.hover-attack-data .damage {
+    color: #88c080;
+    font-weight: bold;
 }
 </style>
