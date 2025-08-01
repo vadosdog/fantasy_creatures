@@ -38,55 +38,71 @@ export const locationsLib = {
             },
             {
                 id: 'training_1',
-                label: 'Бой 1 на 1',
+                label: 'Бой 1 на 1 (До 5 уровня)',
                 type: 'start_battle',
                 config: {
-                    limit: 1,
+                    count: 1,
+                    levelLimit: 5,
                     type: 'random_battle',
                 }
             },
             {
-                id: 'training_2',
-                label: 'Бой 2 на 2',
+                id: 'training_1',
+                label: 'Бой 1 на 1 (До 9 уровня)',
                 type: 'start_battle',
                 config: {
-                    limit: 2,
+                    count: 1,
+                    levelLimit: 9,
                     type: 'random_battle',
                 }
             },
             {
                 id: 'training_3',
-                label: 'Бой 3 на 3',
+                label: 'Бой 3 на 3 (До 5 уровня)',
                 type: 'start_battle',
                 config: {
-                    limit: 3,
+                    count: 3,
+                    levelLimit: 5,
                     type: 'random_battle',
                 }
             },
             {
-                id: 'training_4',
-                label: 'Бой 4 на 4',
+                id: 'training_3',
+                label: 'Бой 3 на 3 (До 9 уровня)',
                 type: 'start_battle',
                 config: {
-                    limit: 4,
+                    count: 3,
+                    levelLimit: 9,
                     type: 'random_battle',
                 }
             },
             {
                 id: 'training_5',
-                label: 'Бой 5 на 5',
+                label: 'Бой 5 на 5 (До 5 уровня)',
                 type: 'start_battle',
                 config: {
-                    limit: 5,
+                    count: 5,
+                    levelLimit: 5,
+                    type: 'random_battle',
+                }
+            },
+            {
+                id: 'training_5',
+                label: 'Бой 5 на 5 (До 9 уровня)',
+                type: 'start_battle',
+                config: {
+                    count: 5,
+                    levelLimit: 9,
                     type: 'random_battle',
                 }
             },
             {
                 id: 'training_6',
-                label: 'Бой 6 на 6',
+                label: 'Бой 6 на 6 (До 9 уровня)',
                 type: 'start_battle',
                 config: {
-                    limit: 6,
+                    count: 6,
+                    levelLimit: 9,
                     type: 'random_battle',
                 }
             },

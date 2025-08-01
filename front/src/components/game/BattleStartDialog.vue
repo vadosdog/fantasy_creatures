@@ -47,7 +47,8 @@ const powerBalance = computed(() => {
     return playerTotalPower.value / total
 })
 
-const creaturesLimit = computed(() => props.config.limit || 6)
+const creaturesLimit = computed(() => props.config.count || 6)
+const creaturesLevelLimit = computed(() => props.config.levelLimit || 6)
 
 // Переключение выбора существа
 const toggleCreatureSelection = (creature) => {
@@ -58,6 +59,16 @@ const toggleCreatureSelection = (creature) => {
         if (selectedCreatures.value.length >= creaturesLimit.value) {
             Notify.create({
                 message: 'Ограничение активных существ: ' + creaturesLimit.value,
+                color: 'negative', // красный цвет
+                icon: 'error',
+                position: 'top-right',
+                timeout: 3000, // исчезнет через 3 секунды
+                closeBtn: true // кнопка закрытия
+            })
+            return false
+        } else if(creature.level > creaturesLevelLimit.value) {
+            Notify.create({
+                message: 'Ограничение на уровень существ: ' + creaturesLevelLimit.value,
                 color: 'negative', // красный цвет
                 icon: 'error',
                 position: 'top-right',

@@ -16,7 +16,7 @@ export function getEnemiesByConfig(config) {
     return []
 }
 
-function generateEnemyTeamLevels(playerCreatures, battleSize) {
+function generateEnemyTeamLevels(playerCreatures, battleSize, levelLimit) {
     // 1. Проверка крайних случаев
     if (playerCreatures.length === 0) return Array(battleSize).fill(1);
 
@@ -25,19 +25,19 @@ function generateEnemyTeamLevels(playerCreatures, battleSize) {
     const sortedCreatures = [...validCreatures].sort((a, b) => b.level - a.level);
 
     // 3. Расчет силы команды игрока
-    const playerPower = calculatePlayerPower(sortedCreatures, battleSize);
+    const playerPower = calculatePlayerPower(sortedCreatures, battleSize, levelLimit);
 
     // 4. Определение базового уровня противника
     const baseLevel = Math.min(20, Math.max(1, Math.round(playerPower)));
 
     // 5. Генерация уровней команды противника
-    return generateTeamLevels(baseLevel, battleSize);
+    return generateTeamLevels(baseLevel, battleSize, levelLimit);
 }
 
 // Расчет силы команды игрока
-function calculatePlayerPower(creatures, battleSize) {
-    // Берем топ-N существ игрока
-    const topCreatures = creatures.slice(0, battleSize);
+function calculatePlayerPower(creatures, battleSize, levelLimit) {
+    // Берем топ-N существ игрока (в рамках лимита)
+    const topCreatures = creatures.filter(c => c.level <= levelLimit).slice(0, battleSize);
 
     // Если у игрока меньше существ, чем нужно для боя
     if (topCreatures.length < battleSize) {
@@ -65,15 +65,14 @@ function calculatePlayerPower(creatures, battleSize) {
 }
 
 // Генерация уровней команды
-function generateTeamLevels(baseLevel, size) {
+function generateTeamLevels(baseLevel, size, levelLimit = 9) {
     const levels = [];
-    const teamPower = baseLevel * size;
-    let remainingPower = teamPower;
+    let remainingPower = baseLevel * size;
 
     // Распределение уровней
     for (let i = 0; i < size; i++) {
-        const maxPossible = Math.min(9, remainingPower - (size - i - 1));//TODO исправить после добавления эволюций
-        const minPossible = Math.max(1, remainingPower - 9 * (size - i - 1));//TODO исправить после добавления эволюций
+        const maxPossible = Math.min(levelLimit, remainingPower - (size - i - 1));//TODO исправить после добавления эволюций
+        const minPossible = Math.max(1, remainingPower - levelLimit * (size - i - 1));//TODO исправить после добавления эволюций
 
         // Весовое распределение: первые существа сильнее
         const weight = (size - i) / (size * (size + 1) / 2);
@@ -92,8 +91,8 @@ function generateTeamLevels(baseLevel, size) {
 }
 
 
-function getRandomEnemies(config) {
-    const levels = generateEnemyTeamLevels(gameStore.creatures, config.limit)
+function getRandomEnemies({count, levelLimit}) {
+    const levels = generateEnemyTeamLevels(gameStore.creatures, count, levelLimit)
     const creatures = levels.map(level => createNewCreature(randomElement(), randomShape(), randomEmotion(), level))
 
     shuffleArray(creatures)
