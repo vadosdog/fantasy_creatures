@@ -27,9 +27,8 @@ const selectedCreature = computed(() => gameStore.creatures.find(creature => cre
 const selectedSkills = computed(() => selectedCreature.value.actions.map(({id}) => id)); // Выбранные навыки
 
 // Характеристики для прокачки
-// Характеристики для прокачки
 const stats = computed(() => {
-    const levelModifier = 1 + 0.03 * (selectedCreature.value.level - 1);
+    const levelModifier = Math.pow(2, (selectedCreature.value.level - 1) / 7.5);
     return [
         {
             key: 'maxHealthStat',
@@ -125,6 +124,10 @@ function canUpgrade(stat) {
 // Прокачка характеристики
 function upgradeStat(statKey) {
     gameStore.upgradeStat(selectedCreature.value, statKey);
+}
+
+function recalc() {
+    gameStore.recalcStats(selectedCreature.value.id);
 }
 
 // Доступные навыки (заглушка)
@@ -422,6 +425,10 @@ const levelUpButtonLabel = computed(() => selectedCreature.value.level < maxLeve
                                 />
                             </div>
                         </div>
+                    </div>
+                    <div class="q-ma-md">
+                        Временная кнопка для тестов. Если это будет в бою, напиши разрабам :)
+                        <q-btn size="xs" @click="recalc()">Пересчитать</q-btn>
                     </div>
                 </q-card-section>
             </q-card>

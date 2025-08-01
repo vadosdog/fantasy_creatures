@@ -400,7 +400,7 @@ export const useGameStore = defineStore('game', {
 
             // Рассчитываем новые значения
             const newLevel = creature.level + 1;
-            const levelModifier = 1 + 0.03 * (newLevel - 1);
+            const levelModifier = Math.pow(2, (newLevel - 1) / 7.5);
 
             // Создаём новый объект с новыми значениями
             const updatedCreature = {
@@ -421,6 +421,33 @@ export const useGameStore = defineStore('game', {
 
             // Тратим ресурс
             this.inventoryRemove('memory_shard', levelCost);
+
+            this.saveGame()
+        },
+        recalcStats(creatureId) {
+            const index = this.creatures.findIndex(c => c.id === creatureId);
+
+            if (index === -1) return;
+
+            const creature = this.creatures[index];
+
+            // Рассчитываем новые значения
+            const levelModifier = Math.pow(2, (creature.level - 1) / 7.5);
+
+            // Создаём новый объект с новыми значениями
+            const updatedCreature = {
+                ...creature,
+                maxHealthStat: Math.round(creature.baseMaxHealthStat * levelModifier) + (creature.manualMaxHealthStat || 0),
+                attackStat: Math.round(creature.baseAttackStat * levelModifier) + (creature.manualAttackStat || 0),
+                defenseStat: Math.round(creature.baseDefenseStat * levelModifier) + (creature.manualDefenseStat || 0),
+                willStat: Math.round(creature.baseWillStat * levelModifier) + (creature.manualWillStat || 0),
+                initiativeStat: Math.round(creature.baseInitiativeStat * levelModifier) + (creature.manualInitiativeStat || 0),
+                maxPP: Math.round(creature.baseMaxPP * levelModifier) + (creature.manualMaxPP || 0),
+                ppRegen: Math.round(creature.basePpRegen * levelModifier) + (creature.manualPpRegen || 0),
+            };
+
+            // Заменяем в массиве
+            this.creatures = this.creatures.map(c => c.id === creatureId ? updatedCreature : c);
 
             this.saveGame()
         },
@@ -450,9 +477,8 @@ export const useGameStore = defineStore('game', {
             const level = creature.level;
             const manualValue = creature[manualKey] || 0;
 
-            // Пересчёт: base * (1 + 0.03 * (level - 1)) + manual
             creature[statKey] = Math.round(
-                baseValue * (1 + 0.03 * (level - 1)) + manualValue
+                baseValue * Math.pow(2, (level - 1) / 7.5) + manualValue
             );
 
             this.saveGame()

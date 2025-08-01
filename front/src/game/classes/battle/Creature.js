@@ -61,15 +61,17 @@ export function createCreature(config) {
 
 export function calcCreatureStats(config) {
     const level = config.level || 1;
+    
+    const multiplier = Math.pow(2, (level - 1) / 7.5);
 
-    config.maxHealthStat = Math.floor(config.baseMaxHealthStat * (1 + 0.03 * (level - 1))) + (config.manualMaxHealthStat || 0);
+    config.maxHealthStat = Math.floor(config.baseMaxHealthStat * multiplier) + (config.manualMaxHealthStat || 0);
     config.speedStat = Math.floor(config.baseSpeedStat + (config.manualSpeedStat || 0));
-    config.attackStat = Math.floor(config.baseAttackStat * (1 + 0.03 * (level - 1))) + (config.manualAttackStat || 0);
-    config.defenseStat = Math.floor(config.baseDefenseStat * (1 + 0.03 * (level - 1))) + (config.manualDefenseStat || 0);
-    config.initiativeStat = Math.floor(config.baseInitiativeStat * (1 + 0.03 * (level - 1))) + (config.manualInitiativeStat || 0);
-    config.willStat = Math.floor(config.baseWillStat * (1 + 0.03 * (level - 1))) + (config.manualWillStat || 0);
-    config.maxPP = Math.floor(config.baseMaxPP * (1 + 0.03 * (level - 1))) + (config.manualMaxPP || 0);
-    config.ppRegen = Math.floor(config.basePpRegen * (1 + 0.03 * (level - 1))) + (config.manualPpRegen || 0);
+    config.attackStat = Math.floor(config.baseAttackStat * multiplier) + (config.manualAttackStat || 0);
+    config.defenseStat = Math.floor(config.baseDefenseStat * multiplier) + (config.manualDefenseStat || 0);
+    config.initiativeStat = Math.floor(config.baseInitiativeStat * multiplier) + (config.manualInitiativeStat || 0);
+    config.willStat = Math.floor(config.baseWillStat * multiplier) + (config.manualWillStat || 0);
+    config.maxPP = Math.floor(config.baseMaxPP * multiplier) + (config.manualMaxPP || 0);
+    config.ppRegen = Math.floor(config.basePpRegen * multiplier) + (config.manualPpRegen || 0);
 
     return config
 }
@@ -263,7 +265,7 @@ export const CreatureAPI = {
 
     // восстанавливает ПП каждый раунд
     roundRestorePP(creature) {
-        creature.pp += this.getPpRegen(creature) // TODO должен зависеть от характеристики ppRegen!
+        creature.pp += this.getPpRegen(creature)
         const maxPP = this.getMaxPP(creature)
         if (creature.pp >= maxPP) {
             creature.pp = maxPP
