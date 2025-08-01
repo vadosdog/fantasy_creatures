@@ -79,6 +79,10 @@ export const useBattleStore = defineStore('battle', {
             const target = this.creatures.find(c => c.id === targetId);
             const action = activeCreature.actions.find(a => a.id === selectedActionId);
             const speed = CreatureAPI.getSpeed(this.activeCreature)
+            
+            if (!action) {
+                return;
+            }
 
             // Проверяем, что цель — противник
             if (!target || target.direction === activeCreature.direction) {

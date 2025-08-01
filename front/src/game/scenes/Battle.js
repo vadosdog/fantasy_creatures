@@ -354,7 +354,7 @@ export class Battle extends Scene {
         const prevState = this.store.battleState
         this.store.setBattleState(BATTLE_STATE_WAITING)
 
-        if (action.action === 'skip') {
+        if (action.action === 'skip' || action.action === 'defense') {
             return this.handleDefenseAction()
         }
 
@@ -586,6 +586,7 @@ export class Battle extends Scene {
                 break
             default:
                 // неизвестное действие
+                console.warn('неизвестное действие', action)
                 this.store.setBattleState(prevState)
                 return
         }
