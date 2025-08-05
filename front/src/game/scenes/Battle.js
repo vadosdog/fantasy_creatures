@@ -217,7 +217,6 @@ export class Battle extends Scene {
             at: 0, //гомосятина
             run: () => {
                 activeCreature.creatureSpriteContainer.setMonsterState('hurt_' + activeCreature.direction)
-                activeCreature.creatureSpriteContainer.updateVisual()
             }
         })
 
@@ -233,7 +232,10 @@ export class Battle extends Scene {
             timeline.add({
                 at: i * 200, //гомосятина
                 run: () => {
-                    activeCreature.creatureSpriteContainer.playActionText(emoji + " " + effect.damage, effect.damage > 0 ? 'green' : 'red')
+                    activeCreature.creatureSpriteContainer.playActionText(emoji + " " + effect.damage, effect.damage > 0 ? 'buff' : 'debuff')
+                    if (effect.damage !== 0) {
+                        activeCreature.creatureSpriteContainer.playDamageHealEffect(effect.damage, effect.damage > 0)
+                    }
                 }
             })
         })
@@ -447,8 +449,8 @@ export class Battle extends Scene {
                         at: 200 * (path.length), //гомосятина
                         run: () => {
                             targetCreature.creatureSpriteContainer.setMonsterState('hurt_' + defenseDirection)
-                            targetCreature.creatureSpriteContainer.updateVisual()
-                            targetCreature.creatureSpriteContainer.playActionText("-" + attackResult.damage, 'red')
+                            targetCreature.creatureSpriteContainer.playDamageHealEffect(attackResult.damage, false, attackResult.isCrit)
+                            targetCreature.creatureSpriteContainer.playActionText("-" + attackResult.damage, 'damage')
                             targetCreature.creatureSpriteContainer.updateEffectsIcons()
                             this.store.activeCreature.creatureSpriteContainer.updateEffectsIcons()
                         }
@@ -481,8 +483,8 @@ export class Battle extends Scene {
                             at: 200 * (path.length) + 500, //гомосятина
                             run: () => {
                                 this.store.activeCreature.creatureSpriteContainer.setMonsterState('hurt_' + attackDirection)
-                                this.store.activeCreature.creatureSpriteContainer.updateVisual()
-                                this.store.activeCreature.creatureSpriteContainer.playActionText("-" + attackResult.backDamage, 'red')
+                                this.store.activeCreature.creatureSpriteContainer.playDamageHealEffect(attackResult.backDamage)
+                                this.store.activeCreature.creatureSpriteContainer.playActionText("-" + attackResult.backDamage, 'damage')
                             }
                         });
                         if (this.store.activeCreature.health) {
@@ -513,7 +515,7 @@ export class Battle extends Scene {
                     timeline.add({
                         at: 200 * (path.length), //гомосятина
                         run: () => {
-                            targetCreature.creatureSpriteContainer.playActionText("Промах...", 'red')
+                            targetCreature.creatureSpriteContainer.playActionText("Промах...", 'miss')
                         }
                     });
                 }
@@ -560,8 +562,10 @@ export class Battle extends Scene {
                         at: 200 * (path.length), //гомосятина
                         run: () => {
                             targetCreature.creatureSpriteContainer.setMonsterState('hurt_' + treatedDirection)
-                            targetCreature.creatureSpriteContainer.updateVisual()
-                            targetCreature.creatureSpriteContainer.playActionText("+" + treatResult.damage, 'green')
+                            if (treatResult.damage > 0) {
+                                targetCreature.creatureSpriteContainer.playDamageHealEffect(treatResult.damage, true)
+                                targetCreature.creatureSpriteContainer.playActionText("+" + treatResult.damage, 'heal')
+                            }
                             targetCreature.creatureSpriteContainer.updateEffectsIcons()
                             this.store.activeCreature.creatureSpriteContainer.updateEffectsIcons()
                         }
@@ -576,7 +580,7 @@ export class Battle extends Scene {
                     timeline.add({
                         at: 200 * (path.length), //гомосятина
                         run: () => {
-                            targetCreature.creatureSpriteContainer.playActionText("Промах...", 'green')
+                            targetCreature.creatureSpriteContainer.playActionText("Промах...", 'miss')
                         }
                     });
                 }

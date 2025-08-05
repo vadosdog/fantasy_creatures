@@ -66,7 +66,6 @@ export const useBattleStore = defineStore('battle', {
             const activeCreature = this.activeCreature;
             const targetId = this.hoveredCreatureId;
             const selectedActionId = this.selectedActionId;
-            console.log(activeCreature,targetId,selectedActionId)
 
             if (
                 !activeCreature ||
