@@ -25,7 +25,7 @@ const StartGame = (parent) => {
             }
         },
         parent: 'game-container',
-        backgroundColor: '#028af8',
+        backgroundColor: '#131624',
         scene: [
             Boot,
             Preloader,
