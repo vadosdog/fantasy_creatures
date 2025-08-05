@@ -221,18 +221,10 @@ export class Battle extends Scene {
         })
 
         effects.forEach((effect, i) => {
-            const emoji = {
-                'regen': '💚',
-                'poison': '☠️',
-                'bleed': '💉',
-                'burn': '🔥',
-                'freeze': '🥶',
-                'madness': '🤪',
-            }[effect.effect] || ''
             timeline.add({
                 at: i * 200, //гомосятина
                 run: () => {
-                    activeCreature.creatureSpriteContainer.playActionText(emoji + " " + effect.damage, effect.damage > 0 ? 'buff' : 'debuff')
+                    activeCreature.creatureSpriteContainer.playActionText(effect.damage, effect.damage > 0 ? 'buff' : 'debuff', effect.type)
                     if (effect.damage !== 0) {
                         activeCreature.creatureSpriteContainer.playDamageHealEffect(effect.damage, effect.damage > 0)
                     }
@@ -261,6 +253,7 @@ export class Battle extends Scene {
                 at: 200 * (effects.length), //гомосятина
                 run: () => {
                     activeCreature.creatureSpriteContainer.setMonsterState('idle_' + activeCreature.direction)
+                    activeCreature.creatureSpriteContainer.updateEffectsIcons()
                 }
             });
         }

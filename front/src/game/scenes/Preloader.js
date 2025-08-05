@@ -116,6 +116,19 @@ export class Preloader extends Scene {
         this.load.image('rage_shard', 'runes/rage_shard.png');
         this.load.image('passion_shard', 'runes/passion_shard.png');
         this.load.image('close_icon', 'common/cross-icon.png');
+        
+        // Иконки
+        // Загружаем иконки эффектов
+        const effectIcons = [
+            'upgrade.png', 'wingfoot.png', 'clover.png', 'heart-plus.png', 'spiked-tail.png',
+            'armor-upgrade.png', 'death-juice.png', 'bleeding-wound.png', 'flamer.png',
+            'snowflake-2.png', 'sticky-boot.png', 'sight-disabled.png', 'cursed-star.png',
+            'mouth-watering.png', 'terror.png', 'knockout.png'
+        ];
+
+        effectIcons.forEach(icon => {
+            this.load.image(`effect_${icon.replace('.png', '')}`, `icons/${icon}`);
+        });
     }
 
     create() {

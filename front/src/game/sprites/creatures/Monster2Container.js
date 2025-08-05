@@ -34,7 +34,7 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
         this.setupEventHandlers();
         this.createGlowSprite();
         this.createCreatureText();
-        
+
         this.updateDepth()
     }
 
@@ -240,62 +240,30 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
         // Логика движения или состояния
     }
 
-    playActionText(text, type = 'damage') {
-        // === Новые стили ===
+    /**
+     * Показывает текстовое действие (урон, хил, баф и т.д.) с иконкой эффекта (если указано)
+     * @param {string} text - Текст для отображения (например, "15", "Промах")
+     * @param {string} type - Тип действия: 'damage', 'crit', 'heal', 'buff', 'debuff', 'miss', 'energy'
+     * @param {string|null} [effectName] - Название эффекта (например, 'burn', 'regen'), чтобы показать иконку
+     */
+    playActionText(text, type = 'damage', effectName = null) {
+        // === Стили для текста ===
         const styles = {
-            damage: {
-                color: '#ff3333',
-                stroke: '#1d1d1d',
-                strokeThickness: 4,
-                fontSize: '16px'
-            },
-            crit: {
-                color: '#F2C037',
-                stroke: '#332200',
-                strokeThickness: 6,
-                fontSize: '24px',
-                fontWeight: 'bold'
-            },
-            heal: {
-                color: '#00ff88',
-                stroke: '#004422',
-                strokeThickness: 4,
-                fontSize: '16px'
-            },
-            buff: {
-                color: '#66ccff',
-                stroke: '#003366',
-                strokeThickness: 4,
-                fontSize: '16px'
-            },
-            debuff: {
-                color: '#ff66ff',
-                stroke: '#660066',
-                strokeThickness: 4,
-                fontSize: '16px'
-            },
-            energy: {
-                color: '#ffffff',
-                stroke: '#333333',
-                strokeThickness: 4,
-                fontSize: '16px'
-            },
-            miss: {
-                color: '#aaaaaa',
-                stroke: '#222222',
-                strokeThickness: 4,
-                fontSize: '16px',
-                fontStyle: 'italic'
-            }
+            damage: {color: '#ff3333', stroke: '#1d1d1d', strokeThickness: 4, fontSize: '16px'},
+            crit: {color: '#F2C037', stroke: '#332200', strokeThickness: 6, fontSize: '24px', fontWeight: 'bold'},
+            heal: {color: '#00ff88', stroke: '#004422', strokeThickness: 4, fontSize: '16px'},
+            buff: {color: '#66ccff', stroke: '#003366', strokeThickness: 4, fontSize: '16px'},
+            debuff: {color: '#ff66ff', stroke: '#660066', strokeThickness: 4, fontSize: '16px'},
+            energy: {color: '#ffffff', stroke: '#333333', strokeThickness: 4, fontSize: '16px'},
+            miss: {color: '#aaaaaa', stroke: '#222222', strokeThickness: 4, fontSize: '16px', fontStyle: 'italic'}
         };
-
         const style = styles[type] || styles.damage;
 
-        // === Глобальные координаты контейнера монстра ===
+        // === Глобальные координаты ===
         const worldX = this.x;
         const worldY = this.y;
 
-        // === Создаём текст НА СЦЕНЕ, а не в контейнере! ===
+        // === Создаём текст ===
         const actionText = this.scene.add.text(worldX, worldY - 25, text, {
             fontFamily: 'Arial, sans-serif',
             fontSize: style.fontSize,
@@ -305,35 +273,68 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
             align: 'center',
             stroke: style.stroke,
             strokeThickness: style.strokeThickness,
-            shadow: {
-                offsetX: 0,
-                offsetY: 1,
-                color: '#000000',
-                blur: 1,
-                fill: true
-            }
-        })
-            .setOrigin(0.5)
-            .setDepth(1000); // 🔥 Очень высокий depth — поверх всего!
+            shadow: {offsetX: 0, offsetY: 1, color: '#000000', blur: 1, fill: true}
+        }).setOrigin(0.5).setDepth(1000);
 
-        // Начальный масштаб
+        // Масштабируем текст
         actionText.setScale(0.5);
 
-        // === Управление активными текстами (локально, если нужно) ===
+        // === Иконка эффекта (если указано) ===
+        let effectIcon = null;
+        if (effectName) {
+            // Маппинг: effectName → ключ текстуры
+            const effectKeys = {
+                'empower': 'effect_upgrade',
+                'haste': 'effect_wingfoot',
+                'luck': 'effect_clover',
+                'regen': 'effect_heart-plus',
+                'thorns': 'effect_spiked-tail',
+                'aegis': 'effect_armor-upgrade',
+                'defense': 'effect_armor-upgrade',
+                'poison': 'effect_death-juice',
+                'bleed': 'effect_bleeding-wound',
+                'burn': 'effect_flamer',
+                'freeze': 'effect_snowflake-2',
+                'chill': 'effect_sticky-boot',
+                'blind': 'effect_sight-disabled',
+                'curse': 'effect_cursed-star',
+                'madness': 'effect_mouth-watering',
+                'fear': 'effect_terror',
+                'confusion': 'effect_knockout'
+            };
+
+            const textureKey = effectKeys[effectName];
+            if (textureKey && this.scene.textures.exists(textureKey)) {
+                effectIcon = this.scene.add.image(worldX + 20, worldY - 25, textureKey)
+                    .setDisplaySize(16, 16) // размер иконки
+                    .setOrigin(0.5)
+                    .setAlpha(0)
+                    .setDepth(1001); // чуть выше текста
+
+                this.add(effectIcon); // добавляем в контейнер
+            }
+        }
+
+        // === Управление активными текстами ===
         if (!this.activeTexts) this.activeTexts = [];
         this.activeTexts.push(actionText);
+        if (effectIcon) this.activeTexts.push(effectIcon);
 
-        // Удаляем через 1200 мс
+        // Удаление через 1200 мс
         this.scene.time.delayedCall(1200, () => {
-            const index = this.activeTexts.indexOf(actionText);
-            if (index > -1) this.activeTexts.splice(index, 1);
-            actionText.destroy(); // автоматически удалится сцены
+            [actionText, effectIcon].forEach(obj => {
+                if (obj && this.activeTexts.includes(obj)) {
+                    const index = this.activeTexts.indexOf(obj);
+                    if (index > -1) this.activeTexts.splice(index, 1);
+                    obj.destroy();
+                }
+            });
         });
 
-        // === Анимация через timeline (Phaser 3.88) ===
+        // === Анимация ===
         const timeline = this.scene.add.timeline();
 
-        // Этап 1: появление с масштабом и движением
+        // Этап 1: появление текста и иконки
         timeline.add({
             at: 0,
             run: () => {
@@ -341,11 +342,22 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
                     targets: actionText,
                     scale: 1.1,
                     y: actionText.y - 30,
+                    alpha: 1,
                     duration: 700,
                     ease: 'Back.easeOut',
-                    easeParams: [1.2],
-                    alpha: 1
+                    easeParams: [1.2]
                 });
+
+                if (effectIcon) {
+                    this.scene.tweens.add({
+                        targets: effectIcon,
+                        alpha: 1,
+                        y: effectIcon.y - 30,
+                        scale: 1.2,
+                        duration: 600,
+                        ease: 'Power2'
+                    });
+                }
             }
         });
 
@@ -361,9 +373,21 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
                     duration: 500,
                     ease: 'Power2'
                 });
+
+                if (effectIcon) {
+                    this.scene.tweens.add({
+                        targets: effectIcon,
+                        alpha: 0,
+                        y: effectIcon.y - 35,
+                        scale: 1.3,
+                        duration: 500,
+                        ease: 'Power2'
+                    });
+                }
             }
         });
 
+        // Запуск анимации
         timeline.play();
 
         // === Особые эффекты для крита ===
@@ -375,16 +399,6 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
                 yoyo: true,
                 repeat: 1,
                 ease: 'Sine.easeInOut'
-            });
-
-            // Усилить обводку
-            this.scene.tweens.add({
-                targets: actionText.style,
-                strokeThickness: style.strokeThickness * 1.5,
-                duration: 100,
-                yoyo: true,
-                repeat: 1,
-                ease: 'Power1'
             });
         }
 
@@ -406,54 +420,63 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
         this.effectIcons?.forEach(icon => icon.destroy());
         this.effectIcons = [];
 
-        // Если у существа нет эффектов - выходим
+        // Если у существа нет эффектов — выходим
         if (!this.creature?.effects?.length) return;
 
-        // Эмодзи для эффектов (бафы и дебафы)
-        const effectEmojis = {
+        // Маппинг: effectName → Phaser-ключ текстуры
+        const effectKeys = {
             // Бафы
-            'empower': '💪',
-            'haste': '⚡',
-            'luck': '🍀',
-            'regen': '💚',
-            'thorns': '🌵',
-            'aegis': '🛡️',
-            'defense': '🛡️', // можно какой-то другой
+            'empower': 'effect_upgrade',
+            'haste': 'effect_wingfoot',
+            'luck': 'effect_clover',
+            'regen': 'effect_heart-plus',
+            'thorns': 'effect_spiked-tail',
+            'aegis': 'effect_armor-upgrade',
+            'defense': 'effect_armor-upgrade',
 
             // Дебафы
-            'poison': '☠️',
-            'bleed': '💉',
-            'burn': '🔥',
-            'freeze': '🥶',
-            'chill': '❄️',
-            'blind': '👁️‍🗨️',
-            'curse': '📛',
-            'madness': '🤪',
-            'fear': '😱',
-            'confusion': '😖' // нужно какой-то другой
+            'poison': 'effect_death-juice',
+            'bleed': 'effect_bleeding-wound',
+            'burn': 'effect_flamer',
+            'freeze': 'effect_snowflake-2',
+            'chill': 'effect_sticky-boot',
+            'blind': 'effect_sight-disabled',
+            'curse': 'effect_cursed-star',
+            'madness': 'effect_mouth-watering',
+            'fear': 'effect_terror',
+            'confusion': 'effect_knockout'
         };
 
-        // Создаем новые иконки
-        const iconSize = 10; // Размер иконки
-        const padding = 5;   // Отступ между иконками
-        let offsetX = -20;     // Смещение по X
+        // Параметры иконок
+        const iconSize = 16;        // Размер иконки (в пикселях)
+        const padding = 6;          // Отступ между иконками
+        const maxPerRow = 4;        // Максимум иконок в строке
 
+        // Позиция: над существом
+        const startX = -((Math.min(this.creature.effects.length, maxPerRow) - 1) * (iconSize + padding)) / 2;
+        const startY = -44;         // Немного выше существа
+
+        // Создаём новые иконки
         this.creature.effects.forEach((effect, i) => {
-            const emoji = effectEmojis[effect.effect];
-            if (!emoji) return; // Пропускаем неизвестные эффекты
+            const key = effectKeys[effect.effect];
+            if (!key || !this.scene.textures.exists(key)) {
+                console.warn(`Texture not found for effect: ${effect.effect}`);
+                return;
+            }
 
-            // Создаем текстовый объект для эмодзи
-            const icon = this.scene.add.text(
-                offsetX + i % 4 * (iconSize + padding),
-                -30 + Math.floor(i / 4) * (iconSize + padding), // Размещаем над существом
-                emoji,
-                {
-                    fontSize: iconSize + 'px',
-                    padding: {x: 2, y: 2}
-                }
-            ).setOrigin(0.5);
+            const row = Math.floor(i / maxPerRow);
+            const col = i % maxPerRow;
 
-            // Добавляем иконку в контейнер
+            const x = startX + col * (iconSize + padding);
+            const y = startY + row * (iconSize + padding);
+
+            // Создаём изображение
+            const icon = this.scene.add.image(x, y, key)
+                .setDisplaySize(iconSize, iconSize)
+                .setOrigin(0.5)
+                .setDepth(this.depth + 1); // Поверх существа
+
+            // Добавляем в контейнер
             this.add(icon);
             this.effectIcons.push(icon);
         });

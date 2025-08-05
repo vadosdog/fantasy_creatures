@@ -1,97 +1,53 @@
 <script setup>
-
 import CreatureCard from "./CreatureCard.vue";
-import {computed, ref, watch} from "vue";
-import {useBattleStore} from "../../store/battle.js";
-import {useGlobalStore} from "../../store/global.js";
+import { computed, ref, watch } from "vue";
+import { useBattleStore } from "../../store/battle.js";
+import { useGlobalStore } from "../../store/global.js";
 import BattleLog from "./BattleLog.vue";
 import BattleQueueVertical from "./BattleQueueVertical.vue";
-import {useBattleLogStore} from "../../store/battleLog.js";
-import {useGameStore} from "../../store/game.js";
+import { useBattleLogStore } from "../../store/battleLog.js";
+import { useGameStore } from "../../store/game.js";
 
-const battleStore = useBattleStore()
-const globalStore = useGlobalStore()
+// Импортируем хелпер
+import {
+    getElementIcon,
+    getEmotionIcon,
+    getShapeIcon
+} from "../../game/classes/iconHelper.js";
 
-const activeCreature = computed(() => battleStore.activeCreature)
-const selectedActionId = computed(() => {
-    return battleStore.selectedActionId
-})
+const battleStore = useBattleStore();
+const globalStore = useGlobalStore();
 
+const activeCreature = computed(() => battleStore.activeCreature);
+const selectedActionId = computed(() => battleStore.selectedActionId);
 
+// Тип действия — эмодзи, не меняем
 function getActionTypeIcon(action) {
     if (action.range === 0) {
-        return '🛡️'
+        return '🛡️';
     }
-
-    return {"melee": '🗡️', 'ranged': '🏹', 'treat': '❤'}[action.actionType]
+    return { melee: '🗡️', ranged: '🏹', treat: '❤' }[action.actionType];
 }
 
-
-function getElementIcon(element) { //TODO унести в какое нибудь единое место
-    const elementIcon = {icon: '', color: ''}
-    switch (element) {
-        case 'fire':
-            elementIcon.icon = 'whatshot'
-            elementIcon.color = 'red-9'
-            break;
-        case 'water':
-            elementIcon.icon = 'water_drop'
-            elementIcon.color = 'blue-10'
-            break;
-        case 'grass':
-            elementIcon.icon = 'grass'
-            elementIcon.color = 'green-9'
-            break;
-    }
-
-    return elementIcon
-}
-
-
-function getEmotionIcon(emotion) {
-    switch (emotion) {
-        case 'rage':
-            return 'shield'
-        case 'passion':
-            return 'rocket'
-        case 'hope':
-            return 'emergency'
-    }
-
-    return undefined
-}
-
-function getShapeIcon(shape) {
-    switch (shape) {
-        case 'beast':
-            return 'pets'
-        case 'bird':
-            return 'flutter_dash'
-        case 'reptile':
-            return 'smart_toy'
-    }
-
-    return undefined
-}
-
+// Убираем дублирующие функции — используем хелпер
 function getActionIcon(action) {
     if (action.element) {
-        return getElementIcon(action.element)
+        const src = getElementIcon(action.element);
+        return src ? { type: 'element', src, color: 'primary' } : null;
     }
     if (action.emotion) {
-        return {
-            color: 'red',
-            icon: getEmotionIcon(action.emotion)
-        }
+        const src = getEmotionIcon(action.emotion);
+        return src ? { type: 'emotion', src, color: 'red-9' } : null;
     }
-    return {
-        color: 'accent',
-        icon: getShapeIcon(action.shape)
+    if (action.shape) {
+        const src = getShapeIcon(action.shape);
+        return src ? { type: 'shape', src, color: 'accent' } : null;
     }
+    return null;
 }
 
-const confirmSkip = ref(false)
-const confirmDelay = ref(false)
+const confirmSkip = ref(false);
+const confirmDelay = ref(false);
 
 function openDialog() {
     globalStore.setDialogVisible(true);
@@ -101,78 +57,69 @@ function closeDialog() {
     globalStore.setDialogVisible(false);
 }
 
-
-const scrollAreaRef = ref(null)
-const battleLogStore = useBattleLogStore()
-const battleLogLength = computed(() => battleLogStore.battleLog.length)
+// Ссылка на scroll area для автопрокрутки лога
+const scrollAreaRef = ref(null);
+const battleLogStore = useBattleLogStore();
+const battleLogLength = computed(() => battleLogStore.battleLog.length);
 
 watch(battleLogLength, (newValue) => {
     try {
-        if (!scrollAreaRef.value) return
+        if (!scrollAreaRef.value) return;
 
-        const scrollElement = scrollAreaRef.value.getScrollTarget()
-        if (!scrollElement) return
+        const scrollElement = scrollAreaRef.value.getScrollTarget();
+        if (!scrollElement) return;
 
-        // Вычисляем максимальную позицию скролла
-        const maxScroll = scrollElement.scrollHeight - scrollElement.clientHeight + 300
-
-        // Прокручиваем с анимацией
-        scrollAreaRef.value.setScrollPosition('vertical', maxScroll, 300)
+        const maxScroll = scrollElement.scrollHeight - scrollElement.clientHeight + 300;
+        scrollAreaRef.value.setScrollPosition('vertical', maxScroll, 300);
     } catch (error) {
         console.error('Error in scroll area:', error);
     }
-
 });
 
 const gameStore = useGameStore();
-const game = gameStore.game
+const game = computed(() => gameStore.game);
 
 function cameraAction(action) {
     try {
-        if (!game) return;
+        if (!game.value) return;
 
-        // Получаем текущую сцену безопасным способом
-        const scene = gameStore.scene || (game.scene && game.scene.getScene('Battle'));
-
+        const scene = gameStore.scene || (game.value.scene && game.value.scene.getScene('Battle'));
         if (scene && scene.scene && scene.scene.cameras) {
-            // Основной способ отключения ввода
+            const camera = scene.scene.cameras.main;
+
             switch (action) {
                 case 'up':
-                    scene.scene.cameras.main.scrollY -= 50;
-                    break
+                    camera.scrollY -= 50;
+                    break;
                 case 'down':
-                    scene.scene.cameras.main.scrollY += 50;
-                    break
+                    camera.scrollY += 50;
+                    break;
                 case 'left':
-                    scene.scene.cameras.main.scrollX -= 50;
-                    break
+                    camera.scrollX -= 50;
+                    break;
                 case 'right':
-                    scene.scene.cameras.main.scrollX += 50;
-                    break
+                    camera.scrollX += 50;
+                    break;
                 case 'zoomIn':
-                    scene.scene.cameras.main.zoom += 0.1;
-                    break
+                    camera.zoom += 0.1;
+                    break;
                 case 'zoomOut':
-                    scene.scene.cameras.main.zoom = Math.max(0.1, scene.scene.cameras.main.zoom - 0.1);
-                    break
+                    camera.zoom = Math.max(0.1, camera.zoom - 0.1);
+                    break;
             }
         }
     } catch (error) {
-        console.error('Error in dialogVisible watcher:', error);
+        console.error('Error in cameraAction:', error);
     }
-
 }
-
-
 </script>
 
 <template>
-    <!-- Внешний контейнер: занимает всю высоту drawer'а -->
     <div class="battle-drawer-container">
-        <!-- Хедер: только под контент -->
+        <!-- Хедер -->
         <q-card class="border bg-grey-2 text-primary-foreground" style="flex: none">
             <q-card-section>
-                <div class="text-accent-foreground" style="max-width: 350px">
+                <div style="max-width: 350px">
                     <q-list bordered separator>
                         <q-item clickable v-ripple to="world">
                             <q-item-section>Выйти</q-item-section>
@@ -180,6 +127,7 @@ function cameraAction(action) {
                     </q-list>
                 </div>
 
+                <!-- Кнопки управления камерой -->
                 <div class="q-mt-md">
                     <div class="row q-gutter-xs">
                         <q-btn
@@ -195,8 +143,8 @@ function cameraAction(action) {
                             flat
                             round
                             size="sm"
-                            color="#7B68EE"
-                            text-color="#C0C0C0"
+                            color="indigo"
+                            text-color="white"
                             :icon="action.icon"
                             @pointerup="cameraAction(action.fn)"
                             class="control-button"
@@ -206,16 +154,16 @@ function cameraAction(action) {
             </q-card-section>
         </q-card>
 
-        <!-- Основной контент: очередь + лог -->
+        <!-- Основной контент -->
         <div class="main-content">
-            <!-- Очередь: 70% -->
+            <!-- Очередь -->
             <div class="queue-section">
                 <q-toolbar class="full-height bg-grey-9">
                     <BattleQueueVertical class="full-width" />
                 </q-toolbar>
             </div>
 
-            <!-- Лог: 30% -->
+            <!-- Лог боя -->
             <div class="log-section bg-grey-2 text-grey-9">
                 <q-scroll-area class="full-height full-width q-pa-md" ref="scrollAreaRef">
                     <BattleLog />
@@ -226,24 +174,6 @@ function cameraAction(action) {
 </template>
 
 <style scoped>
-/* Базовые стили кнопок */
-.control-button {
-    background-color: #7B68EE;
-    transition: all 0.2s ease;
-}
-
-/* Эффекты при наведении */
-.control-button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(123, 104, 238, 0.4);
-}
-
-/* Эффекты при нажатии */
-.control-button:active {
-    background-color: #D6AFAF !important;
-    transform: scale(0.95);
-}
-
 .battle-drawer-container {
     display: flex;
     flex-direction: column;
@@ -252,13 +182,11 @@ function cameraAction(action) {
     overflow: hidden;
 }
 
-/* Хедер — только под контент */
 .battle-drawer-container > .q-card {
     flex: none;
     z-index: 2;
 }
 
-/* Основной контент: занимает всё, что осталось после хедера */
 .main-content {
     display: flex;
     flex-direction: column;
@@ -267,7 +195,6 @@ function cameraAction(action) {
     height: 100%;
 }
 
-/* Очередь — 70% от оставшегося места */
 .queue-section {
     height: 70%;
     min-height: 0;
@@ -275,7 +202,6 @@ function cameraAction(action) {
     background: #262626;
 }
 
-/* Лог — 30% */
 .log-section {
     height: 30%;
     min-height: 0;

@@ -1,5 +1,6 @@
 <script setup>
-import {computed} from 'vue';
+import { computed } from 'vue';
+import { getEffectIcon } from "../../game/classes/iconHelper.js";
 
 const props = defineProps({
     effect: {
@@ -8,58 +9,69 @@ const props = defineProps({
         validator: (eff) => 'effect' in eff
     },
     type: {
-        default: 'span'
+        type: String,
+        default: 'span' // 'span' или 'badge'
     }
 });
 
-// Мапинг иконок для эффектов
-const effectIcons = {
-    // Бафы
-    'empower': '💪',
-    'haste': '⚡',
-    'luck': '🍀',
-    'regen': '💚',
-    'thorns': '🌵',
-    'aegis': '🛡️',
-    'defense': '🛡️',
+// Получаем путь к PNG-иконке
+const iconSrc = computed(() => getEffectIcon(props.effect.effect));
 
-    // Дебафы
-    'poison': '☠️',
-    'bleed': '💉',
-    'burn': '🔥',
-    'freeze': '🥶',
-    'chill': '❄️',
-    'blind': '👁️‍🗨️',
-    'curse': '📛',
-    'madness': '🤪',
-    'fear': '😱',
-    'confusion': '😖'
-};
-
-// Получаем иконку для эффекта
-const icon = computed(() => {
-    return effectIcons[props.effect.effect] || '';
-});
-
-// Определяем цвет в зависимости от типа эффекта
+// Определяем цвет: бафы — positive, дебафы — negative
 const colorClass = computed(() => {
-    const buffs = ['empower', 'haste', 'luck', 'regen', 'thorns', 'aegis', 'defense'];
+    const buffs = [
+        'empower', 'haste', 'luck', 'regen', 'thorns', 'aegis', 'defense'
+    ];
     return buffs.includes(props.effect.effect) ? 'positive' : 'negative';
 });
 </script>
 
 <template>
+    <!-- Режим: бейдж с иконкой и текстом -->
     <q-badge
         v-if="type === 'badge'"
         :color="colorClass"
+        class="effect-badge"
     >
-        {{ icon }} {{ effect.effect }}
+        <q-avatar
+            v-if="iconSrc"
+            size="1em"
+            class="q-mr-xs"
+        ><img :src="iconSrc" alt="" /></q-avatar>
+        <span v-else class="q-mr-xs">{{ effect.effect[0] }}</span>
+        {{ effect.effect }}
     </q-badge>
-    <span :class="'text-' + colorClass" v-else>
-        {{ icon }} {{ effect.effect }}
-    </span>
+
+    <!-- Режим: инлайн текст с иконкой -->
+    <span
+        v-else
+        :class="`text-${colorClass}`"
+        class="effect-inline"
+    >
+    <q-avatar
+        v-if="iconSrc"
+        size="1em"
+        class="q-mr-xs inline-icon"
+    ><img :src="iconSrc" alt="" /></q-avatar>
+    <span v-else class="q-mr-xs">{{ effect.effect[0] }}</span>
+    {{ effect.effect }}
+  </span>
 </template>
 
 <style scoped>
-/* При необходимости добавьте кастомные стили */
+/* Размер иконки в тексте */
+.inline-icon {
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+/* Дополнительные стили при необходимости */
+.effect-badge {
+    font-size: 0.85em;
+    padding: 2px 6px;
+}
+
+.effect-inline {
+    font-size: 0.95em;
+}
 </style>

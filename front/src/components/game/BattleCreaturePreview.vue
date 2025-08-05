@@ -1,8 +1,13 @@
-
-
 <script setup>
 import { computed } from 'vue';
-import {CreatureAPI} from "../../game/classes/battle/Creature.js";
+import { CreatureAPI } from '../../game/classes/battle/Creature.js';
+
+// Импортируем хелперы
+import {
+    getElementIcon as getElementIconPath,
+    getEmotionIcon as getEmotionIconPath,
+    getShapeIcon as getShapeIconPath
+} from "../../game/classes/iconHelper.js";
 
 // --- Props ---
 const props = defineProps({
@@ -10,7 +15,6 @@ const props = defineProps({
         type: Object,
         default: null,
     },
-    // Дополнительный класс, если нужно сдвинуть или изменить позицию
     additionalClass: {
         type: String,
         default: '',
@@ -27,81 +31,41 @@ const healthColor = computed(() => {
 });
 
 function statColor(a, b) {
-    const c = (a > b) - (a < b)
-    
-    return {
-        "-1": 'text-negative',
-        "1": 'text-positive'
-    }[c]
-}
-
-
-function compare(a, b) {
-    // Если a > b -> возвращаем 1.
-    // Если a < b -> возвращаем -1.
-    // Если a равно b, то возвращаем 0.
-    return (a > b) - (a < b);
+    const c = (a > b) - (a < b);
+    return { "-1": 'text-negative', "1": 'text-positive' }[c] || '';
 }
 
 // Статы
 const attackStat = computed(() => {
-    if (!props.creature) {
-        return 1
-    }
-    const value = props.creature ? CreatureAPI.getAttack(props.creature) : 0;
+    if (!props.creature) return { value: 1, color: '' };
+    const value = CreatureAPI.getAttack(props.creature);
     return { value, color: statColor(value, props.creature?.attackStat) };
 });
+
 const defenseStat = computed(() => {
-    if (!props.creature) {
-        return 1
-    }
-    const value = props.creature ? CreatureAPI.getDefense(props.creature) : 0;
+    if (!props.creature) return { value: 1, color: '' };
+    const value = CreatureAPI.getDefense(props.creature);
     return { value, color: statColor(value, props.creature?.defenseStat) };
 });
+
 const willStat = computed(() => {
-    if (!props.creature) {
-        return 1
-    }
-    const value = props.creature ? CreatureAPI.getWill(props.creature) : 0;
+    if (!props.creature) return { value: 1, color: '' };
+    const value = CreatureAPI.getWill(props.creature);
     return { value, color: statColor(value, props.creature?.willStat) };
 });
+
 const initiativeStat = computed(() => {
-    if (!props.creature) {
-        return 1
-    }
-    const value = props.creature ? CreatureAPI.getInitiative(props.creature) : 0;
+    if (!props.creature) return { value: 1, color: '' };
+    const value = CreatureAPI.getInitiative(props.creature);
     return { value, color: statColor(value, props.creature?.initiativeStat) };
 });
 
-// Иконки
-const emotionIcon = computed(() => {
-    switch (props.creature?.emotion) {
-        case 'rage': return 'shield';
-        case 'passion': return 'rocket';
-        case 'hope': return 'emergency';
-        default: return null;
-    }
-});
+// --- Иконки через хелпер ---
+const emotionIcon = computed(() => getEmotionIconPath(props.creature?.emotion));
+const shapeIcon = computed(() => getShapeIconPath(props.creature?.shape));
+const elementIcon = computed(() => getElementIconPath(props.creature?.element));
 
-const shapeIcon = computed(() => {
-    switch (props.creature?.shape) {
-        case 'beast': return 'pets';
-        case 'bird': return 'flutter_dash';
-        case 'reptile': return 'smart_toy';
-        default: return null;
-    }
-});
-
-const elementIcon = computed(() => {
-    const map = {
-        fire: { icon: 'whatshot', color: 'red-9' },
-        water: { icon: 'water_drop', color: 'blue-10' },
-        grass: { icon: 'grass', color: 'green-9' },
-    };
-    return map[props.creature?.element] || { icon: '', color: 'grey' };
-});
-
-// Эффекты
+// --- Эффекты (остаётся без изменений, только эмодзи) ---
 const effectIcons = computed(() => {
     if (!props.creature?.effects) return [];
     return props.creature.effects.map(effect => {
@@ -127,33 +91,37 @@ const effectIcons = computed(() => {
         :class="additionalClass"
         style="z-index: 1000"
     >
-        <!-- Основной контейнер (совпадает с hover-attack-data) -->
+        <!-- Основной контейнер -->
         <div class="p-3 space-y-2">
-            <!-- Имя и иконки (элемент, эмоция, форма, уровень) -->
+            <!-- Имя и иконки -->
             <div class="flex items-center justify-between text-sm">
                 <strong class="text-white q-pr-sm">{{ creature.name }}</strong>
                 <div class="flex items-center space-x-1">
-                    <!-- Элемент -->
-                    <q-icon
-                        v-if="elementIcon.icon"
-                        :name="elementIcon.icon"
-                        :color="elementIcon.color"
-                        size="sm"
+                    <!-- Элемент (PNG) -->
+                    <q-img
+                        v-if="elementIcon"
+                        :src="elementIcon"
+                        :style="{ width: '16px', height: '16px' }"
+                        class="q-mr-xs"
                     />
-                    <!-- Эмоция -->
-                    <q-icon
+
+                    <!-- Эмоция (PNG) -->
+                    <q-img
                         v-if="emotionIcon"
-                        :name="emotionIcon"
-                        color="red"
-                        size="sm"
+                        :src="emotionIcon"
+                        :style="{ width: '16px', height: '16px' }"
+                        class="q-mr-xs"
                     />
-                    <!-- Форма -->
-                    <q-icon
+
+                    <!-- Форма (PNG) -->
+                    <q-img
                         v-if="shapeIcon"
-                        :name="shapeIcon"
-                        color="accent"
-                        size="sm"
+                        :src="shapeIcon"
+                        :style="{ width: '16px', height: '16px' }"
+                        class="q-mr-xs"
                     />
+
+                    <!-- Уровень -->
                     <q-badge class="q-ml-md" color="grey">Ур. {{ creature.level }}</q-badge>
                 </div>
             </div>
@@ -172,7 +140,7 @@ const effectIcons = computed(() => {
                 </q-linear-progress>
             </div>
 
-            <!-- Краткие статы (Атака, Защита, Воля, Инициатива) -->
+            <!-- Статы с эмодзи -->
             <div class="grid grid-cols-2 gap-2 text-xs">
                 <div class="flex items-center">
                     ⚔️
@@ -192,7 +160,7 @@ const effectIcons = computed(() => {
                 </div>
             </div>
 
-            <!-- Активные эффекты (иконки) -->
+            <!-- Активные эффекты -->
             <div v-if="effectIcons.length" class="flex flex-wrap gap-1">
                 <q-badge
                     v-for="effect in effectIcons"
@@ -205,7 +173,7 @@ const effectIcons = computed(() => {
             </div>
         </div>
 
-        <!-- Лёгкая тень-градиент снизу (как в hover-attack-data) -->
+        <!-- Тень-градиент снизу -->
         <div
             style="
         height: 8px;
@@ -215,6 +183,7 @@ const effectIcons = computed(() => {
         ></div>
     </div>
 </template>
+
 <style scoped>
 .main-block {
     @apply bg-background text-foreground;

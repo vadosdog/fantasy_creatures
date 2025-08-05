@@ -1,122 +1,94 @@
 <script setup>
-import {computed, ref, watch} from 'vue';
-import {useGameStore} from "../../store/game.js";
-import EffectSpan from "./EffectSpan.vue";
+import { computed, ref, watch } from 'vue';
+import { useGameStore } from '../../store/game.js';
+import EffectSpan from './EffectSpan.vue';
+
+// Импортируем хелпер
+import {
+    getElementIcon,
+    getEmotionIcon,
+    getShapeIcon
+} from "../../game/classes/iconHelper.js";
 
 defineProps({
     modelValue: Boolean
 });
-
 defineEmits(['update:modelValue']);
 
 // Фильтры
-const selectedElement = ref({label: 'Любой', value: null});
-const selectedShape = ref({label: 'Любой', value: null});
-const selectedEmotion = ref({label: 'Любой', value: null});
+const selectedElement = ref({ label: 'Любой', value: null });
+const selectedShape = ref({ label: 'Любой', value: null });
+const selectedEmotion = ref({ label: 'Любой', value: null });
 const searchQuery = ref('');
 
 // Опции фильтров
 const elementOptions = [
-    {label: 'Любой', value: null},
-    {label: 'Огонь', value: 'fire'},
-    {label: 'Вода', value: 'water'},
-    {label: 'Трава', value: 'grass'},
+    { label: 'Любой', value: null },
+    { label: 'Огонь', value: 'fire' },
+    { label: 'Вода', value: 'water' },
+    { label: 'Трава', value: 'grass' },
 ];
-
 const shapeOptions = [
-    {label: 'Любой', value: null},
-    {label: 'Зверь', value: 'beast'},
-    {label: 'Птица', value: 'bird'},
-    {label: 'Рептилия', value: 'reptile'},
+    { label: 'Любой', value: null },
+    { label: 'Зверь', value: 'beast' },
+    { label: 'Птица', value: 'bird' },
+    { label: 'Рептилия', value: 'reptile' },
 ];
-
 const emotionOptions = [
-    {label: 'Любой', value: null},
-    {label: 'Ярость', value: 'rage'},
-    {label: 'Азарт', value: 'passion'},
-    {label: 'Надежда', value: 'hope'},
+    { label: 'Любой', value: null },
+    { label: 'Ярость', value: 'rage' },
+    { label: 'Азарт', value: 'passion' },
+    { label: 'Надежда', value: 'hope' },
 ];
 
-const gameStore = useGameStore()
+const gameStore = useGameStore();
 
 // Фильтрация существ
 const filteredCreatures = computed(() => {
     return gameStore.creatures.filter(creature => {
-        // Фильтр по стихии
-        if (
-            selectedElement.value &&
-            selectedElement.value.value &&
-            creature.element !== selectedElement.value.value
-        ) {
-            return false;
-        }
-
-        // Фильтр по форме
-        if (
-            selectedShape.value &&
-            selectedShape.value.value &&
-            creature.shape !== selectedShape.value.value
-        ) {
-            return false;
-        }
-
-        // Фильтр по эмоции
-        if (
-            selectedEmotion.value &&
-            selectedEmotion.value.value &&
-            creature.emotion !== selectedEmotion.value.value
-        ) {
-            return false;
-        }
-
-        // Поиск по названию
+        if (selectedElement.value?.value && creature.element !== selectedElement.value.value) return false;
+        if (selectedShape.value?.value && creature.shape !== selectedShape.value.value) return false;
+        if (selectedEmotion.value?.value && creature.emotion !== selectedEmotion.value.value) return false;
         if (
             searchQuery.value &&
             !creature.name.toLowerCase().includes(searchQuery.value.toLowerCase()) &&
             !creature.number.toString().includes(searchQuery.value.toLowerCase())
-        ) {
-            return false;
-        }
-
+        ) return false;
         return true;
     });
 });
 
+// Путь к изображению существа
 const creatureImage = (creature) => {
-    if (!creature) {
-        return '';
-    }
-    return 'assets/creatures/basic/' + creature.number + '.png';
-}
+    if (!creature) return '';
+    return `assets/creatures/basic/${creature.number}.png`;
+};
 
-const selectedCreature = ref(null)
+const selectedCreature = ref(null);
+const prevFilters = ref(null);
 
 const selectCreature = (creature) => {
     if (selectedCreature.value?.id === creature.id) {
-        selectedCreature.value = null
+        selectedCreature.value = null;
     } else {
-        selectedCreature.value = creature
+        selectedCreature.value = creature;
     }
-}
+};
 
-// Сброс фильтров при выборе существа
+// Сброс/восстановление фильтров при выборе существа
 watch(selectedCreature, (newVal) => {
     if (newVal) {
-        // Сохраняем текущие значения фильтров
         prevFilters.value = {
-            element: {...selectedElement.value},
-            shape: {...selectedShape.value},
-            emotion: {...selectedEmotion.value},
+            element: { ...selectedElement.value },
+            shape: { ...selectedShape.value },
+            emotion: { ...selectedEmotion.value },
             search: searchQuery.value
         };
-
-        // Сбрасываем фильтры
-        selectedElement.value = {label: 'Любой', value: null};
-        selectedShape.value = {label: 'Любой', value: null};
-        selectedEmotion.value = {label: 'Любой', value: null};
+        selectedElement.value = { label: 'Любой', value: null };
+        selectedShape.value = { label: 'Любой', value: null };
+        selectedEmotion.value = { label: 'Любой', value: null };
         searchQuery.value = '';
     } else {
-        // Восстанавливаем фильтры
         if (prevFilters.value) {
             selectedElement.value = prevFilters.value.element;
             selectedShape.value = prevFilters.value.shape;
@@ -126,82 +98,28 @@ watch(selectedCreature, (newVal) => {
     }
 });
 
-// Для восстановления фильтров после выхода из детального просмотра
-const prevFilters = ref(null);
-
+// Получение иконки действия (через PNG)
 function getActionIcon(action) {
     if (action.element) {
-        return getElementIcon(action.element)
+        const src = getElementIcon(action.element);
+        return src ? { type: 'element', src, color: 'primary' } : null;
     }
     if (action.emotion) {
-        return {
-            color: 'red',
-            icon: getEmotionIcon(action.emotion)
-        }
+        const src = getEmotionIcon(action.emotion);
+        return src ? { type: 'emotion', src, color: 'red-9' } : null;
     }
-    return {
-        color: 'accent',
-        icon: getShapeIcon(action.shape)
+    if (action.shape) {
+        const src = getShapeIcon(action.shape);
+        return src ? { type: 'shape', src, color: 'accent' } : null;
     }
+    return null;
 }
 
-
-function getElementIcon(element) { //TODO унести в какое нибудь единое место
-    const elementIcon = {icon: '', color: ''}
-    switch (element) {
-        case 'fire':
-            elementIcon.icon = 'whatshot'
-            elementIcon.color = 'red-9'
-            break;
-        case 'water':
-            elementIcon.icon = 'water_drop'
-            elementIcon.color = 'blue-10'
-            break;
-        case 'grass':
-            elementIcon.icon = 'grass'
-            elementIcon.color = 'green-9'
-            break;
-    }
-
-    return elementIcon
-}
-
-
-function getEmotionIcon(emotion) {
-    switch (emotion) {
-        case 'rage':
-            return 'shield'
-        case 'passion':
-            return 'rocket'
-        case 'hope':
-            return 'emergency'
-    }
-
-    return undefined
-}
-
-function getShapeIcon(shape) {
-    switch (shape) {
-        case 'beast':
-            return 'pets'
-        case 'bird':
-            return 'flutter_dash'
-        case 'reptile':
-            return 'smart_toy'
-    }
-
-    return undefined
-}
-
-
+// Тип действия — эмодзи, не меняем
 function getActionTypeIcon(action) {
-    if (action.range === 0) {
-        return '🛡️'
-    }
-
-    return {"melee": '🗡️', 'ranged': '🏹', 'treat': '❤'}[action.actionType]
+    if (action.range === 0) return '🛡️';
+    return { melee: '🗡️', ranged: '🏹', treat: '❤' }[action.actionType];
 }
-
 </script>
 
 <template>
@@ -210,9 +128,9 @@ function getActionTypeIcon(action) {
         @update:model-value="val => $emit('update:modelValue', val)"
         class="text-primary-foreground"
     >
-        <q-card class="flex column" style=" max-width: 80vw; width: 800px">
+        <q-card class="flex column" style="max-width: 80vw; width: 800px">
             <q-toolbar>
-                <!-- Кнопка "Назад" в режиме детального просмотра -->
+                <!-- Кнопка "Назад" -->
                 <q-btn
                     v-if="selectedCreature"
                     icon="arrow_back"
@@ -221,10 +139,11 @@ function getActionTypeIcon(action) {
                     dense
                     @click="selectedCreature = null"
                 />
-                <q-space/>
-                <q-btn flat round dense icon="close" v-close-popup/>
+                <q-space />
+                <q-btn icon="close" flat round dense v-close-popup />
             </q-toolbar>
-            <!-- Панель фильтров (видна только когда не выбрано существо) -->
+
+            <!-- Панель фильтров -->
             <q-card-section v-if="!selectedCreature" class="q-pb-none">
                 <div class="q-pa-sm">
                     <div class="row q-gutter-sm">
@@ -253,7 +172,6 @@ function getActionTypeIcon(action) {
                             class="col"
                         />
                     </div>
-
                     <q-input
                         v-model="searchQuery"
                         label="Поиск существ"
@@ -262,13 +180,13 @@ function getActionTypeIcon(action) {
                         class="q-mt-sm"
                     >
                         <template v-slot:append>
-                            <q-icon name="search"/>
+                            <q-icon name="search" />
                         </template>
                     </q-input>
                 </div>
             </q-card-section>
 
-            <!-- Горизонтальный скролл существ (виден только при выборе существа) -->
+            <!-- Горизонтальный скролл существ -->
             <q-card-section v-if="selectedCreature" class="q-pa-sm" style="height: 120px;">
                 <q-scroll-area horizontal style="height: 100px; white-space: nowrap;">
                     <div class="row no-wrap q-gutter-sm">
@@ -276,7 +194,7 @@ function getActionTypeIcon(action) {
                             v-for="(creature, index) in gameStore.creatures"
                             :key="index"
                             class="inline-block cursor-pointer"
-                            :class="{'selected-mini': selectedCreature?.id === creature.id}"
+                            :class="{ 'selected-mini': selectedCreature?.id === creature.id }"
                             @click="selectCreature(creature)"
                         >
                             <q-img
@@ -288,8 +206,9 @@ function getActionTypeIcon(action) {
                 </q-scroll-area>
             </q-card-section>
 
+            <!-- Основной контент -->
             <q-card-section style="max-height: 80vh; min-height: 600px" class="scroll">
-                <!-- Сетка существ (когда не выбрано существо) -->
+                <!-- Сетка существ -->
                 <div v-if="!selectedCreature" class="row q-col-gutter-sm">
                     <div
                         v-for="(creature, index) in filteredCreatures"
@@ -297,19 +216,19 @@ function getActionTypeIcon(action) {
                         class="col-xs-4 cursor-pointer"
                         @click="selectCreature(creature)"
                     >
-                        <q-card class="">
-                            <q-img :src="creatureImage(creature)" no-native-menu/>
-                            <q-badge class="absolute-bottom-right text-subtitle2" :label="creature.name"/>
+                        <q-card>
+                            <q-img :src="creatureImage(creature)" no-native-menu />
+                            <q-badge class="absolute-bottom-right text-subtitle2" :label="creature.name" />
                         </q-card>
                     </div>
                 </div>
 
-                <!-- Детали существа (когда выбрано) -->
+                <!-- Детали существа -->
                 <div v-else class="row q-col-gutter-md">
-                    <!-- Левая колонка: изображение и кнопки -->
+                    <!-- Левая колонка: изображение и действия -->
                     <div class="col-xs-4">
                         <q-card>
-                            <q-img :src="creatureImage(selectedCreature)" no-native-menu/>
+                            <q-img :src="creatureImage(selectedCreature)" no-native-menu />
                         </q-card>
 
                         <div class="q-mt-md">
@@ -319,31 +238,51 @@ function getActionTypeIcon(action) {
                                 no-caps
                                 align="left"
                             >
-                                <q-icon flat round :color="getActionIcon(action).color"
-                                        :name="getActionIcon(action).icon" size="sm"
-                                        class="text-foreground q-ma-xs absolute-right"/>
+                                <!-- Иконка действия — PNG -->
+                                <q-avatar
+                                    v-if="getActionIcon(action)?.src"
+                                    size="sm"
+                                    class="q-ma-xs absolute-right"
+                                >
+                                    <img :src="getActionIcon(action).src" alt="" />
+                                </q-avatar>
 
-                                <!-- Action Details -->
+                                <!-- Иконка действия — fallback (на случай ошибки) -->
+                                <q-icon
+                                    v-else
+                                    :name="getActionIcon(action)?.icon || 'help'"
+                                    :color="getActionIcon(action)?.color || 'grey'"
+                                    size="sm"
+                                    class="q-ma-xs absolute-right"
+                                />
+
+                                <!-- Название действия -->
                                 <div class="col-12 text-left text-foreground">
-                                    {{ getActionTypeIcon(action) }} ️{{ action.name }}
+                                    {{ getActionTypeIcon(action) }} {{ action.name }}
                                 </div>
-                                <div class="col-12 text-left text-foreground" v-if="action.range > 1">
+
+                                <!-- Дальность -->
+                                <div v-if="action.range > 1" class="col-12 text-left text-foreground">
                                     📏 {{ action.range }}
                                 </div>
+
+                                <!-- Стоимость PP -->
                                 <div class="col-12 text-left">
-                                    <span>
-                                        PP: {{ action.pp }}
-                                    </span>
+                                    <span>PP: {{ action.pp }}</span>
                                 </div>
+
+                                <!-- Характеристики -->
                                 <div class="col-12 text-left text-foreground">
                                     🎯 {{ action.hitChance * 100 }}%
                                     <span v-if="action.critChance > 0">💢 {{ action.critChance * 100 }}%</span>
                                     💥 {{ action.baseDamage }}
                                 </div>
-                                <div class="col-12 text-left text-foreground" v-if="action.effects.length">
-                                    <q-separator class="bg-border"/>
-                                    <div v-for="effect in action.effects">
-                                        <EffectSpan :effect="effect"/>
+
+                                <!-- Эффекты -->
+                                <div v-if="action.effects.length" class="col-12 text-left text-foreground">
+                                    <q-separator class="bg-border" />
+                                    <div v-for="effect in action.effects" :key="effect.effect">
+                                        <EffectSpan :effect="effect" />
                                         <span v-if="effect.duration > 1" class="q-pl-xs">x{{ effect.duration }}</span>
                                         🎲 {{ effect.chance * 100 }}%
                                     </div>
@@ -361,40 +300,38 @@ function getActionTypeIcon(action) {
                             <div class="col-6">
                                 <q-list bordered dense>
                                     <q-item>
-                                        <q-item-section>Уровень
-                                            <QIcon name="help" size="xs" class="text-grey">
-                                                <QTooltip>Пояснение термина</QTooltip>
-                                            </QIcon>
+                                        <q-item-section>
+                                            Уровень
+                                            <q-icon name="help" size="xs" class="text-grey">
+                                                <q-tooltip>Пояснение термина</q-tooltip>
+                                            </q-icon>
                                         </q-item-section>
-                                        <q-item-section side>{{ selectedCreature.level }}
-                                        </q-item-section>
+                                        <q-item-section side>{{ selectedCreature.level }}</q-item-section>
                                     </q-item>
                                     <q-item>
                                         <q-item-section>Эхо Битв (ЭБ)</q-item-section>
-                                        <q-item-section side>{{ selectedCreature.experience || 0 }}
-                                        </q-item-section>
+                                        <q-item-section side>{{ selectedCreature.experience || 0 }}</q-item-section>
                                     </q-item>
                                     <q-item>
                                         <q-item-section>Сила Пробуждения (СП)</q-item-section>
-                                        <q-item-section side>{{ selectedCreature.manualPoints || 0 }}
-                                        </q-item-section>
+                                        <q-item-section side>{{ selectedCreature.manualPoints || 0 }}</q-item-section>
                                     </q-item>
                                     <q-item>
                                         <q-item-section>Стихия</q-item-section>
                                         <q-item-section side>
-                                            <q-badge :label="selectedCreature.element" color="primary"/>
+                                            <q-badge :label="selectedCreature.element" color="primary" />
                                         </q-item-section>
                                     </q-item>
                                     <q-item>
                                         <q-item-section>Форма</q-item-section>
                                         <q-item-section side>
-                                            <q-badge :label="selectedCreature.shape" color="secondary"/>
+                                            <q-badge :label="selectedCreature.shape" color="secondary" />
                                         </q-item-section>
                                     </q-item>
                                     <q-item>
                                         <q-item-section>Эмоция</q-item-section>
                                         <q-item-section side>
-                                            <q-badge :label="selectedCreature.emotion" color="accent"/>
+                                            <q-badge :label="selectedCreature.emotion" color="accent" />
                                         </q-item-section>
                                     </q-item>
                                 </q-list>
@@ -435,16 +372,13 @@ function getActionTypeIcon(action) {
                                     </q-item>
                                 </q-list>
                             </div>
-
                         </div>
 
                         <div class="text-subtitle1 q-mt-md q-mb-sm">Описание:</div>
-                        <p>Это могучее существо обладает невероятной силой и выносливостью. Его способности позволяют
-                            ему доминировать в бою и защищать своих союзников от любых угроз.</p>
+                        <p>Это могучее существо обладает невероятной силой и выносливостью. Его способности позволяют ему доминировать в бою и защищать своих союзников от любых угроз.</p>
                     </div>
                 </div>
             </q-card-section>
-
         </q-card>
     </q-dialog>
 </template>
@@ -456,7 +390,6 @@ function getActionTypeIcon(action) {
     padding: 2px;
 }
 
-/* Action Buttons */
 .action-button {
     transition: all 0.3s ease;
     text-align: left;
