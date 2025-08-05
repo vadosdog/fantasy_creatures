@@ -348,6 +348,7 @@ const battleOverOpen = computed(() => battleStore.showBattleOverDialog)
 
 /* Остальные стили (hover-attack-data) можно оставить */
 .hover-attack-data {
+    z-index: 1000;
     width: 180px;
     @apply bg-background text-foreground;
     background: radial-gradient(ellipse at 20% 50%, rgba(139, 69, 193, 0.15) 0%, transparent 50%),

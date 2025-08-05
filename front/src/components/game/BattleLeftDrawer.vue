@@ -128,7 +128,7 @@ function closeDialog() {
         }"
           no-caps
           align="left"
-          :disable="action.currentCooldown > 0 || action.pp > activeCreature.pp"
+          :disable="activeCreature.direction === 'left' || action.currentCooldown > 0 || action.pp > activeCreature.pp"
           @click="() => battleStore.selectAction(action.id)"
       >
         <!-- Круговой индикатор с иконкой -->

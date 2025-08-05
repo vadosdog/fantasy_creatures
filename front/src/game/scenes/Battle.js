@@ -1081,7 +1081,7 @@ export class Battle extends Scene {
 
         this.attackIndicator = this.add.sprite(x, y, 'cursor_sword');
         this.attackIndicator.rotation = angle + Math.PI + Math.PI / 4;
-        this.attackIndicator.setDepth(100);
+        this.attackIndicator.setDepth(1001);
         this.attackHex = attackHex
     }
 

@@ -131,7 +131,7 @@ const src = computed(() => './assets/creatures/basic/' + (props.creature.number 
                 :src="src"
                 :alt="creature.name"
                 class="col"
-                :class="{ mirror: creature.direction === 'left' }"
+                :class="{ mirror: creature.direction === 'right' }"
             />
 
             <!-- Эффекты справа -->
