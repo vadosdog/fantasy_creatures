@@ -313,22 +313,25 @@ const battleOverOpen = computed(() => battleStore.showBattleOverDialog)
 </template>
 
 <style scoped>
-#game-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
+/* Убираем отступы и гарантируем высоту */
+.q-page {
+    padding: 0 !important;
+    margin: 0 !important;
     overflow: hidden;
-    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 #game-container {
-    width: 100%;
+    flex: 1;
     height: 100%;
-    max-height: calc(100vh - 60px);
+    max-height: none;
     background-color: #282C34;
+    position: relative;
+    overflow: hidden;
 }
 
-/* Добавляем изоляцию для WebGL */
 #game-canvas-container {
     position: absolute;
     top: 0;
@@ -343,6 +346,7 @@ const battleOverOpen = computed(() => battleStore.showBattleOverDialog)
     pointer-events: none;
 }
 
+/* Остальные стили (hover-attack-data) можно оставить */
 .hover-attack-data {
     width: 180px;
     @apply bg-background text-foreground;

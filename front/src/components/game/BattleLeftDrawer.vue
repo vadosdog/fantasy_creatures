@@ -131,13 +131,6 @@ function closeDialog() {
         </q-card>
     </q-dialog>
 
-    <!-- Header Card -->
-    <q-card class="bg-card border backdrop-blur-md text-foreground q-mb-md">
-        <q-card-section>
-            <div class="text-h6">Ваш ход</div>
-        </q-card-section>
-    </q-card>
-
     <CreatureCard
         v-if="activeCreature && activeCreature.id"
         :creature="activeCreature"

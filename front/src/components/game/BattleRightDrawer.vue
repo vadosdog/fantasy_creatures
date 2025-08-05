@@ -167,104 +167,61 @@ function cameraAction(action) {
 </script>
 
 <template>
-    <!-- Header Card -->
-    <q-card class="border bg-grey-2 text-primary-foreground" style="height: 20vh">
-        <q-card-section>
-            <div class="text-accent-foreground" style="max-width: 350px">
-                <q-list bordered separator>
-                    <q-item clickable v-ripple
-                            to="world">
-                        <q-item-section>Выйти</q-item-section>
-                    </q-item>
-                </q-list>
-            </div>
-            <div class="q-mt-md" style="z-index: 10">
-                <div class="column q-gutter-xs">
-                    <!-- Стрелки управления -->
+    <!-- Внешний контейнер: занимает всю высоту drawer'а -->
+    <div class="battle-drawer-container">
+        <!-- Хедер: только под контент -->
+        <q-card class="border bg-grey-2 text-primary-foreground" style="flex: none">
+            <q-card-section>
+                <div class="text-accent-foreground" style="max-width: 350px">
+                    <q-list bordered separator>
+                        <q-item clickable v-ripple to="world">
+                            <q-item-section>Выйти</q-item-section>
+                        </q-item>
+                    </q-list>
+                </div>
+
+                <div class="q-mt-md">
                     <div class="row q-gutter-xs">
                         <q-btn
+                            v-for="(action, i) in [
+                { icon: 'add', fn: 'zoomIn' },
+                { icon: 'remove', fn: 'zoomOut' },
+                { icon: 'keyboard_arrow_left', fn: 'left' },
+                { icon: 'keyboard_arrow_right', fn: 'right' },
+                { icon: 'keyboard_arrow_up', fn: 'up' },
+                { icon: 'keyboard_arrow_down', fn: 'down' }
+              ]"
+                            :key="i"
                             flat
                             round
                             size="sm"
                             color="#7B68EE"
                             text-color="#C0C0C0"
-                            icon="add"
-                            @pointerup="cameraAction('zoomIn')"
-                            class="control-button"
-                        />
-
-                        <q-btn
-                            flat
-                            round
-                            size="sm"
-                            color="#7B68EE"
-                            text-color="#C0C0C0"
-                            icon="remove"
-                            @pointerup="cameraAction('zoomOut')"
-                            class="control-button"
-                        />
-                        <q-btn
-                            flat
-                            round
-                            size="sm"
-                            color="#7B68EE"
-                            text-color="#C0C0C0"
-                            icon="keyboard_arrow_left"
-                            @pointerup="cameraAction('left')"
-                            class="control-button"
-                        />
-
-                        <q-btn
-                            flat
-                            round
-                            size="sm"
-                            color="#7B68EE"
-                            text-color="#C0C0C0"
-                            icon="keyboard_arrow_right"
-                            @pointerup="cameraAction('right')"
-                            class="control-button"
-                        />
-
-                        <q-btn
-                            flat
-                            round
-                            size="sm"
-                            color="#7B68EE"
-                            text-color="#C0C0C0"
-                            icon="keyboard_arrow_up"
-                            @pointerup="cameraAction('up')"
-                            class="control-button"
-                        />
-
-                        <q-btn
-                            flat
-                            round
-                            size="sm"
-                            color="#7B68EE"
-                            text-color="#C0C0C0"
-                            icon="keyboard_arrow_down"
-                            @pointerup="cameraAction('down')"
+                            :icon="action.icon"
+                            @pointerup="cameraAction(action.fn)"
                             class="control-button"
                         />
                     </div>
                 </div>
+            </q-card-section>
+        </q-card>
+
+        <!-- Основной контент: очередь + лог -->
+        <div class="main-content">
+            <!-- Очередь: 70% -->
+            <div class="queue-section">
+                <q-toolbar class="full-height bg-grey-9">
+                    <BattleQueueVertical class="full-width" />
+                </q-toolbar>
             </div>
-        </q-card-section>
-    </q-card>
-    <div class="row now-wrap-shadow-1" style="height: 50vh;">
 
-        <q-toolbar class="col-12 bg-grey-9">
-            <BattleQueueVertical/>
-
-        </q-toolbar>
-    </div>
-    <div class="row no-wrap shadow-1" style="height: 30vh;">
-        <QScrollArea class="col-12 bg-grey-2 text-grey-9 q-pa-md"
-                     style="height: 100%; width: 100%"
-                     ref="scrollAreaRef"
-        >
-            <BattleLog/>
-        </QScrollArea>
+            <!-- Лог: 30% -->
+            <div class="log-section bg-grey-2 text-grey-9">
+                <q-scroll-area class="full-height full-width q-pa-md" ref="scrollAreaRef">
+                    <BattleLog />
+                </q-scroll-area>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -282,6 +239,62 @@ function cameraAction(action) {
 }
 
 /* Эффекты при нажатии */
+.control-button:active {
+    background-color: #D6AFAF !important;
+    transform: scale(0.95);
+}
+
+.battle-drawer-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 100%;
+    overflow: hidden;
+}
+
+/* Хедер — только под контент */
+.battle-drawer-container > .q-card {
+    flex: none;
+    z-index: 2;
+}
+
+/* Основной контент: занимает всё, что осталось после хедера */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+}
+
+/* Очередь — 70% от оставшегося места */
+.queue-section {
+    height: 70%;
+    min-height: 0;
+    overflow: hidden;
+    background: #262626;
+}
+
+/* Лог — 30% */
+.log-section {
+    height: 30%;
+    min-height: 0;
+    overflow: hidden;
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+}
+
+/* Кнопки управления */
+.control-button {
+    background-color: #7B68EE;
+    transition: all 0.2s ease;
+}
+
+.control-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(123, 104, 238, 0.4);
+}
+
 .control-button:active {
     background-color: #D6AFAF !important;
     transform: scale(0.95);

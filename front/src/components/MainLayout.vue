@@ -38,7 +38,7 @@ const toggleRightDrawer = () => {
 <template>
     <q-layout view="hHh LpR lFr">
 
-        <q-header elevated class="bg-primary text-white border-b border-solid border-primary/20" :height-hint="50">
+        <q-header elevated class="bg-primary text-white border-b border-solid border-primary/20" :height-hint="60">
             <q-toolbar>
                 <DefaultHeader/>
 
@@ -82,7 +82,7 @@ const toggleRightDrawer = () => {
 <!--            <component :is="currentFooterComponent"/>-->
 <!--        </q-footer>-->
 
-        <q-page-container class="font-scada">
+        <q-page-container class="font-scada game-layout-container">
             <router-view v-slot="{ Component }">
                 <component
                     :is="Component"
@@ -102,5 +102,9 @@ const toggleRightDrawer = () => {
 .q-header {
     background: transparent !important;
     min-height: 60px;
+}
+
+.game-layout-container {
+    overflow: hidden;
 }
 </style>
