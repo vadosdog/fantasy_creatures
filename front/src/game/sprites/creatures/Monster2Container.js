@@ -26,7 +26,7 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
             creature.texture,
             scene,
             0,
-            0,
+            -2, // Чутка опускаем
             this.defaultDirection
         );
 
@@ -34,6 +34,8 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
         this.setupEventHandlers();
         this.createGlowSprite();
         this.createCreatureText();
+        
+        this.updateDepth()
     }
 
     setupEventHandlers() {
@@ -466,5 +468,14 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
             this.creatureSprite.clearTint();
             battleStore.setHoveredCreature(null);
         }
+    }
+
+    updateDepth() {
+        // Умножаем на большой шаг (например, 100), чтобы гарантировать порядок
+        const baseDepth = this.creature.position[0] * 100 + ((this.creature.position[1] % 2) * 50) + this.creature.position[1];
+        this.setDepth(baseDepth);
+
+        // Для отладки:
+        console.log('updateDepth:', this.creature.name, 'grid ppos:', this.creature.position, '→ depth:', baseDepth);
     }
 }

@@ -648,7 +648,10 @@ export class Battle extends Scene {
             let direction = path[i - 1][1] < y ? 'walk_right' : 'walk_left'
             timeline.add({
                 at: i * segmentDuration,
-                run: () => activeCreature.creatureSpriteContainer.setMonsterState(direction)
+                run: () => {
+                    activeCreature.creatureSpriteContainer.setMonsterState(direction)
+                    activeCreature.creatureSpriteContainer.updateDepth()
+                }
             });
             timeline.add({
                 at: i * segmentDuration,
