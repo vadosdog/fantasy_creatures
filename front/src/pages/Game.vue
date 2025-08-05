@@ -13,6 +13,7 @@ import CraftLeftDrawer from "../components/game/CraftLeftDrawer.vue";
 import CraftRightDrawer from "../components/game/CraftRightDrawer.vue";
 import BattleOverDialog from "../components/game/BattleOverDialog.vue";
 import {useRouter} from 'vue-router';
+import BattleCreaturePreview from "../components/game/BattleCreaturePreview.vue";
 
 const router = useRouter();
 const game = ref(null);
@@ -295,11 +296,16 @@ const battleOverOpen = computed(() => battleStore.showBattleOverDialog)
 
             <!-- Лёгкая тень-градиент снизу -->
             <div style="
-        height: 8px;
-        background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.4));
-        pointer-events: none;
-    "></div>
+                height: 8px;
+                background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.4));
+                pointer-events: none;
+            "></div>
         </div>
+        <BattleCreaturePreview
+            v-if="battleStore.hoveredCreature"
+            :creature="battleStore.hoveredCreature"
+            additionalClass="left-4"
+        />
         <div id="game-container" :class="{ 'block-events': globalStore.dialogVisible }">
             <!-- Canvas будет создан здесь -->
         </div>
@@ -340,11 +346,10 @@ const battleOverOpen = computed(() => battleStore.showBattleOverDialog)
 .hover-attack-data {
     width: 180px;
     @apply bg-background text-foreground;
-    background:
-        radial-gradient(ellipse at 20% 50%, rgba(139, 69, 193, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-        radial-gradient(ellipse at 40% 80%, rgba(139, 69, 193, 0.1) 0%, transparent 50%),
-        linear-gradient(135deg, #0a0b14 0%, #1a1b2e  50%, #16213e 100%);
+    background: radial-gradient(ellipse at 20% 50%, rgba(139, 69, 193, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 40% 80%, rgba(139, 69, 193, 0.1) 0%, transparent 50%),
+    linear-gradient(135deg, #0a0b14 0%, #1a1b2e 50%, #16213e 100%);
     background-attachment: fixed;
 }
 

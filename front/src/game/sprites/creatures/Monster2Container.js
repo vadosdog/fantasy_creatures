@@ -474,8 +474,5 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
         // Умножаем на большой шаг (например, 100), чтобы гарантировать порядок
         const baseDepth = this.creature.position[0] * 100 + ((this.creature.position[1] % 2) * 50) + this.creature.position[1];
         this.setDepth(baseDepth);
-
-        // Для отладки:
-        console.log('updateDepth:', this.creature.name, 'grid ppos:', this.creature.position, '→ depth:', baseDepth);
     }
 }

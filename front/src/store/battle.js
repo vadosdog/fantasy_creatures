@@ -132,6 +132,17 @@ export const useBattleStore = defineStore('battle', {
                 damageTo,
             };
         },
+        hoveredCreature() {
+            const targetId = this.hoveredCreatureId;
+
+            if (
+                !targetId
+            ) {
+                return null;
+            }
+
+            return this.creatures.find(c => c.id === targetId);
+        },
     },
     actions: {
         load() {
