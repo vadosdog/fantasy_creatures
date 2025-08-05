@@ -11,6 +11,10 @@ const props = defineProps({
     type: {
         type: String,
         default: 'span' // 'span' или 'badge'
+    },
+    showDuration: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -20,7 +24,7 @@ const iconSrc = computed(() => getEffectIcon(props.effect.effect));
 // Определяем цвет: бафы — positive, дебафы — negative
 const colorClass = computed(() => {
     const buffs = [
-        'empower', 'haste', 'luck', 'regen', 'thorns', 'aegis', 'defense'
+        'empower', 'haste', 'luck', 'regen', 'thorns', 'aegis', 'defense', 'taunt'
     ];
     return buffs.includes(props.effect.effect) ? 'positive' : 'negative';
 });
@@ -39,7 +43,7 @@ const colorClass = computed(() => {
             class="q-mr-xs"
         ><img :src="iconSrc" alt="" /></q-avatar>
         <span v-else class="q-mr-xs">{{ effect.effect[0] }}</span>
-        {{ effect.effect }}
+        {{ effect.effect }} <template v-if="showDuration">({{effect.duration || 1}})</template>
     </q-badge>
 
     <!-- Режим: инлайн текст с иконкой -->
@@ -54,7 +58,7 @@ const colorClass = computed(() => {
         class="q-mr-xs inline-icon"
     ><img :src="iconSrc" alt="" /></q-avatar>
     <span v-else class="q-mr-xs">{{ effect.effect[0] }}</span>
-    {{ effect.effect }}
+    {{ effect.effect }} <template v-if="showDuration">({{effect.duration || 1}})</template>
   </span>
 </template>
 

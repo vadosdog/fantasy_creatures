@@ -18,6 +18,7 @@ const EFFECT_ICONS = {
     chill: 'sticky-boot.png',
     blind: 'sight-disabled.png',
     curse: 'cursed-star.png',
+    taunt: 'duality-mask.png',
     madness: 'mouth-watering.png',
     fear: 'terror.png',
     confusion: 'knockout.png'

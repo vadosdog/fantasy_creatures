@@ -8,6 +8,7 @@ import {
     getEmotionIcon as getEmotionIconPath,
     getShapeIcon as getShapeIconPath
 } from "../../game/classes/iconHelper.js";
+import EffectSpan from "./EffectSpan.vue";
 
 // --- Props ---
 const props = defineProps({
@@ -162,13 +163,10 @@ const effectIcons = computed(() => {
 
             <!-- Активные эффекты -->
             <div v-if="effectIcons.length" class="flex flex-wrap gap-1">
-                <q-badge
+                <EffectSpan
                     v-for="effect in effectIcons"
-                    :key="effect.effect"
-                    :text-color="effect.color === 'negative' ? 'red' : 'green'"
-                    :label="effect.text"
-                    size="sm"
-                    class="px-1 py-0.5"
+                    :effect="effect"
+                    :show-duration="true"
                 />
             </div>
         </div>

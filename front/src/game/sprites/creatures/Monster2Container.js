@@ -298,6 +298,7 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
                 'chill': 'effect_sticky-boot',
                 'blind': 'effect_sight-disabled',
                 'curse': 'effect_cursed-star',
+                'taunt': 'effect_duality-mask',
                 'madness': 'effect_mouth-watering',
                 'fear': 'effect_terror',
                 'confusion': 'effect_knockout'
@@ -442,6 +443,7 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
             'chill': 'effect_sticky-boot',
             'blind': 'effect_sight-disabled',
             'curse': 'effect_cursed-star',
+            'taunt': 'effect_duality-mask',
             'madness': 'effect_mouth-watering',
             'fear': 'effect_terror',
             'confusion': 'effect_knockout'

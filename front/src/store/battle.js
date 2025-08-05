@@ -78,7 +78,7 @@ export const useBattleStore = defineStore('battle', {
             const target = this.creatures.find(c => c.id === targetId);
             const action = activeCreature.actions.find(a => a.id === selectedActionId);
             const speed = CreatureAPI.getSpeed(this.activeCreature)
-            
+
             if (!action) {
                 return;
             }
@@ -91,7 +91,7 @@ export const useBattleStore = defineStore('battle', {
             // Получаем расстояние
             const path = this.findPath(activeCreature.position, target.position, false);
             const distance = path.length - 1;
-            
+
             const actionLimit = action.actionType === 'ranged' ? action.range : speed
 
             // Проверяем, в зоне ли атаки
@@ -218,6 +218,11 @@ export const useBattleStore = defineStore('battle', {
             if (CreatureAPI.hasEffect(activeCreature, 'freeze')) {
                 return
             }
+            
+            // Проверяем наличие провокаторов в радиусе 3 клеток
+            const taunters = this.getTauntersInRange(activeCreature);
+            const hasActiveTaunt = taunters.length > 0;
+            
             const moveablePositions = this.getMoveablePositions(activeCreature)
             if (moveablePositions.length) {
                 this.availableActions.push({
@@ -243,6 +248,13 @@ export const useBattleStore = defineStore('battle', {
 
                     if (creature.health <= 0) {
                         return
+                    }
+
+                    // Проверка на провокацию для атакующих действий
+                    if (hasActiveTaunt && (action.actionType === 'melee' || action.actionType === 'ranged')) {
+                        // Проверяем является ли цель провокатором
+                        const isTaunter = taunters.some(t => t.id === creature.id);
+                        if (!isTaunter) return; // Пропускаем не-провокаторов
                     }
 
                     const obstacles = new Set()
@@ -307,7 +319,7 @@ export const useBattleStore = defineStore('battle', {
             if (CreatureAPI.hasEffect(activeCreature, 'freeze')) {
                 return
             }
-            this.availableActions = [engine.getAction(this)]
+            this.availableActions = [engine.getAction(this, this.getTauntersInRange(this.activeCreature))];
             return
             //Выбор всех активных врагов
             let enemies = []
@@ -365,6 +377,15 @@ export const useBattleStore = defineStore('battle', {
                     targets: path[speed - 1],
                 })
             }
+        },
+        getTauntersInRange(attacker) {
+            return this.creatures.filter(target => {
+                // Проверяем основные условия:
+                return target.health > 0 && // Цель жива
+                    target.direction !== attacker.direction && // Цель - враг
+                    CreatureAPI.hasEffect(target, 'taunt') && // Есть эффект провокации
+                    this.getDistance(attacker.position, target.position, false) <= 3; // В радиусе 3 клеток
+            });
         },
         setBattleState(battleState) {
             this.battleState = battleState
@@ -550,7 +571,7 @@ export const useBattleStore = defineStore('battle', {
                 if (item.id === creature.id) {
                     return
                 }
-                
+
                 result[item.id] = {
                     withObstacles: this.getDistance(creature.position, item.position, true),
                     withoutObstacles: this.getDistance(creature.position, item.position, false)
@@ -719,6 +740,8 @@ export const useBattleStore = defineStore('battle', {
 
             // накладываем эфекты
             (attack.effects || []).forEach(effect => {
+                effect = Object.assign({}, effect)
+                
                 const chance = CombatHandler.getPushEffectChance(attacker, defender, effect)
                 if (Math.random() > chance) {
                     return
@@ -727,6 +750,11 @@ export const useBattleStore = defineStore('battle', {
                 const effectTarget = effect.target === 'target' ? defender : attacker
                 if (!CreatureAPI.hasEffect(effectTarget, effect.effect)) {
                     result.effects.push(effect.effect)
+                }
+                
+                // При накладывании на самого себя, докидываем еще единичку к длительности
+                if (effectTarget.id === attacker.id) {
+                    effect.duration++
                 }
 
                 const pushEffect = CreatureAPI.pushEffect(effectTarget, effect)
@@ -829,6 +857,11 @@ export const useBattleStore = defineStore('battle', {
                     result.effects.push(effect.effect)
                 }
 
+                // При накладывании на самого себя, докидываем еще единичку к длительности
+                if (effectTarget.id === treater.id) {
+                    effect.duration++
+                }
+
                 const pushEffect = CreatureAPI.pushEffect(effectTarget, effect)
                 if (pushEffect) {
                     this.recordLog({
@@ -852,6 +885,10 @@ export const useBattleStore = defineStore('battle', {
             return this.playerActionAttack(targetPosition, action)
         },
         playerActionDefense() {
+            CreatureAPI.pushEffect(this.activeCreature, {
+                effect: 'defense',
+                duration: 2,
+            })
             this.recordLog({
                 type: 'defense',
                 actor: CreatureAPI.getSimpleObject(this.activeCreature),

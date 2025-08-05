@@ -30,7 +30,7 @@ export class Preloader extends Scene {
     preload() {
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('./assets');
-        
+
         /**
          * BATTLE
          */
@@ -38,8 +38,8 @@ export class Preloader extends Scene {
         this.load.image('battle-background-1-back_land', 'battle/backgrounds/game_background_1/layers/back_land.png');
         this.load.image('battle-background-1-battleground', 'battle/backgrounds/game_background_1/layers/battleground.png');
         this.load.spritesheet('hexagon', 'battle/hexagon/hexagon3.png', {frameWidth: 95, frameHeight: 110});
-        
-        
+
+
         // basic creatures
         const basicCreatures = [
             "001",
@@ -73,10 +73,10 @@ export class Preloader extends Scene {
         for (const basicCreature of basicCreatures) {
             this.load.image(basicCreature + '_stand', 'creatures/basic/' + basicCreature + '.png')
         }
-        
+
         // Cursors        
         this.load.image('cursor_sword', 'battle/cursors/sword.png');
-        
+
 
         // Создаем текстуру для свечения (если ещё не создана)
         if (!this.textures.exists('glowTexture')) {
@@ -103,7 +103,7 @@ export class Preloader extends Scene {
             // 3. Добавляем текстуру в менеджер текстур Phaser
             this.textures.addCanvas('glowTexture', canvas);
         }
-        
+
         // Craft
         this.load.image('rune_frame', 'runes/rune_frame.png');
         this.load.image('fire_shard', 'runes/fire_shard.png');
@@ -116,14 +116,14 @@ export class Preloader extends Scene {
         this.load.image('rage_shard', 'runes/rage_shard.png');
         this.load.image('passion_shard', 'runes/passion_shard.png');
         this.load.image('close_icon', 'common/cross-icon.png');
-        
+
         // Иконки
         // Загружаем иконки эффектов
         const effectIcons = [
             'upgrade.png', 'wingfoot.png', 'clover.png', 'heart-plus.png', 'spiked-tail.png',
             'armor-upgrade.png', 'death-juice.png', 'bleeding-wound.png', 'flamer.png',
-            'snowflake-2.png', 'sticky-boot.png', 'sight-disabled.png', 'cursed-star.png',
-            'mouth-watering.png', 'terror.png', 'knockout.png'
+            'snowflake-2.png', 'sticky-boot.png', 'sight-disabled.png', 'cursed-star.png', 
+            'duality-mask.png', 'mouth-watering.png', 'terror.png', 'knockout.png'
         ];
 
         effectIcons.forEach(icon => {

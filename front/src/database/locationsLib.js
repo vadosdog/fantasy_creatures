@@ -37,7 +37,7 @@ export const locationsLib = {
                 label: 'Двор Забытых Мастеров',
             },
             {
-                id: 'training_1',
+                id: 'training_1_5',
                 label: 'Бой 1 на 1 (До 5 уровня)',
                 type: 'start_battle',
                 config: {
@@ -47,7 +47,7 @@ export const locationsLib = {
                 }
             },
             {
-                id: 'training_1',
+                id: 'training_1_9',
                 label: 'Бой 1 на 1 (До 9 уровня)',
                 type: 'start_battle',
                 config: {
@@ -57,7 +57,7 @@ export const locationsLib = {
                 }
             },
             {
-                id: 'training_3',
+                id: 'training_3_5',
                 label: 'Бой 3 на 3 (До 5 уровня)',
                 type: 'start_battle',
                 config: {
@@ -67,7 +67,7 @@ export const locationsLib = {
                 }
             },
             {
-                id: 'training_3',
+                id: 'training_3_9',
                 label: 'Бой 3 на 3 (До 9 уровня)',
                 type: 'start_battle',
                 config: {
@@ -77,7 +77,7 @@ export const locationsLib = {
                 }
             },
             {
-                id: 'training_5',
+                id: 'training_5_5',
                 label: 'Бой 5 на 5 (До 5 уровня)',
                 type: 'start_battle',
                 config: {
@@ -87,7 +87,7 @@ export const locationsLib = {
                 }
             },
             {
-                id: 'training_5',
+                id: 'training_5_9',
                 label: 'Бой 5 на 5 (До 9 уровня)',
                 type: 'start_battle',
                 config: {
@@ -97,7 +97,7 @@ export const locationsLib = {
                 }
             },
             {
-                id: 'training_6',
+                id: 'training_6_9',
                 label: 'Бой 6 на 6 (До 9 уровня)',
                 type: 'start_battle',
                 config: {

@@ -58,7 +58,7 @@ function getEffectIcon(effect) {
 
     // Бафы — положительные эффекты
     const isBuff = [
-        'empower', 'haste', 'luck', 'regen', 'thorns', 'aegis', 'defense'
+        'empower', 'haste', 'luck', 'regen', 'thorns', 'aegis', 'defense', 'taunt'
     ].includes(effect.effect);
 
     if (isBuff) color = 'positive';
@@ -143,7 +143,7 @@ const src = computed(() => './assets/creatures/basic/' + (props.creature.number 
                     :color="effect.color"
                     outline
                 >
-                    <q-avatar size="1.2em" :img="effect.icon" />
+                    <q-avatar size="1.2em" ><img :src="effect.icon" alt=""></q-avatar>
                     {{ effect.text }}
                 </q-badge>
             </q-card-actions>

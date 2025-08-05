@@ -4,23 +4,15 @@ export class EasyAI {
     store;
     activeCreature;
 
-    getAction(store) {
+    getAction(store, taunters) {
         this.store = store;
         this.activeCreature = store.activeCreature;
 
-        let enemies = [];
-        let allies = [];
+        const enemies = taunters.length
+            ? taunters
+            : store.creatures.filter(c => c.health > 0 && c.direction !== this.activeCreature.direction);
+        const allies = store.creatures.filter(c => c.health > 0 && c.direction === this.activeCreature.direction && c.id !== this.activeCreature.id);
         let availableActions = [];
-
-        // Разделение существ на союзников и врагов
-        for (const creature of store.creatures) {
-            if (creature.health <= 0) continue;
-            if (creature.direction === this.activeCreature.direction) {
-                allies.push(creature);
-            } else {
-                enemies.push(creature);
-            }
-        }
 
         // Оценка действий
         this.activeCreature.actions.forEach(action => {

@@ -119,7 +119,7 @@ export class QueueController {
     }// ... существующий код ...
 
     isBuff(effect) {
-        return ['empower', 'haste', 'luck', 'regen', 'thorns', 'aegis', 'defense'].includes(effect)
+        return ['empower', 'haste', 'luck', 'regen', 'thorns', 'aegis', 'defense', 'taunt'].includes(effect)
     }
 
     getQueueData() {

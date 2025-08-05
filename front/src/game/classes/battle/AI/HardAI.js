@@ -49,7 +49,7 @@ export class HardAI {
     actionsData;
     activeCreatureSpeed;
 
-    getAction(store) {
+    getAction(store, taunters) {
         this.store = store;
         this.activeCreature = store.activeCreature;
         this.movablePositions = store.getMoveablePositions(this.activeCreature);
@@ -61,7 +61,9 @@ export class HardAI {
         }
 
 
-        const enemies = store.creatures.filter(c => c.health > 0 && c.direction !== this.activeCreature.direction);
+        const enemies = taunters.length 
+            ? taunters
+            : store.creatures.filter(c => c.health > 0 && c.direction !== this.activeCreature.direction);
         const allies = store.creatures.filter(c => c.health > 0 && c.direction === this.activeCreature.direction && c.id !== this.activeCreature.id);
         
         

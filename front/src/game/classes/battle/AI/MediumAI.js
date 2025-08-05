@@ -44,11 +44,13 @@ export class MediumAI {
     activeCreature;
     adjacentEnemies;
 
-    getAction(store) {
+    getAction(store, taunters) {
         this.store = store;
         this.activeCreature = store.activeCreature;
 
-        const enemies = store.creatures.filter(c => c.health > 0 && c.direction !== this.activeCreature.direction);
+        const enemies = taunters.length
+            ? taunters
+            : store.creatures.filter(c => c.health > 0 && c.direction !== this.activeCreature.direction);
         const allies = store.creatures.filter(c => c.health > 0 && c.direction === this.activeCreature.direction && c.id !== this.activeCreature.id);
         this.adjacentEnemies = store.getAdjacentEnemies(this.activeCreature.position, this.activeCreature.direction);
 
