@@ -272,18 +272,48 @@ export class HexTile extends Phaser.GameObjects.Container {
     }
 
     // Исправленный метод - теперь возвращает локальные координаты
-    getHexPoints() {
+    getHexPoints(customRadius = null) {
+        const radius = customRadius ?? this.radius;
         const points = [];
         const angleOffset = this.orientation === 'pointy' ? -Math.PI / 6 : 0;
 
         for (let i = 0; i < 6; i++) {
             const angle = Math.PI / 3 * i + angleOffset;
             points.push({
-                x: this.radius * Math.cos(angle), // Локальная координата X
-                y: this.radius * Math.sin(angle)  // Локальная координата Y
+                x: radius * Math.cos(angle), // Локальная координата X
+                y: radius * Math.sin(angle)  // Локальная координата Y
             });
         }
         return points;
+    }
+
+    getSidePoints(direction, offset = 0) {
+        const points = this.getHexPoints();
+        const sideIndex = (direction + 4) % 6; // Корректировка на 4 позиции
+        const nextIndex = (sideIndex + 1) % 6;
+
+        // Точки стороны
+        const p1 = {x: this.x + points[sideIndex].x, y: this.y + points[sideIndex].y};
+        const p2 = {x: this.x + points[nextIndex].x, y: this.y + points[nextIndex].y};
+
+        // Вектор от центра к середине стороны
+        const centerX = this.x;
+        const centerY = this.y;
+        const midX = (p1.x + p2.x) / 2;
+        const midY = (p1.y + p2.y) / 2;
+        const dx = midX - centerX;
+        const dy = midY - centerY;
+
+        // Нормализация вектора
+        const length = Math.sqrt(dx * dx + dy * dy);
+        if (length === 0) return [p1, p2];
+        const nx = dx / length;
+        const ny = dy / length;
+
+        return [
+            {x: p1.x + nx * offset, y: p1.y + ny * offset},
+            {x: p2.x + nx * offset, y: p2.y + ny * offset}
+        ];
     }
 
     setHexState(state) {

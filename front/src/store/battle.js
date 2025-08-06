@@ -218,11 +218,11 @@ export const useBattleStore = defineStore('battle', {
             if (CreatureAPI.hasEffect(activeCreature, 'freeze')) {
                 return
             }
-            
+
             // Проверяем наличие провокаторов в радиусе 3 клеток
             const taunters = this.getTauntersInRange(activeCreature);
             const hasActiveTaunt = taunters.length > 0;
-            
+
             const moveablePositions = this.getMoveablePositions(activeCreature)
             if (moveablePositions.length) {
                 this.availableActions.push({
@@ -490,6 +490,9 @@ export const useBattleStore = defineStore('battle', {
 
             return result
         },
+        isPositionOccupied([x, y]) {
+            return this.battleMap.isMovable(x, y);
+        },
         getMoveablePositions(activeCreature) {
             let start = activeCreature.position
             let speed = CreatureAPI.getSpeed(activeCreature)
@@ -527,6 +530,40 @@ export const useBattleStore = defineStore('battle', {
 
             // убираем стартовую позицию, тк туда перемещаться и не надо
             currentPositions.shift()
+            return currentPositions;
+        },
+        getPositionsInRange(start, range) {
+            const visited = new Set();
+            let currentPositions = [start];
+            visited.add(start.join(','));
+
+            for (let s = 0; s < range; s++) {
+                const nextPositions = [];
+
+                for (const pos of currentPositions) {
+                    const directions = this.getDirections(pos);
+
+                    for (const [dx, dy] of directions) {
+                        const newX = pos[0] + dx;
+                        const newY = pos[1] + dy;
+                        const key = `${newX},${newY}`;
+
+                        if (
+                            newX >= 0 &&
+                            newY >= 0 &&
+                            this.battleMap.hasByCoords(newX, newY) &&
+                            !visited.has(key)
+                        ) {
+                            visited.add(key);
+                            nextPositions.push([newX, newY]);
+                        }
+                    }
+                }
+
+                currentPositions.push(...nextPositions);
+                if (currentPositions.length === 0) break; // нет куда идти дальше
+            }
+
             return currentPositions;
         },
         getDirections(position) {
@@ -741,7 +778,7 @@ export const useBattleStore = defineStore('battle', {
             // накладываем эфекты
             (attack.effects || []).forEach(effect => {
                 effect = Object.assign({}, effect)
-                
+
                 const chance = CombatHandler.getPushEffectChance(attacker, defender, effect)
                 if (Math.random() > chance) {
                     return
@@ -751,7 +788,7 @@ export const useBattleStore = defineStore('battle', {
                 if (!CreatureAPI.hasEffect(effectTarget, effect.effect)) {
                     result.effects.push(effect.effect)
                 }
-                
+
                 // При накладывании на самого себя, докидываем еще единичку к длительности
                 if (effectTarget.id === attacker.id) {
                     effect.duration++

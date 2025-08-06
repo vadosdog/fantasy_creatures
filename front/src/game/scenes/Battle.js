@@ -38,6 +38,9 @@ export class Battle extends Scene {
     attackIndicator = null;
     hoveredCreature = null;
 
+    zoneOutlines = []
+    zoneGraphics
+
     constructor() {
         super('Battle');
         this.store = useBattleStore()
@@ -58,6 +61,8 @@ export class Battle extends Scene {
 
         this.createBackground()
         this.createBattleField()
+        this.zoneGraphics = this.add.graphics();
+        this.zoneGraphics.setDepth(1000); // Высокий слой
         //
         this.handleStep()
 
@@ -80,10 +85,16 @@ export class Battle extends Scene {
                     this.hoveredCreature = creature
                 }
             });
+
+
+            this.clearZoneOutlines();
+            if (this.hoveredCreature) {
+                this.handleCreatureHover(this.hoveredCreature);
+            }
         });
 
         this.input.on('pointermove', this.handleAttackDirection.bind(this));
-        
+
         // Добавляем обработчик для безопасного уничтожения
         this.game.events.on('before-destroy', this.safeDestroy, this);
     }
@@ -679,7 +690,7 @@ export class Battle extends Scene {
                 }
             }
         });
-        
+
         return timeline
     }
 
@@ -688,138 +699,6 @@ export class Battle extends Scene {
     }
 
     update(time, delta) {
-    }
-
-    showButtons() {
-        this.store.activeCreature.actions.forEach((action, i) => {
-            // Создаем элементы кнопки
-            const buttonBg = this.add.rectangle(0, 0, 200, 150, 0x3e5a4d)
-                .setOrigin(0, 0)
-                .setInteractive();
-
-            const effects = (action.effects || []).map(effect => effect.effect).join(', ')
-            let actionType = 'Тип атаки: ' + action.actionType + (action.actionType === 'ranged' ? ' (' + action.range + ')' : '');
-            if (action.element) {
-                actionType += ' (' + action.element + ')'
-            }
-
-            const reload = action.currentCooldown > 0
-            const notEnoughtPP = action.pp > this.store.activeCreature.pp
-
-            const buttonTexts = [
-                this.add.text(20, 20, action.name + (reload > 0 ? ' Reload' + action.currentCooldown : ''), {
-                    fontFamily: "arial",
-                    fontSize: "14px"
-                }).setOrigin(0, 0),
-
-                this.add.text(20, 40, actionType, {
-                    fontFamily: "arial",
-                    fontSize: "12px"
-                }).setOrigin(0, 0),
-                this.add.text(20, 60, 'PP: ' + action.pp + ', CD: ' + action.cooldown, {
-                    fontFamily: "arial",
-                    fontSize: "12px",
-                    color: notEnoughtPP ? 'red' : 'white'
-                }).setOrigin(0, 0),
-                this.add.text(20, 80, 'Шанс (крит): ' + action.hitChance + ' (' + (action.critChance || 0) + ')', {
-                    fontFamily: "arial",
-                    fontSize: "12px"
-                }).setOrigin(0, 0),
-                this.add.text(20, 100, 'Базовый урон: ' + action.baseDamage, {
-                    fontFamily: "arial",
-                    fontSize: "12px"
-                }).setOrigin(0, 0),
-                this.add.text(20, 120, 'Эффекты: ' + effects, {
-                    fontFamily: "arial",
-                    fontSize: "12px"
-                }).setOrigin(0, 0)
-            ];
-
-            // Создаем контейнер для кнопки
-            const buttonContainer = this.add.container(20 + i * 215, 20, [buttonBg, ...buttonTexts, activeCreatureText]);
-
-            buttonContainer.action = action
-
-            // Делаем весь контейнер интерактивным
-            buttonContainer.setInteractive(new Phaser.Geom.Rectangle(0, 0, 200, 150), Phaser.Geom.Rectangle.Contains);
-
-            // Сохраняем ссылку на background для удобства
-            buttonContainer.buttonBg = buttonBg;
-            buttonContainer.buttonTexts = buttonTexts;
-            buttonContainer.isActive = false;
-            this.buttons.push(buttonContainer)
-
-            // Обработчики событий
-            buttonBg.on('pointerover', () => {
-                if (!buttonContainer.isActive) {
-                    buttonBg.setFillStyle(0x5a7a6d); // Цвет при наведении
-                }
-            });
-
-            buttonBg.on('pointerout', () => {
-                if (!buttonContainer.isActive) {
-                    buttonBg.setFillStyle(0x3e5a4d); // Исходный цвет
-                }
-            });
-
-            buttonBg.on('pointerdown', () => {
-                this.selectActionOutside(action.id)
-            });
-        });
-
-        const defenseButtonBg = this.add.rectangle(0, 0, 120, 60, 0x3e5a4d)
-            .setOrigin(0, 0)
-            .setInteractive()
-        const defenseButtonText = [this.add.text(20, 20, 'Защита', {fontFamily: "arial", fontSize: "14px"})]
-        const defenseButtonContainer = this.add.container(880, 20, [defenseButtonBg, ...defenseButtonText])
-
-        // Делаем весь контейнер интерактивным
-        defenseButtonContainer.setInteractive(new Phaser.Geom.Rectangle(0, 0, 120, 60), Phaser.Geom.Rectangle.Contains)
-
-        // Сохраняем ссылку на background для удобства
-        defenseButtonContainer.buttonBg = defenseButtonBg;
-        defenseButtonContainer.buttonTexts = defenseButtonText;
-        this.buttons.push(defenseButtonContainer)
-
-        // Обработчики событий
-        defenseButtonBg.on('pointerover', () => {
-            defenseButtonBg.setFillStyle(0x5a7a6d); // Цвет при наведении
-        });
-
-        defenseButtonBg.on('pointerout', () => {
-            defenseButtonBg.setFillStyle(0x3e5a4d); // Исходный цвет
-        });
-
-        defenseButtonBg.on('pointerdown', () => this.handleDefenseAction());
-
-        if (this.store.queue.canDelayTurn()) {
-            const delayButtonBg = this.add.rectangle(0, 0, 120, 60, 0x3e5a4d)
-                .setOrigin(0, 0)
-                .setInteractive()
-            const delayButtonText = [this.add.text(20, 20, 'Отложить', {fontFamily: "arial", fontSize: "14px"})]
-            const delayButtonContainer = this.add.container(880, 95, [delayButtonBg, ...delayButtonText])
-
-            // Делаем весь контейнер интерактивным
-            delayButtonContainer.setInteractive(new Phaser.Geom.Rectangle(0, 0, 120, 60), Phaser.Geom.Rectangle.Contains)
-
-            // Сохраняем ссылку на background для удобства
-            delayButtonContainer.buttonBg = delayButtonBg;
-            delayButtonContainer.buttonTexts = delayButtonText;
-            this.buttons.push(delayButtonContainer)
-
-            // Обработчики событий
-            delayButtonBg.on('pointerover', () => {
-                delayButtonBg.setFillStyle(0x5a7a6d); // Цвет при наведении
-            });
-
-            delayButtonBg.on('pointerout', () => {
-                delayButtonBg.setFillStyle(0x3e5a4d); // Исходный цвет
-            });
-
-            delayButtonBg.on('pointerdown', () => {
-                this.showDelayTurnOptions()
-            });
-        }
     }
 
     selectActionOutside(actionId) {
@@ -1102,6 +981,110 @@ export class Battle extends Scene {
         }
     }
 
+    handleCreatureHover(creature) {
+        if (!creature) return;
+
+        // Зона перемещения
+        const moveZone = this.store.getMoveablePositions(creature);
+        if (moveZone.length > 0) {
+            moveZone.push(creature.position)
+            this.drawZoneOutline(moveZone, 'move');
+        }
+
+        // Зона атаки (только для дальних атак)
+        const attackRange = Math.max(...creature.actions
+            .filter(a => a.actionType === 'ranged' && a.range > 1)
+            .map(a => a.range));
+
+        if (attackRange > 0) {
+            const attackZone = this.store.getPositionsInRange(creature.position, attackRange);
+            this.drawZoneOutline(attackZone, 'attack');
+        }
+
+        // Зона лечения
+        const treatRange = Math.max(...creature.actions
+            .filter(a => a.actionType === 'treat' && a.range > 1)
+            .map(a => a.range));
+
+        if (treatRange > 0) {
+            const treatZone = this.store.getPositionsInRange(creature.position, treatRange);
+            this.drawZoneOutline(treatZone, 'treat');
+        }
+    }
+
+    drawZoneOutline(positions, type) {
+        // Создаем новый graphics для каждого типа зоны
+        const graphics = this.add.graphics();
+        graphics.setDepth(999);
+        this.zoneOutlines.push(graphics); // Сохраняем для очистки
+
+        if (!positions.length) return;
+
+        const style = {
+            attack: {color: 0xF05050, width: 2, offset: 1.5},
+            move: {color: 0x3B82F6, width: 2, offset: 3},
+            treat: {color: 0xC34FFC, width: 2, offset: 4.5}
+        }[type];
+
+        graphics.lineStyle(style.width, style.color, 1);
+
+        // Собираем все граничные стороны
+        const boundarySides = [];
+        const positionSet = new Set(positions.map(p => p.join(',')));
+
+        positions.forEach(pos => {
+            const neighbors = this.getNeighborPositions(pos);
+            neighbors.forEach((neighbor, dirIndex) => {
+                const neighborKey = neighbor.join(',');
+                if (!positionSet.has(neighborKey)) {
+                    boundarySides.push({pos, dirIndex});
+                }
+            });
+        });
+
+        // Рисуем все граничные стороны
+        boundarySides.forEach(({pos, dirIndex}) => {
+            const hex = this.hexagonsArray.get(pos.join(','));
+            if (hex) {
+                const [p1, p2] = hex.getSidePoints(dirIndex, style.offset);
+                graphics.moveTo(p1.x, p1.y);
+                graphics.lineTo(p2.x, p2.y);
+            }
+        });
+        graphics.strokePath();
+
+        // Анимация появления
+        graphics.alpha = 0;
+        this.tweens.add({
+            targets: graphics,
+            alpha: 0.6,
+            duration: 300,
+            ease: 'Sine.easeOut'
+        });
+    }
+
+    getNeighborPositions(position) {
+        const directions = this.store.getDirections(position);
+        return directions.map(dir => [
+            position[0] + dir[0],
+            position[1] + dir[1]
+        ]);
+    }
+
+
+    clearZoneOutlines() {
+        this.zoneOutlines.forEach(graphics => {
+            this.tweens.add({
+                targets: graphics,
+                alpha: 0,
+                duration: 200,
+                ease: 'Sine.easeIn',
+                onComplete: () => graphics.destroy()
+            });
+        });
+        this.zoneOutlines = [];
+    }
+
     safeDestroy() {
         try {
             // 1. Отписываемся от событий
@@ -1181,6 +1164,8 @@ export class Battle extends Scene {
                 direction: null,
                 position: null
             };
+
+            this.clearZoneOutlines()
         } catch (mainError) {
             console.error('Battle safeDestroy error:', mainError);
         }
