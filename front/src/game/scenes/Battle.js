@@ -1010,6 +1010,12 @@ export class Battle extends Scene {
             const treatZone = this.store.getPositionsInRange(creature.position, treatRange);
             this.drawZoneOutline(treatZone, 'treat');
         }
+        
+        // Зона влияния танков
+        if (CreatureAPI.hasEffect(creature, 'taunt')) {
+            const tauntZone = this.store.getPositionsInRange(creature.position, 3);
+            this.drawZoneOutline(tauntZone, 'taunt');
+        }
     }
 
     drawZoneOutline(positions, type) {
@@ -1023,7 +1029,8 @@ export class Battle extends Scene {
         const style = {
             attack: {color: 0xF05050, width: 2, offset: 1.5},
             move: {color: 0x3B82F6, width: 2, offset: 3},
-            treat: {color: 0xC34FFC, width: 2, offset: 4.5}
+            treat: {color: 0xC34FFC, width: 2, offset: 4.5},
+            taunt: {color: 0xC34FFC, width: 2, offset: 4.5}
         }[type];
 
         graphics.lineStyle(style.width, style.color, 1);
