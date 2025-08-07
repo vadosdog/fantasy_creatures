@@ -271,6 +271,9 @@ export class Battle extends Scene {
 
         timeline.on('complete', () => {
             if (activeCreature.health <= 0 || availableActions.length === 0) {
+                if (activeCreature.health > 0) {
+                    activeCreature?.creatureSpriteContainer?.setDefaultState()
+                }
                 this.store.endTurn();
                 if (
                     this.store.battleState === BATTLE_STATE_BATTLE_OVER_WIN
