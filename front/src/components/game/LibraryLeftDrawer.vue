@@ -109,6 +109,11 @@ const selectCreature = (id) => {
             Ваши существа
         </div>
 
+        <div class="q-ma-md text-primary-foreground">
+            Временная кнопка для тестов. Если это будет в бою, напиши разрабам :)
+            <q-btn size="xs" @click="gameStore.reCalcCreatures()">Пересчитать</q-btn>
+        </div>
+
         <!-- Основной контейнер с фильтрами и списком -->
         <div class="flex flex-col flex-grow q-pa-md text-accent-foreground">
             <!-- Фильтры -->

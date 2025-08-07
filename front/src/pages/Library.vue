@@ -136,10 +136,6 @@ function upgradeStat(statKey) {
     gameStore.upgradeStat(selectedCreature.value, statKey);
 }
 
-function recalc() {
-    gameStore.recalcStats(selectedCreature.value.id);
-}
-
 const availableSkills = computed(() => getActionsByLevel(
     selectedCreature.value?.element,
     selectedCreature.value?.shape,
@@ -350,10 +346,6 @@ const levelUpButtonLabel = computed(() =>
                                 />
                             </div>
                         </div>
-                    </div>
-                    <div class="q-ma-md">
-                        Временная кнопка для тестов. Если это будет в бою, напиши разрабам :)
-                        <q-btn size="xs" @click="recalc()">Пересчитать</q-btn>
                     </div>
                 </q-card-section>
             </q-card>

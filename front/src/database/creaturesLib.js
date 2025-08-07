@@ -383,6 +383,10 @@ export function getCreature(element, shape, emotion, level) {
     return creature
 }
 
+export function getActionById(id) {
+    return Object.assign({}, creaturesActions.find(obj => obj.id === id));
+}
+
 export function getActionsByLevel(element, shape, emotion, level) {
     const actions = [
         ...creatureActionsLib[element + '-' + shape + '-' + emotion],

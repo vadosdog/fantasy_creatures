@@ -6,6 +6,7 @@ import {markRaw} from "vue";
 import {resourcesLib} from "../database/resourcesLib.js";
 import {Notify} from "quasar";
 import {ALLOWED_KEYS, useYandexStore} from "./yandexStore.js";
+import {getActionById} from "../database/creaturesLib.js";
 
 const defaultState = {
     game: undefined,
@@ -424,7 +425,15 @@ export const useGameStore = defineStore('game', {
 
             this.saveGame()
         },
-        recalcStats(creatureId) {
+        reCalcCreatures() {
+            this.creatures.forEach(c => {
+                this.reCalcStats(c.id)
+                this.reCalcActions(c.id)
+            })
+
+            this.saveGame()
+        },
+        reCalcStats(creatureId) {
             const index = this.creatures.findIndex(c => c.id === creatureId);
 
             if (index === -1) return;
@@ -448,8 +457,26 @@ export const useGameStore = defineStore('game', {
 
             // Заменяем в массиве
             this.creatures = this.creatures.map(c => c.id === creatureId ? updatedCreature : c);
+        },
+        reCalcActions(creatureId) {
+            const index = this.creatures.findIndex(c => c.id === creatureId);
 
-            this.saveGame()
+            if (index === -1) return;
+
+            const creature = this.creatures[index];
+            
+            const newActions = creature.actions.map(a => {
+                return getActionById(a.id)
+            });
+
+            // Создаём новый объект с новыми значениями
+            const updatedCreature = {
+                ...creature,
+                actions: newActions,
+            };
+
+            // Заменяем в массиве
+            this.creatures = this.creatures.map(c => c.id === creatureId ? updatedCreature : c);
         },
         upgradeStat(creature, statKey) {
             const manualKey = `manual${statKey.charAt(0).toUpperCase() + statKey.slice(1)}`;
