@@ -50,6 +50,7 @@ export const useBattleStore = defineStore('battle', {
         battleState: BATTLE_STATE_WAITING,
         battleMap: undefined,
         activeCreature: undefined,
+        canDelayTurn: false,
         availableActions: [],
         selectedActionId: undefined,
         queueData: [], // Добавляем для хранения данных очереди
@@ -452,6 +453,8 @@ export const useBattleStore = defineStore('battle', {
             } else {
                 CreatureAPI.roundRestorePP(this.activeCreature)
             }
+            
+            this.canDelayTurn = this.queue.canDelayTurn();
 
             return {
                 activeCreature: this.activeCreature,
@@ -931,8 +934,8 @@ export const useBattleStore = defineStore('battle', {
                 actor: CreatureAPI.getSimpleObject(this.activeCreature),
             })
         },
-        playerActionDelayedTurn(afterCreature) {
-            this.queue.handleDelayedTurn(afterCreature)
+        playerActionDelayedTurn() {
+            this.queue.handleDelayedTurn()
             this.recordLog({
                 type: 'delayTurn',
                 actor: CreatureAPI.getSimpleObject(this.activeCreature),

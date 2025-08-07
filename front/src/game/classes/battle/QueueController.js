@@ -6,7 +6,7 @@ export class QueueController {
         this.turnQueue = []; // Очередь ходов текущего раунда
         this.currentTurnIndex = 0; // Индекс текущего существа в очереди
         this.round = 1; // Текущий раунд
-        this.delayActions = {}; // Информация о пропущенных ходах
+        this.delayedCreatures = []; // Массив ID юнитов, отложивших ход (в обратном порядке откладывания)
         this.alreadyTurned = new Set()
         this.currentCreature = null
 
@@ -20,104 +20,104 @@ export class QueueController {
         // Фильтруем мертвых существ
         const aliveCreatures = this.creatures.filter(creature => creature.health > 0);
 
-        // Сортируем по инициативе (с учетом бафов/дебафов)
+        // Сортируем по инициативе
         aliveCreatures.sort((a, b) => {
             const aInitiative = CreatureAPI.getInitiative(a);
             const bInitiative = CreatureAPI.getInitiative(b);
 
             if (aInitiative === bInitiative) {
-                // В случае ничьи - в пользу игрока
                 if (a.direction !== b.direction) {
-                    return a.direction === 'left' ? 1 : -1
+                    return a.direction === 'left' ? 1 : -1;
                 }
-
-                // Или по ИД
-                return a.id - b.id
-
-                // Старая логика, меняет постоянно существ с равной инициативой
-                // return a.direction !== b.direction ? -1 : 1;
+                return a.id - b.id;
             }
             return bInitiative - aInitiative;
         });
 
-        // Применяем изменения от пропущенных ходов
+        // Применяем отложенные ходы
         this.turnQueue = this.applyDelayActions(aliveCreatures);
 
-        // Находим новую позицию
+        // Находим следующее существо, которое еще не ходило
         this.currentTurnIndex = this.turnQueue.findIndex(c => !this.alreadyTurned.has(c));
     }
 
-    // Применение изменений от пропущенных ходов
+    // Применяем отложенные ходы: удаляем отложивших из очереди, добавляем в конец в порядке откладывания
     applyDelayActions(creatures) {
-        const newQueue = [...creatures];
+        const queueWithoutDelayed = creatures.filter(c => !this.delayedCreatures.includes(c.id));
 
-        for (const creature of creatures) {
-            const delayAction = this.delayActions[creature.id];
-            if (!delayAction) continue;
+        // Находим отложивших в порядке откладывания
+        const delayedCreaturesInOrder = this.delayedCreatures
+            .map(id => this.creatures.find(c => c.id === id))
+            .filter(Boolean); // Убираем undefined
 
-            // Находим текущую позицию существа
-            const currentIndex = newQueue.findIndex(c => c.id === creature.id);
-            if (currentIndex === -1) continue;
-
-            // Находим целевое существо, после которого нужно встать
-            const targetIndex = newQueue.findIndex(c => c.id === delayAction.afterCreature.id);
-            if (targetIndex === -1 || targetIndex <= currentIndex) continue;
-
-            // Перемещаем существо
-            const [movedCreature] = newQueue.splice(currentIndex, 1);
-            newQueue.splice(targetIndex, 0, movedCreature);
-        }
-
-        return newQueue;
+        return [...queueWithoutDelayed, ...delayedCreaturesInOrder];
     }
 
-    // Переход к следующему ходу
     nextTurn() {
-        // Получаем текущее существо
         this.currentCreature = this.turnQueue[this.currentTurnIndex];
-
-        // Обновляем UI
-        // this.updateUI(currentCreature);
     }
 
     endTurn(isDelayTurn = false) {
         if (!isDelayTurn) {
-            this.alreadyTurned.add(this.currentCreature)
+            this.alreadyTurned.add(this.currentCreature);
+        } else {
+            // Добавляем в список отложивших (если ещё не добавлен)
+            if (!this.delayedCreatures.includes(this.currentCreature.id)) {
+                this.delayedCreatures.unshift(this.currentCreature.id);
+            }
         }
-        this.updateTurnQueue()
+
+        this.updateTurnQueue();
+
         if (this.currentTurnIndex === -1) {
-            return this.endRound()
+            this.endRound();
         }
     }
 
-    // Завершение раунда
     endRound() {
         this.round++;
-
-        // Очищаем пропуски ходов
-        this.delayActions = {}
-
-        this.alreadyTurned = new Set()
-
-        // Обновляем очередь для нового раунда
+        this.delayedCreatures = []; // Очищаем отложенные ходы
+        this.alreadyTurned = new Set();
         this.updateTurnQueue();
     }
 
     getNextQueue() {
-        return this.turnQueue.slice(this.currentTurnIndex + 1)
+        return this.turnQueue.slice(this.currentTurnIndex + 1);
     }
 
-    handleDelayedTurn(afterCreature) {
-        this.delayActions[this.currentCreature.id] = {
-            creature: this.currentCreature,
-            afterCreature,
+    // Отложить ход: текущий юнит откладывает ход
+    handleDelayedTurn() {
+        if (this.canDelayTurn()) {
+            // Мы не передаём afterCreature — просто откладываем
+            this.endTurn(true); // true = это отложенный ход
         }
     }
 
+    // Можно ли отложить ход?
     canDelayTurn() {
-        return this.delayActions[this.currentCreature.id] === undefined
-    }// ... существующий код ...
+        // Проверяем, есть ли текущий юнит
+        if (!this.currentCreature) return false;
 
+        const creatureId = this.currentCreature.id;
+
+        // 1. Уже откладывал ход в этом раунде?
+        if (this.delayedCreatures.includes(creatureId)) {
+            return false;
+        }
+
+        // 2. Является ли последним в очереди?
+        const currentIndex = this.turnQueue.findIndex(c => c.id === creatureId);
+        if (currentIndex === -1) return false;
+
+        // Если после него никого нет — он последний
+        const isLastInQueue = currentIndex === this.turnQueue.length - 1;
+        if (isLastInQueue) {
+            return false;
+        }
+
+        return true;
+    }
+    // Остальной код без изменений
     isBuff(effect) {
         return ['empower', 'haste', 'luck', 'regen', 'thorns', 'aegis', 'defense', 'taunt'].includes(effect)
     }
@@ -128,7 +128,7 @@ export class QueueController {
             name: creature.name,
             texture: creature.texture,
             health: creature.health,
-            maxHealth: creature.maxHealth || 100, // Добавляем если нет
+            maxHealth: creature.maxHealth || 100,
             pp: creature.pp || 0,
             maxPP: creature.maxPP || 100,
             effects: creature.effects,

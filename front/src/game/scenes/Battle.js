@@ -28,7 +28,6 @@ export class Battle extends Scene {
     hexagonsArray;
     buttons = []
     selectedAction
-    delayTurnModelOpened = false
     gameSpeed = 1
     currentAttack = {
         enemyId: null,
@@ -331,7 +330,7 @@ export class Battle extends Scene {
     }
 
     handleHexagonClick(position, hexagonSprite, args) {
-        if (this.store.battleState !== BATTLE_STATE_PLAYER_TURN || this.delayTurnModelOpened) {
+        if (this.store.battleState !== BATTLE_STATE_PLAYER_TURN) {
             return
         }
 
@@ -712,7 +711,7 @@ export class Battle extends Scene {
             return this.handleDefenseAction()
         }
         if (actionId === 'delay') {
-            return this.showDelayTurnOptions()
+            return this.handleDelayTurn()
         }
 
         // Ищем действие по ID
@@ -761,64 +760,6 @@ export class Battle extends Scene {
         this.selectedAction = null;
     }
 
-    showDelayTurnOptions() {
-        this.delayTurnModelOpened = true
-        const currentCreature = this.store.activeCreature;
-
-        // Создаем модальное окно
-        const modal = this.add.rectangle(400, 300, 600, 400, 0x333333)
-            .setStrokeStyle(2, 0xffffff);
-
-        const title = this.add.text(400, 180, 'Выберите после кого ходить', {
-            fontSize: '28px',
-            fill: '#ffffff'
-        }).setOrigin(0.5);
-
-        const buttons = []
-
-        // Создаем кнопки для каждого существа, которое может быть после текущего
-        let yPosition = 230;
-        const queue = this.store.queue.getNextQueue()
-        for (let i = 0; i < queue.length; i++) {
-            const targetCreature = queue[i];
-
-            buttons.push(this.add.text(400, yPosition, `${targetCreature.name} (id: ${targetCreature.id}, Инициатива: ${CreatureAPI.getInitiative(targetCreature)})`, {
-                fontSize: '20px',
-                fill: '#ffffff',
-                backgroundColor: '#444444',
-                padding: {x: 10, y: 5}
-            })
-                .setOrigin(0.5)
-                .setInteractive()
-                .on('pointerup', () => {
-                    this.handleDelayTurn(targetCreature);
-                    modal.destroy();
-                    title.destroy();
-                    buttons.forEach(b => b.destroy())
-                    this.delayTurnModelOpened = false
-                }));
-
-            yPosition += 40;
-        }
-
-        // Кнопка отмены
-        buttons.push(this.add.text(400, yPosition + 20, 'Отмена', {
-            fontSize: '24px',
-            fill: '#ffffff',
-            backgroundColor: '#cc0000',
-            padding: {x: 10, y: 5}
-        })
-            .setOrigin(0.5)
-            .setInteractive()
-            .on('pointerup', () => {
-                modal.destroy();
-                title.destroy();
-                buttons.forEach(b => b.destroy())
-
-                this.delayTurnModelOpened = false
-            }));
-    }
-
     handleDefenseAction() {
         this.store.playerActionDefense()
         const activeCreature = this.store.activeCreature
@@ -846,9 +787,10 @@ export class Battle extends Scene {
         timeline.play()
     }
 
-    handleDelayTurn(targetCreature) {
-        this.store.playerActionDelayedTurn(targetCreature)
+    handleDelayTurn() {
+        this.store.playerActionDelayedTurn()
         this.store.activeCreature.creatureSpriteContainer.updateVisual()
+        this.store.activeCreature.creatureSpriteContainer.setDefaultState()
         this.store.endTurn(true);
         this.handleStep()
     }
