@@ -3,19 +3,37 @@ import {ref, computed, onMounted} from 'vue'
 import {useGameStore} from "../../store/game.js";
 import {Notify, QLinearProgress, QScrollArea} from "quasar";
 import BattleStartDialogCreature from "./BattleStartDialogCreature.vue";
+import {useBattleStore} from "../../store/battle.js";
+import {useRouter} from "vue-router";
+import {getEnemiesByConfig} from "../../game/classes/battle/CreateBattle.js";
 
 const props = defineProps({
-    enemyCreatures: {
-        type: Array,
-        default: [],
-    },
     config: {
         type: Object,
         default: {}
-    }
+        /* может быть двух видов. по хорошему привести к одному. но пусть пока будет так
+        {
+                    count: 1,
+                    levelLimit: 5,
+                }
+                
+                {
+                        enemyCount: [2, 3],
+                        enemyLevel: [1, 3],
+                        playerCountLimit: 3,
+                        playerLevelLimit: 5,
+                    }
+
+*/
+    },
+    modelValue: Boolean
 })
 
+const emits = defineEmits(['update:modelValue']);
+const router = useRouter();
+
 const gameStore = useGameStore()
+const battleStore = useBattleStore()
 
 // Состояние компонента
 const selectedCreatureIds = ref([])
@@ -36,7 +54,7 @@ const playerTotalPower = computed(() => {
 
 // Рассчитываем суммарную силу противника
 const enemyTotalPower = computed(() => {
-    return props.enemyCreatures.reduce((sum, creature) =>
+    return enemyCreatures.value.reduce((sum, creature) =>
         sum + creature.attackStat + creature.defenseStat + creature.maxHealthStat, 0)
 })
 
@@ -47,8 +65,38 @@ const powerBalance = computed(() => {
     return playerTotalPower.value / total
 })
 
-const creaturesLimit = computed(() => props.config.count || 6)
-const creaturesLevelLimit = computed(() => props.config.levelLimit || 6)
+const playerLevelLimit = computed(() => {
+    return props.config.playerLevelLimit || props.config.levelLimit || 30;
+})
+
+const playerCountLimit = computed(() => {
+    return props.config.playerCountLimit || props.config.count || 6;
+})
+
+
+function getEnemyLevelLimit() {
+    if (props.config.enemyLevel) {
+        const [min, max] = props.config.enemyLevel
+        return Math.floor(Math.random() * (max - min + 1)) + min
+    }
+
+    return props.config.levelLimit || 30
+}
+
+function getEnemyCountLimit() {
+    if (props.config.enemyCount) {
+        const [min, max] = props.config.enemyCount
+        return Math.floor(Math.random() * (max - min + 1)) + min
+    }
+
+    return props.config.count || 6
+}
+
+const enemyCreatures = ref([])
+
+function calcEnemies() {
+    enemyCreatures.value = getEnemiesByConfig(props.config, gameStore)
+}
 
 // Переключение выбора существа
 const toggleCreatureSelection = (creature) => {
@@ -56,9 +104,9 @@ const toggleCreatureSelection = (creature) => {
     if (index > -1) {
         selectedCreatureIds.value.splice(index, 1)
     } else {
-        if (selectedCreatures.value.length >= creaturesLimit.value) {
+        if (selectedCreatures.value.length >= playerCountLimit.value) {
             Notify.create({
-                message: 'Ограничение активных существ: ' + creaturesLimit.value,
+                message: 'Ограничение активных существ в ритуале: ' + playerCountLimit.value,
                 color: 'negative', // красный цвет
                 icon: 'error',
                 position: 'top-right',
@@ -66,9 +114,9 @@ const toggleCreatureSelection = (creature) => {
                 closeBtn: true // кнопка закрытия
             })
             return false
-        } else if(creature.level > creaturesLevelLimit.value) {
+        } else if (creature.level > playerLevelLimit.value) {
             Notify.create({
-                message: 'Ограничение на уровень существ: ' + creaturesLevelLimit.value,
+                message: 'Ограничение на уровень существ в ритуале: ' + playerLevelLimit.value,
                 color: 'negative', // красный цвет
                 icon: 'error',
                 position: 'top-right',
@@ -150,17 +198,36 @@ const filteredCreatures = computed(() => {
         }
 
         return true;
-    }).sort((a,b) => b.level - a.level);
+    }).sort((a, b) => b.level - a.level);
 });
+
+
+function handleBattleStart(battleData) {
+    const playerCreatures = gameStore.creatures.filter(creature => battleData.includes(creature.id));
+    // Здесь будет логика инициализации боя
+    battleStore.startBattle({
+        leftTeam: playerCreatures,
+        rightTeam: enemyCreatures.value,
+    })
+    emits('update:modelValue', false)
+    gameStore.setState('battle')
+    gameStore.changeScene('Battle')
+    router.push('/game')
+}
 
 
 </script>
 
 <template>
-    <q-dialog persistent maximized full-width full-height class="text-dark">
+    <q-dialog
+        :model-value="modelValue"
+        @update:model-value="val => $emit('update:modelValue', val)"
+        persistent maximized full-width full-height class="text-dark"
+        @show="calcEnemies"
+    >
         <q-card class="">
             <q-card-section class="bg-primary text-white q-py-sm q-px-md row items-center">
-                <q-btn flat round icon="arrow_back" v-close-popup dense />
+                <q-btn flat round icon="arrow_back" v-close-popup dense/>
                 <div class="text-h6 q-ml-sm">Подготовка к бою</div>
             </q-card-section>
 
@@ -239,6 +306,10 @@ const filteredCreatures = computed(() => {
                     <!-- Колонка 2: Выбранные существа -->
                     <div class="col-3 q-pa-sm scroll column">
                         <div class="text-center text-weight-bold q-mb-sm">Выбранные существа</div>
+                        <div class="text-center-g-md-sm">
+                            Вы чувствуете, что хрупкое эхо выдержит до <b>{{ playerCountLimit }}</b> существ уровня не выше
+                            <b>{{ playerLevelLimit }}</b>.
+                        </div>
                         <div class="col">
                             <QScrollArea
                                 ref="scrollArea"
@@ -293,7 +364,7 @@ const filteredCreatures = computed(() => {
                                 label="Начать бой"
                                 color="positive"
                                 :disable="selectedCreatures.length === 0"
-                                @click="$emit('battle-start', selectedCreatureIds)"
+                                @click="handleBattleStart(selectedCreatureIds)"
                             />
 
                         </div>

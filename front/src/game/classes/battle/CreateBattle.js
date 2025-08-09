@@ -11,11 +11,14 @@ export function getEnemiesByConfig(config) {
     switch (config.type) {
         case 'random_battle':
             return getRandomEnemies(config)
+        case 'exploration_battle':
+            return getExplorationEnemies(config)
     }
 
     return []
 }
 
+// Функция которая подстраивает силу существ под игрока
 function generateEnemyTeamLevels(playerCreatures, battleSize, levelLimit) {
     // 1. Проверка крайних случаев
     if (playerCreatures.length === 0) return Array(battleSize).fill(1);
@@ -95,6 +98,24 @@ function getRandomEnemies({count, levelLimit}) {
     const levels = generateEnemyTeamLevels(gameStore.creatures, count, levelLimit)
     const creatures = levels.map(level => createNewCreature(randomElement(), randomShape(), randomEmotion(), level))
 
+    shuffleArray(creatures)
+
+    return getTeam2('left', new HardAI(), creatures)
+}
+
+function getRandomInt([min, max]) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Создает команду случайного размера и случайных уровней (в границах конфига)
+function getExplorationEnemies(config) {
+    const size = getRandomInt(config.enemyCount)
+    const levels = []
+    for (let i = 0; i < size; i++) {
+        levels.push(getRandomInt(config.enemyLevel))
+    }
+
+    const creatures = levels.map(level => createNewCreature(randomElement(), randomShape(), randomEmotion(), level))
     shuffleArray(creatures)
 
     return getTeam2('left', new HardAI(), creatures)

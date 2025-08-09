@@ -166,6 +166,8 @@ export const useGameStore = defineStore('game', {
         selectedLibraryCreatureId: null,
 
         last5BattleResults: [false, false, false, false, false],
+
+        explorationEnabled: false,
     }),
     getters: {
         inventoryObjects(state) {
@@ -464,7 +466,7 @@ export const useGameStore = defineStore('game', {
             if (index === -1) return;
 
             const creature = this.creatures[index];
-            
+
             const newActions = creature.actions.map(a => {
                 return getActionById(a.id)
             });
@@ -571,6 +573,9 @@ export const useGameStore = defineStore('game', {
         },
         addBattleResult(result) {
             this.last5BattleResults = [...this.last5BattleResults, result].slice(-5);
+        },
+        toggleExploration() {
+            this.explorationEnabled = !this.explorationEnabled;
         }
     },
 });

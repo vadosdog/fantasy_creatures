@@ -19,7 +19,7 @@ import {
     QTabs, QTimeline, QTimelineEntry,
     QToolbar,
     QToolbarTitle, QTooltip,
-    Quasar, Notify
+    Quasar, Notify, QMarkupTable
 } from 'quasar'
 
 // Импортируем стили Quasar
@@ -76,6 +76,7 @@ app.use(Quasar, {
         QSpace,
         QCard,
         QCardSection,
+        QMarkupTable,
         QImg,
         QCardActions,
         QBadge,
