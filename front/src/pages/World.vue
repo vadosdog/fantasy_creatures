@@ -118,6 +118,9 @@ const battleStartDialogOpen = ref(false);
 const battleStartConfig = ref({})
 
 function openStartBattleDialog(config) {
+    config = Object.assign({}, config)
+    config.playerCountLimit = exploration.value.playerCountLimit
+    config.playerLevelLimit = exploration.value.playerLevelLimit
     battleStartDialogOpen.value = true
     battleStartConfig.value = config
 }
@@ -174,8 +177,8 @@ function openStartBattleDialog(config) {
                             </template>
                         </td>
                         <td class="text-left">
-                            Существ: {{ variant.config.playerCountLimit }},<br>
-                            Уровень: {{ variant.config.playerLevelLimit }}
+                            Существ: {{ exploration.playerCountLimit }},<br>
+                            Уровень: {{ exploration.playerLevelLimit }}
                         </td>
                         <td class="text-left"></td>
                         <td class="text-left">{{ variant.config.comment }}</td>
