@@ -69,6 +69,15 @@ export class Preloader extends Scene {
             "073",
             "076",
             "079",
+            "082",
+            "085",
+            "088",
+            "091",
+            "094",
+            "097",
+            "100",
+            "103",
+            "106",
         ]
         for (const basicCreature of basicCreatures) {
             this.load.image(basicCreature + '_stand', 'creatures/basic/' + basicCreature + '.png')

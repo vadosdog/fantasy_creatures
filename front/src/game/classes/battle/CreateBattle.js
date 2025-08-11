@@ -121,9 +121,9 @@ function getExplorationEnemies(config) {
     return getTeam2('left', new HardAI(), creatures)
 }
 
-function createNewCreature(element, shape, emotion, level) {
+function createNewCreature(element, shape, emotion, level, rarity = 'common') {
 
-    let newCreature = Object.assign({}, creaturesLib[element + '-' + shape + '-' + emotion])
+    let newCreature = Object.assign({}, creaturesLib[element + '-' + shape + '-' + emotion + '-' + rarity])
 
     // Присваиваем рандомный ИД
     newCreature.id = crypto.randomUUID();

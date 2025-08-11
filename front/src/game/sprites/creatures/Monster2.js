@@ -33,8 +33,7 @@ export default class Monster2 extends Phaser.GameObjects.Sprite {
         this.direction = direction;
 
         this.stopAllTweens();
-        // this.setFlipX(direction === 'left');
-        this.setFlipX(direction !== 'left'); //TODO убрать
+        this.setFlipX(direction === 'left');
 
         switch (action) {
             case 'idle':

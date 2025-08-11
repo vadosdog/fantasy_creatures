@@ -185,7 +185,7 @@ export const locationsLib = {
                         enemyCount: [2, 3],
                         enemyLevel: [1, 3],
                         type: 'exploration_battle',
-                        comment: '70%: 2-3 существа (ур. 1-3) | Игрок: до 3 сущ. (макс. ур. 5)'
+                        comment: '70%: 2-3 существа (ур. 1-3)'
                     }
                 },
                 {
@@ -195,7 +195,7 @@ export const locationsLib = {
                         enemyCount: [2, 2],
                         enemyLevel: [4, 5],
                         type: 'exploration_battle',
-                        comment: '25%: 1 существо + 1 элит (ур. 4-5) | Игрок: до 2 сущ. (макс. ур. 7)'
+                        comment: '25%: 1 существо + 1 элит (ур. 4-5)'
                     }
                 },
                 {
@@ -205,7 +205,7 @@ export const locationsLib = {
                         enemyCount: [4, 4],
                         enemyLevel: [2, 4],
                         type: 'exploration_battle',
-                        comment: '25%: 1 существо + 1 элит (ур. 4-5) | Игрок: до 2 сущ. (макс. ур. 7)'
+                        comment: '25%: 1 существо + 1 элит (ур. 4-5)'
                     }
                 },
             ]
@@ -249,7 +249,7 @@ export const locationsLib = {
                         enemyCount: [2, 3],
                         enemyLevel: [1, 3],
                         type: 'exploration_battle',
-                        comment: '70%: 2-3 существа (ур. 1-3) | Игрок: до 3 сущ. (макс. ур. 5)'
+                        comment: '70%: 2-3 существа (ур. 1-3)'
                     }
                 },
                 {
@@ -259,7 +259,8 @@ export const locationsLib = {
                         enemyCount: [2, 2],
                         enemyLevel: [4, 5],
                         type: 'exploration_battle',
-                        comment: '25%: 1 существо + 1 элит (ур. 4-5) | Игрок: до 2 сущ. (макс. ур. 7)'
+                        comment: '25%: 1 существо + 1 элит (ур. 4-5)',
+                        enemies: [{rarity: 'rare'}]
                     }
                 },
                 {
@@ -269,7 +270,8 @@ export const locationsLib = {
                         enemyCount: [4, 4],
                         enemyLevel: [2, 4],
                         type: 'exploration_battle',
-                        comment: '25%: 1 существо + 1 элит (ур. 4-5) | Игрок: до 2 сущ. (макс. ур. 7)'
+                        comment: '5%: 4 существа элит (ур. 2-4)',
+                        enemies: [{rarity: 'rare'},{rarity: 'rare'},{rarity: 'rare'},{rarity: 'rare'}]
                     }
                 },
             ]
@@ -302,7 +304,7 @@ export const locationsLib = {
                         enemyCount: [4, 5],
                         enemyLevel: [6, 8],
                         type: 'exploration_battle',
-                        comment: '60%: 4-5 существ (ур. 6-8) | Игрок: до 5 сущ. (макс. ур. 10)'
+                        comment: '60%: 4-5 существ (ур. 6-8)'
                     }
                 },
                 {
@@ -312,7 +314,7 @@ export const locationsLib = {
                         enemyCount: [3, 3],
                         enemyLevel: [9, 10],
                         type: 'exploration_battle',
-                        comment: '30%: 3 элита (ур. 9-10) | Игрок: до 4 сущ. (макс. ур. 12)'
+                        comment: '30%: 3 элита (ур. 9-10)'
                     }
                 },
                 {
@@ -322,7 +324,7 @@ export const locationsLib = {
                         enemyCount: [1, 1],
                         enemyLevel: [12, 12],
                         type: 'exploration_battle',
-                        comment: '10%: 1 уникальный (ур. 12) | Игрок: до 2 сущ. (макс. ур. 15)'
+                        comment: '10%: 1 уникальный (ур. 12)'
                     }
                 },
             ]
@@ -363,7 +365,7 @@ export const locationsLib = {
                         enemyCount: [3, 4],
                         enemyLevel: [3, 5],
                         type: 'exploration_battle',
-                        comment: '60%: 3-4 существа (ур. 3-5) | Игрок: до 4 сущ. (макс. ур. 7)'
+                        comment: '60%: 3-4 существа (ур. 3-5)'
                     }
                 },
                 {
@@ -373,7 +375,7 @@ export const locationsLib = {
                         enemyCount: [2, 2],
                         enemyLevel: [6, 6],
                         type: 'exploration_battle',
-                        comment: '30%: 2 элита (ур. 6) | Игрок: до 3 сущ. (макс. ур. 8)'
+                        comment: '30%: 2 элита (ур. 6)'
                     }
                 },
                 {
@@ -383,7 +385,7 @@ export const locationsLib = {
                         enemyCount: [3, 3],
                         enemyLevel: [3, 7],
                         type: 'exploration_battle',
-                        comment: '10%: 1 сильный + 2 обычных (ур. 7/3) | Игрок: до 3 сущ. (макс. ур. 9)'
+                        comment: '10%: 1 сильный + 2 обычных (ур. 7/3)'
                     }
                 },
             ]
@@ -420,7 +422,7 @@ export const locationsLib = {
                         enemyCount: [5, 6],
                         enemyLevel: [11, 13],
                         type: 'exploration_battle',
-                        comment: '50%: 5-6 существ (ур. 11-13) | Игрок: до 6 сущ. (макс. ур. 15)'
+                        comment: '50%: 5-6 существ (ур. 11-13)'
                     }
                 },
                 {
@@ -430,7 +432,7 @@ export const locationsLib = {
                         enemyCount: [4, 4],
                         enemyLevel: [14, 15],
                         type: 'exploration_battle',
-                        comment: '40%: 4 элита (ур. 14-15) | Игрок: до 5 сущ. (макс. ур. 17)'
+                        comment: '40%: 4 элита (ур. 14-15)'
                     }
                 },
                 {
@@ -440,7 +442,7 @@ export const locationsLib = {
                         enemyCount: [1, 1],
                         enemyLevel: [18, 18],
                         type: 'exploration_battle',
-                        comment: '10%: 1 уникальный (ур. 18) | Игрок: до 3 сущ. (макс. ур. 20)'
+                        comment: '10%: 1 уникальный (ур. 18)'
                     }
                 },
             ]
@@ -473,7 +475,7 @@ export const locationsLib = {
                         enemyCount: [5, 6],
                         enemyLevel: [20, 22],
                         type: 'exploration_battle',
-                        comment: '50%: 5-6 существ (ур. 20-22) | Игрок: до 6 сущ. (макс. ур. 24)'
+                        comment: '50%: 5-6 существ (ур. 20-22)'
                     }
                 },
                 {
@@ -483,7 +485,7 @@ export const locationsLib = {
                         enemyCount: [4, 4],
                         enemyLevel: [23, 24],
                         type: 'exploration_battle',
-                        comment: '40%: 4 уникальных (ур. 23-24) | Игрок: до 5 сущ. (макс. ур. 26)'
+                        comment: '40%: 4 уникальных (ур. 23-24)'
                     }
                 },
                 {
@@ -493,7 +495,7 @@ export const locationsLib = {
                         enemyCount: [1, 1],
                         enemyLevel: [25, 25],
                         type: 'exploration_battle',
-                        comment: '10%: 1 легендарный (ур. 25) | Игрок: до 3 сущ. (макс. ур. 28)'
+                        comment: '10%: 1 легендарный (ур. 25)'
                     }
                 },
             ]
@@ -528,7 +530,7 @@ export const locationsLib = {
                         enemyCount: [5, 5],
                         enemyLevel: [13, 15],
                         type: 'exploration_battle',
-                        comment: '40% | 5 существ | ур. 13-15| игрок: до 5 сущ., макс. ур. 17'
+                        comment: '40% | 5 существ | ур. 13-15'
                     }
                 },
                 {
@@ -538,7 +540,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [14, 16],
                         type: 'exploration_battle',
-                        comment: '40% | 6 существ | ур. 14-16| игрок: до 6 сущ., макс. ур. 18'
+                        comment: '40% | 6 существ | ур. 14-16'
                     }
                 },
                 {
@@ -548,7 +550,7 @@ export const locationsLib = {
                         enemyCount: [1, 1],
                         enemyLevel: [15, 17],
                         type: 'exploration_battle',
-                        comment: '20% | 4 существа| ур. 15-17| игрок: до 4 сущ., макс. ур. 19'
+                        comment: '20% | 4 существа| ур. 15-17'
                     }
                 },
             ]
@@ -581,7 +583,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [26, 28],
                         type: 'exploration_battle',
-                        comment: '70%: 6 существ (ур. 26-28) | Игрок: до 6 сущ. (макс. ур. 30)'
+                        comment: '70%: 6 существ (ур. 26-28)'
                     }
                 },
                 {
@@ -591,7 +593,7 @@ export const locationsLib = {
                         enemyCount: [3, 3],
                         enemyLevel: [29, 29],
                         type: 'exploration_battle',
-                        comment: '25%: 3 легендарных (ур. 29) | Игрок: до 4 сущ. (макс. ур. 30)'
+                        comment: '25%: 3 легендарных (ур. 29)'
                     }
                 },
                 {
@@ -601,7 +603,7 @@ export const locationsLib = {
                         enemyCount: [1, 1],
                         enemyLevel: [30, 30],
                         type: 'exploration_battle',
-                        comment: '5%: 1 финальный босс (ур. 30) | Игрок: до 6 сущ. (макс. ур. 30)'
+                        comment: '5%: 1 финальный босс (ур. 30)'
                     }
                 },
             ]

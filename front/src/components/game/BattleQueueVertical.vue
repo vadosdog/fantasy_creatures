@@ -120,7 +120,7 @@ const clearHoverCreature = () => {
                             :src="'./assets/creatures/basic/' + (creature.number || creature.texture) + '.png'"
                             :alt="creature.name"
                             class="creature-image"
-                            :class="{mirror: creature.direction === 'right'}"
+                            :class="{mirror: creature.direction === 'left'}"
                         />
                     </q-avatar>
                 </q-item-section>

@@ -13,7 +13,8 @@ creatures.forEach((creature, index) => {
     if (!creature.evolutionGroup) {
         creature.evolutionGroup = creature.number
     }
-    creaturesLib[creature.element + '-' + creature.shape + '-' + creature.emotion] = creature
+    const rarity = creature.rarity || 'common'
+    creaturesLib[creature.element + '-' + creature.shape + '-' + creature.emotion + '-' + rarity] = creature
 })
 
 for (const actionIndex of creaturesActions.keys()) {
@@ -87,9 +88,9 @@ export function getTeam2(direction, control, creatures) {
     })
 }
 
-export function getCreature(element, shape, emotion, level) {
+export function getCreature(element, shape, emotion, level, rarity = 'common') {
     // нужно копирование, иначе при повторении существ, будет один объект
-    const creature = Object.assign({}, creaturesLib[element + '-' + shape + '-' + emotion]);
+    const creature = Object.assign({}, creaturesLib[element + '-' + shape + '-' + emotion + '-' + rarity]);
     // creature.name = element + '/' + shape + '/' + emotion
     creature.texture = creature.number;
     creature.level = level
@@ -240,10 +241,10 @@ export function testTeam(level, direction, control, limit) {
 
 // Тест 1: Базовый урон (ДД vs Танк)
 export function testBaseDamagePassionvsRage() {
-    const rage = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'rage']);
-    const passion = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'passion']);
-    const passion2 = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'passion']);
-    const hope = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'hope']);
+    const rage = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'rage' + '-' + 'common']);
+    const passion = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'passion' + '-' + 'common']);
+    const passion2 = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'passion' + '-' + 'common']);
+    const hope = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'hope' + '-' + 'common']);
     rage.actions = []
     passion2.actions = []
     hope.actions = [
@@ -439,8 +440,8 @@ export function testBaseDamagePassionvsRage() {
 
 // Тест 1: Базовый урон (ДД vs Танк)
 export function testEffects(effect, chanceEffect, duration) {
-    const rage1 = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'rage']);
-    const rage2 = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'rage']);
+    const rage1 = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'rage' + '-' + 'common']);
+    const rage2 = Object.assign({}, creaturesLib['fire' + '-' + 'beast' + '-' + 'rage' + '-' + 'common']);
     rage1.actions = [
         {
             "name": "Свирепый укус с эффектом",

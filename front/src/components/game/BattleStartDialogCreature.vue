@@ -52,7 +52,7 @@ defineProps({
                     :src="'./assets/creatures/basic/' + creature.number + '.png'"
                     :alt="creature.name"
                     class="creature-image"
-                    :class="{mirror: direction === 'right'}"
+                    :class="{mirror: direction === 'left'}"
                 />
             </q-avatar>
         </q-item-section>

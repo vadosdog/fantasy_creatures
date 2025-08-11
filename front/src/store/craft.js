@@ -54,7 +54,7 @@ export const useCraftStore = defineStore('craft', {
                 return null
             }
 
-            return creaturesLib[this.selectedElement.code + '-' + this.selectedShape.code + '-' + this.selectedEmotion.code]
+            return creaturesLib[this.selectedElement.code + '-' + this.selectedShape.code + '-' + this.selectedEmotion.code + '-' + 'common']
         },
     },
     actions: {

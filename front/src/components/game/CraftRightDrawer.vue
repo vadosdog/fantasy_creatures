@@ -130,8 +130,8 @@ function shardClass(shard) {
     return `shard-${shard.rarity}`;
 }
 
-function getBaseCreature(element, shape, emotion) {
-    return creaturesLib[element + '-' + shape + '-' + emotion]
+function getBaseCreature(element, shape, emotion, rarity = 'common') {
+    return creaturesLib[element + '-' + shape + '-' + emotion + '-' + rarity]
 }
 
 </script>
