@@ -517,6 +517,44 @@ export const locationsLib = {
                 label: 'Святилище Первых Снов',
             },
         ],
+        exploration: {
+            playerCountLimit: 6,
+            playerLevelLimit: 19,
+            variants: [
+                {
+                    chance: 0.4,
+                    type: 'battle',
+                    config: {
+                        enemyCount: [5, 5],
+                        enemyLevel: [13, 15],
+                        type: 'exploration_battle',
+                        comment: '40% | 5 существ | ур. 13-15| игрок: до 5 сущ., макс. ур. 17'
+                    }
+                },
+                {
+                    chance: 0.4,
+                    type: 'battle',
+                    config: {
+                        enemyCount: [6, 6],
+                        enemyLevel: [14, 16],
+                        type: 'exploration_battle',
+                        comment: '40% | 6 существ | ур. 14-16| игрок: до 6 сущ., макс. ур. 18'
+                    }
+                },
+                {
+                    chance: 0.2,
+                    type: 'battle',
+                    config: {
+                        enemyCount: [1, 1],
+                        enemyLevel: [15, 17],
+                        type: 'exploration_battle',
+                        comment: '20% | 4 существа| ур. 15-17| игрок: до 4 сущ., макс. ур. 19'
+                    }
+                },
+            ]
+
+        }
+
     },
     sanctuary_of_the_first_dreams: {
         id: 'sanctuary_of_the_first_dreams',
@@ -605,37 +643,37 @@ export const locationsLib = {
             },
         ],
         exploration: {
-            playerCountLimit: 4,
-            playerLevelLimit: 10,
+            playerCountLimit: 6,
+            playerLevelLimit: 14,
             variants: [
                 {
-                    chance: 0.5,
+                    chance: 0.4,
                     type: 'battle',
                     config: {
-                        enemyCount: [4, 4],
-                        enemyLevel: [4, 6],
+                        enemyCount: [5, 5],
+                        enemyLevel: [8, 10],
                         type: 'exploration_battle',
-                        comment: '50%: 4 существа (ур. 4-6) | Игрок: до 4 сущ. (макс. ур. 8)'
+                        comment: '40% | 5 существ | ур. 8-10 | игрок: до 5 сущ., макс. ур. 12\n'
                     }
                 },
                 {
                     chance: 0.4,
                     type: 'battle',
                     config: {
-                        enemyCount: [3, 3],
-                        enemyLevel: [5, 7],
+                        enemyCount: [6, 6],
+                        enemyLevel: [9, 11],
                         type: 'exploration_battle',
-                        comment: '40%: 3 элита (ур. 5-7) | Игрок: до 4 сущ. (макс. ур. 9)'
+                        comment: '40% | 6 существ | ур. 9-11 | игрок: до 6 сущ., макс. ур. 13'
                     }
                 },
                 {
-                    chance: 0.1,
+                    chance: 0.2,
                     type: 'battle',
                     config: {
-                        enemyCount: [3, 3],
-                        enemyLevel: [8, 8],
+                        enemyCount: [4, 4],
+                        enemyLevel: [10, 12],
                         type: 'exploration_battle',
-                        comment: '10%: 1 босс-миньон (ур. 8) + 2 слабых | Игрок: до 3 сущ. (макс. ур. 10)'
+                        comment: '20% | 4 существа| ур. 10-12| игрок: до 4 сущ., макс. ур. 14'
                     }
                 },
             ]
@@ -669,6 +707,42 @@ export const locationsLib = {
                 label: 'Проклятый Карьер',
             },
         ],
+        exploration: {
+            playerCountLimit: 5,
+            playerLevelLimit: 10,
+            variants: [
+                {
+                    chance: 0.5,
+                    type: 'battle',
+                    config: {
+                        enemyCount: [4, 4],
+                        enemyLevel: [5, 7],
+                        type: 'exploration_battle',
+                        comment: '50% | 4 существа | ур. 5-7 | игрок: до 4 сущ., макс. ур. 9'
+                    }
+                },
+                {
+                    chance: 0.3,
+                    type: 'battle',
+                    config: {
+                        enemyCount: [5, 5],
+                        enemyLevel: [6, 8],
+                        type: 'exploration_battle',
+                        comment: '30% | 5 существ  | ур. 6-8 | игрок: до 5 сущ., макс. ур. 10'
+                    }
+                },
+                {
+                    chance: 0.2,
+                    type: 'battle',
+                    config: {
+                        enemyCount: [3, 3],
+                        enemyLevel: [7, 8],
+                        type: 'exploration_battle',
+                        comment: '20% | 3 существа | ур. 7-8 | игрок: до 3 сущ., макс. ур. 10'
+                    }
+                },
+            ]
+        }
     },
     nightmares_grove: {
         id: 'nightmares_grove',
@@ -994,6 +1068,43 @@ export const locationsLib = {
                 label: 'Кладбище Кораблей',
             },
         ],
+        exploration: {
+            playerCountLimit: 6,
+            playerLevelLimit: 30,
+            variants: [
+                {
+                    chance: 0.7,
+                    type: 'battle',
+                    config: {
+                        enemyCount: [6, 6],
+                        enemyLevel: [22, 24],
+                        type: 'exploration_battle',
+                        comment: '70%: 6 существ (ур. 22-24) | Игрок: до 6 сущ. (макс. ур. 26)'
+                    }
+                },
+                {
+                    chance: 0.3,
+                    type: 'battle',
+                    config: {
+                        enemyCount: [4, 4],
+                        enemyLevel: [25, 26],
+                        type: 'exploration_battle',
+                        comment: '25%: 4 уникальных (ур. 25-26) | Игрок: до 5 сущ. (макс. ур. 28)'
+                    }
+                },
+                {
+                    chance: 0.05,
+                    type: 'battle',
+                    config: {
+                        enemyCount: [1, 1],
+                        enemyLevel: [28, 28],
+                        type: 'exploration_battle',
+                        comment: '5%: 1 финальный босс-миньон (ур. 28) | Игрок: до 3 сущ. (макс. ур. 30)'
+                    }
+                },
+            ]
+
+        }
     },
     ship_cemetery: {
         id: 'ship_cemetery',
