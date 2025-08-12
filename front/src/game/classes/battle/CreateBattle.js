@@ -107,6 +107,24 @@ function getRandomInt([min, max]) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function getComposition(config = []) {
+    const result = []
+    config.forEach(item => {
+        let count = 1
+        if (item.count) {
+            count = getRandomInt(item.count)
+        }
+        for (let i = 0; i < count; i++) {
+            const preset = Object.assign({}, item)
+            if (preset.level) {
+                preset.level = getRandomInt(preset.level)
+            }
+            result.push(preset)
+        }
+    })
+    return result
+}
+
 // Создает команду случайного размера и случайных уровней (в границах конфига)
 function getExplorationEnemies(config) {
     const size = getRandomInt(config.enemyCount)
@@ -114,8 +132,24 @@ function getExplorationEnemies(config) {
     for (let i = 0; i < size; i++) {
         levels.push(getRandomInt(config.enemyLevel))
     }
+    const composition = getComposition(config.composition)
 
-    const creatures = levels.map(level => createNewCreature(randomElement(), randomShape(), randomEmotion(), level))
+    const creatures = levels.map((level, i) => {
+        const preset = ((composition[i]) || {});
+        const element = preset.element || randomElement(config.dominantElement ? [config.dominantElement] : []);
+        const shape = preset.shape || randomShape(config.dominantShape ? [config.dominantShape] : []);
+        const emotion = preset.emotion || randomEmotion(config.dominantEmotion ? [config.dominantEmotion] : []);
+        let rarity = preset.rarity || 'common'
+        if (rarity === 'epic' || rarity === 'legendary') {
+            rarity = 'rare'
+        }
+
+        if (preset.level) {
+            level = preset.level
+        }
+        
+        return createNewCreature(element, shape, emotion, level, rarity)
+    })
     shuffleArray(creatures)
 
     return getTeam2('left', new HardAI(), creatures)
@@ -215,8 +249,8 @@ function shuffleArray(array) {
     return array;
 }
 
-function randomEmotion() {
-    return ['rage', 'passion', 'hope'][Math.floor(Math.random() * 3)];
+function randomEmotion(chances = []) {
+    return randomByChances(chances, ['rage', 'passion', 'hope']);
 }
 
 function generateEmotions(limit) {
@@ -258,14 +292,63 @@ function generateEmotions(limit) {
     return result;
 }
 
-function randomShape() {
-    return [
-        'beast',
-        'bird',
-        'reptile'
-    ][Math.floor(Math.random() * 3)];
+function randomShape(chances = []) {
+    return randomByChances(chances, ['beast', 'bird', 'reptile']);
 }
 
-function randomElement() {
-    return ['fire', 'water', 'grass'][Math.floor(Math.random() * 3)];
+function randomElement(chances = []) {
+    return randomByChances(chances, ['fire', 'water', 'grass']);
+}
+
+function randomByChances(config = [], allElements) {
+    // Если конфиг пустой, возвращаем случайный элемент с равной вероятностью
+    if (!config || config.length === 0) {
+        return allElements[Math.floor(Math.random() * allElements.length)];
+    }
+
+    // Создаём карту шансов из конфига
+    const chanceMap = new Map();
+    let totalSpecifiedChance = 0;
+
+    config.forEach(({ element, chance }) => {
+        if (allElements.includes(element)) {
+            chanceMap.set(element, chance);
+            totalSpecifiedChance += chance;
+        }
+    });
+
+    // Проверка: сумма шансов не должна превышать 1
+    if (totalSpecifiedChance > 1) {
+        console.error('Сумма шансов не может превышать 1');
+        return allElements[Math.floor(Math.random() * allElements.length)];
+    }
+
+    // Элементы, которые не указаны в конфиге
+    const unspecifiedElements = allElements.filter(el => !chanceMap.has(el));
+    const remainingChance = 1 - totalSpecifiedChance;
+    const distributedChance = unspecifiedElements.length > 0
+        ? remainingChance / unspecifiedElements.length
+        : 0;
+
+    // Формируем финальные вероятности
+    const probabilities = allElements.map(element => {
+        const chance = chanceMap.has(element)
+            ? chanceMap.get(element)
+            : distributedChance;
+        return { element, chance };
+    });
+
+    // Выбираем случайный элемент по вероятностям
+    const rand = Math.random();
+    let cumulative = 0;
+
+    for (const { element, chance } of probabilities) {
+        cumulative += chance;
+        if (rand < cumulative) {
+            return element;
+        }
+    }
+
+    // На случай погрешности (например, из-за float)
+    return probabilities[probabilities.length - 1].element;
 }

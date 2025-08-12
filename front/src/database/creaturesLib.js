@@ -13,7 +13,7 @@ creatures.forEach((creature, index) => {
     if (!creature.evolutionGroup) {
         creature.evolutionGroup = creature.number
     }
-    const rarity = creature.rarity || 'common'
+    let rarity = creature.rarity || 'common'
     creaturesLib[creature.element + '-' + creature.shape + '-' + creature.emotion + '-' + rarity] = creature
 })
 
@@ -89,6 +89,10 @@ export function getTeam2(direction, control, creatures) {
 }
 
 export function getCreature(element, shape, emotion, level, rarity = 'common') {
+    // TODO Пока нет эпических и легендарных, заменяем их редкими
+    if (rarity === 'epic' || rarity === 'legendary') {
+        rarity = 'rare'
+    }
     // нужно копирование, иначе при повторении существ, будет один объект
     const creature = Object.assign({}, creaturesLib[element + '-' + shape + '-' + emotion + '-' + rarity]);
     // creature.name = element + '/' + shape + '/' + emotion

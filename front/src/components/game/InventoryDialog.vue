@@ -33,6 +33,7 @@ const rarityOptions = [
     {label: 'Любой', value: null},
     {label: 'Обычный', value: 'common'},
     {label: 'Редкий', value: 'rare'},
+    {label: 'Эпический', value: 'epic'},
     {label: 'Легендарный', value: 'legendary'}
 ];
 
@@ -105,6 +106,7 @@ const resources = computed(() => gameStore.inventoryResources)
 const totalShards = computed(() => gameStore.inventoryShards.length);
 const commonCount = computed(() => gameStore.inventoryShards.filter(s => s.rarity === 'common').length);
 const rareCount = computed(() => gameStore.inventoryShards.filter(s => s.rarity === 'rare').length);
+const epicCount = computed(() => gameStore.inventoryShards.filter(s => s.rarity === 'epic').length);
 const legendaryCount = computed(() => gameStore.inventoryShards.filter(s => s.rarity === 'legendary').length);
 </script>
 
@@ -244,7 +246,8 @@ const legendaryCount = computed(() => gameStore.inventoryShards.filter(s => s.ra
                     <div>Всего: {{ totalShards }}</div>
                     <div>Обычн: {{ commonCount }}</div>
                     <div>Редк: {{ rareCount }}</div>
-                    <div>Легенд: {{ legendaryCount }}</div>
+                    <div>Эпич: {{ rareCount }}</div>
+                    <div>Лег: {{ legendaryCount }}</div>
                 </div>
             </q-card-section>
         </q-card>

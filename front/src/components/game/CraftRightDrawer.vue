@@ -196,7 +196,7 @@ function getBaseCreature(element, shape, emotion, rarity = 'common') {
                             'text-negative': stat.color === 'negative'
                         }">
                             {{ stat.value }}
-                            <q-tooltip 
+                            <q-tooltip
                                 anchor="center left"
                                 self="center right"
                                 :offset="[10, 10]"

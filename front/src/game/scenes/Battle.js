@@ -964,8 +964,14 @@ export class Battle extends Scene {
     }
 
     drawZoneOutline(positions, type) {
+        // Защита: убедимся, что сцена и рендерер инициализированы
+        if (!this.sys || !this.sys.game || !this.sys.game.renderer || !this.sys.game.isBooted) {
+            console.warn('Scene or renderer not ready, skipping drawZoneOutline');
+            return;
+        }
+        
         // Создаем новый graphics для каждого типа зоны
-        const graphics = this.add.graphics();
+        const graphics = this?.add?.graphics();
         graphics.setDepth(999);
         this.zoneOutlines.push(graphics); // Сохраняем для очистки
 

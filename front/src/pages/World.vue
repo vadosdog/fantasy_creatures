@@ -44,6 +44,8 @@ const startExplorationTimer = () => {
 
 function weightedRandomChoice(items) {
     if (!items || items.length === 0) return null;
+    
+    items = items.filter(i => !i.disabled)
 
     // Суммируем все веса (chance)
     const totalWeight = items.reduce((sum, item) => sum + (item.chance || 0), 0);
@@ -121,6 +123,10 @@ function openStartBattleDialog(config) {
     config = Object.assign({}, config)
     config.playerCountLimit = exploration.value.playerCountLimit
     config.playerLevelLimit = exploration.value.playerLevelLimit
+
+    config.dominantElement = exploration.value.dominantElement
+    config.dominantShape = exploration.value.dominantShape
+    config.dominantEmotion = exploration.value.dominantEmotion
     battleStartDialogOpen.value = true
     battleStartConfig.value = config
 }
@@ -159,7 +165,7 @@ function openStartBattleDialog(config) {
                     <tbody>
                     <tr v-for="variant in exploration.variants">
                         <td class="text-left">{{ variant.chance * 100 }}%</td>
-                        <td class="text-left">{{ {battle: 'Битва'}[variant.type] }}</td>
+                        <td class="text-left">{{ {battle: 'Битва'}[variant.type] }}<template v-if="variant.disabled"><br>(Заблокировано)</template></td>
                         <td class="text-left">
                             <template v-if="variant.type === 'battle'">
                                 Cуществ: <span v-if="variant.config.enemyCount[0] === variant.config.enemyCount[1]">

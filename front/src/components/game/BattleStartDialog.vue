@@ -22,6 +22,24 @@ const props = defineProps({
                         enemyLevel: [1, 3],
                         playerCountLimit: 3,
                         playerLevelLimit: 5,
+                        dominantElement: {element: "grass", chance: 0.8},
+                        dominantShape: {shape: "beast", chance: 0.6},
+                        dominantEmotion: {emotion: "rage", chance: 0.7},
+                        composition: [ // пресеты конкретных юнитов, все поля необязательные
+                            {
+                                count: [1, 1],
+                                element: "water",
+                                shape: "beast",
+                                emotion: "rage",
+                                rarity: "legendary"
+                            },
+                            {
+                                count: [3, 3],
+                                element: "water",
+                                shape: "beast",
+                                rarity: "rare"
+                            },
+                        ],
                     }
 
 */
@@ -72,25 +90,6 @@ const playerLevelLimit = computed(() => {
 const playerCountLimit = computed(() => {
     return props.config.playerCountLimit || props.config.count || 6;
 })
-
-
-function getEnemyLevelLimit() {
-    if (props.config.enemyLevel) {
-        const [min, max] = props.config.enemyLevel
-        return Math.floor(Math.random() * (max - min + 1)) + min
-    }
-
-    return props.config.levelLimit || 30
-}
-
-function getEnemyCountLimit() {
-    if (props.config.enemyCount) {
-        const [min, max] = props.config.enemyCount
-        return Math.floor(Math.random() * (max - min + 1)) + min
-    }
-
-    return props.config.count || 6
-}
 
 const enemyCreatures = ref([])
 

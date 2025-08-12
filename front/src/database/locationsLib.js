@@ -176,7 +176,10 @@ export const locationsLib = {
         ],
         exploration: {
             playerCountLimit: 3,
-            playerLevelLimit: 7,
+            playerLevelLimit: 9,
+            dominantElement: {element: "grass", chance: 0.8},
+            dominantShape: {shape: "beast", chance: 0.7},
+            dominantEmotion: {emotion: "passion", chance: 0.6},
             variants: [
                 {
                     chance: 0.7,
@@ -195,7 +198,17 @@ export const locationsLib = {
                         enemyCount: [2, 2],
                         enemyLevel: [4, 5],
                         type: 'exploration_battle',
-                        comment: '25%: 1 существо + 1 элит (ур. 4-5)'
+                        comment: '25%: 1 существо + 1 редкий (ур. 4-5)',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                level: [4, 5],
+                                element: "grass",
+                                shape: "beast",
+                                emotion: "passion",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
@@ -205,7 +218,21 @@ export const locationsLib = {
                         enemyCount: [4, 4],
                         enemyLevel: [2, 4],
                         type: 'exploration_battle',
-                        comment: '25%: 1 существо + 1 элит (ур. 4-5)'
+                        comment: '5%: 1 редкий + 2 обычных (ур. 7/3-7)',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                level: [7, 7],
+                                element: "grass",
+                                shape: "beast",
+                                emotion: "passion",
+                                rarity: "rare"
+                            },
+                            {
+                                count: [2, 2],
+                                level: [7, 7],
+                            },
+                        ],
                     }
                 },
             ]
@@ -240,7 +267,10 @@ export const locationsLib = {
         ],
         exploration: {
             playerCountLimit: 3,
-            playerLevelLimit: 7,
+            playerLevelLimit: 9,
+            dominantElement: {element: "grass", chance: 0.8},
+            dominantShape: {shape: "reptile", chance: 0.7},
+            dominantEmotion: {emotion: "hope", chance: 0.5},
             variants: [
                 {
                     chance: 0.7,
@@ -259,8 +289,16 @@ export const locationsLib = {
                         enemyCount: [2, 2],
                         enemyLevel: [4, 5],
                         type: 'exploration_battle',
-                        comment: '25%: 1 существо + 1 элит (ур. 4-5)',
-                        enemies: [{rarity: 'rare'}]
+                        comment: '25%: 1 существо + 1 редкий (ур. 4-5)',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                element: "grass",
+                                shape: "reptile",
+                                emotion: "hope",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
@@ -270,8 +308,22 @@ export const locationsLib = {
                         enemyCount: [4, 4],
                         enemyLevel: [2, 4],
                         type: 'exploration_battle',
-                        comment: '5%: 4 существа элит (ур. 2-4)',
-                        enemies: [{rarity: 'rare'},{rarity: 'rare'},{rarity: 'rare'},{rarity: 'rare'}]
+                        comment: '5%: 4 существа редкий (ур. 2-4)',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                element: "grass",
+                                shape: "reptile",
+                                emotion: "hope",
+                                rarity: "rare"
+                            },
+                            {
+                                count: [1, 3],
+                                element: "grass",
+                                shape: "reptile",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
             ]
@@ -296,6 +348,9 @@ export const locationsLib = {
         exploration: {
             playerCountLimit: 5,
             playerLevelLimit: 15,
+            dominantElement: {element: "grass", chance: 0.8},
+            dominantShape: {shape: "reptile", chance: 0.7},
+            dominantEmotion: {emotion: "passion", chance: 0.6},
             variants: [
                 {
                     chance: 0.6,
@@ -311,20 +366,44 @@ export const locationsLib = {
                     chance: 0.3,
                     type: 'battle',
                     config: {
-                        enemyCount: [3, 3],
+                        enemyCount: [6, 6],
                         enemyLevel: [9, 10],
                         type: 'exploration_battle',
-                        comment: '30%: 3 элита (ур. 9-10)'
+                        comment: '30%: 6 существ: 3 редких (ур. 9-10)',
+                        composition: [
+                            {
+                                count: [3, 3],
+                                element: "grass",
+                                shape: "reptile",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.1,
+                    disabled: true,
                     type: 'battle',
                     config: {
-                        enemyCount: [1, 1],
+                        enemyCount: [6, 6],
                         enemyLevel: [12, 12],
                         type: 'exploration_battle',
-                        comment: '10%: 1 уникальный (ур. 12)'
+                        comment: '10% | 6 существ: 1 эпически, 3 редких | ур. 12',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                element: "grass",
+                                shape: "reptile",
+                                emotion: "passion",
+                                rarity: "epic"
+                            },
+                            {
+                                count: [3, 3],
+                                element: "grass",
+                                shape: "reptile",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
             ]
@@ -357,6 +436,9 @@ export const locationsLib = {
         exploration: {
             playerCountLimit: 4,
             playerLevelLimit: 9,
+            dominantElement: {element: "fire", chance: 0.8},
+            dominantShape: {shape: "bird", chance: 0.7},
+            dominantEmotion: {emotion: "passion", chance: 0.6},
             variants: [
                 {
                     chance: 0.6,
@@ -375,7 +457,17 @@ export const locationsLib = {
                         enemyCount: [2, 2],
                         enemyLevel: [6, 6],
                         type: 'exploration_battle',
-                        comment: '30%: 2 элита (ур. 6)'
+                        comment: '30%: 2-2 существа (ур. 6), 1 редкий',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                level: [6, 6],
+                                element: "fire",
+                                shape: "bird",
+                                emotion: "passion",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
@@ -385,7 +477,21 @@ export const locationsLib = {
                         enemyCount: [3, 3],
                         enemyLevel: [3, 7],
                         type: 'exploration_battle',
-                        comment: '10%: 1 сильный + 2 обычных (ур. 7/3)'
+                        comment: '10%: 1 редкий + 2 обычных (ур. 7/3-7)',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                level: [7, 7],
+                                element: "fire",
+                                shape: "bird",
+                                emotion: "passion",
+                                rarity: "rare"
+                            },
+                            {
+                                count: [2, 2],
+                                level: [7, 7],
+                            },
+                        ],
                     }
                 },
             ]
@@ -414,6 +520,9 @@ export const locationsLib = {
         exploration: {
             playerCountLimit: 6,
             playerLevelLimit: 20,
+            dominantElement: {element: "fire", chance: 0.8},
+            dominantShape: {shape: "bird", chance: 0.7},
+            dominantEmotion: {emotion: "rage", chance: 0.6},
             variants: [
                 {
                     chance: 0.5,
@@ -429,20 +538,44 @@ export const locationsLib = {
                     chance: 0.4,
                     type: 'battle',
                     config: {
-                        enemyCount: [4, 4],
+                        enemyCount: [6, 6],
                         enemyLevel: [14, 15],
                         type: 'exploration_battle',
-                        comment: '40%: 4 элита (ур. 14-15)'
+                        comment: '40%: 6 существ, 4 редких (ур. 14-15)',
+                        composition: [
+                            {
+                                count: [4, 4],
+                                element: "fire",
+                                shape: "bird",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.1,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [1, 1],
                         enemyLevel: [18, 18],
                         type: 'exploration_battle',
-                        comment: '10%: 1 уникальный (ур. 18)'
+                        comment: '10% | 6 существ: 1 эпически, 3 редких | ур. 18-18',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                element: "fire",
+                                shape: "bird",
+                                emotion: "rage",
+                                rarity: "legendary"
+                            },
+                            {
+                                count: [3, 3],
+                                element: "fire",
+                                shape: "bird",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
             ]
@@ -475,27 +608,35 @@ export const locationsLib = {
                         enemyCount: [5, 6],
                         enemyLevel: [20, 22],
                         type: 'exploration_battle',
-                        comment: '50%: 5-6 существ (ур. 20-22)'
+                        comment: '50%: 5-6 существ (ур. 20-22)',
+                        composition: [
+                            {
+                                count: [6, 6],
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.4,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [4, 4],
                         enemyLevel: [23, 24],
                         type: 'exploration_battle',
-                        comment: '40%: 4 уникальных (ур. 23-24)'
+                        comment: '40%: 4 эпических (ур. 23-24)'
                     }
                 },
                 {
                     chance: 0.1,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [1, 1],
                         enemyLevel: [25, 25],
                         type: 'exploration_battle',
-                        comment: '10%: 1 легендарный (ур. 25)'
+                        comment: '10%: 1 минибосс (ур. 25)'
                     }
                 },
             ]
@@ -522,6 +663,9 @@ export const locationsLib = {
         exploration: {
             playerCountLimit: 6,
             playerLevelLimit: 19,
+            dominantElement: {element: "grass", chance: 0.8},
+            dominantShape: {shape: "bird", chance: 0.7},
+            dominantEmotion: {emotion: "rage", chance: 0.6},
             variants: [
                 {
                     chance: 0.4,
@@ -540,17 +684,41 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [14, 16],
                         type: 'exploration_battle',
-                        comment: '40% | 6 существ | ур. 14-16'
+                        comment: '40% | 6 существ, 3 редких | ур. 14-16',
+                        composition: [
+                            {
+                                count: [3, 3],
+                                element: "grass",
+                                shape: "bird",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.2,
+                    disabled: true,
                     type: 'battle',
                     config: {
-                        enemyCount: [1, 1],
+                        enemyCount: [6, 6],
                         enemyLevel: [15, 17],
                         type: 'exploration_battle',
-                        comment: '20% | 4 существа| ур. 15-17'
+                        comment: '5% | 6 существ: 1 эпически, 3 редких | ур. 15-17',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                element: "grass",
+                                shape: "bird",
+                                emotion: "rage",
+                                rarity: "legendary"
+                            },
+                            {
+                                count: [3, 3],
+                                element: "grass",
+                                shape: "bird",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
             ]
@@ -575,6 +743,9 @@ export const locationsLib = {
         exploration: {
             playerCountLimit: 6,
             playerLevelLimit: 30,
+            dominantElement: {element: "water", chance: 0.8},
+            dominantShape: {shape: "reptile", chance: 0.7},
+            dominantEmotion: {emotion: "rage", chance: 0.6},
             variants: [
                 {
                     chance: 0.7,
@@ -583,11 +754,18 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [26, 28],
                         type: 'exploration_battle',
-                        comment: '70%: 6 существ (ур. 26-28)'
+                        comment: '70%: 6 существ (ур. 26-28)',
+                        composition: [
+                            {
+                                count: [6, 6],
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.25,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [3, 3],
@@ -598,6 +776,7 @@ export const locationsLib = {
                 },
                 {
                     chance: 0.05,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [1, 1],
@@ -646,16 +825,19 @@ export const locationsLib = {
         ],
         exploration: {
             playerCountLimit: 6,
-            playerLevelLimit: 14,
+            playerLevelLimit: 9,
+            dominantElement: {element: "fire", chance: 0.8},
+            dominantShape: {shape: "reptile", chance: 0.7},
+            dominantEmotion: {emotion: "rage", chance: 0.6},
             variants: [
                 {
                     chance: 0.4,
                     type: 'battle',
                     config: {
                         enemyCount: [5, 5],
-                        enemyLevel: [8, 10],
+                        enemyLevel: [8, 9],
                         type: 'exploration_battle',
-                        comment: '40% | 5 существ | ур. 8-10 | игрок: до 5 сущ., макс. ур. 12\n'
+                        comment: '40% | 5 существ | ур. 8-9'
                     }
                 },
                 {
@@ -663,9 +845,19 @@ export const locationsLib = {
                     type: 'battle',
                     config: {
                         enemyCount: [6, 6],
-                        enemyLevel: [9, 11],
+                        enemyLevel: [9, 9],
                         type: 'exploration_battle',
-                        comment: '40% | 6 существ | ур. 9-11 | игрок: до 6 сущ., макс. ур. 13'
+                        comment: '40% | 6 существ | ур. 9',
+                        composition: [
+                            {
+                                count: [1, 2],
+                                level: [9, 9],
+                                element: "fire",
+                                shape: "reptile",
+                                emotion: "rage",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
@@ -673,9 +865,26 @@ export const locationsLib = {
                     type: 'battle',
                     config: {
                         enemyCount: [4, 4],
-                        enemyLevel: [10, 12],
+                        enemyLevel: [9, 9],
                         type: 'exploration_battle',
-                        comment: '20% | 4 существа| ур. 10-12| игрок: до 4 сущ., макс. ур. 14'
+                        comment: '20% | 4 существа| ур. 9, 3 редкие',
+                        composition: [
+                            {
+                                count: [2, 2],
+                                level: [9, 9],
+                                element: "fire",
+                                shape: "reptile",
+                                emotion: "rage",
+                                rarity: "rare"
+                            },
+                            {
+                                count: [1, 1],
+                                level: [9, 9],
+                                element: "fire",
+                                shape: "reptile",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
             ]
@@ -711,7 +920,10 @@ export const locationsLib = {
         ],
         exploration: {
             playerCountLimit: 5,
-            playerLevelLimit: 10,
+            playerLevelLimit: 9,
+            dominantElement: {element: "water", chance: 0.8},
+            dominantShape: {shape: "bird", chance: 0.7},
+            dominantEmotion: {emotion: "rage", chance: 0.6},
             variants: [
                 {
                     chance: 0.5,
@@ -720,7 +932,7 @@ export const locationsLib = {
                         enemyCount: [4, 4],
                         enemyLevel: [5, 7],
                         type: 'exploration_battle',
-                        comment: '50% | 4 существа | ур. 5-7 | игрок: до 4 сущ., макс. ур. 9'
+                        comment: '50% | 4 существа | ур. 5-7'
                     }
                 },
                 {
@@ -730,7 +942,16 @@ export const locationsLib = {
                         enemyCount: [5, 5],
                         enemyLevel: [6, 8],
                         type: 'exploration_battle',
-                        comment: '30% | 5 существ  | ур. 6-8 | игрок: до 5 сущ., макс. ур. 10'
+                        comment: '30% | 5 существ (ур. 6-8), 2 редких',
+                        composition: [
+                            {
+                                count: [2, 2],
+                                element: "water",
+                                shape: "bird",
+                                emotion: "rage",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
@@ -740,7 +961,16 @@ export const locationsLib = {
                         enemyCount: [3, 3],
                         enemyLevel: [7, 8],
                         type: 'exploration_battle',
-                        comment: '20% | 3 существа | ур. 7-8 | игрок: до 3 сущ., макс. ур. 10'
+                        comment: '20% | 3 существа | ур. 7-9',
+                        composition: [
+                            {
+                                count: [2, 3],
+                                element: "water",
+                                shape: "bird",
+                                emotion: "rage",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
             ]
@@ -761,6 +991,9 @@ export const locationsLib = {
         exploration: {
             playerCountLimit: 6,
             playerLevelLimit: 28,
+            dominantElement: {element: "grass", chance: 0.8},
+            dominantShape: {shape: "reptile", chance: 0.7},
+            dominantEmotion: {emotion: "rage", chance: 0.6},
             variants: [
                 {
                     chance: 0.6,
@@ -769,27 +1002,29 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [21, 23],
                         type: 'exploration_battle',
-                        comment: '60%: 6 существ (ур. 21-23) | Игрок: до 6 сущ. (макс. ур. 25)'
+                        comment: '60%: 6 редких существ (ур. 21-23)'
                     }
                 },
                 {
                     chance: 0.3,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [5, 5],
                         enemyLevel: [22, 24],
                         type: 'exploration_battle',
-                        comment: '30%: 3 элита + 2 уникальных (ур. 24/22) | Игрок: до 5 сущ. (макс. ур. 27)'
+                        comment: '30%: 3 эпических + 2 редких (ур. 24/22)'
                     }
                 },
                 {
                     chance: 0.1,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [1, 1],
                         enemyLevel: [26, 26],
                         type: 'exploration_battle',
-                        comment: '10%: 1 босс (ур. 26) | Игрок: до 4 сущ. (макс. ур. 28)'
+                        comment: '10%: 1 минибосс (ур. 26)'
                     }
                 },
             ]
@@ -857,6 +1092,9 @@ export const locationsLib = {
         exploration: {
             playerCountLimit: 3,
             playerLevelLimit: 7,
+            dominantElement: {element: "water", chance: 0.8},
+            dominantShape: {shape: "reptile", chance: 1},
+            dominantEmotion: {emotion: "passion", chance: 0.6},
             variants: [
                 {
                     chance: 0.7,
@@ -865,27 +1103,51 @@ export const locationsLib = {
                         enemyCount: [5, 5],
                         enemyLevel: [7, 9],
                         type: 'exploration_battle',
-                        comment: '70%: 5 существ (ур. 7-9) | Игрок: до 5 сущ. (макс. ур. 11)'
+                        comment: '70%: 5 существ (ур. 7-9)'
                     }
                 },
                 {
                     chance: 0.25,
                     type: 'battle',
                     config: {
-                        enemyCount: [4, 4],
+                        enemyCount: [6, 6],
                         enemyLevel: [8, 10],
                         type: 'exploration_battle',
-                        comment: '25%: 3 сильных + 1 элит (ур. 10/8) | Игрок: до 4 сущ. (макс. ур. 13)'
+                        comment: '25% | 6 существ | ур. 8-10, 3 редких',
+                        composition: [
+                            {
+                                count: [3, 3],
+                                element: "water",
+                                shape: "reptile",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.05,
+                    disabled: true,
                     type: 'battle',
                     config: {
-                        enemyCount: [2, 2],
+                        enemyCount: [6, 6],
                         enemyLevel: [12, 12],
                         type: 'exploration_battle',
-                        comment: '5%: 2 уникальных (ур. 12) | Игрок: до 3 сущ. (макс. ур. 14)'
+                        comment: '5%: 6 существ, 1 эпический, 3 редких (ур. 12)',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                element: "water",
+                                shape: "reptile",
+                                emotion: "passion",
+                                rarity: "epic"
+                            },
+                            {
+                                count: [3, 3],
+                                element: "water",
+                                shape: "reptile",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
             ]
@@ -910,6 +1172,9 @@ export const locationsLib = {
         exploration: {
             playerCountLimit: 6,
             playerLevelLimit: 20,
+            dominantElement: {element: "grass", chance: 0.8},
+            dominantShape: {shape: "beast", chance: 0.7},
+            dominantEmotion: {emotion: "hope", chance: 0.5},
             variants: [
                 {
                     chance: 0.6,
@@ -918,7 +1183,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [12, 14],
                         type: 'exploration_battle',
-                        comment: '60%: 6 существ (ур. 12-14) | Игрок: до 6 сущ. (макс. ур. 16)'
+                        comment: '60%: 6 существ (ур. 12-14)'
                     }
                 },
                 {
@@ -928,17 +1193,24 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [13, 15],
                         type: 'exploration_battle',
-                        comment: '30%: 3 сильных + 3 элита (ур. 15/13) | Игрок: до 6 сущ. (макс. ур. 18)'
+                        comment: '30%: 6 cуществ + 3 редких (ур. 15/13)',
+                        composition: [
+                            {
+                                count: [3, 3],
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.1,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [2, 2],
                         enemyLevel: [17, 17],
                         type: 'exploration_battle',
-                        comment: '10%: 2 уникальных (ур. 17) | Игрок: до 4 сущ. (макс. ур. 20)'
+                        comment: '10%: 1 легендарный (ур. 17)'
                     }
                 },
             ]
@@ -965,6 +1237,9 @@ export const locationsLib = {
         exploration: {
             playerCountLimit: 6,
             playerLevelLimit: 22,
+            dominantElement: {element: "fire", chance: 0.8},
+            dominantShape: {shape: "beast", chance: 0.7},
+            dominantEmotion: {emotion: "passion", chance: 0.6},
             variants: [
                 {
                     chance: 0.7,
@@ -973,7 +1248,13 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [13, 15],
                         type: 'exploration_battle',
-                        comment: '70%: 6 существ (ур. 13-15) | Игрок: до 6 сущ. (макс. ур. 17)'
+                        comment: '70%: 6 редких существ (ур. 13-15)',
+                        composition: [
+                            {
+                                count: [6, 6],
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
@@ -983,17 +1264,41 @@ export const locationsLib = {
                         enemyCount: [4, 4],
                         enemyLevel: [16, 17],
                         type: 'exploration_battle',
-                        comment: '25%: 4 элита (ур. 16-17) | Игрок: до 5 сущ. (макс. ур. 19)'
+                        comment: '25%: 4 эпических (ур. 16-17)',
+                        composition: [
+                            {
+                                count: [3, 3],
+                                element: "fire",
+                                shape: "beast",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.05,
+                    disabled: true,
                     type: 'battle',
                     config: {
-                        enemyCount: [1, 1],
-                        enemyLevel: [20, 20],
+                        enemyCount: [6, 6],
+                        enemyLevel: [19, 19],
                         type: 'exploration_battle',
-                        comment: '5%: 1 босс-миньон (ур. 20) | Игрок: до 3 сущ. (макс. ур. 22)'
+                        comment: '5% | минибос | ур. 19',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                element: "fire",
+                                shape: "beast",
+                                emotion: "passion",
+                                rarity: "legendary"
+                            },
+                            {
+                                count: [3, 3],
+                                element: "fire",
+                                shape: "beast",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
             ]
@@ -1016,6 +1321,9 @@ export const locationsLib = {
         exploration: {
             playerCountLimit: 6,
             playerLevelLimit: 30,
+            dominantElement: {element: "fire", chance: 0.8},
+            dominantShape: {shape: "reptile", chance: 0.7},
+            dominantEmotion: {emotion: "passion", chance: 0.6},
             variants: [
                 {
                     chance: 0.7,
@@ -1024,27 +1332,29 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [22, 24],
                         type: 'exploration_battle',
-                        comment: '70%: 6 существ (ур. 22-24) | Игрок: до 6 сущ. (макс. ур. 26)'
+                        comment: '70%: 6 существ (ур. 22-24)'
                     }
                 },
                 {
                     chance: 0.3,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [4, 4],
                         enemyLevel: [25, 26],
                         type: 'exploration_battle',
-                        comment: '25%: 4 уникальных (ур. 25-26) | Игрок: до 5 сущ. (макс. ур. 28)'
+                        comment: '25%: 4 эпических (ур. 25-26)'
                     }
                 },
                 {
                     chance: 0.05,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [1, 1],
                         enemyLevel: [28, 28],
                         type: 'exploration_battle',
-                        comment: '5%: 1 финальный босс-миньон (ур. 28) | Игрок: до 3 сущ. (макс. ур. 30)'
+                        comment: '5%: 1 мини бос (ур. 28)'
                     }
                 },
             ]
@@ -1072,36 +1382,63 @@ export const locationsLib = {
         ],
         exploration: {
             playerCountLimit: 6,
-            playerLevelLimit: 30,
+            playerLevelLimit: 15,
+            dominantElement: {element: "water", chance: 0.8},
+            dominantShape: {shape: "bird", chance: 0.7},
+            dominantEmotion: {emotion: "passion", chance: 0.6},
             variants: [
                 {
                     chance: 0.7,
                     type: 'battle',
                     config: {
-                        enemyCount: [6, 6],
-                        enemyLevel: [22, 24],
+                        enemyCount: [5, 5],
+                        enemyLevel: [8, 10],
                         type: 'exploration_battle',
-                        comment: '70%: 6 существ (ур. 22-24) | Игрок: до 6 сущ. (макс. ур. 26)'
+                        comment: '70% | 5 существ | ур. 8-10'
                     }
                 },
                 {
-                    chance: 0.3,
+                    chance: 0.25,
                     type: 'battle',
                     config: {
-                        enemyCount: [4, 4],
-                        enemyLevel: [25, 26],
+                        enemyCount: [6, 6],
+                        enemyLevel: [9, 11],
                         type: 'exploration_battle',
-                        comment: '25%: 4 уникальных (ур. 25-26) | Игрок: до 5 сущ. (макс. ур. 28)'
+                        comment: '25% | 6 существ | ур. 9-11, 3 редких',
+                        composition: [
+                            {
+                                count: [3, 3],
+                                element: "water",
+                                shape: "bird",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.05,
+                    disabled: true,
                     type: 'battle',
                     config: {
-                        enemyCount: [1, 1],
-                        enemyLevel: [28, 28],
+                        enemyCount: [6, 6],
+                        enemyLevel: [10, 12],
                         type: 'exploration_battle',
-                        comment: '5%: 1 финальный босс-миньон (ур. 28) | Игрок: до 3 сущ. (макс. ур. 30)'
+                        comment: '5% | 6 существ: 1 эпически, 3 редких | ур. 10-12',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                element: "water",
+                                shape: "bird",
+                                emotion: "passion",
+                                rarity: "epic"
+                            },
+                            {
+                                count: [3, 3],
+                                element: "water",
+                                shape: "bird",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
             ]
@@ -1123,6 +1460,9 @@ export const locationsLib = {
         exploration: {
             playerCountLimit: 6,
             playerLevelLimit: 26,
+            dominantElement: {element: "water", chance: 0.8},
+            dominantShape: {shape: "bird", chance: 0.7},
+            dominantEmotion: {emotion: "hope", chance: 0.5},
             variants: [
                 {
                     chance: 0.7,
@@ -1131,27 +1471,35 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [18, 20],
                         type: 'exploration_battle',
-                        comment: '70%: 6 существ (ур. 18-20) | Игрок: до 6 сущ. (макс. ур. 22)'
+                        comment: '70%: 6 существ (ур. 18-20)',
+                        composition: [
+                            {
+                                count: [6, 6],
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.25,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [5, 5],
                         enemyLevel: [19, 21],
                         type: 'exploration_battle',
-                        comment: '25%: 3 сильных + 2 элита (ур. 21/19) | Игрок: до 5 сущ. (макс. ур. 24)'
+                        comment: '25%: 3 эпических + 2 редких (ур. 21/19)'
                     }
                 },
                 {
                     chance: 0.05,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [1, 1],
                         enemyLevel: [23, 23],
                         type: 'exploration_battle',
-                        comment: '5%: 1 уникальный босс (ур. 23) | Игрок: до 3 сущ. (макс. ур. 26)'
+                        comment: '5%: 1 минибосс (ур. 23)'
                     }
                 },
             ]
@@ -1171,6 +1519,9 @@ export const locationsLib = {
         exploration: {
             playerCountLimit: 6,
             playerLevelLimit: 25,
+            dominantElement: {element: "water", chance: 0.8},
+            dominantShape: {shape: "beast", chance: 0.7},
+            dominantEmotion: {emotion: "rage", chance: 0.6},
             variants: [
                 {
                     chance: 0.5,
@@ -1179,27 +1530,51 @@ export const locationsLib = {
                         enemyCount: [5, 6],
                         enemyLevel: [14, 16],
                         type: 'exploration_battle',
-                        comment: '50%: 5-6 существ (ур. 14-16) | Игрок: до 6 сущ. (макс. ур. 18)'
+                        comment: '50%: 5-6 существ (ур. 14-16)'
                     }
                 },
                 {
                     chance: 0.4,
                     type: 'battle',
                     config: {
-                        enemyCount: [3, 3],
+                        enemyCount: [6, 6],
                         enemyLevel: [17, 18],
                         type: 'exploration_battle',
-                        comment: '40%: 3 уникальных (ур. 17-18) | Игрок: до 4 сущ. (макс. ур. 20)'
+                        comment: '40%: 6 существ, 3 редких (ур. 17-18)',
+                        composition: [
+                            {
+                                count: [3, 3],
+                                element: "water",
+                                shape: "beast",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.1,
+                    disabled: true,
                     type: 'battle',
                     config: {
-                        enemyCount: [1, 1],
+                        enemyCount: [6, 6],
                         enemyLevel: [19, 19],
                         type: 'exploration_battle',
-                        comment: '10%: 1 легендарный миньон (ур. 19) | Игрок: до 2 сущ. (макс. ур. 25)'
+                        comment: '5% | 6 существ: 1 эпически, 3 редких | ур. 19',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                element: "water",
+                                shape: "beast",
+                                emotion: "rage",
+                                rarity: "legendary"
+                            },
+                            {
+                                count: [3, 3],
+                                element: "water",
+                                shape: "beast",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
             ]
@@ -1221,6 +1596,9 @@ export const locationsLib = {
         exploration: {
             playerCountLimit: 6,
             playerLevelLimit: 30,
+            dominantElement: {element: "fire", chance: 0.8},
+            dominantShape: {shape: "beast", chance: 0.7},
+            dominantEmotion: {emotion: "hope", chance: 0.5},
             variants: [
                 {
                     chance: 0.5,
@@ -1229,27 +1607,35 @@ export const locationsLib = {
                         enemyCount: [5, 6],
                         enemyLevel: [24, 26],
                         type: 'exploration_battle',
-                        comment: '50%: 5-6 существ (ур. 24-26) | Игрок: до 6 сущ. (макс. ур. 28)'
+                        comment: '50%: 5-6 существ (ур. 24-26)',
+                        composition: [
+                            {
+                                count: [6, 6],
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.4,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [5, 5],
                         enemyLevel: [25, 27],
                         type: 'exploration_battle',
-                        comment: '40%: 3 уникальных + 2 элита (ур. 27/25) | Игрок: до 5 сущ. (макс. ур. 29)/22) | Игрок: до 5 сущ. (макс. ур. 27)'
+                        comment: '40%: 3 легенд + 2 редких (ур. 27/25)'
                     }
                 },
                 {
                     chance: 0.1,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [1, 1],
                         enemyLevel: [29, 29],
                         type: 'exploration_battle',
-                        comment: '10%: 1 легендарный босс (ур. 29) | Игрок: до 4 сущ. (макс. ур. 30)'
+                        comment: '10%: 1 босс (ур. 29)'
                     }
                 },
             ]
@@ -1270,8 +1656,11 @@ export const locationsLib = {
             {id: 'whispers_grove', label: 'Роща Шепотов'},
         ],
         exploration: {
-            playerCountLimit: 3,
-            playerLevelLimit: 7,
+            playerCountLimit: 4,
+            playerLevelLimit: 15,
+            dominantElement: {element: "water", chance: 0.8},
+            dominantShape: {shape: "reptile", chance: 0.7},
+            dominantEmotion: {emotion: "hope", chance: 0.5},
             variants: [
                 {
                     chance: 0.5,
@@ -1280,7 +1669,7 @@ export const locationsLib = {
                         enemyCount: [4, 4],
                         enemyLevel: [5, 7],
                         type: 'exploration_battle',
-                        comment: '50%: 4 существа (ур. 5-7) | Игрок: до 4 сущ. (макс. ур. 9)'
+                        comment: '50%: 4 существа (ур. 5-7)'
                     }
                 },
                 {
@@ -1290,17 +1679,48 @@ export const locationsLib = {
                         enemyCount: [3, 3],
                         enemyLevel: [8, 10],
                         type: 'exploration_battle',
-                        comment: '40%: 3 элита (ур. 8-10) | Игрок: до 4 сущ. (макс. ур. 12)'
+                        comment: '40%: 3 редких (ур. 8-10)',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                element: "water",
+                                shape: "reptile",
+                                emotion: "hope",
+                                rarity: "rare"
+                            },
+                            {
+                                count: [2, 2],
+                                element: "water",
+                                shape: "reptile",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.1,
+                    disabled: true,
                     type: 'battle',
                     config: {
-                        enemyCount: [1, 1],
+                        enemyCount: [4, 4],
                         enemyLevel: [11, 11],
                         type: 'exploration_battle',
-                        comment: '10%: 1 босс-миньон (ур. 11) | Игрок: до 2 сущ. (макс. ур. 14)'
+                        comment: '10%: 1 эпический и 3 редких',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                element: "water",
+                                shape: "reptile",
+                                emotion: "hope",
+                                rarity: "epic"
+                            },
+                            {
+                                count: [3, 3],
+                                element: "water",
+                                shape: "reptile",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
             ]
@@ -1319,8 +1739,11 @@ export const locationsLib = {
             {id: 'bottomless_dreams_lake', label: 'Озеро Бездонных Снов'},
         ],
         exploration: {
-            playerCountLimit: 3,
+            playerCountLimit: 6,
             playerLevelLimit: 7,
+            dominantElement: {element: "grass", chance: 0.8},
+            dominantShape: {shape: "beast", chance: 0.7},
+            dominantEmotion: {emotion: "rage", chance: 0.6},
             variants: [
                 {
                     chance: 0.6,
@@ -1329,7 +1752,7 @@ export const locationsLib = {
                         enemyCount: [5, 6],
                         enemyLevel: [8, 10],
                         type: 'exploration_battle',
-                        comment: '60%: 5-6 существ (ур. 8-10) | Игрок: до 6 сущ. (макс. ур. 12)'
+                        comment: '60%: 5-6 существ (ур. 8-10)'
                     }
                 },
                 {
@@ -1339,17 +1762,48 @@ export const locationsLib = {
                         enemyCount: [4, 4],
                         enemyLevel: [11, 12],
                         type: 'exploration_battle',
-                        comment: '30%: 4 элита (ур. 11-12) | Игрок: до 5 сущ. (макс. ур. 14)'
+                        comment: '30%: 4 редких (ур. 11-12)',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                element: "grass",
+                                shape: "beast",
+                                emotion: "rage",
+                                rarity: "rare"
+                            },
+                            {
+                                count: [3, 3],
+                                element: "grass",
+                                shape: "beast",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.1,
+                    disabled: true,
                     type: 'battle',
                     config: {
-                        enemyCount: [2, 2],
+                        enemyCount: [6, 6],
                         enemyLevel: [13, 13],
                         type: 'exploration_battle',
-                        comment: '10%: 2 уникальных (ур. 13) | Игрок: до 3 сущ. (макс. ур. 16)'
+                        comment: '1% | 6 существ: 1 эпически, 3 редких | ур. 13-13',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                element: "grass",
+                                shape: "beast",
+                                emotion: "rage",
+                                rarity: "epic"
+                            },
+                            {
+                                count: [3, 3],
+                                element: "grass",
+                                shape: "beast",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
             ]
@@ -1368,7 +1822,10 @@ export const locationsLib = {
         ],
         exploration: {
             playerCountLimit: 6,
-            playerLevelLimit: 24,
+            playerLevelLimit: 29,
+            dominantElement: {element: "water", chance: 0.8},
+            dominantShape: {shape: "beast", chance: 0.7},
+            dominantEmotion: {emotion: "passion", chance: 0.6},
             variants: [
                 {
                     chance: 0.6,
@@ -1377,27 +1834,35 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [16, 18],
                         type: 'exploration_battle',
-                        comment: '60%: 6 существ (ур. 16-18) | Игрок: до 6 сущ. (макс. ур. 20)'
+                        comment: '60%: 6 редких существ (ур. 16-18)',
+                        composition: [
+                            {
+                                count: [6, 6],
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.3,
+                    disabled: true,
                     type: 'battle',
                     config: {
-                        enemyCount: [4, 4],
+                        enemyCount: [6, 6],
                         enemyLevel: [19, 20],
                         type: 'exploration_battle',
-                        comment: '30%: 4 элита (ур. 19-20) | Игрок: до 5 сущ. (макс. ур. 22)'
+                        comment: '30%: 4 эпических (ур. 19-20)'
                     }
                 },
                 {
                     chance: 0.1,
+                    disabled: true,
                     type: 'battle',
                     config: {
-                        enemyCount: [2, 2],
+                        enemyCount: [6, 6],
                         enemyLevel: [22, 22],
                         type: 'exploration_battle',
-                        comment: '10%: 2 уникальных (ур. 22) | Игрок: до 4 сущ. (макс. ур. 24)'
+                        comment: '10%: минибосс (ур. 22)'
                     }
                 },
             ]
@@ -1417,7 +1882,10 @@ export const locationsLib = {
         ],
         exploration: {
             playerCountLimit: 6,
-            playerLevelLimit: 18,
+            playerLevelLimit: 15,
+            dominantElement: {element: "fire", chance: 0.8},
+            dominantShape: {shape: "beast", chance: 0.7},
+            dominantEmotion: {emotion: "rage", chance: 0.6},
             variants: [
                 {
                     chance: 0.7,
@@ -1426,7 +1894,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [9, 11],
                         type: 'exploration_battle',
-                        comment: '70%: 6 существ (ур. 9-11) | Игрок: до 6 сущ. (макс. ур. 13)'
+                        comment: '70%: 6 существ (ур. 9-11)'
                     }
                 },
                 {
@@ -1436,17 +1904,48 @@ export const locationsLib = {
                         enemyCount: [5, 5],
                         enemyLevel: [10, 12],
                         type: 'exploration_battle',
-                        comment: '25%: 3 сильных + 2 элита (ур. 12/10) | Игрок: до 5 сущ. (макс. ур. 15)'
+                        comment: '25%: 3 редких (ур. 10-12)',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                element: "fire",
+                                shape: "beast",
+                                emotion: "rage",
+                                rarity: "rare"
+                            },
+                            {
+                                count: [2, 2],
+                                element: "fire",
+                                shape: "beast",
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.05,
+                    disabled: true,
                     type: 'battle',
                     config: {
-                        enemyCount: [1, 1],
+                        enemyCount: [6, 6],
                         enemyLevel: [14, 14],
                         type: 'exploration_battle',
-                        comment: '5%: 1 босс-миньон (ур. 14) | Игрок: до 2 сущ. (макс. ур. 18)'
+                        comment: '5%: 6 существ, 1 эпический, 3 редких',
+                        composition: [
+                            {
+                                count: [1, 1],
+                                element: "fire",
+                                shape: "beast",
+                                emotion: "rage",
+                                rarity: "epic"
+                            },
+                            {
+                                count: [3, 3],
+                                element: "fire",
+                                shape: "beast",
+                                rarity: "rare"
+                            },
+                        ]
                     }
                 },
             ]
@@ -1481,6 +1980,9 @@ export const locationsLib = {
         exploration: {
             playerCountLimit: 6,
             playerLevelLimit: 30,
+            dominantElement: {element: "grass", chance: 0.8},
+            dominantShape: {shape: "bird", chance: 0.7},
+            dominantEmotion: {emotion: "passion", chance: 0.6},
             variants: [
                 {
                     chance: 0.6,
@@ -1489,27 +1991,35 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [25, 27],
                         type: 'exploration_battle',
-                        comment: '60%: 6 существ (ур. 25-27) | Игрок: до 6 сущ. (макс. ур. 29)'
+                        comment: '60%: 6 существ (ур. 25-27)',
+                        composition: [
+                            {
+                                count: [6, 6],
+                                rarity: "rare"
+                            },
+                        ],
                     }
                 },
                 {
                     chance: 0.3,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [4, 4],
                         enemyLevel: [28, 29],
                         type: 'exploration_battle',
-                        comment: '30%: 4 уникальных (ур. 28-29) | Игрок: до 5 сущ. (макс. ур. 30)'
+                        comment: '30%: 4 эпич (ур. 28-29)'
                     }
                 },
                 {
                     chance: 0.1,
+                    disabled: true,
                     type: 'battle',
                     config: {
                         enemyCount: [1, 1],
                         enemyLevel: [30, 30],
                         type: 'exploration_battle',
-                        comment: '10%: 1 архетип (ур. 30) | Игрок: до 3 сущ. (макс. ур. 30)'
+                        comment: '10%: 1 босс (ур. 30)'
                     }
                 },
             ]

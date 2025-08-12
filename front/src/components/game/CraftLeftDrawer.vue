@@ -19,6 +19,7 @@ const shardGroups = computed(() => {
 const totalShards = computed(() => gameStore.inventoryShards.length);
 const commonCount = computed(() => gameStore.inventoryShards.filter(s => s.rarity === 'common').length);
 const rareCount = computed(() => gameStore.inventoryShards.filter(s => s.rarity === 'rare').length);
+const epicCount = computed(() => gameStore.inventoryShards.filter(s => s.rarity === 'epic').length);
 const legendaryCount = computed(() => gameStore.inventoryShards.filter(s => s.rarity === 'legendary').length);
 
 // Выбор осколка
@@ -94,7 +95,8 @@ const groupTitles = {
                 <div>Всего: {{ totalShards }}</div>
                 <div>Обычн: {{ commonCount }}</div>
                 <div>Редк: {{ rareCount }}</div>
-                <div>Легенд: {{ legendaryCount }}</div>
+                <div>Эпик: {{ rareCount }}</div>
+                <div>Лег: {{ legendaryCount }}</div>
             </div>
         </div>
     </div>
