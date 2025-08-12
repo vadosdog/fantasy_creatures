@@ -44,6 +44,8 @@ export class Battle extends Scene {
         super('Battle');
         this.store = useBattleStore()
         this.hexagonsArray = new Map()
+        this.stopWatchEffect = null; // Добавляем свойство
+        this.sceneActive = true; // Добавляем флаг состояния
     }
 
     create() {
@@ -69,8 +71,10 @@ export class Battle extends Scene {
         this.resize(this.scale.gameSize);
 
         EventBus.emit('current-scene-ready', this);
+        this.stopWatchEffect = watchEffect(() => {
+            // Проверяем, что сцена еще активна
+            if (!this.sceneActive) return;
 
-        watchEffect(() => {
             const id = this.store.hoveredCreatureId;
             if (!id) {
                 this.hoveredCreature = null
@@ -927,7 +931,7 @@ export class Battle extends Scene {
     }
 
     handleCreatureHover(creature) {
-        if (!creature) return;
+        if (!creature || !this.sceneActive) return;
 
         // Зона перемещения
         const moveZone = this.store.getMoveablePositions(creature);
@@ -964,9 +968,9 @@ export class Battle extends Scene {
     }
 
     drawZoneOutline(positions, type) {
-        // Защита: убедимся, что сцена и рендерер инициализированы
-        if (!this.sys || !this.sys.game || !this.sys.game.renderer || !this.sys.game.isBooted) {
-            console.warn('Scene or renderer not ready, skipping drawZoneOutline');
+        // Проверяем флаг активности сцены
+        if (!this.sceneActive) {
+            console.warn('Scene inactive, skipping drawZoneOutline');
             return;
         }
         
@@ -979,7 +983,7 @@ export class Battle extends Scene {
 
         const style = {
             attack: {color: 0xF05050, width: 2, offset: 1.5},
-            move: {color: 0x3B82F6, width: 2, offset: 3},
+            move: {color: 0x66C7FF, width: 3, offset: 3},
             treat: {color: 0xC34FFC, width: 2, offset: 4.5},
             taunt: {color: 0xC34FFC, width: 2, offset: 4.5}
         }[type];
@@ -1003,6 +1007,8 @@ export class Battle extends Scene {
         // Рисуем все граничные стороны
         boundarySides.forEach(({pos, dirIndex}) => {
             const hex = this.hexagonsArray.get(pos.join(','));
+            // Добавляем проверку на существование гекса
+            if (!hex || hex.scene !== this) return;
             if (hex) {
                 const [p1, p2] = hex.getSidePoints(dirIndex, style.offset);
                 graphics.moveTo(p1.x, p1.y);
@@ -1032,6 +1038,12 @@ export class Battle extends Scene {
 
     clearZoneOutlines() {
         this.zoneOutlines.forEach(graphics => {
+            // Быстрое уничтожение без анимации при деактивации сцены
+            if (!this.sceneActive) {
+                graphics.destroy();
+                return;
+            }
+            
             this.tweens.add({
                 targets: graphics,
                 alpha: 0,
@@ -1045,6 +1057,18 @@ export class Battle extends Scene {
 
     safeDestroy() {
         try {
+            this.sceneActive = false;
+            // Добавляем отмену watchEffect
+            if (this.stopWatchEffect) {
+                this.stopWatchEffect();
+                this.stopWatchEffect = null;
+            }
+
+            this.game.events.off('before-destroy', this.safeDestroy, this);
+
+            // Уничтожаем графику зон
+            this.clearZoneOutlines();
+            
             // 1. Отписываемся от событий
             this.scale.off('resize', this.resize, this);
             this.input.off('pointermove', this.handleAttackDirection, this);
@@ -1053,7 +1077,6 @@ export class Battle extends Scene {
             this.tweens.tweens.forEach(tween => {
                 try {
                     tween.stop();
-                    tween.remove();
                 } catch (tweenError) {
                     console.warn('Error removing tween:', tweenError);
                 }
@@ -1124,6 +1147,14 @@ export class Battle extends Scene {
             };
 
             this.clearZoneOutlines()
+            if (this.zoneGraphics) {
+                this.zoneGraphics.destroy();
+                this.zoneGraphics = null;
+            }
+
+            // Явно удаляем обработчики событий
+            this.input.off('pointermove', this.handleAttackDirection, this);
+            this.scale.off('resize', this.resize, this);
         } catch (mainError) {
             console.error('Battle safeDestroy error:', mainError);
         }
