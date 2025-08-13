@@ -306,7 +306,7 @@ export default class Monster2Container extends Phaser.GameObjects.Container {
 
             const textureKey = effectKeys[effectName];
             if (textureKey && this.scene.textures.exists(textureKey)) {
-                effectIcon = this.scene.add.image(worldX + 20, worldY - 25, textureKey)
+                effectIcon = this.scene.add.image(20, -25, textureKey)
                     .setDisplaySize(16, 16) // размер иконки
                     .setOrigin(0.5)
                     .setAlpha(0)

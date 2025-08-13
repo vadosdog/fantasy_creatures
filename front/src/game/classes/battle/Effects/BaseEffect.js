@@ -103,7 +103,7 @@ export const EffectAPI = {
 
     getRoundEffect(effect) {
         switch (effect.effect) {
-            case 'bleed':
+            case 'freeze':
                 return 'Пропуск хода'
         }
         return false
