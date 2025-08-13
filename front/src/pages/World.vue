@@ -4,6 +4,7 @@ import {useGameStore} from '../store/game.js';
 import WorldLeftDrawer from "../components/game/WorldLeftDrawer.vue";
 import WorldRightDrawer from "../components/game/WorldRightDrawer.vue";
 import BattleStartDialog from "../components/game/BattleStartDialog.vue";
+import {getElementIcon, getEmotionIcon, getShapeIcon} from "../game/classes/iconHelper.js";
 
 const emit = defineEmits([
     'current-active-scene',
@@ -44,7 +45,7 @@ const startExplorationTimer = () => {
 
 function weightedRandomChoice(items) {
     if (!items || items.length === 0) return null;
-    
+
     items = items.filter(i => !i.disabled)
 
     // Суммируем все веса (chance)
@@ -145,10 +146,19 @@ function openStartBattleDialog(config) {
                     exploration.playerCountLimit
                 }}</b> существ уровня не выше
                 <b>{{ exploration.playerLevelLimit }}</b>.
-                <template v-if="exploration.creature_types && exploration.creature_types.length">
+                <div v-if="exploration.dominantElement
+                    || exploration.dominantShape
+                    || exploration.dominantEmotion"
+                >
+                    Во снах преобладают:
+                    <template v-if="exploration.dominantElement"><q-avatar size="xs"><img :src="getElementIcon(exploration.dominantElement.element)" alt=""/></q-avatar></template>
+                    <template v-if="exploration.dominantEmotion"><q-avatar size="xs"><img :src="getEmotionIcon(exploration.dominantEmotion.emotion)" alt=""/></q-avatar></template>
+                    <template v-if="exploration.dominantShape"><q-avatar size="xs"><img :src="getShapeIcon(exploration.dominantShape.shape)" alt=""/></q-avatar></template>
+                </div>
+                <div v-if="exploration.creature_types && exploration.creature_types.length">
                     Кроме того, эхо этой локации откликается только на существ с осколками:
                     <b>{{ exploration.creature_types.join(', ') }}</b>.
-                </template>
+                </div>
             </q-card-section>
             <q-card-section>
                 <q-markup-table>
@@ -157,15 +167,14 @@ function openStartBattleDialog(config) {
                         <th class="text-left">Шанс</th>
                         <th class="text-left">Тип</th>
                         <th class="text-left">Кошмары</th>
-                        <th class="text-left">Ограничения</th>
-                        <th class="text-left">Награда</th>
-                        <th class="text-left">Комментарий</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr v-for="variant in exploration.variants">
                         <td class="text-left">{{ variant.chance * 100 }}%</td>
-                        <td class="text-left">{{ {battle: 'Битва'}[variant.type] }}<template v-if="variant.disabled"><br>(Заблокировано)</template></td>
+                        <td class="text-left">{{ {battle: 'Битва'}[variant.type] }}
+                            <template v-if="variant.disabled"><br>(Заблокировано)</template>
+                        </td>
                         <td class="text-left">
                             <template v-if="variant.type === 'battle'">
                                 Cуществ: <span v-if="variant.config.enemyCount[0] === variant.config.enemyCount[1]">
@@ -182,12 +191,6 @@ function openStartBattleDialog(config) {
                                 </span>
                             </template>
                         </td>
-                        <td class="text-left">
-                            Существ: {{ exploration.playerCountLimit }},<br>
-                            Уровень: {{ exploration.playerLevelLimit }}
-                        </td>
-                        <td class="text-left"></td>
-                        <td class="text-left">{{ variant.config.comment }}</td>
                     </tr>
                     </tbody>
                 </q-markup-table>
