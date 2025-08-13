@@ -514,7 +514,7 @@
             {
                 "effect": "luck",
                 "chance": 0.3,
-                "duration": 0
+                "duration": 1
             }
         ],
         "pp": 12,
@@ -2723,9 +2723,9 @@
                 "duration": 2
             },
             {
-                "effect": "crit",
+                "effect": "luck",
                 "chance": 0.5,
-                "duration": 0
+                "duration": 1
             }
         ],
         "pp": 18,

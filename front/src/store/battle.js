@@ -792,8 +792,9 @@ export const useBattleStore = defineStore('battle', {
                     result.effects.push(effect.effect)
                 }
 
-                // При накладывании на самого себя, докидываем еще единичку к длительности
+                // При накладывании на самого себя, докидываем еще единичку к длительности чтобы не списалось в конце хода
                 if (effectTarget.id === attacker.id) {
+                    effect = Object.assign(effect)
                     effect.duration++
                 }
 
@@ -897,8 +898,9 @@ export const useBattleStore = defineStore('battle', {
                     result.effects.push(effect.effect)
                 }
 
-                // При накладывании на самого себя, докидываем еще единичку к длительности
+                // При накладывании на самого себя, докидываем еще единичку к длительности чтобы не списалось в конце хода
                 if (effectTarget.id === treater.id) {
+                    effect = Object.assign(effect)
                     effect.duration++
                 }
 

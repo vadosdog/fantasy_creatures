@@ -183,7 +183,8 @@ export const CreatureAPI = {
             creature.effects = []
         }
 
-        const effect = effectConfig
+        // Обязательно, тк иначе исправляются характеристики изначального навыка в конце хода
+        const effect = Object.assign({}, effectConfig)
         // Если такой эффект уже есть, то увеличиваем его длительность
         const existsEffect = creature.effects.find(({effect}) => effectConfig.effect === effect)
         if (existsEffect) {
