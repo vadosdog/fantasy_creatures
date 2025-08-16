@@ -235,7 +235,7 @@ function handleBattleStart(battleData) {
                     <!-- Колонка 1: Существа игрока -->
                     <div class="col-3 q-pa-sm column">
                         <div>
-                            <div class="text-center text-weight-bold q-mb-sm">Ваши существа</div>
+                            <div class="text-center text-weight-bold q-mb-sm">Ваши Эхоны</div>
                             <div class="q-pb-sm">
                                 <div class="row q-gutter-sm">
                                     <q-select
@@ -296,7 +296,7 @@ function handleBattleStart(battleData) {
                                 </q-list>
                             </QScrollArea>
                             <div v-else class="flex column text-center q-pa-md text-grey">
-                                <span>У вас нет ни одного существа.</span>
+                                <span>У вас нет ни одного Эхона.</span>
                                 <span class="q-mt-sm">Создайте их в <strong>Кузне Осколков</strong></span>
                             </div>
                         </div>

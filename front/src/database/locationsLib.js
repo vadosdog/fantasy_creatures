@@ -30,7 +30,7 @@ export const locationsLib = {
     academy_training_room: {
         id: 'academy_training_room',
         name: 'Тренировочная комната',
-        description: 'Гексагональная арена среди руин, где пульсируют осколочные жилы. Фантомы материализуются из тьмы, чтобы испытать ваших существ в бесконечных битвах.',
+        description: 'Гексагональная арена среди руин, где пульсируют осколочные жилы. Фантомы материализуются из тьмы, чтобы испытать ваших Эхонов в бесконечных битвах.',
         conditions: [], // Для доступности
         npcs: [],
         options: [
@@ -113,7 +113,7 @@ export const locationsLib = {
     academy_forge: {
         id: 'academy_forge',
         name: 'Кузня Осколков',
-        description: 'Подвальная мастерская, где плавят кристаллы душ богов. В фиолетовом пламени печей рождаются новые существа - ваше оружие против хаоса.',
+        description: 'Подвальная мастерская, где плавят кристаллы душ богов. В фиолетовом пламени печей рождаются новые Эхоны - ваше оружие против хаоса.',
         conditions: [], // Для доступности
         npcs: [
             {id: 'gromar', label: 'Громар'},
@@ -188,7 +188,7 @@ export const locationsLib = {
                         enemyCount: [2, 3],
                         enemyLevel: [1, 3],
                         type: 'exploration_battle',
-                        comment: '70%: 2-3 существа (ур. 1-3)'
+                        comment: '70%: 2-3 кошмара (ур. 1-3)'
                     }
                 },
                 {
@@ -198,7 +198,7 @@ export const locationsLib = {
                         enemyCount: [2, 2],
                         enemyLevel: [4, 5],
                         type: 'exploration_battle',
-                        comment: '25%: 1 существо + 1 редкий (ур. 4-5)',
+                        comment: '25%: 1 кошмар + 1 редкий (ур. 4-5)',
                         composition: [
                             {
                                 count: [1, 1],
@@ -279,7 +279,7 @@ export const locationsLib = {
                         enemyCount: [2, 3],
                         enemyLevel: [1, 3],
                         type: 'exploration_battle',
-                        comment: '70%: 2-3 существа (ур. 1-3)'
+                        comment: '70%: 2-3 кошмара (ур. 1-3)'
                     }
                 },
                 {
@@ -289,7 +289,7 @@ export const locationsLib = {
                         enemyCount: [2, 2],
                         enemyLevel: [4, 5],
                         type: 'exploration_battle',
-                        comment: '25%: 1 существо + 1 редкий (ур. 4-5)',
+                        comment: '25%: 1 кошмар + 1 редкий (ур. 4-5)',
                         composition: [
                             {
                                 count: [1, 1],
@@ -308,7 +308,7 @@ export const locationsLib = {
                         enemyCount: [4, 4],
                         enemyLevel: [2, 4],
                         type: 'exploration_battle',
-                        comment: '5%: 4 существа редкий (ур. 2-4)',
+                        comment: '5%: 4 кошмара редкий (ур. 2-4)',
                         composition: [
                             {
                                 count: [1, 1],
@@ -359,7 +359,7 @@ export const locationsLib = {
                         enemyCount: [4, 5],
                         enemyLevel: [6, 8],
                         type: 'exploration_battle',
-                        comment: '60%: 4-5 существ (ур. 6-8)'
+                        comment: '60%: 4-5 кошмаров (ур. 6-8)'
                     }
                 },
                 {
@@ -369,7 +369,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [9, 10],
                         type: 'exploration_battle',
-                        comment: '30%: 6 существ: 3 редких (ур. 9-10)',
+                        comment: '30%: 6 кошмаров: 3 редких (ур. 9-10)',
                         composition: [
                             {
                                 count: [3, 3],
@@ -388,7 +388,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [12, 12],
                         type: 'exploration_battle',
-                        comment: '10% | 6 существ: 1 эпически, 3 редких | ур. 12',
+                        comment: '10% | 6 кошмаров: 1 эпически, 3 редких | ур. 12',
                         composition: [
                             {
                                 count: [1, 1],
@@ -447,7 +447,7 @@ export const locationsLib = {
                         enemyCount: [3, 4],
                         enemyLevel: [3, 5],
                         type: 'exploration_battle',
-                        comment: '60%: 3-4 существа (ур. 3-5)'
+                        comment: '60%: 3-4 кошмара (ур. 3-5)'
                     }
                 },
                 {
@@ -457,7 +457,7 @@ export const locationsLib = {
                         enemyCount: [2, 2],
                         enemyLevel: [6, 6],
                         type: 'exploration_battle',
-                        comment: '30%: 2-2 существа (ур. 6), 1 редкий',
+                        comment: '30%: 2 кошмара (ур. 6), 1 редкий',
                         composition: [
                             {
                                 count: [1, 1],
@@ -531,7 +531,7 @@ export const locationsLib = {
                         enemyCount: [5, 6],
                         enemyLevel: [11, 13],
                         type: 'exploration_battle',
-                        comment: '50%: 5-6 существ (ур. 11-13)'
+                        comment: '50%: 5-6 кошмаров (ур. 11-13)'
                     }
                 },
                 {
@@ -541,7 +541,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [14, 15],
                         type: 'exploration_battle',
-                        comment: '40%: 6 существ, 4 редких (ур. 14-15)',
+                        comment: '40%: 6 кошмаров, 4 редких (ур. 14-15)',
                         composition: [
                             {
                                 count: [4, 4],
@@ -560,7 +560,7 @@ export const locationsLib = {
                         enemyCount: [1, 1],
                         enemyLevel: [18, 18],
                         type: 'exploration_battle',
-                        comment: '10% | 6 существ: 1 эпически, 3 редких | ур. 18-18',
+                        comment: '10% | 6 кошмаров: 1 эпически, 3 редких | ур. 18-18',
                         composition: [
                             {
                                 count: [1, 1],
@@ -608,7 +608,7 @@ export const locationsLib = {
                         enemyCount: [5, 6],
                         enemyLevel: [20, 22],
                         type: 'exploration_battle',
-                        comment: '50%: 5-6 существ (ур. 20-22)',
+                        comment: '50%: 5-6 кошмаров (ур. 20-22)',
                         composition: [
                             {
                                 count: [6, 6],
@@ -674,7 +674,7 @@ export const locationsLib = {
                         enemyCount: [5, 5],
                         enemyLevel: [13, 15],
                         type: 'exploration_battle',
-                        comment: '40% | 5 существ | ур. 13-15'
+                        comment: '40% | 5 кошмаров | ур. 13-15'
                     }
                 },
                 {
@@ -684,7 +684,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [14, 16],
                         type: 'exploration_battle',
-                        comment: '40% | 6 существ, 3 редких | ур. 14-16',
+                        comment: '40% | 6 кошмаров, 3 редких | ур. 14-16',
                         composition: [
                             {
                                 count: [3, 3],
@@ -703,7 +703,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [15, 17],
                         type: 'exploration_battle',
-                        comment: '5% | 6 существ: 1 эпически, 3 редких | ур. 15-17',
+                        comment: '5% | 6 кошмаров: 1 эпически, 3 редких | ур. 15-17',
                         composition: [
                             {
                                 count: [1, 1],
@@ -754,7 +754,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [26, 28],
                         type: 'exploration_battle',
-                        comment: '70%: 6 существ (ур. 26-28)',
+                        comment: '70%: 6 кошмаров (ур. 26-28)',
                         composition: [
                             {
                                 count: [6, 6],
@@ -837,7 +837,7 @@ export const locationsLib = {
                         enemyCount: [5, 5],
                         enemyLevel: [8, 9],
                         type: 'exploration_battle',
-                        comment: '40% | 5 существ | ур. 8-9'
+                        comment: '40% | 5 кошмаров | ур. 8-9'
                     }
                 },
                 {
@@ -847,7 +847,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [9, 9],
                         type: 'exploration_battle',
-                        comment: '40% | 6 существ | ур. 9',
+                        comment: '40% | 6 кошмаров | ур. 9',
                         composition: [
                             {
                                 count: [1, 2],
@@ -867,7 +867,7 @@ export const locationsLib = {
                         enemyCount: [4, 4],
                         enemyLevel: [9, 9],
                         type: 'exploration_battle',
-                        comment: '20% | 4 существа| ур. 9, 3 редкие',
+                        comment: '20% | 4 кошмара| ур. 9, 3 редкие',
                         composition: [
                             {
                                 count: [2, 2],
@@ -932,7 +932,7 @@ export const locationsLib = {
                         enemyCount: [4, 4],
                         enemyLevel: [5, 7],
                         type: 'exploration_battle',
-                        comment: '50% | 4 существа | ур. 5-7'
+                        comment: '50% | 4 кошмара | ур. 5-7'
                     }
                 },
                 {
@@ -942,7 +942,7 @@ export const locationsLib = {
                         enemyCount: [5, 5],
                         enemyLevel: [6, 8],
                         type: 'exploration_battle',
-                        comment: '30% | 5 существ (ур. 6-8), 2 редких',
+                        comment: '30% | 5 кошмаров (ур. 6-8), 2 редких',
                         composition: [
                             {
                                 count: [2, 2],
@@ -961,7 +961,7 @@ export const locationsLib = {
                         enemyCount: [3, 3],
                         enemyLevel: [7, 8],
                         type: 'exploration_battle',
-                        comment: '20% | 3 существа | ур. 7-9',
+                        comment: '20% | 3 кошмара | ур. 7-9',
                         composition: [
                             {
                                 count: [2, 3],
@@ -1002,7 +1002,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [21, 23],
                         type: 'exploration_battle',
-                        comment: '60%: 6 редких существ (ур. 21-23)'
+                        comment: '60%: 6 редких кошмаров (ур. 21-23)'
                     }
                 },
                 {
@@ -1103,7 +1103,7 @@ export const locationsLib = {
                         enemyCount: [5, 5],
                         enemyLevel: [7, 9],
                         type: 'exploration_battle',
-                        comment: '70%: 5 существ (ур. 7-9)'
+                        comment: '70%: 5 кошмаров (ур. 7-9)'
                     }
                 },
                 {
@@ -1113,7 +1113,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [8, 10],
                         type: 'exploration_battle',
-                        comment: '25% | 6 существ | ур. 8-10, 3 редких',
+                        comment: '25% | 6 кошмаров | ур. 8-10, 3 редких',
                         composition: [
                             {
                                 count: [3, 3],
@@ -1132,7 +1132,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [12, 12],
                         type: 'exploration_battle',
-                        comment: '5%: 6 существ, 1 эпический, 3 редких (ур. 12)',
+                        comment: '5%: 6 кошмаров, 1 эпический, 3 редких (ур. 12)',
                         composition: [
                             {
                                 count: [1, 1],
@@ -1183,7 +1183,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [12, 14],
                         type: 'exploration_battle',
-                        comment: '60%: 6 существ (ур. 12-14)'
+                        comment: '60%: 6 кошмаров (ур. 12-14)'
                     }
                 },
                 {
@@ -1248,7 +1248,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [13, 15],
                         type: 'exploration_battle',
-                        comment: '70%: 6 редких существ (ур. 13-15)',
+                        comment: '70%: 6 редких кошмаров (ур. 13-15)',
                         composition: [
                             {
                                 count: [6, 6],
@@ -1332,7 +1332,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [22, 24],
                         type: 'exploration_battle',
-                        comment: '70%: 6 существ (ур. 22-24)'
+                        comment: '70%: 6 кошмаров (ур. 22-24)'
                     }
                 },
                 {
@@ -1394,7 +1394,7 @@ export const locationsLib = {
                         enemyCount: [5, 5],
                         enemyLevel: [8, 10],
                         type: 'exploration_battle',
-                        comment: '70% | 5 существ | ур. 8-10'
+                        comment: '70% | 5 кошмаров | ур. 8-10'
                     }
                 },
                 {
@@ -1404,7 +1404,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [9, 11],
                         type: 'exploration_battle',
-                        comment: '25% | 6 существ | ур. 9-11, 3 редких',
+                        comment: '25% | 6 кошмаров | ур. 9-11, 3 редких',
                         composition: [
                             {
                                 count: [3, 3],
@@ -1423,7 +1423,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [10, 12],
                         type: 'exploration_battle',
-                        comment: '5% | 6 существ: 1 эпически, 3 редких | ур. 10-12',
+                        comment: '5% | 6 кошмаров: 1 эпически, 3 редких | ур. 10-12',
                         composition: [
                             {
                                 count: [1, 1],
@@ -1471,7 +1471,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [18, 20],
                         type: 'exploration_battle',
-                        comment: '70%: 6 существ (ур. 18-20)',
+                        comment: '70%: 6 кошмаров (ур. 18-20)',
                         composition: [
                             {
                                 count: [6, 6],
@@ -1530,7 +1530,7 @@ export const locationsLib = {
                         enemyCount: [5, 6],
                         enemyLevel: [14, 16],
                         type: 'exploration_battle',
-                        comment: '50%: 5-6 существ (ур. 14-16)'
+                        comment: '50%: 5-6 кошмаров (ур. 14-16)'
                     }
                 },
                 {
@@ -1540,7 +1540,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [17, 18],
                         type: 'exploration_battle',
-                        comment: '40%: 6 существ, 3 редких (ур. 17-18)',
+                        comment: '40%: 6 кошмаров, 3 редких (ур. 17-18)',
                         composition: [
                             {
                                 count: [3, 3],
@@ -1559,7 +1559,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [19, 19],
                         type: 'exploration_battle',
-                        comment: '5% | 6 существ: 1 эпически, 3 редких | ур. 19',
+                        comment: '5% | 6 кошмаров: 1 эпически, 3 редких | ур. 19',
                         composition: [
                             {
                                 count: [1, 1],
@@ -1607,7 +1607,7 @@ export const locationsLib = {
                         enemyCount: [5, 6],
                         enemyLevel: [24, 26],
                         type: 'exploration_battle',
-                        comment: '50%: 5-6 существ (ур. 24-26)',
+                        comment: '50%: 5-6 кошмаров (ур. 24-26)',
                         composition: [
                             {
                                 count: [6, 6],
@@ -1669,7 +1669,7 @@ export const locationsLib = {
                         enemyCount: [4, 4],
                         enemyLevel: [5, 7],
                         type: 'exploration_battle',
-                        comment: '50%: 4 существа (ур. 5-7)'
+                        comment: '50%: 4 кошмара (ур. 5-7)'
                     }
                 },
                 {
@@ -1752,7 +1752,7 @@ export const locationsLib = {
                         enemyCount: [5, 6],
                         enemyLevel: [8, 10],
                         type: 'exploration_battle',
-                        comment: '60%: 5-6 существ (ур. 8-10)'
+                        comment: '60%: 5-6 кошмаров (ур. 8-10)'
                     }
                 },
                 {
@@ -1788,7 +1788,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [13, 13],
                         type: 'exploration_battle',
-                        comment: '1% | 6 существ: 1 эпически, 3 редких | ур. 13-13',
+                        comment: '1% | 6 кошмаров: 1 эпически, 3 редких | ур. 13-13',
                         composition: [
                             {
                                 count: [1, 1],
@@ -1834,7 +1834,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [16, 18],
                         type: 'exploration_battle',
-                        comment: '60%: 6 редких существ (ур. 16-18)',
+                        comment: '60%: 6 редких кошмаров (ур. 16-18)',
                         composition: [
                             {
                                 count: [6, 6],
@@ -1894,7 +1894,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [9, 11],
                         type: 'exploration_battle',
-                        comment: '70%: 6 существ (ур. 9-11)'
+                        comment: '70%: 6 кошмаров (ур. 9-11)'
                     }
                 },
                 {
@@ -1930,7 +1930,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [14, 14],
                         type: 'exploration_battle',
-                        comment: '5%: 6 существ, 1 эпический, 3 редких',
+                        comment: '5%: 6 кошмаров, 1 эпический, 3 редких',
                         composition: [
                             {
                                 count: [1, 1],
@@ -1991,7 +1991,7 @@ export const locationsLib = {
                         enemyCount: [6, 6],
                         enemyLevel: [25, 27],
                         type: 'exploration_battle',
-                        comment: '60%: 6 существ (ур. 25-27)',
+                        comment: '60%: 6 кошмаров (ур. 25-27)',
                         composition: [
                             {
                                 count: [6, 6],

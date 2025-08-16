@@ -174,7 +174,7 @@ function getActionTypeIcon(action) {
                     </div>
                     <q-input
                         v-model="searchQuery"
-                        label="Поиск существ"
+                        label="Поиск Эхонов"
                         dense
                         outlined
                         class="q-mt-sm"

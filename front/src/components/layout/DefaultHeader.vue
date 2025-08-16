@@ -9,7 +9,7 @@ const mainNavItems = [
 ];
 
 const inventoryTabs = [
-    {label: 'Существа', name: 'creatures'},
+    {label: 'Эхоны', name: 'creatures'},
     {label: 'Осколки', name: 'shards'},
 ]
 
@@ -55,7 +55,7 @@ onBeforeUnmount(() => {
         Инвентарь
     </q-btn>
     <q-btn stretch flat no-caps @click="creaturesDialogOpen = true" class="text-foreground/80 hover-text-primary">
-        Существа
+        Эхоны
     </q-btn>
 
     <InventoryDialog v-model="inventoryDialogOpen"/>

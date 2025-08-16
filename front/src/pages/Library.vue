@@ -457,7 +457,8 @@ const levelUpButtonLabel = computed(() =>
 
         <!-- Коллекция (сетка групп) -->
         <div v-else class="q-pa-md">
-            <div class="text-h4 q-mb-md text-foreground">Коллекция существ</div>
+            <div class="text-h4  text-foreground">Библиотека Эхонов</div>
+            <div class="text-caption text-italic text-foreground q-mb-md">Каждый Эхон — это капсула воспоминания. Они не живы, но и не мертвы. Они — были.</div>
             <div class="row q-col-gutter-lg">
                 <div
                     v-for="(group, index) in evolutionGroups"
